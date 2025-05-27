@@ -1,0 +1,267 @@
+{
+  "featured": [
+    {
+      "id": "cinematic-showreel-2024",
+      "title": "Cinematic Showreel 2024",
+      "category": "film",
+      "thumbnail": "/assets/images/portfolio/films/showreel-2024-thumb.jpg",
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/videos/showreel-2024.mp4",
+          "alt": "BlackWoods Creative Cinematic Showreel 2024"
+        }
+      ],
+      "description": "A compilation of our finest cinematic work from 2024, showcasing our expertise in visual storytelling, color grading, and dynamic camera movements.",
+      "client": "Various Clients",
+      "year": 2024,
+      "tags": ["cinematography", "color grading", "editing", "motion graphics"],
+      "featured": true
+    },
+    {
+      "id": "corporate-brand-film",
+      "title": "Corporate Brand Film",
+      "category": "film",
+      "thumbnail": "/assets/images/portfolio/films/corporate-brand-thumb.jpg",
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/videos/corporate-brand-film.mp4",
+          "alt": "Corporate Brand Film - Professional Video Production"
+        }
+      ],
+      "description": "A sophisticated brand film that captures the essence of innovation and professionalism, featuring dynamic interviews and stunning product shots.",
+      "client": "TechCorp Industries",
+      "year": 2024,
+      "tags": ["brand film", "corporate", "interviews", "product shots"],
+      "featured": true
+    },
+    {
+      "id": "architectural-photography",
+      "title": "Modern Architecture Series",
+      "category": "photography",
+      "thumbnail": "/assets/images/portfolio/photography/architecture-series-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/photography/architecture-1.jpg",
+          "alt": "Modern architectural photography - glass and steel structure"
+        },
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/photography/architecture-2.jpg",
+          "alt": "Contemporary building facade with dramatic lighting"
+        },
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/photography/architecture-3.jpg",
+          "alt": "Minimalist interior design photography"
+        }
+      ],
+      "description": "A striking series capturing the intersection of light, shadow, and modern architectural design. Each image tells a story of space and form.",
+      "client": "Metropolitan Design Group",
+      "year": 2024,
+      "tags": ["architecture", "commercial", "lighting", "composition"],
+      "featured": true
+    },
+    {
+      "id": "product-visualization-3d",
+      "title": "Luxury Watch Visualization",
+      "category": "3d",
+      "thumbnail": "/assets/images/portfolio/3d-models/luxury-watch-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/3d-models/luxury-watch-1.jpg",
+          "alt": "Photorealistic 3D luxury watch rendering"
+        },
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/3d-models/luxury-watch-2.jpg",
+          "alt": "3D watch visualization with dramatic lighting"
+        }
+      ],
+      "description": "Photorealistic 3D visualization of a luxury timepiece, showcasing intricate details and premium materials with studio-quality lighting.",
+      "client": "Prestige Timepieces",
+      "year": 2024,
+      "tags": ["3d modeling", "product visualization", "luxury goods", "photorealism"],
+      "featured": true
+    }
+  ],
+  "film": [
+    {
+      "id": "documentary-short",
+      "title": "Urban Stories Documentary",
+      "category": "film",
+      "thumbnail": "/assets/images/portfolio/films/documentary-thumb.jpg",
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/videos/documentary-short.mp4",
+          "alt": "Urban Stories Documentary - Short Film"
+        }
+      ],
+      "description": "An intimate documentary exploring the hidden stories within urban landscapes, featuring compelling interviews and cinematic B-roll.",
+      "client": "Independent Production",
+      "year": 2024,
+      "tags": ["documentary", "storytelling", "urban", "interviews"]
+    },
+    {
+      "id": "music-video-production",
+      "title": "Ethereal Dreams Music Video",
+      "category": "film",
+      "thumbnail": "/assets/images/portfolio/films/music-video-thumb.jpg",
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/videos/music-video.mp4",
+          "alt": "Ethereal Dreams Music Video Production"
+        }
+      ],
+      "description": "A visually stunning music video combining practical effects with post-production magic to create an otherworldly experience.",
+      "client": "Indie Artist Collective",
+      "year": 2024,
+      "tags": ["music video", "visual effects", "creative direction", "color grading"]
+    },
+    {
+      "id": "commercial-spot",
+      "title": "Premium Coffee Commercial",
+      "category": "film",
+      "thumbnail": "/assets/images/portfolio/films/coffee-commercial-thumb.jpg",
+      "media": [
+        {
+          "type": "video",
+          "src": "/assets/videos/coffee-commercial.mp4",
+          "alt": "Premium Coffee Commercial - 30 Second Spot"
+        }
+      ],
+      "description": "A 30-second commercial that captures the essence of premium coffee culture through macro photography and elegant cinematography.",
+      "client": "Artisan Coffee Co.",
+      "year": 2024,
+      "tags": ["commercial", "product", "macro", "lifestyle"]
+    }
+  ],
+  "photography": [
+    {
+      "id": "portrait-series",
+      "title": "Executive Portrait Series",
+      "category": "photography",
+      "thumbnail": "/assets/images/portfolio/photography/executive-portraits-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/photography/executive-1.jpg",
+          "alt": "Professional executive portrait with dramatic lighting"
+        },
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/photography/executive-2.jpg",
+          "alt": "Corporate headshot with modern styling"
+        }
+      ],
+      "description": "Professional executive portraits that convey authority and approachability, shot with dramatic lighting and contemporary styling.",
+      "client": "Fortune 500 Company",
+      "year": 2024,
+      "tags": ["portraits", "corporate", "executive", "professional"]
+    },
+    {
+      "id": "event-photography",
+      "title": "Gala Event Coverage",
+      "category": "photography",
+      "thumbnail": "/assets/images/portfolio/photography/gala-event-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/photography/gala-1.jpg",
+          "alt": "Elegant gala event photography"
+        },
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/photography/gala-2.jpg",
+          "alt": "Candid moments at charity gala"
+        }
+      ],
+      "description": "Comprehensive event coverage capturing both formal moments and candid interactions at a high-profile charity gala.",
+      "client": "Charity Foundation",
+      "year": 2024,
+      "tags": ["event", "gala", "candid", "formal"]
+    }
+  ],
+  "3d": [
+    {
+      "id": "architectural-visualization",
+      "title": "Residential Complex Visualization",
+      "category": "3d",
+      "thumbnail": "/assets/images/portfolio/3d-models/residential-complex-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/3d-models/residential-1.jpg",
+          "alt": "3D architectural visualization of modern residential complex"
+        },
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/3d-models/residential-2.jpg",
+          "alt": "Interior 3D rendering of luxury apartment"
+        }
+      ],
+      "description": "Detailed 3D visualization of a luxury residential complex, including exterior architecture and interior design elements.",
+      "client": "Premier Developments",
+      "year": 2024,
+      "tags": ["architecture", "residential", "interior design", "visualization"]
+    },
+    {
+      "id": "product-lineup-3d",
+      "title": "Tech Product Lineup",
+      "category": "3d",
+      "thumbnail": "/assets/images/portfolio/3d-models/tech-products-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/3d-models/tech-products-1.jpg",
+          "alt": "3D rendered tech product lineup"
+        }
+      ],
+      "description": "Clean, minimalist 3D renderings of a complete tech product lineup for marketing and e-commerce applications.",
+      "client": "Innovation Tech",
+      "year": 2024,
+      "tags": ["product design", "tech", "minimalist", "e-commerce"]
+    }
+  ],
+  "scenes": [
+    {
+      "id": "fantasy-environment",
+      "title": "Mystical Forest Environment",
+      "category": "scenes",
+      "thumbnail": "/assets/images/portfolio/scenes/mystical-forest-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/scenes/mystical-forest-1.jpg",
+          "alt": "3D mystical forest scene with atmospheric lighting"
+        }
+      ],
+      "description": "An enchanting 3D forest environment featuring atmospheric lighting, detailed vegetation, and mystical elements for game development.",
+      "client": "Indie Game Studio",
+      "year": 2024,
+      "tags": ["environment design", "game development", "fantasy", "atmospheric"]
+    },
+    {
+      "id": "urban-scene",
+      "title": "Cyberpunk City Scene",
+      "category": "scenes",
+      "thumbnail": "/assets/images/portfolio/scenes/cyberpunk-city-thumb.jpg",
+      "media": [
+        {
+          "type": "image",
+          "src": "/assets/images/portfolio/scenes/cyberpunk-city-1.jpg",
+          "alt": "Futuristic cyberpunk city scene with neon lighting"
+        }
+      ],
+      "description": "A futuristic cyberpunk cityscape with neon lighting, detailed architecture, and atmospheric effects for film production.",
+      "client": "Sci-Fi Film Production",
+      "year": 2024,
+      "tags": ["cyberpunk", "futuristic", "neon", "film production"]
+    }
+  ]
+}

@@ -26,7 +26,7 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-        
+
         {/* Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-bw-gold/10 rounded-full blur-3xl animate-pulse"></div>
@@ -40,9 +40,9 @@ export default function HomePage() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-center mb-16">
             Our <span className="text-gradient-gold">Expertise</span>
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {['Film', 'Photography', '3D Visualization', 'Scene Creation'].map((category, index) => (
+            {['Film', 'Photography', '3D Visualization', 'Scene Creation'].map((category) => (
               <div key={category} className="card group cursor-pointer">
                 <div className="aspect-square bg-bw-dark-gray rounded-lg mb-4 flex items-center justify-center group-hover:bg-bw-medium-gray transition-colors duration-300">
                   <span className="text-4xl text-bw-gold">🎬</span>
@@ -64,20 +64,20 @@ export default function HomePage() {
             Ready to Create Something <span className="text-gradient-gold">Amazing</span>?
           </h2>
           <p className="text-xl text-bw-light-gray mb-12 max-w-2xl mx-auto">
-            Let's discuss your vision and bring it to life with our expertise in visual storytelling.
+            Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
             <div className="card">
               <h3 className="text-xl font-semibold mb-4">Get in Touch</h3>
               <p className="text-bw-light-gray mb-4">
-                Ready to start your project? We'd love to hear from you.
+                Ready to start your project? We&apos;d love to hear from you.
               </p>
               <button className="btn-primary w-full">
                 Contact Us
               </button>
             </div>
-            
+
             <div className="card">
               <h3 className="text-xl font-semibold mb-4">View Portfolio</h3>
               <p className="text-bw-light-gray mb-4">

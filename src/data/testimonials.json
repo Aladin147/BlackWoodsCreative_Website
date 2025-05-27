@@ -1,0 +1,62 @@
+[
+  {
+    "id": "testimonial-1",
+    "name": "Sarah Chen",
+    "company": "TechCorp Industries",
+    "role": "Marketing Director",
+    "content": "BlackWoods Creative transformed our brand story into a cinematic masterpiece. Their attention to detail and creative vision exceeded all our expectations. The final brand film has become our most powerful marketing asset.",
+    "image": "/assets/images/testimonials/sarah-chen.jpg",
+    "rating": 5,
+    "projectType": "Brand Film"
+  },
+  {
+    "id": "testimonial-2",
+    "name": "Michael Rodriguez",
+    "company": "Metropolitan Design Group",
+    "role": "Principal Architect",
+    "content": "The architectural photography work by BlackWoods Creative perfectly captured the essence of our designs. Their understanding of light, space, and composition is exceptional. These images have significantly enhanced our portfolio presentations.",
+    "image": "/assets/images/testimonials/michael-rodriguez.jpg",
+    "rating": 5,
+    "projectType": "Architectural Photography"
+  },
+  {
+    "id": "testimonial-3",
+    "name": "Emma Thompson",
+    "company": "Prestige Timepieces",
+    "role": "Brand Manager",
+    "content": "The 3D visualizations created for our luxury watch collection are absolutely stunning. BlackWoods Creative managed to capture every intricate detail with photorealistic precision. Our sales presentations have never looked better.",
+    "image": "/assets/images/testimonials/emma-thompson.jpg",
+    "rating": 5,
+    "projectType": "3D Visualization"
+  },
+  {
+    "id": "testimonial-4",
+    "name": "David Park",
+    "company": "Indie Game Studio",
+    "role": "Creative Director",
+    "content": "Working with BlackWoods Creative on our game environments was a game-changer. Their ability to create immersive, atmospheric scenes that perfectly match our vision is unparalleled. The mystical forest environment they created became the centerpiece of our game.",
+    "image": "/assets/images/testimonials/david-park.jpg",
+    "rating": 5,
+    "projectType": "Environment Design"
+  },
+  {
+    "id": "testimonial-5",
+    "name": "Lisa Anderson",
+    "company": "Charity Foundation",
+    "role": "Event Coordinator",
+    "content": "BlackWoods Creative captured our gala event beautifully. They have an incredible eye for both formal moments and candid interactions. The photos perfectly tell the story of our mission and the impact of our work.",
+    "image": "/assets/images/testimonials/lisa-anderson.jpg",
+    "rating": 5,
+    "projectType": "Event Photography"
+  },
+  {
+    "id": "testimonial-6",
+    "name": "James Wilson",
+    "company": "Premier Developments",
+    "role": "Sales Director",
+    "content": "The 3D architectural visualizations have revolutionized how we present our projects to clients. BlackWoods Creative's attention to detail and realistic rendering quality helps our clients truly envision their future homes. Our pre-sales have increased by 40%.",
+    "image": "/assets/images/testimonials/james-wilson.jpg",
+    "rating": 5,
+    "projectType": "Architectural Visualization"
+  }
+]
