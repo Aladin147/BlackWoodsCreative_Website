@@ -1,0 +1,244 @@
+'use client';
+
+import React from 'react';
+import { motion } from 'framer-motion';
+import {
+  EnvelopeIcon,
+  PhoneIcon,
+  MapPinIcon,
+  ArrowUpIcon
+} from '@heroicons/react/24/outline';
+import { HeartIcon } from '@heroicons/react/24/solid';
+
+interface FooterProps {
+  className?: string;
+}
+
+const socialLinks = [
+  {
+    name: 'Instagram',
+    href: 'https://instagram.com/blackwoodscreative',
+    icon: '📸',
+  },
+  {
+    name: 'LinkedIn',
+    href: 'https://linkedin.com/company/blackwoodscreative',
+    icon: '💼',
+  },
+  {
+    name: 'Vimeo',
+    href: 'https://vimeo.com/blackwoodscreative',
+    icon: '🎬',
+  },
+  {
+    name: 'Behance',
+    href: 'https://behance.net/blackwoodscreative',
+    icon: '🎨',
+  },
+];
+
+const quickLinks = [
+  { name: 'Portfolio', href: '#portfolio' },
+  { name: 'About', href: '#about' },
+  { name: 'Contact', href: '#contact' },
+  { name: 'Services', href: '#portfolio' },
+];
+
+const services = [
+  'Brand Films',
+  'Product Photography',
+  '3D Visualization',
+  'Scene Creation',
+];
+
+export function Footer({ className }: FooterProps) {
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  const handleNavClick = (href: string) => {
+    if (href.startsWith('#')) {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    } else {
+      window.open(href, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  return (
+    <footer className={`bg-bw-black border-t border-bw-dark-gray ${className}`}>
+      <div className="mx-auto max-w-7xl px-4 py-16">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          {/* Company Info */}
+          <motion.div
+            className="lg:col-span-1"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="font-display text-2xl font-bold text-bw-white mb-4">
+              BlackWoods Creative
+            </h3>
+            <p className="text-bw-light-gray mb-6 leading-relaxed">
+              Premium visual storytelling through filmmaking, photography, and 3D visualization.
+              Creating compelling narratives that captivate and convert.
+            </p>
+
+            {/* Contact Info */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-bw-light-gray">
+                <EnvelopeIcon className="h-5 w-5 text-bw-gold" />
+                <span className="text-sm">hello@blackwoodscreative.com</span>
+              </div>
+              <div className="flex items-center gap-3 text-bw-light-gray">
+                <PhoneIcon className="h-5 w-5 text-bw-gold" />
+                <span className="text-sm">+1 (555) 123-4567</span>
+              </div>
+              <div className="flex items-center gap-3 text-bw-light-gray">
+                <MapPinIcon className="h-5 w-5 text-bw-gold" />
+                <span className="text-sm">Los Angeles, CA</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Quick Links */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            <h4 className="font-semibold text-bw-white mb-4">Quick Links</h4>
+            <ul className="space-y-3">
+              {quickLinks.map((link) => (
+                <motion.li key={link.name}>
+                  <motion.button
+                    onClick={() => handleNavClick(link.href)}
+                    className="text-bw-light-gray hover:text-bw-gold transition-colors duration-300 text-sm"
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {link.name}
+                  </motion.button>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Services */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <h4 className="font-semibold text-bw-white mb-4">Services</h4>
+            <ul className="space-y-3">
+              {services.map((service) => (
+                <li key={service} className="text-bw-light-gray text-sm">
+                  {service}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* Social Links */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <h4 className="font-semibold text-bw-white mb-4">Follow Us</h4>
+            <div className="flex flex-wrap gap-4">
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-dark-gray text-bw-light-gray hover:bg-bw-gold hover:text-bw-black transition-all duration-300"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  title={social.name}
+                >
+                  <span className="text-lg">{social.icon}</span>
+                </motion.a>
+              ))}
+            </div>
+
+            {/* Newsletter Signup */}
+            <div className="mt-6">
+              <p className="text-bw-light-gray text-sm mb-3">
+                Stay updated with our latest work
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="Your email"
+                  className="flex-1 px-3 py-2 bg-bw-dark-gray border border-bw-medium-gray rounded-md text-bw-white text-sm focus:outline-none focus:border-bw-gold transition-colors duration-300"
+                />
+                <motion.button
+                  className="px-4 py-2 bg-bw-gold text-bw-black rounded-md text-sm font-medium hover:bg-yellow-400 transition-colors duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Subscribe
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Bottom Bar */}
+        <motion.div
+          className="border-t border-bw-dark-gray pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+        >
+          <div className="text-bw-light-gray text-sm">
+            © {new Date().getFullYear()} BlackWoods Creative. All rights reserved.
+          </div>
+
+          <div className="flex items-center gap-6">
+            <button
+              onClick={() => handleNavClick('#')}
+              className="text-bw-light-gray hover:text-bw-white text-sm transition-colors duration-300"
+            >
+              Privacy Policy
+            </button>
+            <button
+              onClick={() => handleNavClick('#')}
+              className="text-bw-light-gray hover:text-bw-white text-sm transition-colors duration-300"
+            >
+              Terms of Service
+            </button>
+
+            {/* Back to Top */}
+            <motion.button
+              onClick={handleScrollToTop}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-dark-gray text-bw-light-gray hover:bg-bw-gold hover:text-bw-black transition-all duration-300"
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              title="Back to top"
+            >
+              <ArrowUpIcon className="h-5 w-5" />
+            </motion.button>
+          </div>
+        </motion.div>
+      </div>
+    </footer>
+  );
+}

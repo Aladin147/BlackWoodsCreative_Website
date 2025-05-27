@@ -4,11 +4,11 @@
       "id": "cinematic-showreel-2024",
       "title": "Cinematic Showreel 2024",
       "category": "film",
-      "thumbnail": "/assets/images/portfolio/films/showreel-2024-thumb.jpg",
+      "thumbnail": "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=600&fit=crop&crop=center",
       "media": [
         {
           "type": "video",
-          "src": "/assets/videos/showreel-2024.mp4",
+          "src": "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1200&h=800&fit=crop&crop=center",
           "alt": "BlackWoods Creative Cinematic Showreel 2024"
         }
       ],
@@ -22,11 +22,11 @@
       "id": "corporate-brand-film",
       "title": "Corporate Brand Film",
       "category": "film",
-      "thumbnail": "/assets/images/portfolio/films/corporate-brand-thumb.jpg",
+      "thumbnail": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop&crop=center",
       "media": [
         {
           "type": "video",
-          "src": "/assets/videos/corporate-brand-film.mp4",
+          "src": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=800&fit=crop&crop=center",
           "alt": "Corporate Brand Film - Professional Video Production"
         }
       ],
@@ -40,21 +40,21 @@
       "id": "architectural-photography",
       "title": "Modern Architecture Series",
       "category": "photography",
-      "thumbnail": "/assets/images/portfolio/photography/architecture-series-thumb.jpg",
+      "thumbnail": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop&crop=center",
       "media": [
         {
           "type": "image",
-          "src": "/assets/images/portfolio/photography/architecture-1.jpg",
+          "src": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=800&fit=crop&crop=center",
           "alt": "Modern architectural photography - glass and steel structure"
         },
         {
           "type": "image",
-          "src": "/assets/images/portfolio/photography/architecture-2.jpg",
+          "src": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=800&fit=crop&crop=center",
           "alt": "Contemporary building facade with dramatic lighting"
         },
         {
           "type": "image",
-          "src": "/assets/images/portfolio/photography/architecture-3.jpg",
+          "src": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop&crop=center",
           "alt": "Minimalist interior design photography"
         }
       ],
@@ -68,11 +68,11 @@
       "id": "product-visualization-3d",
       "title": "Luxury Watch Visualization",
       "category": "3d",
-      "thumbnail": "/assets/images/portfolio/3d-models/luxury-watch-thumb.jpg",
+      "thumbnail": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop&crop=center",
       "media": [
         {
           "type": "image",
-          "src": "/assets/images/portfolio/3d-models/luxury-watch-1.jpg",
+          "src": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=800&fit=crop&crop=center",
           "alt": "Photorealistic 3D luxury watch rendering"
         },
         {

@@ -13,7 +13,7 @@ blackwoods-creative/
 │   │   │   ├── hero-background.mp4
 │   │   │   ├── showreel-2024.mp4
 │   │   │   └── behind-scenes/
-│   │   ├── 📁 images/ 
+│   │   ├── 📁 images/
 │   │   │   ├── 📁 portfolio/
 │   │   │   │   ├── 📁 films/
 │   │   │   │   ├── 📁 photography/
@@ -160,34 +160,40 @@ blackwoods-creative/
 ## 🎯 Key Architecture Highlights
 
 ### **Enterprise-Level Organization**
+
 - **Route Groups**: `(marketing)` for clean URL structure
 - **Colocation**: Components, styles, and tests grouped together
 - **Barrel Exports**: Clean import statements throughout
 
 ### **Performance & SEO Optimized**
+
 - Next.js App Router for optimal performance
 - Image optimization with `next/image`
 - API routes for dynamic content
 - Sitemap and robots.txt for SEO
 
 ### **Scalable Content Management**
+
 - Headless CMS integration ready
 - JSON data files for easy content updates
 - API routes for dynamic portfolio management
 
 ### **Developer Experience**
+
 - TypeScript for type safety
 - ESLint + Prettier for code quality
 - VSCode configuration included
 - Comprehensive testing setup
 
 ### **Creative-Focused Features**
+
 - 3D model viewer components
 - Video background optimization
 - Animation utilities with Framer Motion
 - Media-rich portfolio structure
 
 ## 🚀 Tech Stack Integration
+
 ```json
 {
   "core": ["Next.js 14", "TypeScript", "Tailwind CSS"],

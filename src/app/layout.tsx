@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
+import { Header, ScrollProgress } from '@/components/layout';
+import { MagneticCursor } from '@/components/interactive';
 import './globals.css';
 
 const inter = Inter({
@@ -88,15 +90,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
-      <body className="font-primary bg-bw-black text-bw-white antialiased">
-        {children}
+      <body className="bg-bw-black font-primary text-bw-white antialiased">
+        {/* Skip to main content link for accessibility */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-bw-gold focus:text-bw-black focus:rounded-md focus:font-medium"
+        >
+          Skip to main content
+        </a>
+        <MagneticCursor />
+        <ScrollProgress />
+        <Header />
+        <main id="main-content" className="relative" role="main">
+          {children}
+        </main>
       </body>
     </html>
   );

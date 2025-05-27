@@ -8,18 +8,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // BlackWoods Creative Brand Colors
+        // BlackWoods Creative Brand Colors - Enhanced
         bw: {
-          black: '#0a0a0a',
-          charcoal: '#1a1a1a',
-          'dark-gray': '#2a2a2a',
-          'medium-gray': '#404040',
-          'light-gray': '#707070',
+          black: '#000000',
+          charcoal: '#0f0f0f',
+          'dark-gray': '#1a1a1a',
+          'medium-gray': '#2a2a2a',
+          'light-gray': '#6a6a6a',
           white: '#ffffff',
-          silver: '#c0c0c0',
-          platinum: '#e5e5e5',
+          silver: '#b8b8b8',
+          platinum: '#f0f0f0',
           gold: '#d4af37',
           red: '#cc3333',
+          // New sophisticated colors
+          pearl: '#f8f8f8',
+          smoke: '#8a8a8a',
+          obsidian: '#0a0a0a',
+          champagne: '#f7e7ce',
+          // Semantic colors
           success: '#28a745',
           warning: '#ffc107',
           error: '#dc3545',
@@ -37,20 +43,20 @@ module.exports = {
         '4xl': '2.25rem',
         '3xl': '1.875rem',
         '2xl': '1.5rem',
-        'xl': '1.25rem',
-        'lg': '1.125rem',
-        'base': '1rem',
-        'sm': '0.875rem',
-        'xs': '0.75rem',
+        xl: '1.25rem',
+        lg: '1.125rem',
+        base: '1rem',
+        sm: '0.875rem',
+        xs: '0.75rem',
       },
       spacing: {
-        '18': '4.5rem',
-        '88': '22rem',
-        '128': '32rem',
+        18: '4.5rem',
+        88: '22rem',
+        128: '32rem',
       },
       boxShadow: {
-        'cinematic': '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
-        'glow': '0 0 20px rgba(255, 255, 255, 0.1)',
+        cinematic: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
+        glow: '0 0 20px rgba(255, 255, 255, 0.1)',
         'gold-glow': '0 0 30px rgba(212, 175, 55, 0.3)',
       },
       animation: {
@@ -77,7 +83,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
+  plugins: [],
+};

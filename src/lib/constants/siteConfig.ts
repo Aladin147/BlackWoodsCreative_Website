@@ -38,7 +38,7 @@ export const siteConfig = {
   ],
   navigation: [
     {
-      name: 'Work',
+      name: 'Portfolio',
       href: '#portfolio',
     },
     {

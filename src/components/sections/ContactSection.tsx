@@ -1,0 +1,421 @@
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  EnvelopeIcon,
+  PhoneIcon,
+  MapPinIcon,
+  PaperAirplaneIcon,
+  ExclamationTriangleIcon
+} from '@heroicons/react/24/outline';
+import { validateEmail } from '@/lib/utils';
+
+interface ContactSectionProps {
+  className?: string;
+}
+
+interface FormData {
+  name: string;
+  email: string;
+  company: string;
+  projectType: string;
+  budget: string;
+  message: string;
+}
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  message?: string;
+}
+
+const contactInfo = [
+  {
+    icon: EnvelopeIcon,
+    label: 'Email',
+    value: 'hello@blackwoodscreative.com',
+    href: 'mailto:hello@blackwoodscreative.com',
+  },
+  {
+    icon: PhoneIcon,
+    label: 'Phone',
+    value: '+1 (555) 123-4567',
+    href: 'tel:+15551234567',
+  },
+  {
+    icon: MapPinIcon,
+    label: 'Location',
+    value: 'Los Angeles, CA',
+    href: '#',
+  },
+];
+
+const projectTypes = [
+  'Brand Film',
+  'Product Photography',
+  '3D Visualization',
+  'Scene Creation',
+  'Documentary',
+  'Commercial',
+  'Other',
+];
+
+const budgetRanges = [
+  '$5K - $10K',
+  '$10K - $25K',
+  '$25K - $50K',
+  '$50K - $100K',
+  '$100K+',
+  'Let&apos;s discuss',
+];
+
+export function ContactSection({ className }: ContactSectionProps) {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    company: '',
+    projectType: '',
+    budget: '',
+    message: '',
+  });
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Clear error when user starts typing
+    if (formErrors[name as keyof FormErrors]) {
+      setFormErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {};
+
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required';
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.message.trim()) {
+      errors.message = 'Project details are required';
+    } else if (formData.message.trim().length < 10) {
+      errors.message = 'Please provide more details about your project';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // TODO: Implement actual form submission
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormErrors({});
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          projectType: '',
+          budget: '',
+          message: '',
+        });
+      }, 3000);
+    } catch (error) {
+      setIsSubmitting(false);
+      // Handle error state
+      console.error('Form submission error:', error);
+    }
+  };
+
+  return (
+    <section id="contact" className={`bg-bw-black px-4 py-24 ${className}`}>
+      <div className="mx-auto max-w-7xl">
+        {/* Section Header */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="mb-6 text-display-lg">
+            Ready to Create Something <span className="text-gradient-gold">Amazing</span>?
+          </h2>
+          <p className="mx-auto max-w-2xl text-body-lg text-bw-light-gray">
+            Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <div className="card">
+              <h3 className="mb-6 font-display text-2xl font-bold text-bw-white">
+                Start Your Project
+              </h3>
+
+              {isSubmitted ? (
+                <motion.div
+                  className="text-center py-12"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="mb-4 text-6xl">✨</div>
+                  <h4 className="mb-2 text-xl font-semibold text-bw-gold">
+                    Thank You!
+                  </h4>
+                  <p className="text-bw-light-gray">
+                    We&apos;ll get back to you within 24 hours.
+                  </p>
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-bw-light-gray mb-2">
+                        Name *
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className={`input-field ${formErrors.name ? 'border-red-500 focus:border-red-500' : ''}`}
+                        placeholder="Your full name"
+                      />
+                      {formErrors.name && (
+                        <motion.div
+                          className="mt-2 flex items-center gap-2 text-red-400 text-sm"
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <ExclamationTriangleIcon className="h-4 w-4" />
+                          {formErrors.name}
+                        </motion.div>
+                      )}
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-bw-light-gray mb-2">
+                        Email *
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className={`input-field ${formErrors.email ? 'border-red-500 focus:border-red-500' : ''}`}
+                        placeholder="your@email.com"
+                      />
+                      {formErrors.email && (
+                        <motion.div
+                          className="mt-2 flex items-center gap-2 text-red-400 text-sm"
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <ExclamationTriangleIcon className="h-4 w-4" />
+                          {formErrors.email}
+                        </motion.div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="company" className="block text-sm font-medium text-bw-light-gray mb-2">
+                      Company
+                    </label>
+                    <input
+                      type="text"
+                      id="company"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      className="input-field"
+                      placeholder="Your company name"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="projectType" className="block text-sm font-medium text-bw-light-gray mb-2">
+                        Project Type
+                      </label>
+                      <select
+                        id="projectType"
+                        name="projectType"
+                        value={formData.projectType}
+                        onChange={handleInputChange}
+                        className="input-field"
+                      >
+                        <option value="">Select project type</option>
+                        {projectTypes.map(type => (
+                          <option key={type} value={type}>{type}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="budget" className="block text-sm font-medium text-bw-light-gray mb-2">
+                        Budget Range
+                      </label>
+                      <select
+                        id="budget"
+                        name="budget"
+                        value={formData.budget}
+                        onChange={handleInputChange}
+                        className="input-field"
+                      >
+                        <option value="">Select budget range</option>
+                        {budgetRanges.map(range => (
+                          <option key={range} value={range}>{range}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-bw-light-gray mb-2">
+                      Project Details *
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={4}
+                      className={`input-field resize-none ${formErrors.message ? 'border-red-500 focus:border-red-500' : ''}`}
+                      placeholder="Tell us about your project vision, goals, and any specific requirements..."
+                    />
+                    {formErrors.message && (
+                      <motion.div
+                        className="mt-2 flex items-center gap-2 text-red-400 text-sm"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ExclamationTriangleIcon className="h-4 w-4" />
+                        {formErrors.message}
+                      </motion.div>
+                    )}
+                  </div>
+
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn-primary w-full flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-bw-black border-t-transparent" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <PaperAirplaneIcon className="h-5 w-5" />
+                        Send Message
+                      </>
+                    )}
+                  </motion.button>
+                </form>
+              )}
+            </div>
+          </motion.div>
+
+          {/* Contact Information */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className="space-y-8">
+              <div>
+                <h3 className="mb-6 font-display text-2xl font-bold text-bw-white">
+                  Get in Touch
+                </h3>
+                <p className="text-bw-light-gray mb-8">
+                  Ready to bring your vision to life? We&apos;re here to help you create something extraordinary.
+                  Reach out to discuss your project and let&apos;s start crafting your story.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                {contactInfo.map((info, index) => (
+                  <motion.a
+                    key={info.label}
+                    href={info.href}
+                    className="flex items-center gap-4 p-4 rounded-lg bg-bw-dark-gray hover:bg-bw-medium-gray transition-colors duration-300 group"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-bw-gold/10 text-bw-gold group-hover:bg-bw-gold group-hover:text-bw-black transition-all duration-300">
+                      <info.icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-bw-light-gray">{info.label}</p>
+                      <p className="font-medium text-bw-white">{info.value}</p>
+                    </div>
+                  </motion.a>
+                ))}
+              </div>
+
+              <div className="mt-8 p-6 rounded-lg bg-gradient-to-br from-bw-gold/10 to-bw-silver/5 border border-bw-gold/20">
+                <h4 className="mb-3 font-semibold text-bw-white">
+                  Response Time
+                </h4>
+                <p className="text-bw-light-gray">
+                  We typically respond to all inquiries within 24 hours. For urgent projects,
+                  please call us directly.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
