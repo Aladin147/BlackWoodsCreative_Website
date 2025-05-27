@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties - BlackWoods Creative Design System */
+:root {
+  /* Colors */
+  --bw-black: #0a0a0a;
+  --bw-charcoal: #1a1a1a;
+  --bw-dark-gray: #2a2a2a;
+  --bw-medium-gray: #404040;
+  --bw-light-gray: #707070;
+  --bw-white: #ffffff;
+  --bw-silver: #c0c0c0;
+  --bw-platinum: #e5e5e5;
+  --bw-gold: #d4af37;
+  --bw-red: #cc3333;
+
+  /* Gradients */
+  --bw-gradient-dark: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  --bw-gradient-silver: linear-gradient(135deg, #c0c0c0 0%, #e5e5e5 100%);
+  --bw-gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+  --bw-gradient-glow: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+
+  /* Shadows */
+  --shadow-cinematic: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.1);
+  --shadow-gold-glow: 0 0 30px rgba(212, 175, 55, 0.3);
+
+  /* Animation Timing */
+  --ease-cinematic: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-dramatic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-cinematic: 800ms;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Smooth Scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bw-charcoal);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bw-medium-gray);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bw-light-gray);
+}
+
+/* Selection Styles */
+::selection {
+  background: var(--bw-gold);
+  color: var(--bw-black);
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--bw-gold);
+  outline-offset: 2px;
+}
+
+/* Utility Classes */
+@layer utilities {
+  .text-gradient-gold {
+    background: var(--bw-gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-dark {
+    background: var(--bw-gradient-dark);
+  }
+
+  .shadow-cinematic {
+    box-shadow: var(--shadow-cinematic);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .shadow-gold-glow {
+    box-shadow: var(--shadow-gold-glow);
+  }
+
+  .transition-cinematic {
+    transition: all var(--duration-cinematic) var(--ease-cinematic);
+  }
+
+  .transition-dramatic {
+    transition: all var(--duration-slow) var(--ease-dramatic);
+  }
+}
+
+/* Component Base Styles */
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-bw-gold to-yellow-400 text-bw-black font-semibold px-6 py-3 rounded-md transition-all duration-300 hover:shadow-gold-glow hover:-translate-y-1;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-bw-white border border-bw-medium-gray font-medium px-6 py-3 rounded-md transition-all duration-300 hover:border-bw-silver hover:bg-white/5;
+  }
+
+  .card {
+    @apply bg-gradient-to-br from-bw-charcoal to-bw-dark-gray border border-bw-dark-gray rounded-xl p-6 shadow-md transition-all duration-300 hover:shadow-cinematic hover:-translate-y-1 hover:border-bw-medium-gray;
+  }
+
+  .input-field {
+    @apply bg-white/5 border border-bw-medium-gray rounded-md px-4 py-3 text-bw-white placeholder-bw-light-gray focus:border-bw-gold focus:shadow-gold-glow focus:outline-none transition-all duration-300;
+  }
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Performance Optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
