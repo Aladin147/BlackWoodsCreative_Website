@@ -101,17 +101,13 @@ describe('ErrorBoundary', () => {
 
   it('resets error state when reset button is clicked', async () => {
     const user = userEvent.setup();
+    let shouldThrow = true;
 
     const TestComponent = () => {
-      const [shouldThrow, setShouldThrow] = React.useState(true);
-
-      React.useEffect(() => {
-        // Reset the error state after a short delay to simulate recovery
-        const timer = setTimeout(() => setShouldThrow(false), 100);
-        return () => clearTimeout(timer);
-      }, []);
-
-      return <ThrowError shouldThrow={shouldThrow} />;
+      if (shouldThrow) {
+        throw new Error('Test error');
+      }
+      return <div>No error</div>;
     };
 
     render(
@@ -123,11 +119,14 @@ describe('ErrorBoundary', () => {
     // Error should be displayed
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
 
+    // Fix the component before clicking reset
+    shouldThrow = false;
+
     // Click reset button
     const resetButton = screen.getByRole('button', { name: 'Try Again' });
     await user.click(resetButton);
 
-    // Wait for the component to recover (timeout in useEffect is 100ms)
+    // Component should now render successfully
     await waitFor(() => {
       expect(screen.getByText('No error')).toBeInTheDocument();
     }, { timeout: 1000 });
