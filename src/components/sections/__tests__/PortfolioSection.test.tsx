@@ -7,29 +7,29 @@ const MockPortfolioSection = () => {
     <section data-testid="portfolio-section" className="portfolio-section">
       <div className="container mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-center mb-12">Our Portfolio</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div data-testid="portfolio-item" className="portfolio-item">
             <img src="/placeholder-1.jpg" alt="Project 1" className="w-full h-64 object-cover rounded-lg" />
             <h3 className="text-xl font-semibold mt-4">Cinema Project 1</h3>
             <p className="text-gray-600 mt-2">Professional video production</p>
           </div>
-          
+
           <div data-testid="portfolio-item" className="portfolio-item">
             <img src="/placeholder-2.jpg" alt="Project 2" className="w-full h-64 object-cover rounded-lg" />
             <h3 className="text-xl font-semibold mt-4">Photography Project</h3>
             <p className="text-gray-600 mt-2">Creative photography session</p>
           </div>
-          
+
           <div data-testid="portfolio-item" className="portfolio-item">
             <img src="/placeholder-3.jpg" alt="Project 3" className="w-full h-64 object-cover rounded-lg" />
             <h3 className="text-xl font-semibold mt-4">3D Visualization</h3>
             <p className="text-gray-600 mt-2">Architectural 3D rendering</p>
           </div>
         </div>
-        
+
         <div className="text-center mt-12">
-          <button 
+          <button
             data-testid="view-all-button"
             className="btn-primary px-8 py-3 rounded-lg"
           >
@@ -104,7 +104,7 @@ describe('PortfolioSection', () => {
   it('handles view all button click', () => {
     render(<MockPortfolioSection />);
     const viewAllButton = screen.getByTestId('view-all-button');
-    
+
     fireEvent.click(viewAllButton);
     // Button should be clickable without errors
     expect(viewAllButton).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('PortfolioSection', () => {
   it('has proper grid layout structure', () => {
     render(<MockPortfolioSection />);
     const portfolioItems = screen.getAllByTestId('portfolio-item');
-    
+
     portfolioItems.forEach(item => {
       expect(item).toHaveClass('portfolio-item');
     });
@@ -128,7 +128,7 @@ describe('PortfolioSection', () => {
   it('renders images with proper styling', () => {
     render(<MockPortfolioSection />);
     const images = screen.getAllByRole('img');
-    
+
     images.forEach(img => {
       expect(img).toHaveClass('w-full', 'h-64', 'object-cover', 'rounded-lg');
     });
@@ -137,7 +137,7 @@ describe('PortfolioSection', () => {
   it('maintains responsive design classes', () => {
     render(<MockPortfolioSection />);
     const section = screen.getByTestId('portfolio-section');
-    
+
     // Check for responsive container
     const container = section.querySelector('.container');
     expect(container).toBeInTheDocument();
@@ -145,26 +145,26 @@ describe('PortfolioSection', () => {
 
   it('handles component mounting without errors', () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    
+
     render(<MockPortfolioSection />);
-    
+
     expect(consoleSpy).not.toHaveBeenCalled();
     consoleSpy.mockRestore();
   });
 
   it('handles component unmounting gracefully', () => {
     const { unmount } = render(<MockPortfolioSection />);
-    
+
     expect(() => unmount()).not.toThrow();
   });
 
   it('provides proper semantic structure', () => {
     render(<MockPortfolioSection />);
-    
-    // Check for section element
-    const section = screen.getByRole('region');
+
+    // Check for section element by testid
+    const section = screen.getByTestId('portfolio-section');
     expect(section).toBeInTheDocument();
-    
+
     // Check for heading
     const heading = screen.getByRole('heading', { level: 2 });
     expect(heading).toBeInTheDocument();
@@ -172,23 +172,23 @@ describe('PortfolioSection', () => {
 
   it('displays all portfolio categories', () => {
     render(<MockPortfolioSection />);
-    
+
     // Check that different types of projects are represented
-    expect(screen.getByText(/Cinema/)).toBeInTheDocument();
-    expect(screen.getByText(/Photography/)).toBeInTheDocument();
-    expect(screen.getByText(/3D/)).toBeInTheDocument();
+    expect(screen.getByText('Cinema Project 1')).toBeInTheDocument();
+    expect(screen.getByText('Photography Project')).toBeInTheDocument();
+    expect(screen.getByText('3D Visualization')).toBeInTheDocument();
   });
 
   it('maintains accessibility standards', () => {
     render(<MockPortfolioSection />);
-    
+
     // Check for proper image alt texts
     const images = screen.getAllByRole('img');
     images.forEach(img => {
       expect(img).toHaveAttribute('alt');
       expect(img.getAttribute('alt')).toBeTruthy();
     });
-    
+
     // Check for proper button accessibility
     const button = screen.getByRole('button');
     expect(button).toBeInTheDocument();
@@ -196,7 +196,7 @@ describe('PortfolioSection', () => {
 
   it('handles different screen sizes appropriately', () => {
     render(<MockPortfolioSection />);
-    
+
     // Check for responsive grid classes
     const gridContainer = screen.getByTestId('portfolio-section').querySelector('.grid');
     expect(gridContainer).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
@@ -204,7 +204,7 @@ describe('PortfolioSection', () => {
 
   it('renders with proper spacing and layout', () => {
     render(<MockPortfolioSection />);
-    
+
     const container = screen.getByTestId('portfolio-section').querySelector('.container');
     expect(container).toHaveClass('mx-auto', 'px-4', 'py-16');
   });

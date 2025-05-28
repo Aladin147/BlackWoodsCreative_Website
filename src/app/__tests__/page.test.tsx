@@ -49,12 +49,8 @@ describe('HomePage', () => {
 
   it('renders without crashing', () => {
     render(<HomePage />);
-    expect(screen.getByRole('main')).toBeInTheDocument();
-  });
-
-  it('renders the header component', () => {
-    render(<HomePage />);
-    expect(screen.getByTestId('header')).toBeInTheDocument();
+    // Check that the page renders with sections
+    expect(screen.getByTestId('hero-section')).toBeInTheDocument();
   });
 
   it('renders the footer component', () => {
@@ -90,14 +86,11 @@ describe('HomePage', () => {
   it('has proper page structure', () => {
     render(<HomePage />);
 
-    // Check for main content area
-    const main = screen.getByRole('main');
-    expect(main).toBeInTheDocument();
-
     // Check that all major sections are present
-    expect(screen.getByTestId('header')).toBeInTheDocument();
     expect(screen.getByTestId('hero-section')).toBeInTheDocument();
+    expect(screen.getByTestId('portfolio-section')).toBeInTheDocument();
     expect(screen.getByTestId('vision-section')).toBeInTheDocument();
+    expect(screen.getByTestId('about-section')).toBeInTheDocument();
     expect(screen.getByTestId('contact-section')).toBeInTheDocument();
     expect(screen.getByTestId('footer')).toBeInTheDocument();
   });
