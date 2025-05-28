@@ -17,6 +17,8 @@ export {
   RippleEffect,
   StaggeredReveal,
   TextReveal,
+  GlitchText,
+  TypewriterText,
 } from './MicroInteractions';
 
 // Future exports for Phase 4 expansion:
