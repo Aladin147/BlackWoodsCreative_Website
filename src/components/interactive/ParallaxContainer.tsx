@@ -59,29 +59,26 @@ export function ParallaxLayer({
 
   const [startPos, endPos] = getMovementRange();
 
-  const y = direction === 'up' || direction === 'down'
-    ? useTransform(smoothProgress, [0, 1], [startPos, endPos])
-    : 0;
+  // Always call hooks, but use conditional values
+  const yTransform = useTransform(smoothProgress, [0, 1], [startPos, endPos]);
+  const xTransform = useTransform(smoothProgress, [0, 1], [startPos, endPos]);
+  const scaleTransformValue = useTransform(smoothProgress, [0, 1], scale || [1, 1]);
+  const opacityTransformValue = useTransform(smoothProgress, [0, 1], opacity || [1, 1]);
+  const rotateTransformValue = useTransform(smoothProgress, [0, 1], rotate || [0, 0]);
+  const blurTransformValue = useTransform(smoothProgress, [0, 1], blur || [0, 0]);
 
-  const x = direction === 'left' || direction === 'right'
-    ? useTransform(smoothProgress, [0, 1], [startPos, endPos])
-    : 0;
+  // Apply conditional logic to the final values
+  const y = (direction === 'up' || direction === 'down') ? yTransform : 0;
+  const x = (direction === 'left' || direction === 'right') ? xTransform : 0;
+  const scaleTransform = scale ? scaleTransformValue : 1;
+  const opacityTransform = opacity ? opacityTransformValue : 1;
+  const rotateTransform = rotate ? rotateTransformValue : 0;
+  const blurTransform = blur ? blurTransformValue : 0;
 
-  const scaleTransform = scale
-    ? useTransform(smoothProgress, [0, 1], scale)
-    : 1;
-
-  const opacityTransform = opacity
-    ? useTransform(smoothProgress, [0, 1], opacity)
-    : 1;
-
-  const rotateTransform = rotate
-    ? useTransform(smoothProgress, [0, 1], rotate)
-    : 0;
-
-  const blurTransform = blur
-    ? useTransform(smoothProgress, [0, 1], blur)
-    : 0;
+  const filterTransform = useTransform(
+    blurTransform as MotionValue<number>,
+    (value) => blur ? `blur(${value}px)` : 'none'
+  );
 
   return (
     <motion.div
@@ -93,7 +90,7 @@ export function ParallaxLayer({
         scale: scaleTransform,
         opacity: opacityTransform,
         rotate: rotateTransform,
-        filter: blur ? useTransform(blurTransform as MotionValue<number>, (value) => `blur(${value}px)`) : 'none',
+        filter: filterTransform,
       }}
     >
       {children}

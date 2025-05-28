@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { ArrowDownIcon } from '@heroicons/react/24/outline';
 import {
-  CinematicParallax,
   FloatingElement,
   TextReveal,
   PulseGlow,
@@ -130,12 +129,12 @@ export function HeroSection({ className }: HeroSectionProps) {
               onClick={handleViewWork}
               hoverChildren={
                 <span className="flex items-center gap-2">
-                  ✨ Explore Portfolio
+                  Explore Portfolio
                 </span>
               }
             >
               <span className="flex items-center gap-2">
-                🎬 View Our Work
+                View Our Work
               </span>
             </MorphingButton>
           </PulseGlow>
@@ -145,12 +144,12 @@ export function HeroSection({ className }: HeroSectionProps) {
             onClick={handleStartProject}
             hoverChildren={
               <span className="flex items-center gap-2">
-                🚀 Let's Create
+                Let&apos;s Create
               </span>
             }
           >
             <span className="flex items-center gap-2">
-              💫 Start Your Project
+              Start Your Project
             </span>
           </MorphingButton>
         </motion.div>

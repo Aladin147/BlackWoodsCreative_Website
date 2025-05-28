@@ -31,7 +31,7 @@ describe('ContactSection', () => {
 
     expect(screen.getByText('hello@blackwoodscreative.com')).toBeInTheDocument();
     expect(screen.getByText('+1 (555) 123-4567')).toBeInTheDocument();
-    expect(screen.getByText('Los Angeles, CA')).toBeInTheDocument();
+    expect(screen.getByText('MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco')).toBeInTheDocument();
   });
 
   it('validates required fields', async () => {

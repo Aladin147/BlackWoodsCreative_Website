@@ -6,9 +6,13 @@ import {
   EnvelopeIcon,
   PhoneIcon,
   MapPinIcon,
-  ArrowUpIcon
+  ArrowUpIcon,
+  CameraIcon,
+  BriefcaseIcon,
+  FilmIcon,
+  PaintBrushIcon
 } from '@heroicons/react/24/outline';
-import { HeartIcon } from '@heroicons/react/24/solid';
+
 
 interface FooterProps {
   className?: string;
@@ -18,22 +22,22 @@ const socialLinks = [
   {
     name: 'Instagram',
     href: 'https://instagram.com/blackwoodscreative',
-    icon: '📸',
+    icon: CameraIcon,
   },
   {
     name: 'LinkedIn',
     href: 'https://linkedin.com/company/blackwoodscreative',
-    icon: '💼',
+    icon: BriefcaseIcon,
   },
   {
     name: 'Vimeo',
     href: 'https://vimeo.com/blackwoodscreative',
-    icon: '🎬',
+    icon: FilmIcon,
   },
   {
     name: 'Behance',
     href: 'https://behance.net/blackwoodscreative',
-    icon: '🎨',
+    icon: PaintBrushIcon,
   },
 ];
 
@@ -106,7 +110,7 @@ export function Footer({ className }: FooterProps) {
               </div>
               <div className="flex items-center gap-3 text-bw-light-gray">
                 <MapPinIcon className="h-5 w-5 text-bw-gold" />
-                <span className="text-sm">Los Angeles, CA</span>
+                <span className="text-sm">MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco</span>
               </div>
             </div>
           </motion.div>
@@ -172,7 +176,7 @@ export function Footer({ className }: FooterProps) {
                   whileTap={{ scale: 0.95 }}
                   title={social.name}
                 >
-                  <span className="text-lg">{social.icon}</span>
+                  <social.icon className="h-5 w-5" />
                 </motion.a>
               ))}
             </div>

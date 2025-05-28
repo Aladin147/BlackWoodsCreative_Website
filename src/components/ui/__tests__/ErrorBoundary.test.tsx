@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ErrorBoundary from '../ErrorBoundary';
 
@@ -127,8 +127,10 @@ describe('ErrorBoundary', () => {
     const resetButton = screen.getByRole('button', { name: 'Try Again' });
     await user.click(resetButton);
 
-    // Component should be reset and working
-    expect(screen.getByText('No error')).toBeInTheDocument();
+    // Wait for the component to recover (timeout in useEffect is 100ms)
+    await waitFor(() => {
+      expect(screen.getByText('No error')).toBeInTheDocument();
+    }, { timeout: 1000 });
   });
 
   it('logs error information', () => {

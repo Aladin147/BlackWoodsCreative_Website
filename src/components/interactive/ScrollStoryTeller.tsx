@@ -150,6 +150,12 @@ function ScrollStorySection({
     section.effects?.rotate || [0, 0]
   );
 
+  // Pre-calculate transforms to avoid conditional hooks
+  const backgroundOpacity = useTransform(opacity, (value) => value * 0.7);
+  const backgroundFilter = useTransform(blur, (value) => `blur(${value}px)`);
+  const contentScale = useTransform(scale, (value) => value * 0.9 + 0.1);
+  const sectionOpacity = useTransform(opacity, (value) => value * 0.3);
+
   return (
     <motion.div
       ref={sectionRef}
@@ -163,8 +169,8 @@ function ScrollStorySection({
           className="absolute inset-0 z-0"
           style={{
             scale,
-            opacity: useTransform(opacity, (value) => value * 0.7),
-            filter: useTransform(blur, (value) => `blur(${value}px)`),
+            opacity: backgroundOpacity,
+            filter: backgroundFilter,
           }}
         >
           <div
@@ -184,7 +190,7 @@ function ScrollStorySection({
         style={{
           opacity,
           rotate,
-          scale: useTransform(scale, (value) => value * 0.9 + 0.1),
+          scale: contentScale,
         }}
       >
         <motion.h2
@@ -223,7 +229,7 @@ function ScrollStorySection({
       {/* Section Number */}
       <motion.div
         className="absolute bottom-8 right-8 text-bw-gold/50 font-display text-6xl font-bold"
-        style={{ opacity: useTransform(opacity, (value) => value * 0.3) }}
+        style={{ opacity: sectionOpacity }}
       >
         {String(index + 1).padStart(2, '0')}
       </motion.div>

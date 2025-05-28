@@ -5,7 +5,8 @@ export const siteConfig = {
   ogImage: '/assets/images/og-image.jpg',
   links: {
     email: 'hello@blackwoodscreative.com',
-    phone: '+1 (555) 123-4567', // Update with actual phone
+    phone: '+1 (555) 123-4567', // Placeholder - awaiting actual contact details
+    address: 'MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco',
     instagram: 'https://instagram.com/blackwoodscreative',
     linkedin: 'https://linkedin.com/company/blackwoodscreative',
     github: 'https://github.com/blackwoods-creative',
@@ -15,25 +16,25 @@ export const siteConfig = {
       id: 'film',
       name: 'Film Production',
       description: 'Cinematic storytelling that captivates audiences and drives results.',
-      icon: '🎬',
+      icon: 'FilmIcon',
     },
     {
       id: 'photography',
       name: 'Photography',
       description: 'Professional photography that captures moments and creates impact.',
-      icon: '📸',
+      icon: 'CameraIcon',
     },
     {
       id: '3d',
       name: '3D Visualization',
       description: 'Stunning 3D models and visualizations that bring ideas to life.',
-      icon: '🎯',
+      icon: 'CubeIcon',
     },
     {
       id: 'scenes',
       name: 'Scene Creation',
       description: 'Immersive environments and scenes for any creative project.',
-      icon: '🎭',
+      icon: 'BuildingOfficeIcon',
     },
   ],
   navigation: [

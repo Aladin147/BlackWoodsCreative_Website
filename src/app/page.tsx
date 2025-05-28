@@ -2,10 +2,10 @@ import { Metadata } from 'next';
 import {
   HeroSection,
   PortfolioSection,
-  AdvancedShowcase,
   AboutSection,
   ContactSection
 } from '@/components/sections';
+import { VisionSection } from '@/components/sections/VisionSection';
 import { Footer } from '@/components/layout';
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function HomePage() {
     <>
       <HeroSection />
       <PortfolioSection />
-      <AdvancedShowcase />
+      <VisionSection />
       <AboutSection />
       <ContactSection />
       <Footer />

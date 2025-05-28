@@ -7,7 +7,8 @@ import {
   PhoneIcon,
   MapPinIcon,
   PaperAirplaneIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { validateEmail } from '@/lib/utils';
 
@@ -46,7 +47,7 @@ const contactInfo = [
   {
     icon: MapPinIcon,
     label: 'Location',
-    value: 'Los Angeles, CA',
+    value: 'MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco',
     href: '#',
   },
 ];
@@ -129,7 +130,7 @@ export function ContactSection({ className }: ContactSectionProps) {
     setIsSubmitting(true);
 
     try {
-      // TODO: Implement actual form submission
+      // PLACEHOLDER: Form submission simulation - replace with actual API call
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       setIsSubmitting(false);
@@ -150,8 +151,8 @@ export function ContactSection({ className }: ContactSectionProps) {
       }, 3000);
     } catch (error) {
       setIsSubmitting(false);
-      // Handle error state
-      console.error('Form submission error:', error);
+      // Handle error state - could implement proper error reporting here
+      // For now, just reset the form state
     }
   };
 
@@ -194,7 +195,9 @@ export function ContactSection({ className }: ContactSectionProps) {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="mb-4 text-6xl">✨</div>
+                  <div className="mb-4 flex justify-center">
+                    <CheckCircleIcon className="h-16 w-16 text-bw-gold" />
+                  </div>
                   <h4 className="mb-2 text-xl font-semibold text-bw-gold">
                     Thank You!
                   </h4>

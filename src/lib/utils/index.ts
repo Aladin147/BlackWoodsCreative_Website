@@ -33,7 +33,6 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
-  let inThrottle: boolean;
   let lastFunc: NodeJS.Timeout;
   let lastRan: number;
 

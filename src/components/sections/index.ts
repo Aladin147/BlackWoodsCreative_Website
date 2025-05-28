@@ -3,6 +3,6 @@
 
 export { HeroSection } from './HeroSection';
 export { PortfolioSection } from './PortfolioSection';
-export { AdvancedShowcase } from './AdvancedShowcase';
+export { VisionSection } from './VisionSection';
 export { AboutSection } from './AboutSection';
-export { ContactSection } from './ContactSection';;
+export { ContactSection } from './ContactSection';

@@ -5,11 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { portfolioData } from '@/lib/data/portfolio';
 import { PortfolioCard } from '@/components/ui/PortfolioCard';
 import {
-  ParallaxLayer,
-  StaggeredReveal,
   HoverMagnify,
-  MagneticField,
-  RippleEffect
+  MagneticField
 } from '@/components/interactive';
 
 interface PortfolioSectionProps {

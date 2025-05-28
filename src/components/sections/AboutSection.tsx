@@ -130,7 +130,7 @@ export function AboutSection({ className }: AboutSectionProps) {
             <div className="aspect-square rounded-lg bg-gradient-to-br from-bw-gold/20 to-bw-silver/10 p-8">
               <div className="h-full w-full rounded-lg bg-bw-charcoal flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-6xl mb-4">🎬</div>
+                  <FilmIcon className="h-16 w-16 text-bw-gold mx-auto mb-4" />
                   <p className="text-bw-light-gray">
                     Studio Image Placeholder
                   </p>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, ReactNode } from 'react';
+import { useState, useRef, useEffect, ReactNode } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 interface HoverMagnifyProps {
@@ -10,13 +10,9 @@ interface HoverMagnifyProps {
 }
 
 export function HoverMagnify({ children, scale = 1.05, className = '' }: HoverMagnifyProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <motion.div
       className={className}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
       whileHover={{ scale }}
       transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
@@ -85,11 +81,11 @@ interface FloatingElementProps {
   className?: string;
 }
 
-export function FloatingElement({ 
-  children, 
-  amplitude = 10, 
+export function FloatingElement({
+  children,
+  amplitude = 10,
   frequency = 2,
-  className = '' 
+  className = ''
 }: FloatingElementProps) {
   return (
     <motion.div
@@ -117,12 +113,11 @@ interface PulseGlowProps {
   className?: string;
 }
 
-export function PulseGlow({ 
-  children, 
-  color = 'bw-gold',
+export function PulseGlow({
+  children,
   intensity = 0.3,
   duration = 2,
-  className = '' 
+  className = ''
 }: PulseGlowProps) {
   return (
     <motion.div
@@ -152,11 +147,11 @@ interface MorphingButtonProps {
   onClick?: () => void;
 }
 
-export function MorphingButton({ 
-  children, 
-  hoverChildren, 
+export function MorphingButton({
+  children,
+  hoverChildren,
   className = '',
-  onClick 
+  onClick
 }: MorphingButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -175,7 +170,7 @@ export function MorphingButton({
       >
         {children}
       </motion.div>
-      
+
       {hoverChildren && (
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
@@ -202,7 +197,7 @@ export function RippleEffect({ children, className = '', color = 'rgba(212, 175,
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    
+
     const newRipple = { x, y, id: Date.now() };
     setRipples(prev => [...prev, newRipple]);
 
@@ -218,7 +213,7 @@ export function RippleEffect({ children, className = '', color = 'rgba(212, 175,
       onClick={handleClick}
     >
       {children}
-      
+
       {ripples.map(ripple => (
         <motion.div
           key={ripple.id}
@@ -229,9 +224,9 @@ export function RippleEffect({ children, className = '', color = 'rgba(212, 175,
             backgroundColor: color,
           }}
           initial={{ width: 0, height: 0, opacity: 1 }}
-          animate={{ 
-            width: 300, 
-            height: 300, 
+          animate={{
+            width: 300,
+            height: 300,
             opacity: 0,
             x: -150,
             y: -150,
@@ -257,8 +252,8 @@ export function StaggeredReveal({ children, delay = 0.1, className = '' }: Stagg
           key={index}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.6, 
+          transition={{
+            duration: 0.6,
             delay: index * delay,
             ease: [0.25, 0.46, 0.45, 0.94]
           }}
@@ -301,5 +296,68 @@ export function TextReveal({ text, className = '', delay = 0.05 }: TextRevealPro
         </span>
       ))}
     </div>
+  );
+}
+
+interface GlitchTextProps {
+  text: string;
+  className?: string;
+  intensity?: number;
+}
+
+export function GlitchText({ text, className = '', intensity = 0.5 }: GlitchTextProps) {
+  return (
+    <motion.div
+      className={`relative ${className}`}
+      animate={{
+        x: [0, -2, 2, 0],
+        textShadow: [
+          '0 0 0 transparent',
+          '2px 0 0 #ff0000, -2px 0 0 #00ffff',
+          '0 0 0 transparent'
+        ]
+      }}
+      transition={{
+        duration: 0.2,
+        repeat: Infinity,
+        repeatDelay: 2,
+        ease: 'easeInOut'
+      }}
+    >
+      {text}
+    </motion.div>
+  );
+}
+
+interface TypewriterTextProps {
+  text: string;
+  className?: string;
+  speed?: number;
+}
+
+export function TypewriterText({ text, className = '', speed = 50 }: TypewriterTextProps) {
+  const [displayText, setDisplayText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, text, speed]);
+
+  return (
+    <span className={className}>
+      {displayText}
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.8, repeat: Infinity }}
+        className="inline-block w-0.5 h-5 bg-current ml-1"
+      />
+    </span>
   );
 }
