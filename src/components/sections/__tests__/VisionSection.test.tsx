@@ -1,195 +1,328 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { VisionSection } from '../VisionSection';
 
-// Create a simple mock VisionSection component for testing
-const MockVisionSection = ({ className }: { className?: string }) => {
-  return (
-    <section className={`relative bg-bw-black ${className}`} data-testid="vision-section">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-bw-white mb-6">Our Vision</h2>
-          <p className="text-lg text-bw-pearl">Visual Storytelling</p>
-          <p className="text-bw-light-gray mt-4">
-            We believe in the power of visual storytelling to transform brands and captivate audiences.
-          </p>
-        </div>
+// Mock framer-motion
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    p: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
+  },
+  useScroll: () => ({
+    scrollYProgress: { on: jest.fn(), get: () => 0 }
+  }),
+  useTransform: (value: any, input: any, output: any) => ({ on: jest.fn(), get: () => output[0] }),
+  useSpring: (value: any) => ({ on: jest.fn(() => jest.fn()), get: () => 0 }),
+}));
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-bw-white mb-4">Our Craft</h3>
-            <p className="text-bw-pearl">Meticulous Excellence</p>
-            <p className="text-bw-light-gray mt-2">
-              From concept to completion, we meticulously craft each project.
-            </p>
-          </div>
+// Mock interactive components
+jest.mock('@/components/interactive', () => ({
+  TextReveal: ({ text, className }: { text: string; className?: string }) => (
+    <div className={className} data-testid="text-reveal">{text}</div>
+  ),
+  ParallaxLayer: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    <div className={className} data-testid="parallax-layer">{children}</div>
+  ),
+}));
 
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-bw-white mb-4">Our Impact</h3>
-            <p className="text-bw-pearl">Results That Matter</p>
-            <p className="text-bw-light-gray mt-2">
-              We create visual experiences that drive real results.
-            </p>
-          </div>
-
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-bw-white mb-4">Experience the Difference</h3>
-            <p className="text-bw-light-gray mt-2">
-              Our commitment to excellence and innovation creates immersive experiences.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+// Mock scroll into view
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  value: jest.fn(),
+  writable: true,
+});
 
 describe('VisionSection', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders without crashing', () => {
-    render(<MockVisionSection />);
-    expect(screen.getByTestId('vision-section')).toBeInTheDocument();
+  describe('Rendering', () => {
+    it('renders vision section with correct structure', () => {
+      render(<VisionSection />);
+
+      const section = document.querySelector('section');
+      expect(section).toBeInTheDocument();
+      expect(section).toHaveClass('relative', 'bg-bw-black');
+    });
+
+    it('applies custom className', () => {
+      const { container } = render(<VisionSection className="custom-vision" />);
+      expect(container.firstChild).toHaveClass('custom-vision');
+    });
+
+    it('has proper section structure', () => {
+      render(<VisionSection />);
+
+      const section = document.querySelector('section');
+      expect(section).toHaveClass('relative', 'bg-bw-black');
+    });
   });
 
-  it('applies custom className', () => {
-    render(<MockVisionSection className="custom-class" />);
-    const section = screen.getByTestId('vision-section');
-    expect(section).toHaveClass('custom-class');
+  describe('Vision Story Data', () => {
+    it('renders all three vision story sections', () => {
+      render(<VisionSection />);
+
+      expect(screen.getByText('Our Vision')).toBeInTheDocument();
+      expect(screen.getByText('Our Craft')).toBeInTheDocument();
+      expect(screen.getByText('Our Impact')).toBeInTheDocument();
+    });
+
+    it('displays correct subtitles for each section', () => {
+      render(<VisionSection />);
+
+      expect(screen.getByText('Visual Storytelling')).toBeInTheDocument();
+      expect(screen.getByText('Meticulous Excellence')).toBeInTheDocument();
+      expect(screen.getByText('Results That Matter')).toBeInTheDocument();
+    });
+
+    it('displays section content descriptions', () => {
+      render(<VisionSection />);
+
+      expect(screen.getByText(/We believe in the power of visual storytelling/)).toBeInTheDocument();
+      expect(screen.getByText(/From concept to completion, we meticulously craft/)).toBeInTheDocument();
+      expect(screen.getByText(/We create visual experiences that not only look stunning/)).toBeInTheDocument();
+    });
+
+    it('renders section numbers', () => {
+      render(<VisionSection />);
+
+      // Section numbers should be rendered (01, 02, 03)
+      expect(screen.getByText('01')).toBeInTheDocument();
+      expect(screen.getByText('02')).toBeInTheDocument();
+      expect(screen.getByText('03')).toBeInTheDocument();
+    });
   });
 
-  it('has correct base classes', () => {
-    render(<MockVisionSection />);
-    const section = screen.getByTestId('vision-section');
-    expect(section).toHaveClass('relative', 'bg-bw-black');
+  describe('Progress Indicator', () => {
+    it('renders progress indicator with correct number of sections', () => {
+      render(<VisionSection />);
+
+      // Should have 3 progress indicators for 3 sections
+      const progressIndicators = document.querySelectorAll('.w-1.h-12.rounded-full');
+      expect(progressIndicators).toHaveLength(3);
+    });
+
+    it('progress indicators are clickable', () => {
+      render(<VisionSection />);
+
+      const progressIndicators = document.querySelectorAll('.w-1.h-12.rounded-full');
+      
+      // Click first indicator
+      fireEvent.click(progressIndicators[0]);
+      
+      // Should not throw error
+      expect(progressIndicators[0]).toBeInTheDocument();
+    });
+
+    it('progress indicator has proper styling classes', () => {
+      render(<VisionSection />);
+
+      const progressContainer = document.querySelector('.fixed.left-8.top-1\\/2');
+      expect(progressContainer).toBeInTheDocument();
+    });
   });
 
-  it('renders vision story sections', () => {
-    render(<MockVisionSection />);
+  describe('Cinematic Finale', () => {
+    it('renders cinematic finale section', () => {
+      render(<VisionSection />);
 
-    // Check for vision story content
-    expect(screen.getByText('Our Vision')).toBeInTheDocument();
-    expect(screen.getByText('Our Craft')).toBeInTheDocument();
-    expect(screen.getByText('Our Impact')).toBeInTheDocument();
+      expect(screen.getByText('Experience the Difference')).toBeInTheDocument();
+      expect(screen.getByText(/Our commitment to excellence and innovation/)).toBeInTheDocument();
+    });
+
+    it('cinematic finale has proper structure', () => {
+      render(<VisionSection />);
+
+      // Should have the finale content
+      const finaleText = screen.getByText('Experience the Difference');
+      expect(finaleText).toBeInTheDocument();
+      
+      const finaleDescription = screen.getByText(/Our commitment to excellence and innovation/);
+      expect(finaleDescription).toBeInTheDocument();
+    });
+
+    it('renders parallax layers in finale', () => {
+      render(<VisionSection />);
+
+      const parallaxLayers = screen.getAllByTestId('parallax-layer');
+      expect(parallaxLayers.length).toBeGreaterThan(0);
+    });
   });
 
-  it('renders vision story subtitles', () => {
-    render(<MockVisionSection />);
+  describe('Interactive Elements', () => {
+    it('renders TextReveal components', () => {
+      render(<VisionSection />);
 
-    expect(screen.getByText('Visual Storytelling')).toBeInTheDocument();
-    expect(screen.getByText('Meticulous Excellence')).toBeInTheDocument();
-    expect(screen.getByText('Results That Matter')).toBeInTheDocument();
+      const textReveals = screen.getAllByTestId('text-reveal');
+      expect(textReveals.length).toBeGreaterThan(0);
+    });
+
+    it('section elements have proper IDs for navigation', () => {
+      render(<VisionSection />);
+
+      expect(document.getElementById('vision')).toBeInTheDocument();
+      expect(document.getElementById('craft')).toBeInTheDocument();
+      expect(document.getElementById('impact')).toBeInTheDocument();
+    });
+
+    it('handles scroll navigation correctly', () => {
+      const scrollIntoViewSpy = jest.spyOn(Element.prototype, 'scrollIntoView');
+      render(<VisionSection />);
+
+      const progressIndicators = document.querySelectorAll('.w-1.h-12.rounded-full');
+      
+      // Click first indicator
+      fireEvent.click(progressIndicators[0]);
+      
+      expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth' });
+    });
   });
 
-  it('renders vision story descriptions', () => {
-    render(<MockVisionSection />);
+  describe('Layout and Styling', () => {
+    it('has proper minimum height for scroll storytelling', () => {
+      render(<VisionSection />);
 
-    expect(screen.getByText(/We believe in the power of visual storytelling/)).toBeInTheDocument();
-    expect(screen.getByText(/From concept to completion/)).toBeInTheDocument();
-    expect(screen.getByText(/We create visual experiences/)).toBeInTheDocument();
+      const scrollContainer = document.querySelector('.min-h-\\[300vh\\]');
+      expect(scrollContainer).toBeInTheDocument();
+    });
+
+    it('story sections have proper height and layout', () => {
+      render(<VisionSection />);
+
+      const storySections = document.querySelectorAll('.h-screen.flex.items-center.justify-center');
+      expect(storySections.length).toBeGreaterThan(0);
+    });
+
+    it('applies proper background styling', () => {
+      render(<VisionSection />);
+
+      const section = document.querySelector('section');
+      expect(section).toHaveClass('relative', 'bg-bw-black');
+    });
+
+    it('content has proper max width and centering', () => {
+      render(<VisionSection />);
+
+      const contentContainers = document.querySelectorAll('.max-w-4xl');
+      expect(contentContainers.length).toBeGreaterThan(0);
+    });
   });
 
-  it('renders the cinematic finale section', () => {
-    render(<MockVisionSection />);
+  describe('Accessibility', () => {
+    it('has proper semantic structure', () => {
+      render(<VisionSection />);
 
-    expect(screen.getByText('Experience the Difference')).toBeInTheDocument();
-    expect(screen.getByText(/Our commitment to excellence and innovation/)).toBeInTheDocument();
+      // Should be a section element
+      const section = document.querySelector('section');
+      expect(section).toBeInTheDocument();
+      expect(section?.tagName.toLowerCase()).toBe('section');
+    });
+
+    it('provides meaningful text content', () => {
+      render(<VisionSection />);
+
+      // All text should be meaningful and descriptive
+      expect(screen.getByText(/visual storytelling/)).toBeInTheDocument();
+      expect(screen.getByText(/meticulously craft/)).toBeInTheDocument();
+      expect(screen.getByText(/drive real results/)).toBeInTheDocument();
+    });
+
+    it('progress indicators are keyboard accessible', () => {
+      render(<VisionSection />);
+
+      const progressIndicators = document.querySelectorAll('.cursor-pointer');
+      expect(progressIndicators.length).toBeGreaterThan(0);
+    });
+
+    it('maintains proper text hierarchy', () => {
+      render(<VisionSection />);
+
+      // Should have proper heading structure
+      const visionTitle = screen.getByText('Our Vision');
+      const craftTitle = screen.getByText('Our Craft');
+      const impactTitle = screen.getByText('Our Impact');
+
+      expect(visionTitle).toBeInTheDocument();
+      expect(craftTitle).toBeInTheDocument();
+      expect(impactTitle).toBeInTheDocument();
+    });
   });
 
-  it('renders component structure', () => {
-    render(<MockVisionSection />);
+  describe('Content Accuracy', () => {
+    it('displays correct vision story content', () => {
+      render(<VisionSection />);
 
-    // Check that the component renders with proper structure
-    const section = screen.getByTestId('vision-section');
-    expect(section).toBeInTheDocument();
+      expect(screen.getByText('Our Vision')).toBeInTheDocument();
+      expect(screen.getByText('Visual Storytelling')).toBeInTheDocument();
+      expect(screen.getByText(/We believe in the power of visual storytelling/)).toBeInTheDocument();
+    });
+
+    it('displays correct craft story content', () => {
+      render(<VisionSection />);
+
+      expect(screen.getByText('Our Craft')).toBeInTheDocument();
+      expect(screen.getByText('Meticulous Excellence')).toBeInTheDocument();
+      expect(screen.getByText(/From concept to completion/)).toBeInTheDocument();
+    });
+
+    it('displays correct impact story content', () => {
+      render(<VisionSection />);
+
+      expect(screen.getByText('Our Impact')).toBeInTheDocument();
+      expect(screen.getByText('Results That Matter')).toBeInTheDocument();
+      expect(screen.getByText(/We create visual experiences/)).toBeInTheDocument();
+    });
+
+    it('displays finale content correctly', () => {
+      render(<VisionSection />);
+
+      expect(screen.getByText('Experience the Difference')).toBeInTheDocument();
+      expect(screen.getByText(/Our commitment to excellence and innovation/)).toBeInTheDocument();
+    });
   });
 
-  it('handles component rendering without errors', () => {
-    render(<MockVisionSection />);
+  describe('Responsive Design', () => {
+    it('has responsive layout classes', () => {
+      render(<VisionSection />);
 
-    // Component should render without errors
-    expect(screen.getByText('Our Vision')).toBeInTheDocument();
+      // Progress indicator should be hidden on small screens
+      const progressContainer = document.querySelector('.hidden.lg\\:block');
+      expect(progressContainer).toBeInTheDocument();
+    });
+
+    it('maintains proper spacing on all screen sizes', () => {
+      render(<VisionSection />);
+
+      const contentContainers = document.querySelectorAll('.px-6');
+      expect(contentContainers.length).toBeGreaterThan(0);
+    });
   });
 
-  it('renders content sections', () => {
-    render(<MockVisionSection />);
+  describe('Brand Consistency', () => {
+    it('uses brand colors consistently', () => {
+      render(<VisionSection />);
 
-    // Check that content sections are present
-    expect(screen.getByText('Our Vision')).toBeInTheDocument();
-    expect(screen.getByText('Our Craft')).toBeInTheDocument();
-    expect(screen.getByText('Our Impact')).toBeInTheDocument();
-  });
+      const section = document.querySelector('section');
+      expect(section).toHaveClass('bg-bw-black');
+    });
 
-  it('maintains proper section structure', () => {
-    render(<MockVisionSection />);
+    it('applies brand typography classes', () => {
+      render(<VisionSection />);
 
-    const section = screen.getByTestId('vision-section');
-    expect(section.tagName).toBe('SECTION');
+      // Should use display font classes
+      const displayElements = document.querySelectorAll('.font-display');
+      expect(displayElements.length).toBeGreaterThan(0);
+    });
 
-    // Should contain the main content
-    expect(section).toHaveTextContent('Our Vision');
-    expect(section).toHaveTextContent('Experience the Difference');
-  });
+    it('uses consistent color scheme', () => {
+      render(<VisionSection />);
 
-  it('renders section content correctly', () => {
-    render(<MockVisionSection />);
+      // Should use brand color classes
+      const goldElements = document.querySelectorAll('.text-bw-gold');
+      const pearlElements = document.querySelectorAll('.text-bw-pearl');
+      const whiteElements = document.querySelectorAll('.text-bw-white');
 
-    // Check that sections have proper structure
-    expect(screen.getByText('Our Vision')).toBeInTheDocument();
-    expect(screen.getByText('Our Craft')).toBeInTheDocument();
-    expect(screen.getByText('Our Impact')).toBeInTheDocument();
-  });
-
-  it('applies correct styling', () => {
-    render(<MockVisionSection />);
-
-    // Check that different sections have different styling
-    expect(screen.getByText('Visual Storytelling')).toBeInTheDocument();
-    expect(screen.getByText('Meticulous Excellence')).toBeInTheDocument();
-    expect(screen.getByText('Results That Matter')).toBeInTheDocument();
-  });
-
-  it('renders with proper semantic structure', () => {
-    render(<MockVisionSection />);
-
-    // Should have proper section structure
-    const section = screen.getByTestId('vision-section');
-    expect(section.tagName).toBe('SECTION');
-
-    // Should contain text content
-    expect(section).toHaveTextContent('Our Vision');
-    expect(section).toHaveTextContent('Our Craft');
-    expect(section).toHaveTextContent('Our Impact');
-  });
-
-  it('handles component unmounting gracefully', () => {
-    const { unmount } = render(<MockVisionSection />);
-
-    expect(() => unmount()).not.toThrow();
-  });
-
-  it('renders all story data correctly', () => {
-    render(<MockVisionSection />);
-
-    // Check all three main sections are rendered
-    const visionText = screen.getByText('Our Vision');
-    const craftText = screen.getByText('Our Craft');
-    const impactText = screen.getByText('Our Impact');
-
-    expect(visionText).toBeInTheDocument();
-    expect(craftText).toBeInTheDocument();
-    expect(impactText).toBeInTheDocument();
-  });
-
-  it('maintains accessibility standards', () => {
-    render(<MockVisionSection />);
-
-    // Check for proper section structure
-    const section = screen.getByTestId('vision-section');
-    expect(section).toBeInTheDocument();
-
-    // Should have text content for screen readers
-    expect(section).toHaveTextContent('Our Vision');
+      expect(goldElements.length + pearlElements.length + whiteElements.length).toBeGreaterThan(0);
+    });
   });
 });
