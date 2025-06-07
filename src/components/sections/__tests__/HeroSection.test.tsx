@@ -37,6 +37,12 @@ jest.mock('@/lib/utils', () => ({
   scrollToElement: jest.fn(),
 }));
 
+// Mock scrollIntoView
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  value: jest.fn(),
+  writable: true,
+});
+
 describe('HeroSection', () => {
   it('renders hero content', () => {
     render(<HeroSection />);
@@ -147,5 +153,232 @@ describe('HeroSection', () => {
     // Hero should contain key brand messaging
     expect(screen.getByText(/BlackWoods Creative/i)).toBeInTheDocument();
     expect(screen.getByText(/Visual Stories/i)).toBeInTheDocument();
+  });
+
+  describe('Scroll Navigation', () => {
+    beforeEach(() => {
+      // Create mock DOM elements
+      document.body.innerHTML = `
+        <div id="portfolio"></div>
+        <div id="contact"></div>
+      `;
+    });
+
+    it('scrolls to portfolio section when View Work button is clicked', async () => {
+      const user = userEvent.setup();
+      const scrollIntoViewSpy = jest.spyOn(Element.prototype, 'scrollIntoView');
+
+      render(<HeroSection />);
+
+      const viewWorkButton = screen.getByText(/View Our Work/);
+      await user.click(viewWorkButton);
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+
+    it('scrolls to contact section when Start Project button is clicked', async () => {
+      const user = userEvent.setup();
+      const scrollIntoViewSpy = jest.spyOn(Element.prototype, 'scrollIntoView');
+
+      render(<HeroSection />);
+
+      const startProjectButton = screen.getByText(/Start Your Project/);
+      await user.click(startProjectButton);
+
+      expect(scrollIntoViewSpy).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+
+    it('scrolls to portfolio section when scroll indicator is clicked', async () => {
+      const user = userEvent.setup();
+      const scrollIntoViewSpy = jest.spyOn(Element.prototype, 'scrollIntoView');
+
+      render(<HeroSection />);
+
+      const scrollButton = screen.getByText('Scroll to explore').closest('button');
+      expect(scrollButton).toBeInTheDocument();
+
+      if (scrollButton) {
+        await user.click(scrollButton);
+        expect(scrollIntoViewSpy).toHaveBeenCalledWith({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    });
+
+    it('handles missing portfolio section gracefully', async () => {
+      const user = userEvent.setup();
+      document.body.innerHTML = ''; // Remove portfolio section
+
+      render(<HeroSection />);
+
+      const viewWorkButton = screen.getByText(/View Our Work/);
+
+      // Should not throw error when portfolio section doesn't exist
+      await expect(user.click(viewWorkButton)).resolves.not.toThrow();
+    });
+
+    it('handles missing contact section gracefully', async () => {
+      const user = userEvent.setup();
+      document.body.innerHTML = ''; // Remove contact section
+
+      render(<HeroSection />);
+
+      const startProjectButton = screen.getByText(/Start Your Project/);
+
+      // Should not throw error when contact section doesn't exist
+      await expect(user.click(startProjectButton)).resolves.not.toThrow();
+    });
+  });
+
+  describe('Component Props', () => {
+    it('applies custom className', () => {
+      const { container } = render(<HeroSection className="custom-hero" />);
+
+      const heroSection = container.querySelector('section');
+      expect(heroSection).toHaveClass('custom-hero');
+    });
+
+    it('renders without className prop', () => {
+      const { container } = render(<HeroSection />);
+
+      const heroSection = container.querySelector('section');
+      expect(heroSection).toBeInTheDocument();
+      expect(heroSection).toHaveClass('relative', 'flex', 'h-screen');
+    });
+  });
+
+  describe('Interactive Elements', () => {
+    it('renders morphing buttons with hover children', () => {
+      render(<HeroSection />);
+
+      const morphingButtons = screen.getAllByTestId('morphing-button');
+      expect(morphingButtons).toHaveLength(2);
+
+      // Check that buttons have the expected content
+      expect(screen.getByText(/View Our Work/)).toBeInTheDocument();
+      expect(screen.getByText(/Start Your Project/)).toBeInTheDocument();
+    });
+
+    it('renders pulse glow wrapper for primary button', () => {
+      render(<HeroSection />);
+
+      const pulseGlow = screen.getByTestId('pulse-glow');
+      expect(pulseGlow).toBeInTheDocument();
+    });
+
+    it('renders floating element for subtitle', () => {
+      render(<HeroSection />);
+
+      const floatingElement = screen.getByTestId('floating-element');
+      expect(floatingElement).toBeInTheDocument();
+    });
+
+    it('renders text reveal for main title', () => {
+      render(<HeroSection />);
+
+      const textReveal = screen.getByTestId('text-reveal');
+      expect(textReveal).toBeInTheDocument();
+      expect(textReveal).toHaveTextContent('BlackWoods Creative');
+    });
+  });
+
+  describe('Layout and Styling', () => {
+    it('has proper hero section structure', () => {
+      const { container } = render(<HeroSection />);
+
+      const heroSection = container.querySelector('section');
+      expect(heroSection).toHaveAttribute('id', 'hero');
+      expect(heroSection).toHaveClass(
+        'relative',
+        'flex',
+        'h-screen',
+        'items-center',
+        'justify-center',
+        'bg-gradient-to-br'
+      );
+    });
+
+    it('renders background animation elements', () => {
+      const { container } = render(<HeroSection />);
+
+      // Check for background elements
+      const backgroundContainer = container.querySelector('.absolute.inset-0.overflow-hidden');
+      expect(backgroundContainer).toBeInTheDocument();
+    });
+
+    it('has proper content hierarchy', () => {
+      render(<HeroSection />);
+
+      // Main title should be present
+      expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+
+      // Subtitle should be present
+      expect(screen.getByText(/Crafting Visual Stories/)).toBeInTheDocument();
+
+      // CTA buttons should be present
+      expect(screen.getByText(/View Our Work/)).toBeInTheDocument();
+      expect(screen.getByText(/Start Your Project/)).toBeInTheDocument();
+    });
+
+    it('renders scroll indicator at bottom', () => {
+      const { container } = render(<HeroSection />);
+
+      const scrollIndicator = container.querySelector('.absolute.bottom-8');
+      expect(scrollIndicator).toBeInTheDocument();
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has proper button roles and interactions', () => {
+      render(<HeroSection />);
+
+      const buttons = screen.getAllByRole('button');
+      expect(buttons).toHaveLength(3); // 2 CTA buttons + 1 scroll button
+
+      buttons.forEach(button => {
+        expect(button).toBeVisible();
+        expect(button).not.toHaveAttribute('disabled');
+      });
+    });
+
+    it('provides meaningful button text', () => {
+      render(<HeroSection />);
+
+      expect(screen.getByRole('button', { name: /View Our Work/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Start Your Project/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Scroll to explore/ })).toBeInTheDocument();
+    });
+
+    it('has proper semantic structure', () => {
+      const { container } = render(<HeroSection />);
+
+      const section = container.querySelector('section');
+      expect(section).toBeInTheDocument();
+      expect(section?.tagName.toLowerCase()).toBe('section');
+    });
+  });
+
+  describe('Content Accuracy', () => {
+    it('displays correct brand messaging', () => {
+      render(<HeroSection />);
+
+      expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+      expect(screen.getByText('Crafting Visual Stories That Captivate and Convert')).toBeInTheDocument();
+    });
+
+    it('displays correct call-to-action text', () => {
+      render(<HeroSection />);
+
+      expect(screen.getByText('View Our Work')).toBeInTheDocument();
+      expect(screen.getByText('Start Your Project')).toBeInTheDocument();
+      expect(screen.getByText('Scroll to explore')).toBeInTheDocument();
+    });
   });
 });
