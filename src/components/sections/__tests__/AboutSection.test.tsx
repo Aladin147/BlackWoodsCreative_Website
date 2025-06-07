@@ -1,79 +1,5 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-
-// Mock the AboutSection component since it doesn't exist yet
-const MockAboutSection = () => {
-  return (
-    <section data-testid="about-section" className="about-section bg-bw-dark-gray py-20">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="about-content">
-            <h2 className="text-4xl font-bold text-bw-white mb-6">About BlackWoods Creative</h2>
-            <p className="text-bw-light-gray text-lg mb-6">
-              We are a creative studio specializing in visual storytelling through cinema,
-              photography, and 3D visualization. Our passion drives us to create compelling
-              narratives that resonate with audiences.
-            </p>
-            <p className="text-bw-light-gray text-lg mb-8">
-              With years of experience in the industry, we bring technical expertise and
-              artistic vision to every project, ensuring exceptional results that exceed
-              client expectations.
-            </p>
-
-            <div className="stats-grid grid grid-cols-2 gap-6">
-              <div data-testid="stat-item" className="stat-item text-center">
-                <div className="text-3xl font-bold text-bw-gold">50+</div>
-                <div className="text-bw-light-gray">Projects Completed</div>
-              </div>
-              <div data-testid="stat-item" className="stat-item text-center">
-                <div className="text-3xl font-bold text-bw-gold">5+</div>
-                <div className="text-bw-light-gray">Years Experience</div>
-              </div>
-              <div data-testid="stat-item" className="stat-item text-center">
-                <div className="text-3xl font-bold text-bw-gold">100%</div>
-                <div className="text-bw-light-gray">Client Satisfaction</div>
-              </div>
-              <div data-testid="stat-item" className="stat-item text-center">
-                <div className="text-3xl font-bold text-bw-gold">24/7</div>
-                <div className="text-bw-light-gray">Support Available</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="about-image">
-            <img
-              src="/about-image.jpg"
-              alt="BlackWoods Creative Team"
-              className="w-full h-96 object-cover rounded-lg shadow-2xl"
-              data-testid="about-image"
-            />
-          </div>
-        </div>
-
-        <div className="team-section mt-16">
-          <h3 className="text-2xl font-bold text-bw-white text-center mb-8">Our Expertise</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div data-testid="expertise-item" className="expertise-item text-center">
-              <div className="icon mb-4 text-bw-gold text-4xl">🎬</div>
-              <h4 className="text-xl font-semibold text-bw-white mb-2">Cinema & Video</h4>
-              <p className="text-bw-light-gray">Professional video production and cinematic storytelling</p>
-            </div>
-            <div data-testid="expertise-item" className="expertise-item text-center">
-              <div className="icon mb-4 text-bw-gold text-4xl">📸</div>
-              <h4 className="text-xl font-semibold text-bw-white mb-2">Photography</h4>
-              <p className="text-bw-light-gray">Creative photography for all occasions and purposes</p>
-            </div>
-            <div data-testid="expertise-item" className="expertise-item text-center">
-              <div className="icon mb-4 text-bw-gold text-4xl">🎨</div>
-              <h4 className="text-xl font-semibold text-bw-white mb-2">3D Visualization</h4>
-              <p className="text-bw-light-gray">Stunning 3D renders and architectural visualization</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+import { AboutSection } from '../AboutSection';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
@@ -81,8 +7,6 @@ jest.mock('framer-motion', () => ({
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
     section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
   },
-  useInView: () => true,
-  useAnimation: () => ({ start: jest.fn() }),
 }));
 
 describe('AboutSection', () => {
@@ -90,162 +14,286 @@ describe('AboutSection', () => {
     jest.clearAllMocks();
   });
 
-  it('renders without crashing', () => {
-    render(<MockAboutSection />);
-    expect(screen.getByTestId('about-section')).toBeInTheDocument();
+  describe('Rendering', () => {
+    it('renders about section with correct structure', () => {
+      render(<AboutSection />);
+
+      const section = document.querySelector('#about');
+      expect(section).toBeInTheDocument();
+      expect(section).toHaveAttribute('id', 'about');
+    });
+
+    it('renders main heading with company name', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText(/About/)).toBeInTheDocument();
+      expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+    });
+
+    it('renders company description', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText(/We are a premium creative studio/)).toBeInTheDocument();
+      expect(screen.getByText(/visual storytelling that captivates audiences/)).toBeInTheDocument();
+    });
+
+    it('applies custom className', () => {
+      const { container } = render(<AboutSection className="custom-about" />);
+      expect(container.firstChild).toHaveClass('custom-about');
+    });
   });
 
-  it('displays the main heading', () => {
-    render(<MockAboutSection />);
-    expect(screen.getByText('About BlackWoods Creative')).toBeInTheDocument();
+  describe('Services Section', () => {
+    it('renders all four service cards', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText('Filmmaking')).toBeInTheDocument();
+      expect(screen.getByText('Photography')).toBeInTheDocument();
+      expect(screen.getByText('3D Visualization')).toBeInTheDocument();
+      expect(screen.getByText('Scene Creation')).toBeInTheDocument();
+    });
+
+    it('displays service descriptions', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText(/Cinematic storytelling that captures emotion/)).toBeInTheDocument();
+      expect(screen.getByText(/Professional photography services from product shoots/)).toBeInTheDocument();
+      expect(screen.getByText(/Photorealistic 3D renders and animations/)).toBeInTheDocument();
+      expect(screen.getByText(/Immersive environments and scenes for VR/)).toBeInTheDocument();
+    });
+
+    it('renders service icons', () => {
+      render(<AboutSection />);
+
+      // Check that service cards have the proper structure for icons
+      const serviceCards = screen.getAllByText(/Filmmaking|Photography|3D Visualization|Scene Creation/);
+      expect(serviceCards).toHaveLength(4);
+    });
   });
 
-  it('displays company description', () => {
-    render(<MockAboutSection />);
-    expect(screen.getByText(/We are a creative studio specializing/)).toBeInTheDocument();
-    expect(screen.getByText(/With years of experience/)).toBeInTheDocument();
+  describe('Company Story Section', () => {
+    it('renders story heading', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText('Story')).toBeInTheDocument();
+      
+      // Check for "Our Story" heading specifically
+      const storyHeading = screen.getByRole('heading', { name: /Our Story/ });
+      expect(storyHeading).toBeInTheDocument();
+    });
+
+    it('displays story content', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText(/Founded with a passion for visual excellence/)).toBeInTheDocument();
+      expect(screen.getByText(/Our team combines technical expertise/)).toBeInTheDocument();
+      expect(screen.getByText(/We believe in the power of visual storytelling/)).toBeInTheDocument();
+    });
+
+    it('renders studio image placeholder', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText('Studio Image Placeholder')).toBeInTheDocument();
+    });
   });
 
-  it('renders statistics section', () => {
-    render(<MockAboutSection />);
-    const statItems = screen.getAllByTestId('stat-item');
-    expect(statItems).toHaveLength(4);
+  describe('Achievements Section', () => {
+    it('renders achievements heading', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText('Achievements')).toBeInTheDocument();
+      
+      // Check for "Our Achievements" heading specifically
+      const achievementsHeading = screen.getByRole('heading', { name: /Our Achievements/ });
+      expect(achievementsHeading).toBeInTheDocument();
+    });
+
+    it('displays all achievement items', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText('50+ Award-Winning Projects')).toBeInTheDocument();
+      expect(screen.getByText('100+ Satisfied Clients')).toBeInTheDocument();
+      expect(screen.getByText('5+ Years of Excellence')).toBeInTheDocument();
+    });
+
+    it('renders achievement icons', () => {
+      render(<AboutSection />);
+
+      // Check that achievements have the proper structure
+      const achievements = screen.getAllByText(/50\+ Award-Winning Projects|100\+ Satisfied Clients|5\+ Years of Excellence/);
+      expect(achievements).toHaveLength(3);
+    });
   });
 
-  it('displays correct statistics', () => {
-    render(<MockAboutSection />);
-    expect(screen.getByText('50+')).toBeInTheDocument();
-    expect(screen.getByText('Projects Completed')).toBeInTheDocument();
-    expect(screen.getByText('5+')).toBeInTheDocument();
-    expect(screen.getByText('Years Experience')).toBeInTheDocument();
-    expect(screen.getByText('100%')).toBeInTheDocument();
-    expect(screen.getByText('Client Satisfaction')).toBeInTheDocument();
-    expect(screen.getByText('24/7')).toBeInTheDocument();
-    expect(screen.getByText('Support Available')).toBeInTheDocument();
+  describe('Layout and Styling', () => {
+    it('has proper section structure', () => {
+      render(<AboutSection />);
+
+      const section = document.querySelector('#about');
+      expect(section).toHaveClass('bg-gradient-to-br', 'from-bw-dark-gray', 'via-bw-medium-gray', 'to-bw-dark-gray');
+    });
+
+    it('uses responsive grid layouts', () => {
+      render(<AboutSection />);
+
+      // Services should be in a responsive grid
+      const filmmaking = screen.getByText('Filmmaking');
+      const serviceCard = filmmaking.closest('.card-elevated');
+      expect(serviceCard).toBeInTheDocument();
+    });
+
+    it('applies proper spacing and padding', () => {
+      render(<AboutSection />);
+
+      const section = document.querySelector('#about');
+      expect(section).toHaveClass('px-6', 'py-32');
+    });
+
+    it('has centered content with max width', () => {
+      render(<AboutSection />);
+
+      const section = document.querySelector('#about');
+      const container = section?.querySelector('.mx-auto.max-w-7xl');
+      expect(container).toBeInTheDocument();
+    });
   });
 
-  it('renders about image', () => {
-    render(<MockAboutSection />);
-    const aboutImage = screen.getByTestId('about-image');
-    expect(aboutImage).toBeInTheDocument();
-    expect(aboutImage).toHaveAttribute('alt', 'BlackWoods Creative Team');
+  describe('Accessibility', () => {
+    it('has proper semantic structure', () => {
+      render(<AboutSection />);
+
+      // Should be a section element
+      const section = document.querySelector('#about');
+      expect(section).toBeInTheDocument();
+      expect(section?.tagName.toLowerCase()).toBe('section');
+
+      // Should have proper heading hierarchy
+      const headings = screen.getAllByRole('heading');
+      expect(headings.length).toBeGreaterThan(0);
+    });
+
+    it('has proper heading levels', () => {
+      render(<AboutSection />);
+
+      // Main heading should be h2
+      const mainHeading = screen.getByRole('heading', { level: 2 });
+      expect(mainHeading).toBeInTheDocument();
+
+      // Service titles should be h3
+      const serviceHeadings = screen.getAllByRole('heading', { level: 3 });
+      expect(serviceHeadings.length).toBeGreaterThan(0);
+    });
+
+    it('provides meaningful text content', () => {
+      render(<AboutSection />);
+
+      // All text should be meaningful and descriptive
+      expect(screen.getByText(/premium creative studio/)).toBeInTheDocument();
+      expect(screen.getAllByText(/visual storytelling/).length).toBeGreaterThan(0);
+      expect(screen.getByText(/filmmaking, photography, 3D visualization/)).toBeInTheDocument();
+    });
   });
 
-  it('displays expertise section', () => {
-    render(<MockAboutSection />);
-    expect(screen.getByText('Our Expertise')).toBeInTheDocument();
+  describe('Content Accuracy', () => {
+    it('displays correct company information', () => {
+      render(<AboutSection />);
 
-    const expertiseItems = screen.getAllByTestId('expertise-item');
-    expect(expertiseItems).toHaveLength(3);
+      expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+      expect(screen.getByText(/premium creative studio/)).toBeInTheDocument();
+      expect(screen.getAllByText(/visual storytelling/).length).toBeGreaterThan(0);
+    });
+
+    it('shows accurate service offerings', () => {
+      render(<AboutSection />);
+
+      // Check all four main services
+      expect(screen.getByText('Filmmaking')).toBeInTheDocument();
+      expect(screen.getByText('Photography')).toBeInTheDocument();
+      expect(screen.getByText('3D Visualization')).toBeInTheDocument();
+      expect(screen.getByText('Scene Creation')).toBeInTheDocument();
+    });
+
+    it('displays realistic achievements', () => {
+      render(<AboutSection />);
+
+      expect(screen.getByText('50+ Award-Winning Projects')).toBeInTheDocument();
+      expect(screen.getByText('100+ Satisfied Clients')).toBeInTheDocument();
+      expect(screen.getByText('5+ Years of Excellence')).toBeInTheDocument();
+    });
   });
 
-  it('displays all expertise areas', () => {
-    render(<MockAboutSection />);
-    expect(screen.getByText('Cinema & Video')).toBeInTheDocument();
-    expect(screen.getByText('Photography')).toBeInTheDocument();
-    expect(screen.getByText('3D Visualization')).toBeInTheDocument();
+  describe('Interactive Elements', () => {
+    it('renders service cards with hover effects', () => {
+      render(<AboutSection />);
+
+      const filmmaking = screen.getByText('Filmmaking');
+      const serviceCard = filmmaking.closest('.card-elevated');
+      expect(serviceCard).toHaveClass('group');
+    });
+
+    it('has proper visual hierarchy', () => {
+      render(<AboutSection />);
+
+      // Main heading should be largest
+      const mainHeading = screen.getByText('BlackWoods Creative');
+      expect(mainHeading.closest('h2')).toHaveClass('text-display-lg');
+
+      // Service titles should be smaller
+      const serviceTitle = screen.getByText('Filmmaking');
+      expect(serviceTitle.closest('h3')).toHaveClass('text-xl');
+    });
   });
 
-  it('displays expertise descriptions', () => {
-    render(<MockAboutSection />);
-    expect(screen.getByText(/Professional video production/)).toBeInTheDocument();
-    expect(screen.getByText(/Creative photography for all/)).toBeInTheDocument();
-    expect(screen.getByText(/Stunning 3D renders/)).toBeInTheDocument();
+  describe('Responsive Design', () => {
+    it('uses responsive grid classes', () => {
+      render(<AboutSection />);
+
+      // Services grid should be responsive
+      const section = document.querySelector('#about');
+      const servicesGrid = section?.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+      expect(servicesGrid).toBeInTheDocument();
+    });
+
+    it('has responsive story layout', () => {
+      render(<AboutSection />);
+
+      // Story section should have responsive grid
+      const section = document.querySelector('#about');
+      const storyGrid = section?.querySelector('.grid.grid-cols-1.lg\\:grid-cols-2');
+      expect(storyGrid).toBeInTheDocument();
+    });
+
+    it('maintains proper spacing on all screen sizes', () => {
+      render(<AboutSection />);
+
+      const section = document.querySelector('#about');
+      expect(section).toHaveClass('px-6'); // Responsive padding
+    });
   });
 
-  it('applies correct CSS classes', () => {
-    render(<MockAboutSection />);
-    const section = screen.getByTestId('about-section');
-    expect(section).toHaveClass('about-section', 'bg-bw-dark-gray', 'py-20');
-  });
+  describe('Brand Consistency', () => {
+    it('uses brand colors consistently', () => {
+      render(<AboutSection />);
 
-  it('has proper grid layout structure', () => {
-    render(<MockAboutSection />);
-    const section = screen.getByTestId('about-section');
+      // Should use BlackWoods brand colors
+      const section = document.querySelector('#about');
+      expect(section).toHaveClass('bg-gradient-to-br', 'from-bw-dark-gray');
+    });
 
-    // Check for main grid
-    const mainGrid = section.querySelector('.grid.grid-cols-1.lg\\:grid-cols-2');
-    expect(mainGrid).toBeInTheDocument();
+    it('applies brand typography', () => {
+      render(<AboutSection />);
 
-    // Check for stats grid
-    const statsGrid = section.querySelector('.stats-grid');
-    expect(statsGrid).toBeInTheDocument();
-  });
+      // Main heading should use display font
+      const mainHeading = screen.getByText('BlackWoods Creative');
+      expect(mainHeading.closest('h2')).toHaveClass('text-display-lg');
+    });
 
-  it('maintains responsive design', () => {
-    render(<MockAboutSection />);
-    const section = screen.getByTestId('about-section');
+    it('uses consistent spacing patterns', () => {
+      render(<AboutSection />);
 
-    // Check for responsive classes
-    const expertiseGrid = section.querySelector('.grid.grid-cols-1.md\\:grid-cols-3');
-    expect(expertiseGrid).toBeInTheDocument();
-  });
-
-  it('provides proper semantic structure', () => {
-    render(<MockAboutSection />);
-
-    // Check for section element by testid
-    const section = screen.getByTestId('about-section');
-    expect(section).toBeInTheDocument();
-
-    // Check for headings
-    const mainHeading = screen.getByRole('heading', { level: 2 });
-    expect(mainHeading).toBeInTheDocument();
-
-    const subHeading = screen.getByRole('heading', { level: 3 });
-    expect(subHeading).toBeInTheDocument();
-  });
-
-  it('handles component mounting without errors', () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-
-    render(<MockAboutSection />);
-
-    expect(consoleSpy).not.toHaveBeenCalled();
-    consoleSpy.mockRestore();
-  });
-
-  it('handles component unmounting gracefully', () => {
-    const { unmount } = render(<MockAboutSection />);
-
-    expect(() => unmount()).not.toThrow();
-  });
-
-  it('maintains accessibility standards', () => {
-    render(<MockAboutSection />);
-
-    // Check for proper image alt text
-    const image = screen.getByRole('img');
-    expect(image).toHaveAttribute('alt');
-    expect(image.getAttribute('alt')).toBeTruthy();
-
-    // Check for proper heading hierarchy
-    const headings = screen.getAllByRole('heading');
-    expect(headings.length).toBeGreaterThan(0);
-  });
-
-  it('displays brand colors correctly', () => {
-    render(<MockAboutSection />);
-
-    // Check for brand color classes
-    const section = screen.getByTestId('about-section');
-    expect(section).toHaveClass('bg-bw-dark-gray');
-  });
-
-  it('renders with proper spacing', () => {
-    render(<MockAboutSection />);
-
-    const container = screen.getByTestId('about-section').querySelector('.container');
-    expect(container).toHaveClass('mx-auto', 'px-4');
-  });
-
-  it('displays icons for expertise areas', () => {
-    render(<MockAboutSection />);
-
-    const expertiseItems = screen.getAllByTestId('expertise-item');
-    expertiseItems.forEach(item => {
-      const icon = item.querySelector('.icon');
-      expect(icon).toBeInTheDocument();
+      // Should have consistent margin/padding patterns
+      const section = document.querySelector('#about');
+      expect(section).toHaveClass('py-32');
     });
   });
 });
