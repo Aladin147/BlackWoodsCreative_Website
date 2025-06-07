@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect, ReactNode } from 'react';
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 interface ParallaxLayerProps {
   children: ReactNode;
@@ -12,7 +12,7 @@ interface ParallaxLayerProps {
   rotate?: [number, number];
   blur?: [number, number];
   className?: string;
-  offset?: [string, string];
+  offset?: ["start start" | "start center" | "start end" | "center start" | "center center" | "center end" | "end start" | "end center" | "end end", "start start" | "start center" | "start end" | "center start" | "center center" | "center end" | "end start" | "end center" | "end end"];
 }
 
 export function ParallaxLayer({
@@ -24,7 +24,7 @@ export function ParallaxLayer({
   rotate,
   blur,
   className = '',
-  offset = ['start end', 'end start'],
+  offset = ['start end', 'end start'] as const,
 }: ParallaxLayerProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -59,24 +59,19 @@ export function ParallaxLayer({
 
   const [startPos, endPos] = getMovementRange();
 
-  // Always call hooks, but use conditional values
-  const yTransform = useTransform(smoothProgress, [0, 1], [startPos, endPos]);
-  const xTransform = useTransform(smoothProgress, [0, 1], [startPos, endPos]);
-  const scaleTransformValue = useTransform(smoothProgress, [0, 1], scale || [1, 1]);
-  const opacityTransformValue = useTransform(smoothProgress, [0, 1], opacity || [1, 1]);
-  const rotateTransformValue = useTransform(smoothProgress, [0, 1], rotate || [0, 0]);
-  const blurTransformValue = useTransform(smoothProgress, [0, 1], blur || [0, 0]);
+  // Create transforms based on direction and effects
+  const yRange = (direction === 'up' || direction === 'down') ? [startPos, endPos] : [0, 0];
+  const xRange = (direction === 'left' || direction === 'right') ? [startPos, endPos] : [0, 0];
 
-  // Apply conditional logic to the final values
-  const y = (direction === 'up' || direction === 'down') ? yTransform : 0;
-  const x = (direction === 'left' || direction === 'right') ? xTransform : 0;
-  const scaleTransform = scale ? scaleTransformValue : 1;
-  const opacityTransform = opacity ? opacityTransformValue : 1;
-  const rotateTransform = rotate ? rotateTransformValue : 0;
-  const blurTransform = blur ? blurTransformValue : 0;
+  const y = useTransform(smoothProgress, [0, 1], yRange);
+  const x = useTransform(smoothProgress, [0, 1], xRange);
+  const scaleTransform = useTransform(smoothProgress, [0, 1], scale || [1, 1]);
+  const opacityTransform = useTransform(smoothProgress, [0, 1], opacity || [1, 1]);
+  const rotateTransform = useTransform(smoothProgress, [0, 1], rotate || [0, 0]);
+  const blurTransform = useTransform(smoothProgress, [0, 1], blur || [0, 0]);
 
   const filterTransform = useTransform(
-    blurTransform as MotionValue<number>,
+    blurTransform,
     (value) => blur ? `blur(${value}px)` : 'none'
   );
 

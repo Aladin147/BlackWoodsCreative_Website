@@ -25,13 +25,14 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
       data-testid={testId}
     >
       {/* Project Image */}
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden" role="img" aria-label={`Project: ${project.title}`}>
         <Image
           src={project.image}
           alt={project.title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-110"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          role="presentation"
         />
 
         {/* Overlay */}
@@ -45,10 +46,11 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
             whileHover={{ scale: 1 }}
             transition={{ duration: 0.2 }}
           >
-            <button
-              onClick={handleViewProject}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-gold/90 text-bw-black shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-gold"
-            >
+          <button
+            onClick={handleViewProject}
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-gold/90 text-bw-black shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-gold"
+            aria-label={`View ${project.title} project details`}
+          >
               <PlayIcon className="h-8 w-8 ml-1" data-testid="play-icon" />
             </button>
           </motion.div>
@@ -81,10 +83,16 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
 
       {/* Project Info */}
       <div className="p-6">
-        <h3 className="mb-2 font-display text-xl font-semibold text-bw-white group-hover:text-bw-gold transition-colors duration-300">
+        <h3 
+          className="mb-2 font-display text-xl font-semibold text-bw-white group-hover:text-bw-gold transition-colors duration-300"
+          id={`project-title-${project.id}`}
+        >
           {project.title}
         </h3>
-        <p className="mb-4 text-bw-light-gray line-clamp-2">
+        <p 
+          className="mb-4 text-bw-light-gray line-clamp-2"
+          aria-describedby={`project-title-${project.id}`}
+        >
           {project.description}
         </p>
 

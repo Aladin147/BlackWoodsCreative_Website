@@ -1,16 +1,17 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Header } from '../Header';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    header: ({ children, ...props }: any) => <header {...props}>{children}</header>,
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-    span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+    header: ({ children, ...props }: React.ComponentProps<'header'>) => <header {...props}>{children}</header>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
+    span: ({ children, ...props }: React.ComponentProps<'span'>) => <span {...props}>{children}</span>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock the scroll utility
@@ -33,7 +34,17 @@ jest.mock('@/lib/constants/siteConfig', () => ({
   },
 }));
 
-const mockScrollToElement = require('@/lib/utils').scrollToElement;
+import { scrollToElement } from '@/lib/utils';
+const mockScrollToElement = scrollToElement as jest.MockedFunction<typeof scrollToElement>;
+
+// Helper function to render Header with ThemeProvider
+const renderHeader = (props = {}) => {
+  return render(
+    <ThemeProvider>
+      <Header {...props} />
+    </ThemeProvider>
+  );
+};
 
 describe('Header', () => {
   beforeEach(() => {
@@ -59,16 +70,16 @@ describe('Header', () => {
   });
 
   it('renders header with logo and navigation', () => {
-    render(<Header />);
+    renderHeader();
 
-    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+    expect(screen.getByAltText('BlackWoods Creative Logo')).toBeInTheDocument();
     expect(screen.getByText('Portfolio')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
     expect(screen.getByText('Contact')).toBeInTheDocument();
   });
 
   it('renders mobile menu button', () => {
-    render(<Header />);
+    renderHeader();
 
     const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
     expect(mobileMenuButton).toBeInTheDocument();
@@ -76,7 +87,7 @@ describe('Header', () => {
 
   it('toggles mobile menu when button is clicked', async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
 
@@ -101,7 +112,7 @@ describe('Header', () => {
 
   it('closes mobile menu when navigation link is clicked', async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
 
@@ -118,7 +129,7 @@ describe('Header', () => {
 
   it('calls scrollToElement when navigation links are clicked', async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const portfolioLinks = screen.getAllByText('Portfolio');
     await user.click(portfolioLinks[0]);
@@ -127,7 +138,7 @@ describe('Header', () => {
   });
 
   it('handles scroll events and updates header background', () => {
-    render(<Header />);
+    renderHeader();
 
     // Verify the scroll event handler is attached
     expect(window.addEventListener).toHaveBeenCalledWith('scroll', expect.any(Function), { passive: true });
@@ -135,7 +146,7 @@ describe('Header', () => {
 
   it('handles keyboard navigation', async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const portfolioLinks = screen.getAllByText('Portfolio');
     portfolioLinks[0].focus();
@@ -145,12 +156,12 @@ describe('Header', () => {
   });
 
   it('applies custom className', () => {
-    const { container } = render(<Header className="custom-header" />);
+    const { container } = renderHeader({ className: "custom-header" });
     expect(container.firstChild).toHaveClass('custom-header');
   });
 
   it('renders all navigation items', () => {
-    render(<Header />);
+    renderHeader();
 
     const expectedNavItems = ['Portfolio', 'About', 'Contact'];
 
@@ -161,7 +172,7 @@ describe('Header', () => {
 
   it('handles escape key to close mobile menu', async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
 
@@ -176,7 +187,7 @@ describe('Header', () => {
   });
 
   it('maintains accessibility attributes', () => {
-    render(<Header />);
+    renderHeader();
 
     const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
     expect(mobileMenuButton).toBeInTheDocument();
@@ -188,7 +199,7 @@ describe('Header', () => {
 
   it('handles multiple rapid clicks on mobile menu button', async () => {
     const user = userEvent.setup();
-    render(<Header />);
+    renderHeader();
 
     const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
 
@@ -202,7 +213,7 @@ describe('Header', () => {
   });
 
   it('cleans up scroll event listener on unmount', () => {
-    const { unmount } = render(<Header />);
+    const { unmount } = renderHeader();
 
     unmount();
 

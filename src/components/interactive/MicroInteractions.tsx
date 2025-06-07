@@ -306,14 +306,16 @@ interface GlitchTextProps {
 }
 
 export function GlitchText({ text, className = '', intensity = 0.5 }: GlitchTextProps) {
+  const glitchOffset = intensity * 4; // Scale the glitch effect based on intensity
+
   return (
     <motion.div
       className={`relative ${className}`}
       animate={{
-        x: [0, -2, 2, 0],
+        x: [0, -glitchOffset, glitchOffset, 0],
         textShadow: [
           '0 0 0 transparent',
-          '2px 0 0 #ff0000, -2px 0 0 #00ffff',
+          `${glitchOffset}px 0 0 #ff0000, -${glitchOffset}px 0 0 #00ffff`,
           '0 0 0 transparent'
         ]
       }}
@@ -348,6 +350,8 @@ export function TypewriterText({ text, className = '', speed = 50 }: TypewriterT
 
       return () => clearTimeout(timeout);
     }
+
+    return undefined;
   }, [currentIndex, text, speed]);
 
   return (

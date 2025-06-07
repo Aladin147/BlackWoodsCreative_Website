@@ -166,7 +166,7 @@ describe('Performance Utilities', () => {
     it('should preserve function context in debounce', () => {
       const obj = {
         value: 'test',
-        method: jest.fn(function(this: any) {
+        method: jest.fn(function(this: { value: string }) {
           return this.value;
         })
       };
@@ -182,7 +182,7 @@ describe('Performance Utilities', () => {
     it('should preserve function context in throttle', () => {
       const obj = {
         value: 'test',
-        method: jest.fn(function(this: any) {
+        method: jest.fn(function(this: { value: string }) {
           return this.value;
         })
       };

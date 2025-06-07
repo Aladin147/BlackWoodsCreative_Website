@@ -46,7 +46,7 @@ export function useIntersectionObserver(
     const observerParams = { threshold, root, rootMargin };
     const observer = new IntersectionObserver(([entry]) => {
       setEntry(entry);
-      
+
       if (triggerOnce && entry.isIntersecting) {
         setHasTriggered(true);
       }
@@ -141,10 +141,10 @@ export function useScrollAnimation(
   useEffect(() => {
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
+
     if (reduceMotion || prefersReducedMotion) {
       setShouldAnimate(true);
-      return;
+      return undefined;
     }
 
     if (entry?.isIntersecting) {
@@ -154,6 +154,8 @@ export function useScrollAnimation(
 
       return () => clearTimeout(timer);
     }
+
+    return undefined;
   }, [entry?.isIntersecting, animationDelay, reduceMotion]);
 
   return {
@@ -179,7 +181,7 @@ export function useLazyLoad(options: UseIntersectionObserverOptions = {}) {
   useEffect(() => {
     if (entry?.isIntersecting && !isLoaded && !isLoading) {
       setIsLoading(true);
-      
+
       // Simulate loading delay for smooth UX
       const timer = setTimeout(() => {
         setIsLoaded(true);
@@ -188,6 +190,8 @@ export function useLazyLoad(options: UseIntersectionObserverOptions = {}) {
 
       return () => clearTimeout(timer);
     }
+
+    return undefined;
   }, [entry?.isIntersecting, isLoaded, isLoading]);
 
   return {
@@ -228,16 +232,16 @@ export function usePerformanceMonitor() {
     const measureFPS = () => {
       frameCount++;
       const currentTime = performance.now();
-      
+
       if (currentTime >= lastTime + 1000) {
         const currentFPS = Math.round((frameCount * 1000) / (currentTime - lastTime));
         setFps(currentFPS);
         setIsLowPerformance(currentFPS < 30);
-        
+
         frameCount = 0;
         lastTime = currentTime;
       }
-      
+
       animationId = requestAnimationFrame(measureFPS);
     };
 

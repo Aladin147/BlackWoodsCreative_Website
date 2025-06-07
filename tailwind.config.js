@@ -5,6 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -18,7 +19,7 @@ module.exports = {
           white: '#ffffff',
           silver: '#b8b8b8',
           platinum: '#f0f0f0',
-          gold: '#d4af37',
+        gold: '#a8e6cf', // Pastel green
           red: '#cc3333',
           // New sophisticated colors
           pearl: '#f8f8f8',
@@ -57,7 +58,7 @@ module.exports = {
       boxShadow: {
         cinematic: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
         glow: '0 0 20px rgba(255, 255, 255, 0.1)',
-        'gold-glow': '0 0 30px rgba(212, 175, 55, 0.3)',
+        'gold-glow': '0 0 30px rgba(168, 230, 207, 0.3)',
       },
       animation: {
         'fade-in': 'fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',

@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props} data-testid="motion-div">{children}</div>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props} data-testid="motion-div">{children}</div>,
   },
   useMotionValue: () => ({
     set: jest.fn(),
@@ -30,7 +30,7 @@ jest.mock('../MagneticCursor', () => ({
   },
 }));
 
-const { MagneticCursor } = require('../MagneticCursor');
+import { MagneticCursor } from '../MagneticCursor';
 
 // Mock window.innerWidth for mobile detection
 Object.defineProperty(window, 'innerWidth', {

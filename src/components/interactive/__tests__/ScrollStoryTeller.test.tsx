@@ -5,10 +5,10 @@ import { ScrollStoryTeller } from '../ScrollStoryTeller';
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-    h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    h2: ({ children, ...props }: React.ComponentProps<'h2'>) => <h2 {...props}>{children}</h2>,
+    p: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
   },
   useScroll: () => ({
     scrollYProgress: { onChange: jest.fn() },
@@ -67,7 +67,7 @@ describe('ScrollStoryTeller', () => {
     render(<ScrollStoryTeller sections={mockSections} />);
 
     const progressIndicators = document.querySelectorAll('[class*="w-2 h-8"]');
-    
+
     if (progressIndicators.length > 0) {
       fireEvent.click(progressIndicators[0]);
       expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });

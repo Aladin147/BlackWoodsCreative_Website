@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 import {
   TextReveal,
   ParallaxLayer
@@ -222,7 +222,7 @@ interface SimpleStorySectionProps {
   section: typeof visionStoryData[0];
   index: number;
   isActive: boolean;
-  scrollProgress: any;
+  scrollProgress: MotionValue<number>;
   totalSections: number;
 }
 

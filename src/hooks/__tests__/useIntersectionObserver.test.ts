@@ -54,7 +54,7 @@ describe('useIntersectionObserver', () => {
 
     act(() => {
       if (result.current[0]) {
-        (result.current[0] as any).current = mockElement;
+        (result.current[0] as React.MutableRefObject<HTMLElement | null>).current = mockElement;
       }
     });
 
@@ -76,7 +76,7 @@ describe('useIntersectionObserver', () => {
 
     act(() => {
       if (result.current[0]) {
-        (result.current[0] as any).current = mockElement;
+        (result.current[0] as React.MutableRefObject<HTMLElement | null>).current = mockElement;
       }
     });
 
@@ -92,7 +92,7 @@ describe('useIntersectionObserver', () => {
     act(() => {
       // Simulate setting the ref
       if (result.current[0].current !== mockElement) {
-        (result.current[0] as any).current = mockElement;
+        (result.current[0] as React.MutableRefObject<HTMLElement | null>).current = mockElement;
       }
     });
 

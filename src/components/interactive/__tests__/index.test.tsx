@@ -18,14 +18,14 @@ import {
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div data-testid="motion-div" {...props}>{children}</div>,
-    span: ({ children, ...props }: any) => <span data-testid="motion-span" {...props}>{children}</span>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div data-testid="motion-div" {...props}>{children}</div>,
+    span: ({ children, ...props }: React.ComponentProps<'span'>) => <span data-testid="motion-span" {...props}>{children}</span>,
   },
   useScroll: () => ({ scrollYProgress: { on: jest.fn(), get: () => 0 } }),
   useTransform: () => 0,
   useSpring: () => ({ on: jest.fn() }),
   useMotionValue: () => ({ on: jest.fn() }),
-  AnimatePresence: ({ children }: any) => children,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 // Mock intersection observer

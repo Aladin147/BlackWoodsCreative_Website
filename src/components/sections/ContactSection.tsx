@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { sanitizeFormData } from '@/lib/utils/sanitize';
 import { motion } from 'framer-motion';
 import {
   EnvelopeIcon,
@@ -16,7 +17,7 @@ interface ContactSectionProps {
   className?: string;
 }
 
-interface FormData {
+interface ContactFormData {
   name: string;
   email: string;
   company: string;
@@ -25,7 +26,7 @@ interface FormData {
   message: string;
 }
 
-interface FormErrors {
+interface ContactFormErrors {
   name?: string;
   email?: string;
   message?: string;
@@ -72,7 +73,7 @@ const budgetRanges = [
 ];
 
 export function ContactSection({ className }: ContactSectionProps) {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     company: '',
@@ -80,7 +81,7 @@ export function ContactSection({ className }: ContactSectionProps) {
     budget: '',
     message: '',
   });
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [formErrors, setFormErrors] = useState<ContactFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -91,13 +92,13 @@ export function ContactSection({ className }: ContactSectionProps) {
     setFormData(prev => ({ ...prev, [name]: value }));
 
     // Clear error when user starts typing
-    if (formErrors[name as keyof FormErrors]) {
+    if (formErrors[name as keyof ContactFormErrors]) {
       setFormErrors(prev => ({ ...prev, [name]: undefined }));
     }
   };
 
   const validateForm = (): boolean => {
-    const errors: FormErrors = {};
+    const errors: ContactFormErrors = {};
 
     if (!formData.name.trim()) {
       errors.name = 'Name is required';
@@ -127,10 +128,15 @@ export function ContactSection({ className }: ContactSectionProps) {
       return;
     }
 
+    // Sanitize user inputs to prevent XSS attacks
+    const sanitizedData = sanitizeFormData(formData as unknown as Record<string, unknown>);
+    
     setIsSubmitting(true);
 
     try {
       // PLACEHOLDER: Form submission simulation - replace with actual API call
+      // In production, send sanitizedData to your API endpoint
+      console.log('Sanitized form data:', sanitizedData);
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       setIsSubmitting(false);

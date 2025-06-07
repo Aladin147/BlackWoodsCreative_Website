@@ -44,9 +44,9 @@ const MockPortfolioSection = () => {
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-    img: ({ children, ...props }: any) => <img {...props}>{children}</img>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    img: ({ children, ...props }: React.ComponentProps<'img'>) => <img {...props}>{children}</img>,
   },
   useInView: () => true,
   useAnimation: () => ({ start: jest.fn() }),

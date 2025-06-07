@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 
 interface ScrollStorySection {
   id: string;
@@ -96,7 +96,7 @@ interface ScrollStorySectionProps {
   section: ScrollStorySection;
   index: number;
   isActive: boolean;
-  scrollProgress: any;
+  scrollProgress: MotionValue<number>;
   totalSections: number;
 }
 

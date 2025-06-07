@@ -38,7 +38,7 @@ jest.mock('../../components/layout', () => ({
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    main: ({ children, ...props }: any) => <main {...props}>{children}</main>,
+    main: ({ children, ...props }: React.ComponentProps<'main'>) => <main {...props}>{children}</main>,
   },
 }));
 

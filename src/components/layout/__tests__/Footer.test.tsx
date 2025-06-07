@@ -1,127 +1,335 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Footer } from '../Footer';
 
-// Create a simple mock Footer component for testing
-const MockFooter = () => (
-  <footer role="contentinfo" className="bg-bw-black">
-    <div>
-      <h3>BlackWoods Creative</h3>
-      <p>Premium visual storytelling through filmmaking, photography, and 3D visualization.</p>
+// Mock framer-motion
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
+    a: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
+    li: ({ children, ...props }: React.ComponentProps<'li'>) => <li {...props}>{children}</li>,
+  },
+}));
 
-      <div>
-        <span>hello@blackwoodscreative.com</span>
-        <span>+1 (555) 123-4567</span>
-        <span>Los Angeles, CA</span>
-      </div>
+// Mock window.scrollTo
+const mockScrollTo = jest.fn();
+Object.defineProperty(window, 'scrollTo', {
+  writable: true,
+  value: mockScrollTo,
+});
 
-      <div>
-        <h4>Quick Links</h4>
-        <button>About</button>
-        <button>Portfolio</button>
-        <button>Our Services</button>
-        <button>Contact</button>
-      </div>
+// Mock window.open
+const mockWindowOpen = jest.fn();
+Object.defineProperty(window, 'open', {
+  writable: true,
+  value: mockWindowOpen,
+});
 
-      <div>
-        <h4>Services</h4>
-        <span>Brand Films</span>
-        <span>Product Photography</span>
-        <span>3D Visualization</span>
-        <span>Scene Creation</span>
-      </div>
+// Mock document.querySelector
+const mockQuerySelector = jest.fn();
+Object.defineProperty(document, 'querySelector', {
+  writable: true,
+  value: mockQuerySelector,
+});
 
-      <div>
-        <h4>Follow Us</h4>
-        <a href="https://instagram.com/blackwoodscreative">Instagram</a>
-        <a href="https://vimeo.com/blackwoodscreative">Vimeo</a>
-        <a href="https://linkedin.com/company/blackwoodscreative">LinkedIn</a>
-        <a href="https://behance.net/blackwoodscreative">Behance</a>
-      </div>
-
-      <div>
-        <span>© {new Date().getFullYear()} BlackWoods Creative. All rights reserved.</span>
-      </div>
-    </div>
-  </footer>
-);
+// Mock scrollIntoView
+const mockScrollIntoView = jest.fn();
+Element.prototype.scrollIntoView = mockScrollIntoView;
 
 describe('Footer', () => {
-  it('renders footer content', () => {
-    render(<MockFooter />);
-
-    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
-    expect(screen.getByText(/Premium visual storytelling/)).toBeInTheDocument();
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('renders contact information', () => {
-    render(<MockFooter />);
+  describe('Rendering', () => {
+    it('renders footer with company information', () => {
+      render(<Footer />);
 
-    expect(screen.getByText('hello@blackwoodscreative.com')).toBeInTheDocument();
-    expect(screen.getByText('+1 (555) 123-4567')).toBeInTheDocument();
-    expect(screen.getByText('Los Angeles, CA')).toBeInTheDocument();
+      expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+      expect(screen.getByText(/Premium visual storytelling/)).toBeInTheDocument();
+      expect(screen.getByText('hello@blackwoodscreative.com')).toBeInTheDocument();
+      expect(screen.getByText('+1 (555) 123-4567')).toBeInTheDocument();
+      expect(screen.getByText(/MFADEL Business Center/)).toBeInTheDocument();
+    });
+
+    it('renders quick links section', () => {
+      render(<Footer />);
+
+      expect(screen.getByText('Quick Links')).toBeInTheDocument();
+      expect(screen.getByText('Portfolio')).toBeInTheDocument();
+      expect(screen.getByText('About')).toBeInTheDocument();
+      expect(screen.getByText('Contact')).toBeInTheDocument();
+
+      // Check for Services button in Quick Links section
+      const quickLinksButtons = screen.getAllByText('Services');
+      expect(quickLinksButtons.length).toBeGreaterThan(0);
+    });
+
+    it('renders services section', () => {
+      render(<Footer />);
+
+      // Check for Services heading in Services section
+      const servicesHeadings = screen.getAllByText('Services');
+      expect(servicesHeadings.length).toBeGreaterThan(0);
+
+      expect(screen.getByText('Brand Films')).toBeInTheDocument();
+      expect(screen.getByText('Product Photography')).toBeInTheDocument();
+      expect(screen.getByText('3D Visualization')).toBeInTheDocument();
+      expect(screen.getByText('Scene Creation')).toBeInTheDocument();
+    });
+
+    it('renders social links section', () => {
+      render(<Footer />);
+
+      expect(screen.getByText('Follow Us')).toBeInTheDocument();
+
+      // Check for social media links by title attribute
+      expect(screen.getByTitle('Instagram')).toBeInTheDocument();
+      expect(screen.getByTitle('LinkedIn')).toBeInTheDocument();
+      expect(screen.getByTitle('Vimeo')).toBeInTheDocument();
+      expect(screen.getByTitle('Behance')).toBeInTheDocument();
+    });
+
+    it('renders newsletter signup', () => {
+      render(<Footer />);
+
+      expect(screen.getByText('Stay updated with our latest work')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Your email')).toBeInTheDocument();
+      expect(screen.getByText('Subscribe')).toBeInTheDocument();
+    });
+
+    it('renders copyright and legal links', () => {
+      render(<Footer />);
+
+      const currentYear = new Date().getFullYear();
+      expect(screen.getByText(`© ${currentYear} BlackWoods Creative. All rights reserved.`)).toBeInTheDocument();
+      expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
+      expect(screen.getByText('Terms of Service')).toBeInTheDocument();
+    });
+
+    it('renders back to top button', () => {
+      render(<Footer />);
+
+      expect(screen.getByTitle('Back to top')).toBeInTheDocument();
+    });
+
+    it('applies custom className', () => {
+      const { container } = render(<Footer className="custom-footer" />);
+      expect(container.firstChild).toHaveClass('custom-footer');
+    });
   });
 
-  it('renders navigation links', () => {
-    render(<MockFooter />);
+  describe('Navigation Functionality', () => {
+    it('handles quick link navigation for internal links', async () => {
+      const user = userEvent.setup();
+      const mockElement = document.createElement('div');
+      mockQuerySelector.mockReturnValue(mockElement);
 
-    expect(screen.getByText('About')).toBeInTheDocument();
-    expect(screen.getByText('Portfolio')).toBeInTheDocument();
-    expect(screen.getByText('Our Services')).toBeInTheDocument();
-    expect(screen.getByText('Contact')).toBeInTheDocument();
+      render(<Footer />);
+
+      const portfolioLink = screen.getByText('Portfolio');
+      await user.click(portfolioLink);
+
+      expect(mockQuerySelector).toHaveBeenCalledWith('#portfolio');
+      expect(mockScrollIntoView).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+
+    it('handles quick link navigation when element not found', async () => {
+      const user = userEvent.setup();
+      mockQuerySelector.mockReturnValue(null);
+
+      render(<Footer />);
+
+      const portfolioLink = screen.getByText('Portfolio');
+      await user.click(portfolioLink);
+
+      expect(mockQuerySelector).toHaveBeenCalledWith('#portfolio');
+      expect(mockScrollIntoView).not.toHaveBeenCalled();
+    });
+
+    it('handles back to top button click', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
+
+      const backToTopButton = screen.getByTitle('Back to top');
+      await user.click(backToTopButton);
+
+      expect(mockScrollTo).toHaveBeenCalledWith({
+        top: 0,
+        behavior: 'smooth',
+      });
+    });
   });
 
-  it('renders services links', () => {
-    render(<MockFooter />);
+  describe('Social Media Links', () => {
+    it('opens Instagram link in new tab', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
 
-    expect(screen.getByText('Brand Films')).toBeInTheDocument();
-    expect(screen.getByText('Product Photography')).toBeInTheDocument();
-    expect(screen.getByText('3D Visualization')).toBeInTheDocument();
-    expect(screen.getByText('Scene Creation')).toBeInTheDocument();
+      const instagramLink = screen.getByTitle('Instagram');
+      await user.click(instagramLink);
+
+      // Check that the link has correct href and target attributes
+      expect(instagramLink).toHaveAttribute('href', 'https://instagram.com/blackwoodscreative');
+      expect(instagramLink).toHaveAttribute('target', '_blank');
+      expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('opens LinkedIn link in new tab', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
+
+      const linkedinLink = screen.getByTitle('LinkedIn');
+      await user.click(linkedinLink);
+
+      expect(linkedinLink).toHaveAttribute('href', 'https://linkedin.com/company/blackwoodscreative');
+      expect(linkedinLink).toHaveAttribute('target', '_blank');
+      expect(linkedinLink).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('opens Vimeo link in new tab', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
+
+      const vimeoLink = screen.getByTitle('Vimeo');
+      await user.click(vimeoLink);
+
+      expect(vimeoLink).toHaveAttribute('href', 'https://vimeo.com/blackwoodscreative');
+      expect(vimeoLink).toHaveAttribute('target', '_blank');
+      expect(vimeoLink).toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('opens Behance link in new tab', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
+
+      const behanceLink = screen.getByTitle('Behance');
+      await user.click(behanceLink);
+
+      expect(behanceLink).toHaveAttribute('href', 'https://behance.net/blackwoodscreative');
+      expect(behanceLink).toHaveAttribute('target', '_blank');
+      expect(behanceLink).toHaveAttribute('rel', 'noopener noreferrer');
+    });
   });
 
-  it('renders social media links', () => {
-    render(<MockFooter />);
+  describe('Newsletter Functionality', () => {
+    it('renders email input with correct attributes', () => {
+      render(<Footer />);
 
-    const socialLinks = screen.getAllByRole('link');
-    const socialLinksWithHref = socialLinks.filter(link =>
-      link.getAttribute('href')?.includes('instagram') ||
-      link.getAttribute('href')?.includes('vimeo') ||
-      link.getAttribute('href')?.includes('linkedin') ||
-      link.getAttribute('href')?.includes('behance')
-    );
+      const emailInput = screen.getByPlaceholderText('Your email');
+      expect(emailInput).toHaveAttribute('type', 'email');
+      expect(emailInput).toHaveClass('flex-1');
+    });
 
-    expect(socialLinksWithHref.length).toBeGreaterThan(0);
+    it('handles newsletter subscription button click', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
+
+      const subscribeButton = screen.getByText('Subscribe');
+      await user.click(subscribeButton);
+
+      // Button should be clickable (no errors thrown)
+      expect(subscribeButton).toBeInTheDocument();
+    });
+
+    it('allows typing in email input', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
+
+      const emailInput = screen.getByPlaceholderText('Your email');
+      await user.type(emailInput, 'test@example.com');
+
+      expect(emailInput).toHaveValue('test@example.com');
+    });
   });
 
-  it('renders copyright information', () => {
-    render(<MockFooter />);
+  describe('Legal Links', () => {
+    it('handles privacy policy click', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
 
-    const currentYear = new Date().getFullYear();
-    expect(screen.getByText(new RegExp(`© ${currentYear}`))).toBeInTheDocument();
+      const privacyLink = screen.getByText('Privacy Policy');
+      await user.click(privacyLink);
+
+      // Should not throw any errors
+      expect(privacyLink).toBeInTheDocument();
+    });
+
+    it('handles terms of service click', async () => {
+      const user = userEvent.setup();
+      render(<Footer />);
+
+      const termsLink = screen.getByText('Terms of Service');
+      await user.click(termsLink);
+
+      // Should not throw any errors
+      expect(termsLink).toBeInTheDocument();
+    });
   });
 
-  it('renders with proper accessibility attributes', () => {
-    render(<MockFooter />);
+  describe('Accessibility', () => {
+    it('has proper ARIA labels and titles', () => {
+      render(<Footer />);
 
-    const footer = screen.getByRole('contentinfo');
-    expect(footer).toBeInTheDocument();
+      // Check social media links have titles
+      expect(screen.getByTitle('Instagram')).toBeInTheDocument();
+      expect(screen.getByTitle('LinkedIn')).toBeInTheDocument();
+      expect(screen.getByTitle('Vimeo')).toBeInTheDocument();
+      expect(screen.getByTitle('Behance')).toBeInTheDocument();
+      expect(screen.getByTitle('Back to top')).toBeInTheDocument();
+    });
+
+    it('has proper semantic structure', () => {
+      render(<Footer />);
+
+      // Footer should be a footer element
+      const footer = screen.getByRole('contentinfo');
+      expect(footer).toBeInTheDocument();
+    });
+
+    it('has focusable interactive elements', () => {
+      render(<Footer />);
+
+      // All buttons should be focusable
+      const buttons = screen.getAllByRole('button');
+      buttons.forEach(button => {
+        expect(button).not.toHaveAttribute('tabindex', '-1');
+      });
+
+      // All links should be focusable
+      const links = screen.getAllByRole('link');
+      links.forEach(link => {
+        expect(link).not.toHaveAttribute('tabindex', '-1');
+      });
+    });
   });
 
-  it('renders all required sections', () => {
-    render(<MockFooter />);
+  describe('Responsive Behavior', () => {
+    it('renders all sections in mobile layout', () => {
+      render(<Footer />);
 
-    // Check for main sections
-    expect(screen.getByText('Quick Links')).toBeInTheDocument();
-    expect(screen.getByText('Services')).toBeInTheDocument();
-    expect(screen.getByText('Follow Us')).toBeInTheDocument();
-  });
+      // All main sections should be present
+      expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+      expect(screen.getByText('Quick Links')).toBeInTheDocument();
 
-  it('has proper responsive structure', () => {
-    const { container } = render(<MockFooter />);
+      // Check for Services section (there are multiple "Services" texts)
+      const servicesElements = screen.getAllByText('Services');
+      expect(servicesElements.length).toBeGreaterThan(0);
 
-    // Footer should have proper structure
-    const footer = container.querySelector('footer');
-    expect(footer).toBeInTheDocument();
-    expect(footer).toHaveClass('bg-bw-black');
+      expect(screen.getByText('Follow Us')).toBeInTheDocument();
+    });
+
+    it('maintains functionality across different screen sizes', () => {
+      render(<Footer />);
+
+      // Core functionality should work regardless of screen size
+      expect(screen.getByTitle('Back to top')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Your email')).toBeInTheDocument();
+      expect(screen.getByText('Subscribe')).toBeInTheDocument();
+    });
   });
 });

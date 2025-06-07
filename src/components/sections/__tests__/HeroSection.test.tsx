@@ -6,23 +6,23 @@ import { HeroSection } from '../HeroSection';
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
+    h1: ({ children, ...props }: React.ComponentProps<'h1'>) => <h1 {...props}>{children}</h1>,
+    p: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
   },
 }));
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
-  CinematicParallax: ({ children }: any) => <div data-testid="cinematic-parallax">{children}</div>,
-  FloatingElement: ({ children }: any) => <div data-testid="floating-element">{children}</div>,
-  TextReveal: ({ children, text, ...props }: any) => <div data-testid="text-reveal" {...props}>{text || children}</div>,
-  PulseGlow: ({ children }: any) => <div data-testid="pulse-glow">{children}</div>,
-  MorphingButton: ({ children, onClick, ...props }: any) => <button data-testid="morphing-button" onClick={onClick} {...props}>{children}</button>,
-  MagneticCursor: ({ children }: any) => <div data-testid="magnetic-cursor">{children}</div>,
-  ParallaxContainer: ({ children }: any) => <div data-testid="parallax-container">{children}</div>,
+  CinematicParallax: ({ children }: { children: React.ReactNode }) => <div data-testid="cinematic-parallax">{children}</div>,
+  FloatingElement: ({ children }: { children: React.ReactNode }) => <div data-testid="floating-element">{children}</div>,
+  TextReveal: ({ children, text, ...props }: { children?: React.ReactNode; text?: string; [key: string]: unknown }) => <div data-testid="text-reveal" {...props}>{text || children}</div>,
+  PulseGlow: ({ children }: { children: React.ReactNode }) => <div data-testid="pulse-glow">{children}</div>,
+  MorphingButton: ({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => <button data-testid="morphing-button" onClick={onClick} {...props}>{children}</button>,
+  MagneticCursor: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-cursor">{children}</div>,
+  ParallaxContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="parallax-container">{children}</div>,
 }));
 
 // Mock Heroicons
