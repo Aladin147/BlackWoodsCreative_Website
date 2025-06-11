@@ -212,7 +212,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                   </p>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate aria-label="Contact form">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-bw-light-gray mb-2">
@@ -225,17 +225,22 @@ export function ContactSection({ className }: ContactSectionProps) {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
+                        aria-invalid={formErrors.name ? 'true' : 'false'}
+                        aria-describedby={formErrors.name ? 'name-error' : undefined}
                         className={`input-field ${formErrors.name ? 'border-red-500 focus:border-red-500' : ''}`}
                         placeholder="Your full name"
                       />
                       {formErrors.name && (
                         <motion.div
+                          id="name-error"
                           className="mt-2 flex items-center gap-2 text-red-400 text-sm"
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
+                          role="alert"
+                          aria-live="polite"
                         >
-                          <ExclamationTriangleIcon className="h-4 w-4" />
+                          <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
                           {formErrors.name}
                         </motion.div>
                       )}
@@ -251,17 +256,22 @@ export function ContactSection({ className }: ContactSectionProps) {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
+                        aria-invalid={formErrors.email ? 'true' : 'false'}
+                        aria-describedby={formErrors.email ? 'email-error' : undefined}
                         className={`input-field ${formErrors.email ? 'border-red-500 focus:border-red-500' : ''}`}
                         placeholder="your@email.com"
                       />
                       {formErrors.email && (
                         <motion.div
+                          id="email-error"
                           className="mt-2 flex items-center gap-2 text-red-400 text-sm"
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
+                          role="alert"
+                          aria-live="polite"
                         >
-                          <ExclamationTriangleIcon className="h-4 w-4" />
+                          <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
                           {formErrors.email}
                         </motion.div>
                       )}
@@ -331,17 +341,22 @@ export function ContactSection({ className }: ContactSectionProps) {
                       onChange={handleInputChange}
                       required
                       rows={4}
+                      aria-invalid={formErrors.message ? 'true' : 'false'}
+                      aria-describedby={formErrors.message ? 'message-error' : undefined}
                       className={`input-field resize-none ${formErrors.message ? 'border-red-500 focus:border-red-500' : ''}`}
                       placeholder="Tell us about your project vision, goals, and any specific requirements..."
                     />
                     {formErrors.message && (
                       <motion.div
+                        id="message-error"
                         className="mt-2 flex items-center gap-2 text-red-400 text-sm"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
+                        role="alert"
+                        aria-live="polite"
                       >
-                        <ExclamationTriangleIcon className="h-4 w-4" />
+                        <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
                         {formErrors.message}
                       </motion.div>
                     )}
@@ -394,7 +409,8 @@ export function ContactSection({ className }: ContactSectionProps) {
                   <motion.a
                     key={info.label}
                     href={info.href}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-bw-dark-gray hover:bg-bw-medium-gray transition-colors duration-300 group"
+                    aria-label={`${info.label}: ${info.value}`}
+                    className="flex items-center gap-4 p-4 rounded-lg bg-bw-dark-gray hover:bg-bw-medium-gray focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300 group"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -402,7 +418,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                     whileHover={{ x: 5 }}
                   >
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-bw-gold/10 text-bw-gold group-hover:bg-bw-gold group-hover:text-bw-black transition-all duration-300">
-                      <info.icon className="h-6 w-6" />
+                      <info.icon className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
                       <p className="text-sm text-bw-light-gray">{info.label}</p>

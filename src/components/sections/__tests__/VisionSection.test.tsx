@@ -11,8 +11,8 @@ jest.mock('framer-motion', () => ({
   useScroll: () => ({
     scrollYProgress: { on: jest.fn(), get: () => 0 }
   }),
-  useTransform: (value: any, input: any, output: any) => ({ on: jest.fn(), get: () => output[0] }),
-  useSpring: (value: any) => ({ on: jest.fn(() => jest.fn()), get: () => 0 }),
+  useTransform: (value: unknown, input: number[], output: (number | string)[]) => ({ on: jest.fn(), get: () => output[0] }),
+  useSpring: () => ({ on: jest.fn(() => jest.fn()), get: () => 0 }),
 }));
 
 // Mock interactive components

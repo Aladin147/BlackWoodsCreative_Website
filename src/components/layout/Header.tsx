@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { siteConfig } from '@/lib/constants/siteConfig';
 import { cn, scrollToElement, throttle } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeContext';
@@ -71,21 +72,25 @@ export function Header({ className }: HeaderProps) {
                 onClick={() => handleNavClick('#hero')}
                 className="text-bw-black hover:text-bw-gold dark:text-bw-white dark:hover:text-bw-gold transition-colors duration-300"
               >
-                <img 
-                  src="/icons/logo.svg" 
-                  alt="BlackWoods Creative Logo" 
-                  className="h-8 w-auto" 
+                <Image
+                  src="/icons/logo.svg"
+                  alt="BlackWoods Creative Logo"
+                  width={32}
+                  height={32}
+                  className="h-8 w-auto"
+                  priority
                 />
               </button>
             </motion.div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
+            <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
               {siteConfig.navigation.map((item, index) => (
                 <motion.button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
-                  className="text-bw-medium-gray hover:text-bw-black dark:text-bw-light-gray dark:hover:text-bw-white font-medium transition-colors duration-300 relative group"
+                  aria-label={`Navigate to ${item.name} section`}
+                  className="text-bw-medium-gray hover:text-bw-black dark:text-bw-light-gray dark:hover:text-bw-white font-medium transition-colors duration-300 relative group focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md px-2 py-1"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -100,10 +105,10 @@ export function Header({ className }: HeaderProps) {
             {/* Theme Toggle */}
             <motion.button
               onClick={() => toggleTheme()}
-              className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-bw-dark-gray hover:bg-bw-gold transition-colors duration-300"
+              className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-bw-dark-gray hover:bg-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              aria-label="Toggle theme"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                 {theme === 'dark' ? (
@@ -116,10 +121,12 @@ export function Header({ className }: HeaderProps) {
 
             {/* Mobile Menu Button */}
             <motion.button
-              className="md:hidden relative w-6 h-6 flex flex-col justify-center items-center"
+              className="md:hidden relative w-6 h-6 flex flex-col justify-center items-center focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md p-2"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               whileTap={{ scale: 0.95 }}
-              aria-label="Toggle mobile menu"
+              aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
                 <motion.span
                   className="w-6 h-0.5 bg-bw-black dark:bg-bw-white transition-all duration-300"
@@ -167,18 +174,20 @@ export function Header({ className }: HeaderProps) {
 
             {/* Menu Content */}
             <motion.div
+              id="mobile-menu"
               className="relative flex flex-col items-center justify-center h-full"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <nav className="flex flex-col items-center space-y-8">
+              <nav className="flex flex-col items-center space-y-8" role="navigation" aria-label="Mobile navigation">
                 {siteConfig.navigation.map((item, index) => (
                   <motion.button
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
-                    className="text-bw-black dark:text-bw-white font-display text-2xl font-medium hover:text-bw-gold transition-colors duration-300"
+                    aria-label={`Navigate to ${item.name} section`}
+                    className="text-bw-black dark:text-bw-white font-display text-2xl font-medium hover:text-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md px-4 py-2 transition-all duration-300"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}

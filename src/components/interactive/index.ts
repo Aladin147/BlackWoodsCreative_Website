@@ -1,6 +1,11 @@
 // Advanced Interactive Components - Phase 4
+// Optimized for tree shaking and code splitting
+
+// Core interactive components
 export { ScrollStoryTeller } from './ScrollStoryTeller';
 export { MagneticCursor } from './MagneticCursor';
+
+// Parallax components (heavy - consider dynamic imports)
 export {
   ParallaxLayer,
   ParallaxContainer,
@@ -8,6 +13,8 @@ export {
   MagneticField,
   DepthOfField
 } from './ParallaxContainer';
+
+// Micro-interactions (lighter components)
 export {
   HoverMagnify,
   TiltCard,

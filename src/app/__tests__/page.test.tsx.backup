@@ -49,8 +49,11 @@ describe('HomePage', () => {
 
   it('renders without crashing', () => {
     render(<HomePage />);
-    // Check that the page renders with sections
-    expect(screen.getByTestId('hero-section')).toBeInTheDocument();
+    // Check that the page renders with loading states and static sections
+    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+    expect(screen.getByTestId('about-section')).toBeInTheDocument();
+    expect(screen.getByTestId('contact-section')).toBeInTheDocument();
+    expect(screen.getByTestId('footer')).toBeInTheDocument();
   });
 
   it('renders the footer component', () => {
@@ -58,19 +61,23 @@ describe('HomePage', () => {
     expect(screen.getByTestId('footer')).toBeInTheDocument();
   });
 
-  it('renders the hero section', () => {
+  it('renders the hero section loading state', () => {
     render(<HomePage />);
-    expect(screen.getByTestId('hero-section')).toBeInTheDocument();
+    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('renders the vision section', () => {
+  it('renders the vision section loading state', () => {
     render(<HomePage />);
-    expect(screen.getByTestId('vision-section')).toBeInTheDocument();
+    expect(screen.getByText('Experience the Difference')).toBeInTheDocument();
+    expect(screen.getByText('Loading vision...')).toBeInTheDocument();
   });
 
-  it('renders the portfolio section', () => {
+  it('renders the portfolio section loading state', () => {
     render(<HomePage />);
-    expect(screen.getByTestId('portfolio-section')).toBeInTheDocument();
+    expect(screen.getByText('Our')).toBeInTheDocument();
+    expect(screen.getByText('Portfolio')).toBeInTheDocument();
+    expect(screen.getByText('Loading portfolio...')).toBeInTheDocument();
   });
 
   it('renders the about section', () => {
@@ -86,25 +93,29 @@ describe('HomePage', () => {
   it('has proper page structure', () => {
     render(<HomePage />);
 
-    // Check that all major sections are present
-    expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-    expect(screen.getByTestId('portfolio-section')).toBeInTheDocument();
-    expect(screen.getByTestId('vision-section')).toBeInTheDocument();
-    expect(screen.getByTestId('about-section')).toBeInTheDocument();
-    expect(screen.getByTestId('contact-section')).toBeInTheDocument();
-    expect(screen.getByTestId('footer')).toBeInTheDocument();
+    // Check that all major sections are present (loading states + static sections)
+    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument(); // Hero loading
+    expect(screen.getByText('Loading portfolio...')).toBeInTheDocument(); // Portfolio loading
+    expect(screen.getByText('Loading vision...')).toBeInTheDocument(); // Vision loading
+    expect(screen.getByTestId('about-section')).toBeInTheDocument(); // Static section
+    expect(screen.getByTestId('contact-section')).toBeInTheDocument(); // Static section
+    expect(screen.getByTestId('footer')).toBeInTheDocument(); // Static footer
   });
 
   it('renders sections in correct order', () => {
     const { container } = render(<HomePage />);
 
+    // Check that static sections are present (dynamic sections show loading states)
     const sections = container.querySelectorAll('[data-testid*="section"]');
 
-    expect(sections[0]).toHaveAttribute('data-testid', 'hero-section');
-    expect(sections[1]).toHaveAttribute('data-testid', 'portfolio-section');
-    expect(sections[2]).toHaveAttribute('data-testid', 'vision-section');
-    expect(sections[3]).toHaveAttribute('data-testid', 'about-section');
-    expect(sections[4]).toHaveAttribute('data-testid', 'contact-section');
+    // Only static sections have testids during loading
+    expect(sections[0]).toHaveAttribute('data-testid', 'about-section');
+    expect(sections[1]).toHaveAttribute('data-testid', 'contact-section');
+
+    // Check that loading content appears in correct order
+    const allContent = container.textContent;
+    expect(allContent?.indexOf('BlackWoods Creative')).toBeLessThan(allContent?.indexOf('Loading portfolio...') || 0);
+    expect(allContent?.indexOf('Loading portfolio...')).toBeLessThan(allContent?.indexOf('Experience the Difference') || 0);
   });
 
   it('maintains semantic HTML structure', () => {
@@ -132,25 +143,20 @@ describe('HomePage', () => {
   it('renders all required sections for a complete homepage', () => {
     render(<HomePage />);
 
-    // Verify all essential homepage sections are present
-    const requiredSections = [
-      'hero-section',
-      'portfolio-section',
-      'vision-section',
-      'about-section',
-      'contact-section'
-    ];
-
-    requiredSections.forEach(sectionId => {
-      expect(screen.getByTestId(sectionId)).toBeInTheDocument();
-    });
+    // Verify essential homepage content is present (loading states + static sections)
+    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument(); // Hero
+    expect(screen.getByText('Loading portfolio...')).toBeInTheDocument(); // Portfolio
+    expect(screen.getByText('Experience the Difference')).toBeInTheDocument(); // Vision
+    expect(screen.getByTestId('about-section')).toBeInTheDocument(); // About (static)
+    expect(screen.getByTestId('contact-section')).toBeInTheDocument(); // Contact (static)
+    expect(screen.getByTestId('footer')).toBeInTheDocument(); // Footer (static)
   });
 
   it('provides proper accessibility structure', () => {
     render(<HomePage />);
 
-    // Check that all sections are accessible
-    expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-    expect(screen.getByTestId('footer')).toBeInTheDocument();
+    // Check that accessible content is present
+    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument(); // Hero content
+    expect(screen.getByTestId('footer')).toBeInTheDocument(); // Footer
   });
 });

@@ -70,7 +70,7 @@ jest.mock('@/lib/data/portfolio', () => ({
 
 // Mock PortfolioCard component
 jest.mock('@/components/ui/PortfolioCard', () => ({
-  PortfolioCard: ({ project }: { project: any }) => (
+  PortfolioCard: ({ project }: { project: { id: string; title: string; description: string; category: string } }) => (
     <div data-testid="portfolio-card" data-project-id={project.id}>
       <h3>{project.title}</h3>
       <p>{project.description}</p>

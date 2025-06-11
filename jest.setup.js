@@ -66,6 +66,35 @@ Object.defineProperty(window, 'matchMedia', {
 // Mock scrollTo
 global.scrollTo = jest.fn();
 
+// Mock Performance API
+global.performance = {
+  ...global.performance,
+  mark: jest.fn(),
+  measure: jest.fn(),
+  now: jest.fn(() => Date.now()),
+  memory: {
+    usedJSHeapSize: 1000000,
+    totalJSHeapSize: 2000000,
+    jsHeapSizeLimit: 4000000,
+  },
+  getEntriesByType: jest.fn(() => []),
+  getEntriesByName: jest.fn(() => []),
+  clearMarks: jest.fn(),
+  clearMeasures: jest.fn(),
+  timing: {
+    navigationStart: Date.now() - 1000,
+    loadEventEnd: Date.now(),
+  },
+};
+
+// Mock requestAnimationFrame and cancelAnimationFrame
+global.requestAnimationFrame = jest.fn((cb) => {
+  setTimeout(cb, 16);
+  return 1;
+});
+
+global.cancelAnimationFrame = jest.fn();
+
 // Mock console.error to avoid noise in tests
 global.console = {
   ...console,

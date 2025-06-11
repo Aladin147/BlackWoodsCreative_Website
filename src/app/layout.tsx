@@ -1,10 +1,34 @@
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
 import { Header, ScrollProgress } from '@/components/layout';
-import { MagneticCursor } from '@/components/interactive';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { ThemeProvider } from '@/context/ThemeContext';
+import dynamic from 'next/dynamic';
 import './globals.css';
+
+// Dynamically import heavy interactive components
+const MagneticCursor = dynamic(
+  () => import('@/components/interactive').then(mod => ({ default: mod.MagneticCursor })),
+  {
+    ssr: false,
+    loading: () => null
+  }
+);
+
+// Performance monitoring (only in production)
+const PerformanceReporter = dynamic(
+  () => import('@/lib/utils/performance-monitor').then(mod => ({
+    default: function PerformanceReporter() {
+      if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+        const monitor = mod.getPerformanceMonitor();
+        // Report metrics after page load
+        setTimeout(() => monitor.reportMetrics(), 3000);
+      }
+      return null;
+    }
+  })),
+  { ssr: false }
+);
 
 const inter = Inter({
   subsets: ['latin'],
@@ -111,6 +135,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main id="main-content" className="relative" role="main">
               {children}
             </main>
+            <PerformanceReporter />
           </div>
         </ThemeProvider>
       </body>

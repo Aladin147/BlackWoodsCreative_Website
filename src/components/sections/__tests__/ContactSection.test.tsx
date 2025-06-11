@@ -20,8 +20,8 @@ describe('ContactSection', () => {
 
     expect(screen.getByText(/Ready to Create Something/)).toBeInTheDocument();
     expect(screen.getByText(/Amazing/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Name/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Name \*/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email \*/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Project Details/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Send Message/ })).toBeInTheDocument();
   });
@@ -54,8 +54,8 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const nameInput = screen.getByLabelText(/Name/);
-    const emailInput = screen.getByLabelText(/Email/);
+    const nameInput = screen.getByLabelText(/Name \*/);
+    const emailInput = screen.getByLabelText(/Email \*/);
     const messageInput = screen.getByLabelText(/Project Details/);
     const submitButton = screen.getByRole('button', { name: /Send Message/ });
 
@@ -74,8 +74,8 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const nameInput = screen.getByLabelText(/Name/);
-    const emailInput = screen.getByLabelText(/Email/);
+    const nameInput = screen.getByLabelText(/Name \*/);
+    const emailInput = screen.getByLabelText(/Email \*/);
     const messageInput = screen.getByLabelText(/Project Details/);
     const submitButton = screen.getByRole('button', { name: /Send Message/ });
 
@@ -94,7 +94,7 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const nameInput = screen.getByLabelText(/Name/);
+    const nameInput = screen.getByLabelText(/Name \*/);
     const submitButton = screen.getByRole('button', { name: /Send Message/ });
 
     // Trigger validation error by submitting empty form
@@ -115,8 +115,8 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const nameInput = screen.getByLabelText(/Name/);
-    const emailInput = screen.getByLabelText(/Email/);
+    const nameInput = screen.getByLabelText(/Name \*/);
+    const emailInput = screen.getByLabelText(/Email \*/);
     const messageInput = screen.getByLabelText(/Project Details/);
     const submitButton = screen.getByRole('button', { name: /Send Message/ });
 
@@ -144,8 +144,8 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const nameInput = screen.getByLabelText(/Name/);
-    const emailInput = screen.getByLabelText(/Email/);
+    const nameInput = screen.getByLabelText(/Name \*/);
+    const emailInput = screen.getByLabelText(/Email \*/);
     const messageInput = screen.getByLabelText(/Project Details/);
     const submitButton = screen.getByRole('button', { name: /Send Message/ });
 
@@ -175,8 +175,8 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const nameInput = screen.getByLabelText(/Name/) as HTMLInputElement;
-    const emailInput = screen.getByLabelText(/Email/) as HTMLInputElement;
+    const nameInput = screen.getByLabelText(/Name \*/) as HTMLInputElement;
+    const emailInput = screen.getByLabelText(/Email \*/) as HTMLInputElement;
     const companyInput = screen.getByLabelText(/Company/) as HTMLInputElement;
 
     await user.type(nameInput, 'John Doe');

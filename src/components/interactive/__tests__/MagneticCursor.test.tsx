@@ -2,9 +2,14 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 // Mock framer-motion
+interface MockMotionProps {
+  children?: React.ReactNode;
+  [key: string]: unknown;
+}
+
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props} data-testid="motion-div">{children}</div>,
+    div: ({ children, ...props }: MockMotionProps) => <div {...props} data-testid="motion-div">{children}</div>,
   },
   useMotionValue: () => ({
     set: jest.fn(),

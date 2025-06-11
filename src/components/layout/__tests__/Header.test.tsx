@@ -81,7 +81,7 @@ describe('Header', () => {
   it('renders mobile menu button', () => {
     renderHeader();
 
-    const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
+    const mobileMenuButton = screen.getByLabelText('Open mobile menu');
     expect(mobileMenuButton).toBeInTheDocument();
   });
 
@@ -89,7 +89,7 @@ describe('Header', () => {
     const user = userEvent.setup();
     renderHeader();
 
-    const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
+    const mobileMenuButton = screen.getByLabelText('Open mobile menu');
 
     // Menu should be closed initially - check for navigation items
     const portfolioLinks = screen.getAllByText('Portfolio');
@@ -114,7 +114,7 @@ describe('Header', () => {
     const user = userEvent.setup();
     renderHeader();
 
-    const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
+    const mobileMenuButton = screen.getByLabelText('Open mobile menu');
 
     // Open menu
     await user.click(mobileMenuButton);
@@ -174,7 +174,7 @@ describe('Header', () => {
     const user = userEvent.setup();
     renderHeader();
 
-    const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
+    const mobileMenuButton = screen.getByLabelText('Open mobile menu');
 
     // Open menu
     await user.click(mobileMenuButton);
@@ -189,7 +189,7 @@ describe('Header', () => {
   it('maintains accessibility attributes', () => {
     renderHeader();
 
-    const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
+    const mobileMenuButton = screen.getByLabelText('Open mobile menu');
     expect(mobileMenuButton).toBeInTheDocument();
 
     // The navigation should be present
@@ -201,7 +201,7 @@ describe('Header', () => {
     const user = userEvent.setup();
     renderHeader();
 
-    const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
+    const mobileMenuButton = screen.getByLabelText('Open mobile menu');
 
     // Rapidly click multiple times
     await user.click(mobileMenuButton);

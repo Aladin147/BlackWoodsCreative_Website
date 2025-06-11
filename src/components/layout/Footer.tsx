@@ -171,29 +171,34 @@ export function Footer({ className }: FooterProps) {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-dark-gray text-bw-light-gray hover:bg-bw-gold hover:text-bw-black transition-all duration-300"
+                  aria-label={`Follow us on ${social.name} (opens in new tab)`}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-dark-gray text-bw-light-gray hover:bg-bw-gold hover:text-bw-black focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   title={social.name}
                 >
-                  <social.icon className="h-5 w-5" />
+                  <social.icon className="h-5 w-5" aria-hidden="true" />
                 </motion.a>
               ))}
             </div>
 
             {/* Newsletter Signup */}
             <div className="mt-6">
-              <p className="text-bw-light-gray text-sm mb-3">
+              <label htmlFor="newsletter-email" className="text-bw-light-gray text-sm mb-3 block">
                 Stay updated with our latest work
-              </p>
+              </label>
               <div className="flex gap-2">
                 <input
+                  id="newsletter-email"
                   type="email"
                   placeholder="Your email"
-                  className="flex-1 px-3 py-2 bg-bw-dark-gray border border-bw-medium-gray rounded-md text-bw-white text-sm focus:outline-none focus:border-bw-gold transition-colors duration-300"
+                  aria-label="Email address for newsletter subscription"
+                  className="flex-1 px-3 py-2 bg-bw-dark-gray border border-bw-medium-gray rounded-md text-bw-white text-sm focus:outline-none focus:border-bw-gold focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300"
                 />
                 <motion.button
-                  className="px-4 py-2 bg-bw-gold text-bw-black rounded-md text-sm font-medium hover:bg-yellow-400 transition-colors duration-300"
+                  type="submit"
+                  aria-label="Subscribe to newsletter"
+                  className="px-4 py-2 bg-bw-gold text-bw-black rounded-md text-sm font-medium hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -233,12 +238,13 @@ export function Footer({ className }: FooterProps) {
             {/* Back to Top */}
             <motion.button
               onClick={handleScrollToTop}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-dark-gray text-bw-light-gray hover:bg-bw-gold hover:text-bw-black transition-all duration-300"
+              aria-label="Scroll back to top of page"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-dark-gray text-bw-light-gray hover:bg-bw-gold hover:text-bw-black focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300"
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               title="Back to top"
             >
-              <ArrowUpIcon className="h-5 w-5" />
+              <ArrowUpIcon className="h-5 w-5" aria-hidden="true" />
             </motion.button>
           </div>
         </motion.div>

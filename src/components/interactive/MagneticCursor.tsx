@@ -119,7 +119,10 @@ export function MagneticCursor() {
     document.head.appendChild(style);
 
     return () => {
-      document.head.removeChild(style);
+      // Safe cleanup - check if style element still exists and has a parent
+      if (style && style.parentNode) {
+        style.parentNode.removeChild(style);
+      }
     };
   }, []);
 
@@ -143,6 +146,7 @@ export function MagneticCursor() {
       {/* Main Cursor */}
       <motion.div
         ref={cursorRef}
+        data-testid="magnetic-cursor"
         className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
         style={{
           x: smoothX,

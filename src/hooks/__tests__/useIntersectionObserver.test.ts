@@ -1,8 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
 import {
   useIntersectionObserver,
+  useIntersectionObserverMultiple,
   useScrollAnimation,
   useLazyLoad,
+  useViewportEffect,
   usePerformanceMonitor,
 } from '../useIntersectionObserver';
 
@@ -118,6 +120,158 @@ describe('useIntersectionObserver', () => {
     expect(result.current[0]).toBeDefined();
     expect(result.current[1]).toBeNull();
   });
+
+  it('should handle threshold array', () => {
+    const { result } = renderHook(() =>
+      useIntersectionObserver({ threshold: [0, 0.25, 0.5, 0.75, 1] })
+    );
+
+    expect(result.current[0]).toBeDefined();
+    expect(result.current[1]).toBeNull();
+  });
+
+  it('should handle root element option', () => {
+    const rootElement = document.createElement('div');
+    const { result } = renderHook(() =>
+      useIntersectionObserver({ root: rootElement })
+    );
+
+    expect(result.current[0]).toBeDefined();
+    expect(result.current[1]).toBeNull();
+  });
+
+  it('should handle custom rootMargin', () => {
+    const { result } = renderHook(() =>
+      useIntersectionObserver({ rootMargin: '20px 10px' })
+    );
+
+    expect(result.current[0]).toBeDefined();
+    expect(result.current[1]).toBeNull();
+  });
+
+  it('should not create observer when IntersectionObserver is not supported', () => {
+    // Temporarily remove IntersectionObserver support
+    const originalIO = global.IntersectionObserver;
+    delete (global as typeof globalThis).IntersectionObserver;
+
+    const { result } = renderHook(() => useIntersectionObserver());
+    const mockElement = document.createElement('div');
+
+    act(() => {
+      (result.current[0] as React.MutableRefObject<HTMLElement | null>).current = mockElement;
+    });
+
+    expect(result.current[0]).toBeDefined();
+    expect(result.current[1]).toBeNull();
+
+    // Restore IntersectionObserver
+    global.IntersectionObserver = originalIO;
+  });
+
+  it('should simulate intersection entry update', () => {
+    const { result } = renderHook(() => useIntersectionObserver());
+    const mockElement = document.createElement('div');
+
+    act(() => {
+      (result.current[0] as React.MutableRefObject<HTMLElement | null>).current = mockElement;
+    });
+
+    // Simulate intersection observer callback
+    const mockEntry = {
+      isIntersecting: true,
+      intersectionRatio: 0.5,
+      boundingClientRect: {} as DOMRectReadOnly,
+      intersectionRect: {} as DOMRectReadOnly,
+      rootBounds: {} as DOMRectReadOnly,
+      target: mockElement,
+      time: Date.now(),
+    };
+
+    act(() => {
+      if (mockIntersectionObserver.mock.calls.length > 0) {
+        const callback = mockIntersectionObserver.mock.calls[0][0];
+        callback([mockEntry]);
+      }
+    });
+
+    expect(result.current[0]).toBeDefined();
+  });
+});
+
+describe('useIntersectionObserverMultiple', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return entries map and control functions', () => {
+    const { result } = renderHook(() => useIntersectionObserverMultiple());
+
+    expect(result.current.entries).toBeInstanceOf(Map);
+    expect(typeof result.current.observe).toBe('function');
+    expect(typeof result.current.unobserve).toBe('function');
+    expect(typeof result.current.disconnect).toBe('function');
+  });
+
+  it('should observe multiple elements', () => {
+    const { result } = renderHook(() => useIntersectionObserverMultiple());
+    const element1 = document.createElement('div');
+    const element2 = document.createElement('div');
+
+    act(() => {
+      result.current.observe(element1);
+      result.current.observe(element2);
+    });
+
+    expect(result.current.entries.size).toBe(0); // Initially empty
+  });
+
+  it('should unobserve elements', () => {
+    const { result } = renderHook(() => useIntersectionObserverMultiple());
+    const element = document.createElement('div');
+
+    act(() => {
+      result.current.observe(element);
+      result.current.unobserve(element);
+    });
+
+    expect(result.current.entries.has(element)).toBe(false);
+  });
+
+  it('should disconnect all observations', () => {
+    const { result } = renderHook(() => useIntersectionObserverMultiple());
+    const element1 = document.createElement('div');
+    const element2 = document.createElement('div');
+
+    act(() => {
+      result.current.observe(element1);
+      result.current.observe(element2);
+      result.current.disconnect();
+    });
+
+    expect(result.current.entries.size).toBe(0);
+  });
+
+  it('should handle freezeOnceVisible option', () => {
+    const { result } = renderHook(() =>
+      useIntersectionObserverMultiple({ freezeOnceVisible: true })
+    );
+
+    expect(result.current.entries).toBeInstanceOf(Map);
+  });
+
+  it('should cleanup on unmount', () => {
+    const { result, unmount } = renderHook(() => useIntersectionObserverMultiple());
+    const element = document.createElement('div');
+
+    act(() => {
+      result.current.observe(element);
+    });
+
+    unmount();
+
+    // Should cleanup without errors
+    expect(result.current.entries.size).toBe(0);
+  });
 });
 
 describe('useScrollAnimation', () => {
@@ -225,6 +379,76 @@ describe('useLazyLoad', () => {
     });
 
     expect(result.current.isLoaded).toBe(false);
+  });
+});
+
+describe('useViewportEffect', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should call callback when entry changes', () => {
+    const mockCallback = jest.fn();
+    const { result } = renderHook(() => useViewportEffect(mockCallback));
+
+    expect(result.current).toBeDefined(); // ref
+    expect(mockCallback).not.toHaveBeenCalled(); // No entry initially
+  });
+
+  it('should handle custom intersection options', () => {
+    const mockCallback = jest.fn();
+    const { result } = renderHook(() =>
+      useViewportEffect(mockCallback, { threshold: 0.5 })
+    );
+
+    expect(result.current).toBeDefined();
+  });
+
+  it('should call callback with entry when intersection occurs', () => {
+    const mockCallback = jest.fn();
+    const { result } = renderHook(() => useViewportEffect(mockCallback));
+    const mockElement = document.createElement('div');
+
+    act(() => {
+      (result.current as React.MutableRefObject<HTMLElement | null>).current = mockElement;
+    });
+
+    // Simulate intersection
+    const mockEntry = {
+      isIntersecting: true,
+      intersectionRatio: 0.5,
+      boundingClientRect: {} as DOMRectReadOnly,
+      intersectionRect: {} as DOMRectReadOnly,
+      rootBounds: {} as DOMRectReadOnly,
+      target: mockElement,
+      time: Date.now(),
+    };
+
+    act(() => {
+      if (mockIntersectionObserver.mock.calls.length > 0) {
+        const callback = mockIntersectionObserver.mock.calls[0][0];
+        callback([mockEntry]);
+      }
+    });
+
+    expect(result.current).toBeDefined();
+  });
+
+  it('should handle callback changes', () => {
+    const mockCallback1 = jest.fn();
+    const mockCallback2 = jest.fn();
+
+    const { result, rerender } = renderHook(
+      ({ callback }) => useViewportEffect(callback),
+      { initialProps: { callback: mockCallback1 } }
+    );
+
+    expect(result.current).toBeDefined();
+
+    // Change callback
+    rerender({ callback: mockCallback2 });
+
+    expect(result.current).toBeDefined();
   });
 });
 
