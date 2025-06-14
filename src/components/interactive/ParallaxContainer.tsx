@@ -152,15 +152,17 @@ export function CinematicParallax({ children, className = '' }: ParallaxContaine
   );
 }
 
-// Enhanced Magnetic field effect for portfolio items
+// Enhanced Magnetic field effect with device adaptation
 export function MagneticField({
   children,
   strength = 0.3,
-  distance = 150
+  distance = 150,
+  disabled = false
 }: {
   children: ReactNode;
   strength?: number;
   distance?: number;
+  disabled?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useSpring(0, { stiffness: 400, damping: 25 });
@@ -169,9 +171,19 @@ export function MagneticField({
 
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    if (!element || disabled) return;
+
+    // Check if device supports hover
+    const hasHover = window.matchMedia('(hover: hover)').matches;
+    const isTouchDevice = 'ontouchstart' in window;
+
+    // Adapt strength and distance for mobile devices
+    const adaptedStrength = isTouchDevice ? strength * 0.5 : strength;
+    const adaptedDistance = isTouchDevice ? distance * 0.7 : distance;
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (!hasHover) return; // Skip on touch devices without hover
+
       const rect = element.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -181,8 +193,8 @@ export function MagneticField({
       const distanceFromCenter = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
       // Only apply magnetic effect within specified distance
-      if (distanceFromCenter < distance) {
-        const magneticStrength = (1 - distanceFromCenter / distance) * strength;
+      if (distanceFromCenter < adaptedDistance) {
+        const magneticStrength = (1 - distanceFromCenter / adaptedDistance) * adaptedStrength;
         x.set(deltaX * magneticStrength);
         y.set(deltaY * magneticStrength);
         scale.set(1 + magneticStrength * 0.1); // Subtle scale effect
@@ -199,15 +211,47 @@ export function MagneticField({
       scale.set(1);
     };
 
+    // Touch event handlers for mobile devices
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!isTouchDevice) return;
+
+      const touch = e.touches[0];
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const deltaX = touch.clientX - centerX;
+      const deltaY = touch.clientY - centerY;
+
+      // Quick tap feedback
+      x.set(deltaX * adaptedStrength * 0.3);
+      y.set(deltaY * adaptedStrength * 0.3);
+      scale.set(1.05);
+
+      // Return to normal after short delay
+      setTimeout(() => {
+        x.set(0);
+        y.set(0);
+        scale.set(1);
+      }, 150);
+    };
+
     // Use global mouse events for better magnetic field effect
-    document.addEventListener('mousemove', handleMouseMove);
-    element.addEventListener('mouseleave', handleMouseLeave);
+    if (hasHover) {
+      document.addEventListener('mousemove', handleMouseMove);
+      element.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    if (isTouchDevice) {
+      element.addEventListener('touchstart', handleTouchStart);
+    }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', handleMouseLeave);
+      element.removeEventListener('touchstart', handleTouchStart);
     };
-  }, [x, y, scale, strength, distance]);
+  }, [x, y, scale, strength, distance, disabled]);
 
   return (
     <motion.div

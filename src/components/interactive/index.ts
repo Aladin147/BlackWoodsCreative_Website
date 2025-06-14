@@ -43,6 +43,9 @@ export {
   ScrollTriggeredCounter
 } from './AdvancedScrollAnimations';
 
+// Phase 2: Advanced Portfolio Features
+export { AdvancedPortfolioFilter } from './AdvancedPortfolioFilter';
+
 // Future exports for Phase 4 expansion:
 // export { ThreeDScene } from './ThreeDScene';
 // export { AudioVisualizer } from './AudioVisualizer';

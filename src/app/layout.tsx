@@ -38,6 +38,17 @@ const PerformanceReporter = dynamic(
   { ssr: false }
 );
 
+// Development monitoring components
+const AnimationPerformanceMonitor = dynamic(
+  () => import('@/hooks/useAnimationPerformance').then(mod => ({ default: mod.AnimationPerformanceMonitor })),
+  { ssr: false }
+);
+
+const DeviceAdaptationMonitor = dynamic(
+  () => import('@/hooks/useDeviceAdaptation').then(mod => ({ default: mod.DeviceAdaptationMonitor })),
+  { ssr: false }
+);
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-primary',
@@ -145,6 +156,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </main>
             <PerformanceReporter />
+            <AnimationPerformanceMonitor />
+            <DeviceAdaptationMonitor />
           </div>
         </ThemeProvider>
       </body>
