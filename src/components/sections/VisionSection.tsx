@@ -26,8 +26,8 @@ const visionStoryData = [
       blur: [12, 0, 0, 12] as [number, number, number, number],
       rotate: [0, 0] as [number, number],
     },
-    color: 'from-bw-gold/30 to-amber-500/20',
-    accent: 'text-bw-gold'
+    color: 'from-bw-aurora-teal/30 to-bw-aurora-green/20',
+    accent: 'text-bw-accent-gold'
   },
   {
     id: 'craft',
@@ -42,8 +42,8 @@ const visionStoryData = [
       blur: [8, 0, 0, 8] as [number, number, number, number],
       rotate: [-1, 1] as [number, number],
     },
-    color: 'from-bw-pearl/30 to-slate-400/20',
-    accent: 'text-bw-pearl'
+    color: 'from-bw-aurora-green/30 to-bw-aurora-bright/20',
+    accent: 'text-bw-accent-gold'
   },
   {
     id: 'impact',
@@ -58,8 +58,8 @@ const visionStoryData = [
       blur: [15, 0, 0, 15] as [number, number, number, number],
       rotate: [0, 0] as [number, number],
     },
-    color: 'from-emerald-500/30 to-teal-400/20',
-    accent: 'text-emerald-400'
+    color: 'from-bw-aurora-bright/30 to-bw-aurora-teal/20',
+    accent: 'text-bw-accent-gold'
   }
 ];
 
@@ -90,20 +90,20 @@ function CinematicFinale() {
           transformOrigin: 'center center',
         }}
       >
-        <div className="w-full h-full bg-gradient-to-br from-bw-black via-bw-charcoal to-bw-dark-gray" />
+        <div className="w-full h-full bg-bw-bg-primary" />
       </motion.div>
 
       {/* Multiple Parallax Layers */}
       <ParallaxLayer speed={0.2} direction="up" className="absolute inset-0 z-10">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-bw-gold/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-bw-aurora-teal/20 rounded-full blur-3xl" />
       </ParallaxLayer>
 
       <ParallaxLayer speed={0.4} direction="down" className="absolute inset-0 z-10">
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-bw-pearl/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-bw-aurora-green/15 rounded-full blur-3xl" />
       </ParallaxLayer>
 
       <ParallaxLayer speed={0.6} direction="up" className="absolute inset-0 z-10">
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-bw-aurora-bright/15 rounded-full blur-2xl" />
       </ParallaxLayer>
 
       {/* Content */}
@@ -114,11 +114,11 @@ function CinematicFinale() {
         <div className="max-w-4xl">
           <TextReveal
             text="Experience the Difference"
-            className="text-display-xl text-bw-white mb-8 font-display font-bold"
+            className="text-display-xl mb-8"
             delay={0.05}
           />
           <motion.p
-            className="text-body-xl text-bw-pearl leading-relaxed"
+            className="text-body-xl"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -136,7 +136,7 @@ function CinematicFinale() {
 // Main Vision Section Component
 export function VisionSection({ className }: VisionSectionProps) {
   return (
-    <section className={`relative bg-bw-black ${className}`}>
+    <section className={`relative bg-bw-bg-primary ${className}`}>
       {/* Simplified Scroll-Based Storytelling */}
       <div className="relative min-h-[300vh]">
         <SimpleScrollStoryTeller sections={visionStoryData} />
@@ -189,8 +189,8 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
               key={section.id}
               className={`w-1 h-12 rounded-full transition-all duration-500 cursor-pointer ${
                 index === activeSection
-                  ? 'bg-bw-gold shadow-[0_0_20px_rgba(212,175,55,0.6)]'
-                  : 'bg-bw-medium-gray/50 hover:bg-bw-light-gray/70'
+                  ? 'bg-bw-accent-gold shadow-[0_0_20px_rgba(195,163,88,0.6)]'
+                  : 'bg-bw-border-subtle hover:bg-bw-accent-gold/30'
               }`}
               whileHover={{ scale: 1.1, x: 2 }}
               onClick={() => {
@@ -288,7 +288,7 @@ function SimpleStorySection({
               backgroundImage: `url(${section.backgroundImage})`,
             }}
           />
-          <div className="absolute inset-0 bg-bw-black/60" />
+          <div className="absolute inset-0 bg-bw-bg-primary/60" />
         </motion.div>
       )}
 
@@ -309,13 +309,13 @@ function SimpleStorySection({
         <motion.div className="mb-8">
           <TextReveal
             text={section.title}
-            className="text-display-xl text-bw-white drop-shadow-2xl font-display font-bold"
+            className="text-display-xl drop-shadow-2xl"
             delay={isActive ? 0.05 : 0}
           />
         </motion.div>
 
         <motion.p
-          className="text-body-lg text-bw-pearl leading-relaxed drop-shadow-lg"
+          className="text-body-xl drop-shadow-lg"
           initial={{ opacity: 0, y: 30 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -326,7 +326,7 @@ function SimpleStorySection({
 
       {/* Section Number */}
       <motion.div
-        className="absolute bottom-8 right-8 text-bw-gold/30 font-display text-6xl font-bold"
+        className="absolute bottom-8 right-8 text-bw-accent-gold/30 font-display text-6xl font-bold"
         style={{ opacity: sectionNumberOpacity }}
       >
         {String(index + 1).padStart(2, '0')}

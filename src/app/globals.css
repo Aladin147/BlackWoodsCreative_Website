@@ -352,48 +352,54 @@ body::after {
     @apply rounded-md border border-bw-medium-gray bg-white/5 px-4 py-3 text-bw-white placeholder-bw-light-gray transition-all duration-300 focus:border-bw-gold focus:shadow-gold-glow focus:outline-none;
   }
 
-  /* Deep Forest Haze Typography System */
+  /* Deep Forest Haze Typography System - EXACT THEME GUIDE IMPLEMENTATION */
+
+  /* h1 (Main Headline) - Theme Guide Specification */
   .text-display-xl {
     font-family: 'Playfair Display', serif;
-    font-size: 4rem; /* 64px */
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--bw-accent-gold);
+    font-size: 4rem; /* 64px per theme guide */
+    font-weight: 600; /* Semi-bold per theme guide */
+    letter-spacing: -0.02em; /* Per theme guide */
+    color: var(--bw-accent-gold); /* $accent-gold per theme guide */
     line-height: 1.1;
   }
 
+  /* h2 (Section Headings) - Theme Guide Specification */
   .text-display-lg {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem; /* 40px */
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--bw-text-primary);
+    font-size: 2.5rem; /* 40px per theme guide */
+    font-weight: 600; /* Per theme guide */
+    letter-spacing: -0.01em; /* Per theme guide */
+    color: var(--bw-text-primary); /* $text-primary per theme guide */
     line-height: 1.2;
   }
 
+  /* h3 (Card Titles, Sub-headings) - Theme Guide Specification */
   .text-display-md {
     font-family: 'Inter', sans-serif;
-    font-size: 1.5rem; /* 24px */
-    font-weight: 600;
-    color: var(--bw-text-primary);
+    font-size: 1.5rem; /* 24px per theme guide */
+    font-weight: 600; /* Per theme guide */
+    color: var(--bw-text-primary); /* $text-primary per theme guide */
     line-height: 1.3;
   }
 
+  /* p (Body Text) - Theme Guide Specification */
   .text-body-xl {
     font-family: 'Inter', sans-serif;
-    font-size: 1rem; /* 16px */
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--bw-text-primary);
-    opacity: 0.85;
+    font-size: 1rem; /* 16px per theme guide */
+    font-weight: 400; /* Regular per theme guide */
+    line-height: 1.6; /* Per theme guide */
+    color: var(--bw-text-primary); /* $text-primary per theme guide */
+    opacity: 0.85; /* 85% opacity per theme guide */
   }
 
+  /* small (Captions, Meta info) - Theme Guide Specification */
   .text-body-lg {
     font-family: 'Inter', sans-serif;
-    font-size: 0.875rem; /* 14px */
-    font-weight: 400;
-    color: var(--bw-text-primary);
-    opacity: 0.6;
+    font-size: 0.875rem; /* 14px per theme guide */
+    font-weight: 400; /* Per theme guide */
+    color: var(--bw-text-primary); /* $text-primary per theme guide */
+    opacity: 0.6; /* 60% opacity per theme guide */
   }
 
   /* Enhanced Visual Effects */

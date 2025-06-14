@@ -52,7 +52,7 @@ export function Header({ className }: HeaderProps) {
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
           isScrolled
-            ? 'bg-bw-white/95 dark:bg-bw-black/95 backdrop-blur-md border-b border-bw-silver dark:border-bw-dark-gray shadow-cinematic'
+            ? 'bg-bw-bg-primary/95 backdrop-blur-md border-b border-bw-border-subtle'
             : 'bg-transparent',
           className
         )}
@@ -70,7 +70,7 @@ export function Header({ className }: HeaderProps) {
             >
               <button
                 onClick={() => handleNavClick('#hero')}
-                className="text-bw-black hover:text-bw-gold dark:text-bw-white dark:hover:text-bw-gold transition-colors duration-300"
+                className="text-bw-text-primary hover:text-bw-accent-gold transition-colors duration-300"
               >
                 <Image
                   src="/icons/logo.svg"
@@ -90,14 +90,14 @@ export function Header({ className }: HeaderProps) {
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
                   aria-label={`Navigate to ${item.name} section`}
-                  className="text-bw-medium-gray hover:text-bw-black dark:text-bw-light-gray dark:hover:text-bw-white font-medium transition-colors duration-300 relative group focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md px-2 py-1"
+                  className="text-bw-text-primary/70 hover:text-bw-accent-gold font-medium transition-colors duration-300 relative group focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 rounded-md px-2 py-1"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ y: -2 }}
                 >
                   {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-bw-gold transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full" />
                 </motion.button>
               ))}
             </nav>
@@ -105,7 +105,7 @@ export function Header({ className }: HeaderProps) {
             {/* Theme Toggle */}
             <motion.button
               onClick={() => toggleTheme()}
-              className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-bw-dark-gray hover:bg-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300"
+              className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-bw-border-subtle hover:bg-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 transition-all duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
