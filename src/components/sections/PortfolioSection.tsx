@@ -6,7 +6,10 @@ import { portfolioData } from '@/lib/data/portfolio';
 import { PortfolioCard } from '@/components/ui/PortfolioCard';
 import {
   HoverMagnify,
-  MagneticField
+  MagneticField,
+  ScrollReveal,
+  ParallaxText,
+  StaggeredGrid
 } from '@/components/interactive';
 
 interface PortfolioSectionProps {
@@ -25,40 +28,42 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
   return (
     <section id="portfolio" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        {/* Deep Forest Haze Section Header */}
-        <div className="text-center mb-20">
-          <h2 className="mb-8 text-display-lg">
-            Our <span className="text-bw-accent-gold">Portfolio</span>
-          </h2>
-          <p className="mx-auto max-w-3xl text-body-xl">
-            Explore our diverse range of creative projects that showcase our expertise in visual storytelling and premium craftsmanship.
-          </p>
-        </div>
+        {/* Advanced Section Header with Parallax */}
+        <ScrollReveal className="text-center mb-20" direction="up" distance={80} delay={0.2}>
+          <ParallaxText speed={0.2}>
+            <h2 className="mb-8 text-display-lg">
+              Our <span className="text-bw-accent-gold">Portfolio</span>
+            </h2>
+          </ParallaxText>
+          <ScrollReveal direction="up" distance={40} delay={0.4}>
+            <p className="mx-auto max-w-3xl text-body-xl">
+              Explore our diverse range of creative projects that showcase our expertise in visual storytelling and premium craftsmanship.
+            </p>
+          </ScrollReveal>
+        </ScrollReveal>
 
-        {/* Deep Forest Haze Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        {/* Advanced Category Filter with Magnetic Effects */}
+        <StaggeredGrid className="flex flex-wrap justify-center gap-4 mb-12" staggerDelay={0.1}>
           {categories.map((category, index) => (
-            <motion.button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-offset-2 focus:ring-offset-bw-bg-primary ${
-                activeCategory === category
-                  ? 'bg-bw-accent-gold text-bw-bg-primary'
-                  : 'bg-transparent text-bw-text-primary hover:text-bw-accent-gold border border-bw-border-subtle hover:border-bw-accent-gold'
-              }`}
-              aria-pressed={activeCategory === category}
-              aria-label={`Filter portfolio by ${category}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {category}
-            </motion.button>
+            <MagneticField key={category} strength={0.2} distance={100}>
+              <motion.button
+                onClick={() => setActiveCategory(category)}
+                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-offset-2 focus:ring-offset-bw-bg-primary cursor-pointer ${
+                  activeCategory === category
+                    ? 'bg-bw-accent-gold text-bw-bg-primary shadow-lg'
+                    : 'bg-transparent text-bw-text-primary hover:text-bw-accent-gold border border-bw-border-subtle hover:border-bw-accent-gold hover:shadow-md'
+                }`}
+                aria-pressed={activeCategory === category}
+                aria-label={`Filter portfolio by ${category}`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                data-cursor="button"
+              >
+                {category}
+              </motion.button>
+            </MagneticField>
           ))}
-        </div>
+        </StaggeredGrid>
 
         {/* Enhanced Portfolio Grid with Magnetic Effects */}
         <motion.div
@@ -93,22 +98,19 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
           </AnimatePresence>
         </motion.div>
 
-        {/* View More Button */}
-        <motion.div
-          className="text-center mt-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
-          <motion.button
-            className="btn-secondary"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View Full Portfolio
-          </motion.button>
-        </motion.div>
+        {/* Advanced View More Button with Magnetic Effect */}
+        <ScrollReveal className="text-center mt-16" direction="up" distance={30} delay={0.4}>
+          <MagneticField strength={0.3} distance={120}>
+            <motion.button
+              className="btn-secondary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              data-cursor="button"
+            >
+              View Full Portfolio
+            </motion.button>
+          </MagneticField>
+        </ScrollReveal>
       </div>
     </section>
   );

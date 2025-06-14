@@ -12,7 +12,7 @@ import {
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { validateEmail } from '@/lib/utils';
-import { SectionScrollAnimation } from '@/components/interactive';
+import { SectionScrollAnimation, ScrollReveal, MagneticField, StaggeredGrid } from '@/components/interactive';
 
 interface ContactSectionProps {
   className?: string;
@@ -197,7 +197,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                   transition={{ duration: 0.5 }}
                 >
                   <div className="mb-4 flex justify-center">
-                    <CheckCircleIcon className="h-16 w-16 text-bw-gold" />
+                    <CheckCircleIcon className="h-16 w-16 text-bw-accent-gold" />
                   </div>
                   <h4 className="mb-2 text-display-md text-bw-accent-gold">
                     Thank You!
@@ -210,7 +210,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                 <form onSubmit={handleSubmit} className="space-y-6" noValidate aria-label="Contact form">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-bw-light-gray mb-2">
+                      <label htmlFor="name" className="block text-sm font-medium text-bw-text-primary mb-2">
                         Name *
                       </label>
                       <input
