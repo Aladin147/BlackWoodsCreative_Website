@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useEffect, useState } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { useDeviceAdaptation } from './useDeviceAdaptation';
 
 interface AudioConfig {
