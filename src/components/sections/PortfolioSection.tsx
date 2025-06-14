@@ -25,38 +25,26 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
   return (
     <section id="portfolio" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        {/* Enhanced Section Header with Better Spacing */}
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="mb-8 text-display-lg drop-shadow-xl">
-            Our <span className="text-gradient-gold">Portfolio</span>
+        {/* Deep Forest Haze Section Header */}
+        <div className="text-center mb-20">
+          <h2 className="mb-8 text-display-lg">
+            Our <span className="text-bw-accent-gold">Portfolio</span>
           </h2>
-          <p className="mx-auto max-w-3xl text-body-xl leading-relaxed">
+          <p className="mx-auto max-w-3xl text-body-xl">
             Explore our diverse range of creative projects that showcase our expertise in visual storytelling and premium craftsmanship.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Category Filter */}
-        <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
+        {/* Deep Forest Haze Category Filter */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
           {categories.map((category, index) => (
             <motion.button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-offset-2 focus:ring-offset-bw-charcoal ${
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-offset-2 focus:ring-offset-bw-bg-primary ${
                 activeCategory === category
-                  ? 'bg-bw-gold text-bw-black shadow-lg'
-                  : 'bg-bw-dark-gray text-bw-light-gray hover:bg-bw-medium-gray hover:text-bw-white'
+                  ? 'bg-bw-accent-gold text-bw-bg-primary'
+                  : 'bg-transparent text-bw-text-primary hover:text-bw-accent-gold border border-bw-border-subtle hover:border-bw-accent-gold'
               }`}
               aria-pressed={activeCategory === category}
               aria-label={`Filter portfolio by ${category}`}
@@ -70,7 +58,7 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
               {category}
             </motion.button>
           ))}
-        </motion.div>
+        </div>
 
         {/* Enhanced Portfolio Grid with Magnetic Effects */}
         <motion.div

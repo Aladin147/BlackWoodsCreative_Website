@@ -19,8 +19,8 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
 
   return (
     <motion.div
-      className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br from-bw-dark-gray to-bw-charcoal shadow-depth-2 hover:shadow-depth-4 transition-all duration-500 border border-bw-medium-gray/30 hover:border-bw-gold/20 ${className}`}
-      whileHover={{ y: -12, scale: 1.03 }}
+      className={`card-elevated group relative overflow-hidden transition-all duration-500 ${className}`}
+      whileHover={{ y: -8, scale: 1.02 }}
       transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
       data-testid={testId}
     >
@@ -73,9 +73,9 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
           </motion.div>
         )}
 
-        {/* Category Badge */}
+        {/* Deep Forest Haze Category Badge */}
         <div className="absolute top-4 left-4">
-          <span className="rounded-full bg-bw-black/70 px-3 py-1 text-sm font-medium text-bw-gold backdrop-blur-sm">
+          <span className="rounded-full bg-bw-bg-primary/70 px-3 py-1 text-sm font-medium text-bw-accent-gold backdrop-blur-sm">
             {project.category}
           </span>
         </div>
@@ -83,14 +83,14 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
 
       {/* Project Info */}
       <div className="p-6">
-        <h3 
-          className="mb-2 font-display text-xl font-semibold text-bw-white group-hover:text-bw-gold transition-colors duration-300"
+        <h3
+          className="mb-2 text-display-md group-hover:text-bw-accent-gold transition-colors duration-300"
           id={`project-title-${project.id}`}
         >
           {project.title}
         </h3>
-        <p 
-          className="mb-4 text-bw-light-gray line-clamp-2"
+        <p
+          className="mb-4 text-body-xl line-clamp-2"
           aria-describedby={`project-title-${project.id}`}
         >
           {project.description}
@@ -102,7 +102,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
             {project.tags.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
-                className="rounded-md bg-bw-medium-gray px-2 py-1 text-xs text-bw-light-gray"
+                className="rounded-md bg-bw-border-subtle px-2 py-1 text-xs text-bw-text-primary opacity-60"
               >
                 {tag}
               </span>

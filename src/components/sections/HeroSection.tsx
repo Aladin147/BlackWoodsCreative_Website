@@ -49,65 +49,85 @@ export function HeroSection({ className }: HeroSectionProps) {
       id="hero"
       className={`relative flex h-screen items-center justify-center bg-bw-bg-primary ${className}`}
     >
-      {/* Deep Forest Haze Background Elements */}
+      {/* Enhanced Deep Forest Haze Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Primary aurora-teal orb */}
+        {/* Primary aurora-teal orb - Enhanced */}
         <motion.div
-          className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-bw-aurora-teal/40 blur-3xl"
+          className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-bw-aurora-teal/50 blur-3xl"
           animate={{
-            scale: [1, 1.4, 1],
-            opacity: [0.6, 1, 0.6],
+            scale: [1, 1.5, 1],
+            opacity: [0.7, 1, 0.7],
+            x: [0, 30, 0],
+            y: [0, -20, 0],
           }}
           transition={{
-            duration: 5,
+            duration: 8,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
         />
-        {/* Secondary aurora-green orb */}
+        {/* Secondary aurora-green orb - Enhanced */}
         <motion.div
-          className="absolute bottom-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-bw-aurora-green/35 blur-3xl"
+          className="absolute bottom-1/4 right-1/4 h-[700px] w-[700px] rounded-full bg-bw-aurora-green/45 blur-3xl"
           animate={{
-            scale: [1.2, 1, 1.2],
+            scale: [1.2, 1, 1.3],
+            opacity: [0.6, 0.9, 0.6],
+            x: [0, -40, 0],
+            y: [0, 25, 0],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 3,
+          }}
+        />
+        {/* Bright accent orb - Enhanced */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-bw-aurora-bright/35 blur-2xl"
+          animate={{
+            rotate: [0, 360],
+            scale: [0.8, 1.3, 0.8],
             opacity: [0.5, 0.8, 0.5],
           }}
           transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 2,
-          }}
-        />
-        {/* Bright accent orb for more visibility */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[400px] w-[400px] rounded-full bg-bw-aurora-bright/30 blur-2xl"
-          animate={{
-            rotate: [0, 360],
-            scale: [0.9, 1.2, 0.9],
-          }}
-          transition={{
-            duration: 15,
+            duration: 20,
             repeat: Infinity,
             ease: 'linear',
+          }}
+        />
+        {/* Additional atmospheric layer */}
+        <motion.div
+          className="absolute top-1/3 right-1/3 h-[400px] w-[400px] rounded-full bg-bw-aurora-teal/25 blur-3xl"
+          animate={{
+            scale: [1.1, 0.9, 1.1],
+            opacity: [0.3, 0.6, 0.3],
+            rotate: [0, -180, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 5,
           }}
         />
       </div>
 
       {/* Enhanced Main Content with Advanced Interactions */}
       <div className="relative z-10 text-center px-6 py-12">
-        {/* Advanced Text Reveal for Main Title */}
+        {/* Main Title - Deep Forest Haze Typography */}
         <div className="mb-8">
           <TextReveal
             text="BlackWoods Creative"
-            className="text-gradient-gold text-display-xl drop-shadow-2xl font-display font-bold"
+            className="text-display-xl drop-shadow-2xl"
             delay={0.08}
           />
         </div>
 
-        {/* Floating Subtitle with Parallax */}
+        {/* Subtitle - Deep Forest Haze Typography */}
         <FloatingElement amplitude={5} frequency={4} className="mb-12">
           <motion.p
-            className="mx-auto max-w-3xl text-body-xl leading-relaxed drop-shadow-lg"
+            className="mx-auto max-w-3xl text-body-xl drop-shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -116,7 +136,7 @@ export function HeroSection({ className }: HeroSectionProps) {
           </motion.p>
         </FloatingElement>
 
-        {/* Advanced Morphing Buttons */}
+        {/* Deep Forest Haze CTA Buttons */}
         <motion.div
           className="flex flex-col justify-center gap-6 sm:flex-row"
           initial={{ opacity: 0, y: 20 }}
@@ -125,7 +145,7 @@ export function HeroSection({ className }: HeroSectionProps) {
         >
           <PulseGlow intensity={0.4} duration={3}>
             <MorphingButton
-              className="btn-primary px-8 py-4 text-lg font-semibold"
+              className="btn-primary"
               onClick={handleViewWork}
               hoverChildren={
                 <span className="flex items-center gap-2">
@@ -140,7 +160,7 @@ export function HeroSection({ className }: HeroSectionProps) {
           </PulseGlow>
 
           <MorphingButton
-            className="btn-secondary px-8 py-4 text-lg font-semibold"
+            className="btn-secondary"
             onClick={handleStartProject}
             hoverChildren={
               <span className="flex items-center gap-2">
@@ -155,7 +175,7 @@ export function HeroSection({ className }: HeroSectionProps) {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Deep Forest Haze Scroll Indicator */}
       <motion.div
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         initial={{ opacity: 0, y: 10 }}
@@ -164,7 +184,7 @@ export function HeroSection({ className }: HeroSectionProps) {
       >
         <motion.button
           onClick={handleScrollToPortfolio}
-          className="flex flex-col items-center text-bw-light-gray hover:text-bw-white transition-colors duration-300"
+          className="flex flex-col items-center text-body-lg hover:text-bw-accent-gold transition-colors duration-300"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           whileHover={{ scale: 1.1 }}
