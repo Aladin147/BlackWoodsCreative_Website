@@ -334,40 +334,40 @@ export function useUISounds() {
   };
 }
 
-// Audio control component
-export function AudioControls({
-  className = '',
-  showVolumeSlider = true
-}: {
-  className?: string;
-  showVolumeSlider?: boolean;
-}) {
-  const { audioState, setMasterVolume, toggleAudio } = useAudioSystem();
-
-  if (!audioState.isSupported) return null;
-
-  return (
-    <div className="flex items-center gap-3">
-      <button
-        onClick={toggleAudio}
-        className="p-2 rounded-full transition-colors duration-300 bg-gray-800 text-white hover:bg-gray-700"
-        title={audioState.isEnabled ? 'Disable audio' : 'Enable audio'}
-      >
-        {audioState.isEnabled ? '🔊' : '🔇'}
-      </button>
-
-      {showVolumeSlider && audioState.isEnabled && (
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={audioState.masterVolume}
-          onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
-          className="w-20"
-          title="Volume"
-        />
-      )}
-    </div>
-  );
-}
+// Audio control component - temporarily disabled due to build issues
+// export function AudioControls({
+//   className = '',
+//   showVolumeSlider = true
+// }: {
+//   className?: string;
+//   showVolumeSlider?: boolean;
+// }) {
+//   const { audioState, setMasterVolume, toggleAudio } = useAudioSystem();
+//
+//   if (!audioState.isSupported) return null;
+//
+//   return (
+//     <div className="flex items-center gap-3">
+//       <button
+//         onClick={toggleAudio}
+//         className="p-2 rounded-full transition-colors duration-300 bg-gray-800 text-white hover:bg-gray-700"
+//         title={audioState.isEnabled ? 'Disable audio' : 'Enable audio'}
+//       >
+//         {audioState.isEnabled ? '🔊' : '🔇'}
+//       </button>
+//
+//       {showVolumeSlider && audioState.isEnabled && (
+//         <input
+//           type="range"
+//           min="0"
+//           max="1"
+//           step="0.1"
+//           value={audioState.masterVolume}
+//           onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
+//           className="w-20"
+//           title="Volume"
+//         />
+//       )}
+//     </div>
+//   );
+// }

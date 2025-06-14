@@ -107,17 +107,19 @@ export function ScrollProgressBar({ className = '' }: ScrollProgressBarProps) {
 interface CountUpProps {
   end: number;
   duration?: number;
+  delay?: number;
   className?: string;
   prefix?: string;
   suffix?: string;
 }
 
-export function CountUp({ 
-  end, 
-  duration = 2, 
-  className = '', 
-  prefix = '', 
-  suffix = '' 
+export function CountUp({
+  end,
+  duration = 2,
+  delay = 0,
+  className = '',
+  prefix = '',
+  suffix = ''
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
@@ -126,30 +128,40 @@ export function CountUp({
   useEffect(() => {
     if (!isInView) return;
 
-    let startTime: number;
-    let animationFrame: number;
+    const startAnimation = () => {
+      let startTime: number;
+      let animationFrame: number;
 
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / (duration * 1000), 1);
-      
-      // Easing function for smooth animation
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.floor(easeOutQuart * end));
+      const animate = (currentTime: number) => {
+        if (!startTime) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / (duration * 1000), 1);
 
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
+        // Easing function for smooth animation
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        setCount(Math.floor(easeOutQuart * end));
+
+        if (progress < 1) {
+          animationFrame = requestAnimationFrame(animate);
+        }
+      };
+
+      animationFrame = requestAnimationFrame(animate);
+
+      return () => {
+        if (animationFrame) {
+          cancelAnimationFrame(animationFrame);
+        }
+      };
     };
 
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, [isInView, end, duration]);
+    // Apply delay if specified
+    if (delay > 0) {
+      const timeoutId = setTimeout(startAnimation, delay * 1000);
+      return () => clearTimeout(timeoutId);
+    } else {
+      return startAnimation();
+    }
+  }, [isInView, end, duration, delay]);
 
   return (
     <span ref={ref} className={className}>
@@ -159,33 +171,36 @@ export function CountUp({
 }
 
 interface StaggeredGridProps {
-  children: React.ReactNode[];
+  children: React.ReactNode;
   className?: string;
   staggerDelay?: number;
 }
 
-export function StaggeredGrid({ 
-  children, 
-  className = '', 
-  staggerDelay = 0.1 
+export function StaggeredGrid({
+  children,
+  className = '',
+  staggerDelay = 0.1
 }: StaggeredGridProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
 
+  // Convert children to array if it's not already
+  const childrenArray = React.Children.toArray(children);
+
   return (
     <div ref={ref} className={className}>
-      {children.map((child, index) => (
+      {childrenArray.map((child, index) => (
         <motion.div
           key={index}
           initial={{ opacity: 0, y: 30, scale: 0.9 }}
-          animate={isInView ? { 
-            opacity: 1, 
-            y: 0, 
-            scale: 1 
-          } : { 
-            opacity: 0, 
-            y: 30, 
-            scale: 0.9 
+          animate={isInView ? {
+            opacity: 1,
+            y: 0,
+            scale: 1
+          } : {
+            opacity: 0,
+            y: 30,
+            scale: 0.9
           }}
           transition={{
             duration: 0.6,
