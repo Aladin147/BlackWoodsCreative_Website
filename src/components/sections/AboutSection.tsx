@@ -66,12 +66,12 @@ export function AboutSection({ className }: AboutSectionProps) {
         {/* Enhanced Section Header with Parallax Text */}
         <ScrollReveal className="text-center mb-20" direction="up" distance={60}>
           <ParallaxText speed={0.2}>
-            <h2 className="mb-8 text-display-lg">
+            <h2 className="mb-8 text-heading-2 font-display">
               About <span className="text-bw-accent-gold">BlackWoods Creative</span>
             </h2>
           </ParallaxText>
           <ScrollReveal direction="up" distance={40} delay={0.3}>
-            <p className="mx-auto max-w-4xl text-body-xl">
+            <p className="mx-auto max-w-4xl text-body-text font-primary opacity-85">
               We are a premium creative studio specializing in visual storytelling that captivates audiences
               and drives results. Our expertise spans filmmaking, photography, 3D visualization, and immersive scene creation.
             </p>
@@ -91,10 +91,10 @@ export function AboutSection({ className }: AboutSectionProps) {
                     <service.icon className="h-10 w-10" />
                   </div>
                 </div>
-                <h3 className="mb-6 text-display-md">
+                <h3 className="mb-6 text-heading-3 font-primary">
                   {service.title}
                 </h3>
-                <p className="text-body-xl">
+                <p className="text-body-text font-primary opacity-85">
                   {service.description}
                 </p>
               </div>
@@ -102,13 +102,13 @@ export function AboutSection({ className }: AboutSectionProps) {
           ))}
         </StaggeredGrid>
 
-        {/* Company Story - Deep Forest Haze Style */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-          <div>
-            <h3 className="mb-6 text-display-lg">
+        {/* Company Story - ASYMMETRICAL LAYOUT per Theme Guide */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+          <div className="lg:col-span-4">
+            <h3 className="mb-6 text-heading-2 font-display">
               Our <span className="text-bw-accent-gold">Story</span>
             </h3>
-            <div className="space-y-4 text-body-xl">
+            <div className="space-y-4 text-body-text font-primary opacity-85">
               <p>
                 Founded with a passion for visual excellence, BlackWoods Creative has evolved into a
                 premier creative studio that bridges the gap between artistic vision and commercial success.
@@ -125,7 +125,7 @@ export function AboutSection({ className }: AboutSectionProps) {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative lg:col-span-7 lg:col-start-6">
             <div className="card aspect-square flex items-center justify-center">
               <div className="text-center">
                 <FilmIcon className="h-16 w-16 text-bw-accent-gold mx-auto mb-4" />
@@ -140,7 +140,7 @@ export function AboutSection({ className }: AboutSectionProps) {
         {/* Enhanced Achievements with CountUp Animation */}
         <ScrollReveal className="text-center" direction="up" distance={50} delay={0.2}>
           <ParallaxText speed={0.15}>
-            <h3 className="mb-8 text-display-lg">
+            <h3 className="mb-8 text-heading-2 font-display">
               Our <span className="text-bw-accent-gold">Achievements</span>
             </h3>
           </ParallaxText>
@@ -149,10 +149,10 @@ export function AboutSection({ className }: AboutSectionProps) {
               <MagneticField key={index} strength={0.15} distance={80}>
                 <div className="flex flex-col items-center gap-3 text-center cursor-pointer">
                   <achievement.icon className="h-8 w-8 text-bw-accent-gold" />
-                  <div className="text-display-md font-bold text-bw-accent-gold">
+                  <div className="text-heading-3 font-primary font-bold text-bw-accent-gold">
                     <CountUp end={achievement.count} duration={2} delay={index * 0.3} />+
                   </div>
-                  <span className="text-body-lg font-medium">{achievement.text}</span>
+                  <span className="text-body-text font-primary font-medium">{achievement.text}</span>
                 </div>
               </MagneticField>
             ))}

@@ -182,12 +182,12 @@ export function ContactSection({ className }: ContactSectionProps) {
         {/* Enhanced Section Header with Parallax Text */}
         <ScrollReveal className="text-center mb-16" direction="up" distance={60} delay={0.2}>
           <ParallaxText speed={0.2}>
-            <h2 className="mb-6 text-display-lg">
+            <h2 className="mb-6 text-heading-2 font-display">
               Ready to Create Something <span className="text-bw-accent-gold">Amazing</span>?
             </h2>
           </ParallaxText>
           <ScrollReveal direction="up" distance={40} delay={0.4}>
-            <p className="mx-auto max-w-2xl text-body-xl">
+            <p className="mx-auto max-w-2xl text-body-text font-primary opacity-85">
               Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
             </p>
           </ScrollReveal>
@@ -198,7 +198,7 @@ export function ContactSection({ className }: ContactSectionProps) {
           <ScrollReveal direction="left" distance={50} delay={0.3}>
             <MagneticField strength={0.1} distance={200}>
               <div className="card">
-              <h3 className="mb-6 text-display-md">
+              <h3 className="mb-6 text-heading-3 font-primary">
                 Start Your Project
               </h3>
 
@@ -212,10 +212,10 @@ export function ContactSection({ className }: ContactSectionProps) {
                   <div className="mb-4 flex justify-center">
                     <CheckCircleIcon className="h-16 w-16 text-bw-accent-gold" />
                   </div>
-                  <h4 className="mb-2 text-display-md text-bw-accent-gold">
+                  <h4 className="mb-2 text-heading-3 font-primary text-bw-accent-gold">
                     Thank You!
                   </h4>
-                  <p className="text-body-xl">
+                  <p className="text-body-text font-primary opacity-85">
                     We&apos;ll get back to you within 24 hours.
                   </p>
                 </motion.div>
@@ -406,10 +406,10 @@ export function ContactSection({ className }: ContactSectionProps) {
           >
             <div className="space-y-8">
               <div>
-                <h3 className="mb-6 text-display-md">
+                <h3 className="mb-6 text-heading-3 font-primary">
                   Get in Touch
                 </h3>
-                <p className="text-body-xl mb-8">
+                <p className="text-body-text font-primary opacity-85 mb-8">
                   Ready to bring your vision to life? We&apos;re here to help you create something extraordinary.
                   Reach out to discuss your project and let&apos;s start crafting your story.
                 </p>

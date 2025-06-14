@@ -127,7 +127,7 @@ function CinematicFinale() {
             <ScrollReveal direction="up" distance={60} delay={0.2}>
               <TextReveal
                 text="Experience the Difference"
-                className="text-display-xl mb-8 cursor-pointer"
+                className="text-heading-1 font-display text-bw-accent-gold mb-8 cursor-pointer"
                 delay={0.05}
               />
             </ScrollReveal>
@@ -328,7 +328,7 @@ function SimpleStorySection({
         <motion.div className="mb-8">
           <TextReveal
             text={section.title}
-            className="text-display-xl drop-shadow-2xl"
+            className="text-heading-1 font-display text-bw-accent-gold drop-shadow-2xl"
             delay={isActive ? 0.05 : 0}
           />
         </motion.div>
