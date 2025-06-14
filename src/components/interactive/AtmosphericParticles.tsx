@@ -19,7 +19,7 @@ interface AtmosphericParticlesProps {
   className?: string;
 }
 
-export function AtmosphericParticles({ count = 80, className = '' }: AtmosphericParticlesProps) {
+export function AtmosphericParticles({ count = 20, className = '' }: AtmosphericParticlesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>();
@@ -30,31 +30,32 @@ export function AtmosphericParticles({ count = 80, className = '' }: Atmospheric
     const container = containerRef.current;
     const rect = container.getBoundingClientRect();
 
-    // Initialize particles
+    // Initialize particles - AUTHENTIC THEME GUIDE SPECIFICATION
+    // Small 2px x 2px divs, border-radius: 50%, background-color: $accent-gold, with varying opacities
     particlesRef.current = Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * rect.width,
       y: Math.random() * rect.height,
-      vx: (Math.random() - 0.5) * 0.8,
-      vy: (Math.random() - 0.5) * 0.6,
-      opacity: Math.random() * 0.8 + 0.3,
-      size: Math.random() * 4 + 2,
+      vx: (Math.random() - 0.5) * 0.3, // Slower, more organic movement
+      vy: (Math.random() - 0.5) * 0.2, // Slower vertical drift
+      opacity: Math.random() * 0.6 + 0.2, // Varying opacities as specified
+      size: 2, // Exactly 2px as specified in theme guide
       life: 0,
-      maxLife: Math.random() * 300 + 200,
+      maxLife: Math.random() * 500 + 300, // Longer life for subtle effect
     }));
 
-    // Create particle elements
+    // Create particle elements - AUTHENTIC THEME GUIDE SPECIFICATION
     particlesRef.current.forEach((particle) => {
       const element = document.createElement('div');
       element.className = 'absolute rounded-full pointer-events-none';
       element.style.cssText = `
         width: ${particle.size}px;
         height: ${particle.size}px;
-        background: var(--bw-accent-gold);
+        background-color: var(--bw-accent-gold);
+        border-radius: 50%;
         opacity: ${particle.opacity};
         transform: translate(${particle.x}px, ${particle.y}px);
-        transition: opacity 0.3s ease-out;
-        box-shadow: 0 0 ${particle.size * 2}px rgba(195, 163, 88, 0.4);
+        transition: opacity 0.5s ease-out;
       `;
       element.setAttribute('data-particle-id', particle.id.toString());
       container.appendChild(element);

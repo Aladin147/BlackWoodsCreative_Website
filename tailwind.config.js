@@ -17,10 +17,10 @@ module.exports = {
           'text-secondary': '#A8A8A3',  // Muted secondary text
           'accent-gold': '#C3A358',     // Muted Gold, rich ochre
 
-          // Aurora Colors for Background Animation - BRIGHTENED
-          'aurora-teal': '#2A5B54',     // Brighter Teal for visibility
-          'aurora-green': '#4A7C59',    // Brighter Forest Green
-          'aurora-bright': '#6B9B6F',   // Even brighter green accent
+          // Aurora Colors for Background Animation - AUTHENTIC THEME GUIDE
+          'aurora-teal': '#0D2E2B',     // Dark Teal - authentic Deep Forest Haze
+          'aurora-green': '#1A4230',    // Forest Green - authentic Deep Forest Haze
+          'aurora-bright': '#2A5B54',   // Brighter accent for highlights only
 
           // Utility Colors
           'border-subtle': '#2A2E2C',   // Low-contrast borders
@@ -56,12 +56,22 @@ module.exports = {
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       fontSize: {
-        // Display sizes for hero sections
+        // AUTHENTIC THEME GUIDE TYPOGRAPHY SPECIFICATION
+        // h1 (Main Headline) - Playfair Display, 4rem, 600 weight, $accent-gold
+        'heading-1': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '600' }],
+        // h2 (Section Headings) - Playfair Display, 2.5rem, 600 weight, $text-primary
+        'heading-2': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '600' }],
+        // h3 (Card Titles, Sub-headings) - Inter, 1.5rem, 600 weight
+        'heading-3': ['1.5rem', { lineHeight: '1.3', fontWeight: '600' }],
+        // p (Body Text) - Inter, 1rem, 400 weight, line-height 1.6
+        'body-text': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
+        // small (Captions, Meta info) - Inter, 0.875rem, 400 weight
+        'caption': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
+
+        // Legacy sizes for backward compatibility
         'display-xl': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         'display-lg': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         'display-md': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
-
-        // Body text sizes
         'body-xl': ['1.25rem', { lineHeight: '1.6' }],
         'body-lg': ['1.125rem', { lineHeight: '1.6' }],
         'body-md': ['1rem', { lineHeight: '1.6' }],
@@ -89,11 +99,22 @@ module.exports = {
         'gold-glow': '0 0 30px rgba(168, 230, 207, 0.3)',
       },
       animation: {
-        'fade-in': 'fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        'slide-up': 'slideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        // AUTHENTIC THEME GUIDE ANIMATIONS
+        // Transition: opacity 0.8s ease-out, transform 0.6s ease-out
+        'fade-in-up': 'fadeInUp 0.8s ease-out',
+        'fade-in': 'fadeIn 0.8s ease-out',
+        'slide-up': 'slideUp 0.6s ease-out',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
       },
       keyframes: {
+        // AUTHENTIC THEME GUIDE SCROLL ANIMATIONS
+        // Default State: opacity: 0; transform: translateY(20px);
+        // Visible State: opacity: 1; transform: translateY(0);
+        // Transition: opacity 0.8s ease-out, transform 0.6s ease-out
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         fadeIn: {
           '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },

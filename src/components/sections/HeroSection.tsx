@@ -127,7 +127,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             <div className="mb-8">
               <TextReveal
                 text="BlackWoods Creative"
-                className="text-display-xl drop-shadow-2xl cursor-pointer"
+                className="text-heading-1 font-display text-bw-accent-gold drop-shadow-2xl cursor-pointer"
                 delay={0.08}
               />
             </div>

@@ -9,10 +9,10 @@
   --bw-text-primary: #E8E8E3; /* Off-White, warm and soft on eyes */
   --bw-accent-gold: #C3A358; /* Muted Gold, rich ochre for CTAs */
 
-  /* Aurora Background Colors - BRIGHTENED for visibility */
-  --bw-aurora-teal: #2A5B54; /* Brighter Teal for visibility */
-  --bw-aurora-green: #4A7C59; /* Brighter Forest Green */
-  --bw-aurora-bright: #6B9B6F; /* Even brighter green accent */
+  /* Aurora Background Colors - AUTHENTIC THEME GUIDE */
+  --bw-aurora-teal: #0D2E2B; /* Dark Teal - authentic Deep Forest Haze */
+  --bw-aurora-green: #1A4230; /* Forest Green - authentic Deep Forest Haze */
+  --bw-aurora-bright: #2A5B54; /* Brighter accent for highlights only */
 
   /* Utility Colors */
   --bw-border-subtle: #2A2E2C; /* Low-contrast borders and dividers */
