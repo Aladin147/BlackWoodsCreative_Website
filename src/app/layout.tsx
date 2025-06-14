@@ -156,8 +156,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </main>
             <PerformanceReporter />
-            <AnimationPerformanceMonitor />
-            <DeviceAdaptationMonitor />
+            {/* Temporarily disabled due to build issues */}
+            {/* <AnimationPerformanceMonitor /> */}
+            {/* <DeviceAdaptationMonitor /> */}
           </div>
         </ThemeProvider>
       </body>

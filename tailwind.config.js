@@ -14,6 +14,7 @@ module.exports = {
           // Core Background Colors
           'bg-primary': '#101211',      // Near Black with green tint
           'text-primary': '#E8E8E3',    // Off-White, warm and soft
+          'text-secondary': '#A8A8A3',  // Muted secondary text
           'accent-gold': '#C3A358',     // Muted Gold, rich ochre
 
           // Aurora Colors for Background Animation - BRIGHTENED
@@ -55,6 +56,17 @@ module.exports = {
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       fontSize: {
+        // Display sizes for hero sections
+        'display-xl': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'display-lg': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'display-md': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+
+        // Body text sizes
+        'body-xl': ['1.25rem', { lineHeight: '1.6' }],
+        'body-lg': ['1.125rem', { lineHeight: '1.6' }],
+        'body-md': ['1rem', { lineHeight: '1.6' }],
+
+        // Standard sizes
         '6xl': '3.75rem',
         '5xl': '3rem',
         '4xl': '2.25rem',
@@ -97,6 +109,10 @@ module.exports = {
       },
       backdropBlur: {
         xs: '2px',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
     },
   },

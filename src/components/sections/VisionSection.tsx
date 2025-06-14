@@ -5,7 +5,8 @@ import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-
 import {
   TextReveal,
   MagneticField,
-  ScrollReveal
+  ScrollReveal,
+  WebGLEnhancedBackground
 } from '@/components/interactive';
 
 interface VisionSectionProps {
@@ -152,15 +153,17 @@ function CinematicFinale() {
 // Main Vision Section Component
 export function VisionSection({ className }: VisionSectionProps) {
   return (
-    <section className={`relative bg-bw-bg-primary ${className}`}>
-      {/* Simplified Scroll-Based Storytelling */}
-      <div className="relative min-h-[300vh]">
-        <SimpleScrollStoryTeller sections={visionStoryData} />
-      </div>
+    <WebGLEnhancedBackground effectType="aurora" intensity={0.3} className={`relative ${className}`}>
+      <section className="relative bg-bw-bg-primary/80">
+        {/* Simplified Scroll-Based Storytelling */}
+        <div className="relative min-h-[300vh]">
+          <SimpleScrollStoryTeller sections={visionStoryData} />
+        </div>
 
-      {/* Cinematic Finale */}
-      <CinematicFinale />
-    </section>
+        {/* Cinematic Finale */}
+        <CinematicFinale />
+      </section>
+    </WebGLEnhancedBackground>
   );
 }
 

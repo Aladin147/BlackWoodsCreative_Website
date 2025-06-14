@@ -8,7 +8,8 @@ import {
   PulseGlow,
   MorphingButton,
   MagneticField,
-  ParallaxText
+  ParallaxText,
+  AtmosphericLayer
 } from '@/components/interactive';
 
 interface HeroSectionProps {
@@ -51,8 +52,12 @@ export function HeroSection({ className }: HeroSectionProps) {
       id="hero"
       className={`relative flex h-screen items-center justify-center bg-bw-bg-primary ${className}`}
     >
-        {/* Enhanced Deep Forest Haze Background Elements */}
+        {/* Enhanced Deep Forest Haze Background Elements with Atmospheric Layers */}
         <div className="absolute inset-0 overflow-hidden">
+          {/* Atmospheric Background Layers */}
+          <AtmosphericLayer type="mist" intensity={0.6} color="bw-aurora-teal" />
+          <AtmosphericLayer type="particles" intensity={0.4} color="bw-aurora-green" />
+          <AtmosphericLayer type="orbs" intensity={0.3} color="bw-aurora-bright" />
           {/* Primary aurora-teal orb - Enhanced */}
           <motion.div
             className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-bw-aurora-teal/50 blur-3xl"
