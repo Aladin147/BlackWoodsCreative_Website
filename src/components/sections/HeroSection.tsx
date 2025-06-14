@@ -47,46 +47,46 @@ export function HeroSection({ className }: HeroSectionProps) {
   return (
     <section
       id="hero"
-      className={`relative flex h-screen items-center justify-center bg-gradient-to-br from-bw-black via-bw-obsidian to-bw-charcoal ${className}`}
+      className={`relative flex h-screen items-center justify-center bg-bw-bg-primary ${className}`}
     >
-      {/* Enhanced Background Elements with Better Contrast */}
+      {/* Deep Forest Haze Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Primary gold orb - more prominent */}
+        {/* Primary aurora-teal orb */}
         <motion.div
-          className="absolute left-1/4 top-1/4 h-80 w-80 rounded-full bg-bw-gold/20 blur-3xl shadow-depth-2"
+          className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-bw-aurora-teal/40 blur-3xl"
           animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.4, 0.8, 0.4],
+            scale: [1, 1.4, 1],
+            opacity: [0.6, 1, 0.6],
           }}
           transition={{
-            duration: 4,
+            duration: 5,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
         />
-        {/* Secondary pearl orb - enhanced contrast */}
+        {/* Secondary aurora-green orb */}
         <motion.div
-          className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-bw-pearl/12 blur-3xl shadow-pearl"
+          className="absolute bottom-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-bw-aurora-green/35 blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.6, 0.3],
+            opacity: [0.5, 0.8, 0.5],
           }}
           transition={{
-            duration: 6,
+            duration: 7,
             repeat: Infinity,
             ease: 'easeInOut',
             delay: 2,
           }}
         />
-        {/* Additional depth layer for sophistication */}
+        {/* Bright accent orb for more visibility */}
         <motion.div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-gradient-radial from-bw-gold/8 via-bw-champagne/5 to-transparent blur-2xl"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[400px] w-[400px] rounded-full bg-bw-aurora-bright/30 blur-2xl"
           animate={{
             rotate: [0, 360],
-            scale: [0.8, 1.1, 0.8],
+            scale: [0.9, 1.2, 0.9],
           }}
           transition={{
-            duration: 20,
+            duration: 15,
             repeat: Infinity,
             ease: 'linear',
           }}
@@ -107,7 +107,7 @@ export function HeroSection({ className }: HeroSectionProps) {
         {/* Floating Subtitle with Parallax */}
         <FloatingElement amplitude={5} frequency={4} className="mb-12">
           <motion.p
-            className="mx-auto max-w-3xl text-body-xl text-bw-pearl leading-relaxed drop-shadow-lg"
+            className="mx-auto max-w-3xl text-body-xl leading-relaxed drop-shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1, ease: [0.25, 0.46, 0.45, 0.94] }}

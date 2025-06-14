@@ -19,7 +19,7 @@ interface AtmosphericParticlesProps {
   className?: string;
 }
 
-export function AtmosphericParticles({ count = 15, className = '' }: AtmosphericParticlesProps) {
+export function AtmosphericParticles({ count = 80, className = '' }: AtmosphericParticlesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>();
@@ -35,10 +35,10 @@ export function AtmosphericParticles({ count = 15, className = '' }: Atmospheric
       id: i,
       x: Math.random() * rect.width,
       y: Math.random() * rect.height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.6 + 0.2,
-      size: Math.random() * 3 + 1,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.6,
+      opacity: Math.random() * 0.8 + 0.3,
+      size: Math.random() * 4 + 2,
       life: 0,
       maxLife: Math.random() * 300 + 200,
     }));

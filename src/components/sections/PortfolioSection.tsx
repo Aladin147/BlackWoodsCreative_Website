@@ -23,7 +23,7 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
   );
 
   return (
-    <section id="portfolio" className={`bg-gradient-to-br from-bw-charcoal via-bw-dark-gray to-bw-charcoal px-6 py-32 ${className}`}>
+    <section id="portfolio" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
       <div className="mx-auto max-w-7xl">
         {/* Enhanced Section Header with Better Spacing */}
         <motion.div
@@ -36,7 +36,7 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
           <h2 className="mb-8 text-display-lg drop-shadow-xl">
             Our <span className="text-gradient-gold">Portfolio</span>
           </h2>
-          <p className="mx-auto max-w-3xl text-body-lg text-bw-pearl leading-relaxed">
+          <p className="mx-auto max-w-3xl text-body-xl leading-relaxed">
             Explore our diverse range of creative projects that showcase our expertise in visual storytelling and premium craftsmanship.
           </p>
         </motion.div>

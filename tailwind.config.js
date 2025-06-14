@@ -16,9 +16,10 @@ module.exports = {
           'text-primary': '#E8E8E3',    // Off-White, warm and soft
           'accent-gold': '#C3A358',     // Muted Gold, rich ochre
 
-          // Aurora Colors for Background Animation
-          'aurora-teal': '#0D2E2B',     // Dark Teal base
-          'aurora-green': '#1A4230',    // Forest Green blend
+          // Aurora Colors for Background Animation - BRIGHTENED
+          'aurora-teal': '#2A5B54',     // Brighter Teal for visibility
+          'aurora-green': '#4A7C59',    // Brighter Forest Green
+          'aurora-bright': '#6B9B6F',   // Even brighter green accent
 
           // Utility Colors
           'border-subtle': '#2A2E2C',   // Low-contrast borders
