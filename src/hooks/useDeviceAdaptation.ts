@@ -200,7 +200,7 @@ export function useAdaptiveMagnetic(baseStrength: number, baseDistance: number) 
 
 // Component for displaying device adaptation info (development only)
 export function DeviceAdaptationMonitor({
-  enabled = false // Temporarily disabled due to build issues
+  enabled = false // Temporarily disabled due to className corruption issues
 }: {
   enabled?: boolean;
 }) {

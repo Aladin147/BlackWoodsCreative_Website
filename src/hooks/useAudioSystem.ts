@@ -35,37 +35,38 @@ const defaultConfig: AudioConfig = {
 };
 
 // Predefined sound effects for common interactions
+// Note: Audio files are optional - system gracefully handles missing files
 const defaultSoundEffects: SoundEffect[] = [
   {
     id: 'hover',
     url: '/audio/hover.mp3',
     volume: 0.2,
-    preload: true
+    preload: false // Disabled preload to prevent 404 errors
   },
   {
     id: 'click',
     url: '/audio/click.mp3',
     volume: 0.3,
-    preload: true
+    preload: false // Disabled preload to prevent 404 errors
   },
   {
     id: 'magnetic',
     url: '/audio/magnetic.mp3',
     volume: 0.15,
-    preload: true
+    preload: false // Disabled preload to prevent 404 errors
   },
   {
     id: 'transition',
     url: '/audio/transition.mp3',
     volume: 0.25,
-    preload: true
+    preload: false // Disabled preload to prevent 404 errors
   },
   {
     id: 'ambient',
     url: '/audio/ambient.mp3',
     volume: 0.1,
     loop: true,
-    preload: false
+    preload: false // Disabled preload to prevent 404 errors
   }
 ];
 
@@ -134,19 +135,25 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
     }
   }, [finalConfig]);
 
-  // Load audio buffer
+  // Load audio buffer with graceful error handling
   const loadAudioBuffer = useCallback(async (soundEffect: SoundEffect): Promise<AudioBuffer | null> => {
     if (!audioState.context || !audioState.isSupported) return null;
 
     try {
       const response = await fetch(soundEffect.url);
+      if (!response.ok) {
+        // Gracefully handle missing audio files
+        console.info(`Audio file not found: ${soundEffect.url} - continuing without audio`);
+        return null;
+      }
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await audioState.context.decodeAudioData(arrayBuffer);
-      
+
       audioBuffersRef.current.set(soundEffect.id, audioBuffer);
       return audioBuffer;
     } catch (error) {
-      console.warn(`Failed to load audio: ${soundEffect.url}`, error);
+      // Gracefully handle audio loading errors
+      console.info(`Audio system: ${soundEffect.url} not available - continuing without audio`);
       return null;
     }
   }, [audioState.context, audioState.isSupported]);
@@ -328,10 +335,10 @@ export function useUISounds() {
 }
 
 // Audio control component
-export function AudioControls({ 
+export function AudioControls({
   className = '',
-  showVolumeSlider = true 
-}: { 
+  showVolumeSlider = true
+}: {
   className?: string;
   showVolumeSlider?: boolean;
 }) {
@@ -340,19 +347,15 @@ export function AudioControls({
   if (!audioState.isSupported) return null;
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div className="flex items-center gap-3">
       <button
         onClick={toggleAudio}
-        className={`p-2 rounded-full transition-colors duration-300 ${
-          audioState.isEnabled 
-            ? 'bg-bw-accent-gold text-bw-bg-primary' 
-            : 'bg-bw-border-subtle text-bw-text-secondary'
-        }`}
+        className="p-2 rounded-full transition-colors duration-300 bg-gray-800 text-white hover:bg-gray-700"
         title={audioState.isEnabled ? 'Disable audio' : 'Enable audio'}
       >
         {audioState.isEnabled ? '🔊' : '🔇'}
       </button>
-      
+
       {showVolumeSlider && audioState.isEnabled && (
         <input
           type="range"
@@ -361,7 +364,7 @@ export function AudioControls({
           step="0.1"
           value={audioState.masterVolume}
           onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
-          className="w-20 accent-bw-accent-gold"
+          className="w-20"
           title="Volume"
         />
       )}

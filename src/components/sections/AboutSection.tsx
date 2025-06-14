@@ -9,7 +9,16 @@ import {
   CheckBadgeIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline';
-import { SectionScrollAnimation, ScrollFadeIn, ScrollReveal, StaggeredGrid, MagneticField } from '@/components/interactive';
+import {
+  SectionScrollAnimation,
+  ScrollFadeIn,
+  ScrollReveal,
+  StaggeredGrid,
+  MagneticField,
+  AtmosphericLayer,
+  ParallaxText,
+  CountUp
+} from '@/components/interactive';
 
 interface AboutSectionProps {
   className?: string;
@@ -39,24 +48,34 @@ const services = [
 ];
 
 const achievements = [
-  { icon: TrophyIcon, text: '50+ Award-Winning Projects' },
-  { icon: CheckBadgeIcon, text: '100+ Satisfied Clients' },
-  { icon: CheckBadgeIcon, text: '5+ Years of Excellence' },
+  { icon: TrophyIcon, text: 'Award-Winning Projects', count: 50 },
+  { icon: CheckBadgeIcon, text: 'Satisfied Clients', count: 100 },
+  { icon: CheckBadgeIcon, text: 'Years of Excellence', count: 5 },
 ];
 
 export function AboutSection({ className }: AboutSectionProps) {
   return (
-    <section id="about" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
-      <div className="mx-auto max-w-7xl">
-        {/* Deep Forest Haze Section Header with Advanced Animation */}
+    <section id="about" className={`relative bg-bw-bg-primary px-6 py-32 ${className}`}>
+      {/* Atmospheric Background Effects */}
+      <div className="absolute inset-0 overflow-hidden">
+        <AtmosphericLayer type="gradient" intensity={0.3} color="bw-aurora-green" />
+        <AtmosphericLayer type="particles" intensity={0.2} color="bw-aurora-teal" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* Enhanced Section Header with Parallax Text */}
         <ScrollReveal className="text-center mb-20" direction="up" distance={60}>
-          <h2 className="mb-8 text-display-lg">
-            About <span className="text-bw-accent-gold">BlackWoods Creative</span>
-          </h2>
-          <p className="mx-auto max-w-4xl text-body-xl">
-            We are a premium creative studio specializing in visual storytelling that captivates audiences
-            and drives results. Our expertise spans filmmaking, photography, 3D visualization, and immersive scene creation.
-          </p>
+          <ParallaxText speed={0.2}>
+            <h2 className="mb-8 text-display-lg">
+              About <span className="text-bw-accent-gold">BlackWoods Creative</span>
+            </h2>
+          </ParallaxText>
+          <ScrollReveal direction="up" distance={40} delay={0.3}>
+            <p className="mx-auto max-w-4xl text-body-xl">
+              We are a premium creative studio specializing in visual storytelling that captivates audiences
+              and drives results. Our expertise spans filmmaking, photography, 3D visualization, and immersive scene creation.
+            </p>
+          </ScrollReveal>
         </ScrollReveal>
 
         {/* Services Grid with Advanced Staggered Animation */}
@@ -118,23 +137,27 @@ export function AboutSection({ className }: AboutSectionProps) {
           </div>
         </div>
 
-        {/* Achievements - Deep Forest Haze Style */}
-        <div className="text-center">
-          <h3 className="mb-8 text-display-lg">
-            Our <span className="text-bw-accent-gold">Achievements</span>
-          </h3>
-          <div className="flex flex-wrap justify-center gap-8">
+        {/* Enhanced Achievements with CountUp Animation */}
+        <ScrollReveal className="text-center" direction="up" distance={50} delay={0.2}>
+          <ParallaxText speed={0.15}>
+            <h3 className="mb-8 text-display-lg">
+              Our <span className="text-bw-accent-gold">Achievements</span>
+            </h3>
+          </ParallaxText>
+          <StaggeredGrid className="flex flex-wrap justify-center gap-8" staggerDelay={0.2}>
             {achievements.map((achievement, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-3 text-body-xl"
-              >
-                <achievement.icon className="h-6 w-6 text-bw-accent-gold" />
-                <span className="font-medium">{achievement.text}</span>
-              </div>
+              <MagneticField key={index} strength={0.15} distance={80}>
+                <div className="flex flex-col items-center gap-3 text-center cursor-pointer">
+                  <achievement.icon className="h-8 w-8 text-bw-accent-gold" />
+                  <div className="text-display-md font-bold text-bw-accent-gold">
+                    <CountUp end={achievement.count} duration={2} delay={index * 0.3} />+
+                  </div>
+                  <span className="text-body-lg font-medium">{achievement.text}</span>
+                </div>
+              </MagneticField>
             ))}
-          </div>
-        </div>
+          </StaggeredGrid>
+        </ScrollReveal>
       </div>
     </section>
   );

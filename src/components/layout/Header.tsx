@@ -7,6 +7,7 @@ import { siteConfig } from '@/lib/constants/siteConfig';
 import { cn, scrollToElement, throttle } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeContext';
 import { MagneticField } from '@/components/interactive';
+import { useUISounds } from '@/hooks/useAudioSystem';
 
 interface HeaderProps {
   className?: string;
@@ -16,6 +17,7 @@ export function Header({ className }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { playHoverSound, playClickSound } = useUISounds();
 
   // Handle scroll effect for header background with throttling
   useEffect(() => {
@@ -28,8 +30,9 @@ export function Header({ className }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle smooth scroll to sections
+  // Handle smooth scroll to sections with audio feedback
   const handleNavClick = (href: string) => {
+    playClickSound();
     scrollToElement(href, 80); // 80px offset for fixed header
     setIsMobileMenuOpen(false);
   };

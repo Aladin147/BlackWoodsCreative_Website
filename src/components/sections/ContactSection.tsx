@@ -12,7 +12,14 @@ import {
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { validateEmail } from '@/lib/utils';
-import { SectionScrollAnimation, ScrollReveal, MagneticField, StaggeredGrid } from '@/components/interactive';
+import {
+  SectionScrollAnimation,
+  ScrollReveal,
+  MagneticField,
+  StaggeredGrid,
+  AtmosphericLayer,
+  ParallaxText
+} from '@/components/interactive';
 
 interface ContactSectionProps {
   className?: string;
@@ -164,16 +171,26 @@ export function ContactSection({ className }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className={`bg-bw-bg-primary px-4 py-24 ${className}`}>
-      <div className="mx-auto max-w-7xl">
-        {/* Advanced Section Header with Scroll Animations */}
+    <section id="contact" className={`relative bg-bw-bg-primary px-4 py-24 ${className}`}>
+      {/* Atmospheric Background Effects */}
+      <div className="absolute inset-0 overflow-hidden">
+        <AtmosphericLayer type="mist" intensity={0.4} color="bw-aurora-teal" />
+        <AtmosphericLayer type="orbs" intensity={0.2} color="bw-aurora-green" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* Enhanced Section Header with Parallax Text */}
         <ScrollReveal className="text-center mb-16" direction="up" distance={60} delay={0.2}>
-          <h2 className="mb-6 text-display-lg">
-            Ready to Create Something <span className="text-bw-accent-gold">Amazing</span>?
-          </h2>
-          <p className="mx-auto max-w-2xl text-body-xl">
-            Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
-          </p>
+          <ParallaxText speed={0.2}>
+            <h2 className="mb-6 text-display-lg">
+              Ready to Create Something <span className="text-bw-accent-gold">Amazing</span>?
+            </h2>
+          </ParallaxText>
+          <ScrollReveal direction="up" distance={40} delay={0.4}>
+            <p className="mx-auto max-w-2xl text-body-xl">
+              Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
+            </p>
+          </ScrollReveal>
         </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -272,7 +289,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                   </div>
 
                   <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-bw-light-gray mb-2">
+                    <label htmlFor="company" className="block text-sm font-medium text-bw-text-secondary mb-2">
                       Company
                     </label>
                     <input
@@ -288,7 +305,7 @@ export function ContactSection({ className }: ContactSectionProps) {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="projectType" className="block text-sm font-medium text-bw-light-gray mb-2">
+                      <label htmlFor="projectType" className="block text-sm font-medium text-bw-text-secondary mb-2">
                         Project Type
                       </label>
                       <select
@@ -305,7 +322,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                       </select>
                     </div>
                     <div>
-                      <label htmlFor="budget" className="block text-sm font-medium text-bw-light-gray mb-2">
+                      <label htmlFor="budget" className="block text-sm font-medium text-bw-text-secondary mb-2">
                         Budget Range
                       </label>
                       <select
@@ -324,7 +341,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-bw-light-gray mb-2">
+                    <label htmlFor="message" className="block text-sm font-medium text-bw-text-secondary mb-2">
                       Project Details *
                     </label>
                     <textarea

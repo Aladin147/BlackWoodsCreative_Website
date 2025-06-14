@@ -148,7 +148,7 @@ export function useAnimationRegistration() {
 
 // Performance monitoring component for development
 export function AnimationPerformanceMonitor({
-  enabled = false // Temporarily disabled due to build issues
+  enabled = false // Temporarily disabled due to className corruption issues
 }: {
   enabled?: boolean;
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
