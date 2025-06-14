@@ -46,6 +46,21 @@ export {
 // Phase 2: Advanced Portfolio Features
 export { AdvancedPortfolioFilter } from './AdvancedPortfolioFilter';
 
+// Phase 2: Complex Parallax Systems
+export {
+  ComplexParallaxSystem,
+  CinematicParallaxScene,
+  ParallaxStorySequence,
+  AtmosphericLayer
+} from './ComplexParallaxSystem';
+
+// Phase 2: WebGL Effects
+export {
+  WebGLAuroraEffect,
+  WebGLParticleSystem,
+  WebGLEnhancedBackground
+} from './WebGLEffects';
+
 // Future exports for Phase 4 expansion:
 // export { ThreeDScene } from './ThreeDScene';
 // export { AudioVisualizer } from './AudioVisualizer';
