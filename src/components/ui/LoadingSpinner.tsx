@@ -20,7 +20,7 @@ export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerP
     <div className={cn('flex flex-col items-center justify-center gap-4', className)}>
       <motion.div
         className={cn(
-          'rounded-full border-2 border-bw-medium-gray border-t-bw-gold',
+          'rounded-full border-2 border-bw-border-subtle border-t-bw-accent-gold',
           sizeClasses[size]
         )}
         animate={{ rotate: 360 }}
@@ -32,7 +32,7 @@ export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerP
       />
       {text && (
         <motion.p
-          className="text-sm text-bw-light-gray"
+          className="text-sm text-bw-text-primary opacity-60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -47,7 +47,7 @@ export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerP
 export function LoadingSkeleton({ className }: { className?: string }) {
   return (
     <motion.div
-      className={cn('rounded-lg bg-bw-dark-gray', className)}
+      className={cn('rounded-lg bg-bw-border-subtle', className)}
       animate={{
         opacity: [0.5, 1, 0.5],
       }}
@@ -62,7 +62,7 @@ export function LoadingSkeleton({ className }: { className?: string }) {
 
 export function PortfolioCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-lg bg-bw-dark-gray">
+    <div className="overflow-hidden rounded-lg bg-bw-border-subtle">
       <LoadingSkeleton className="aspect-[4/3] w-full" />
       <div className="p-6">
         <LoadingSkeleton className="mb-2 h-6 w-3/4" />

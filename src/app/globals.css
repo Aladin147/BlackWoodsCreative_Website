@@ -349,29 +349,70 @@ body::after {
   }
 
   .input-field {
-    @apply rounded-md border border-bw-medium-gray bg-white/5 px-4 py-3 text-bw-white placeholder-bw-light-gray transition-all duration-300 focus:border-bw-gold focus:shadow-gold-glow focus:outline-none;
+    background: rgba(16, 18, 17, 0.3);
+    border: 1px solid var(--bw-border-subtle);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--bw-text-primary);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease-out;
+  }
+
+  .input-field::placeholder {
+    color: var(--bw-text-primary);
+    opacity: 0.6;
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: var(--bw-accent-gold);
+    box-shadow: 0 0 20px rgba(195, 163, 88, 0.3);
   }
 
   /* Deep Forest Haze Typography System - EXACT THEME GUIDE IMPLEMENTATION */
 
-  /* h1 (Main Headline) - Theme Guide Specification */
+  /* h1 (Main Headline) - Theme Guide Specification + Responsive */
   .text-display-xl {
     font-family: 'Playfair Display', serif;
-    font-size: 4rem; /* 64px per theme guide */
+    font-size: 2.5rem; /* 40px mobile */
     font-weight: 600; /* Semi-bold per theme guide */
     letter-spacing: -0.02em; /* Per theme guide */
     color: var(--bw-accent-gold); /* $accent-gold per theme guide */
     line-height: 1.1;
   }
 
-  /* h2 (Section Headings) - Theme Guide Specification */
+  @media (min-width: 768px) {
+    .text-display-xl {
+      font-size: 3rem; /* 48px tablet */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .text-display-xl {
+      font-size: 4rem; /* 64px desktop per theme guide */
+    }
+  }
+
+  /* h2 (Section Headings) - Theme Guide Specification + Responsive */
   .text-display-lg {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem; /* 40px per theme guide */
+    font-size: 1.875rem; /* 30px mobile */
     font-weight: 600; /* Per theme guide */
     letter-spacing: -0.01em; /* Per theme guide */
     color: var(--bw-text-primary); /* $text-primary per theme guide */
     line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .text-display-lg {
+      font-size: 2.25rem; /* 36px tablet */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .text-display-lg {
+      font-size: 2.5rem; /* 40px desktop per theme guide */
+    }
   }
 
   /* h3 (Card Titles, Sub-headings) - Theme Guide Specification */
@@ -418,6 +459,40 @@ body::after {
 
   .transition-bounce {
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Theme Guide Scroll Animation - Intersection Observer */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Deep Forest Haze Focus States for Accessibility */
+  *:focus {
+    outline: 2px solid var(--bw-accent-gold);
+    outline-offset: 2px;
+  }
+
+  button:focus,
+  a:focus,
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: 2px solid var(--bw-accent-gold);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(195, 163, 88, 0.2);
+  }
+
+  /* Remove default focus for mouse users, keep for keyboard users */
+  *:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
   }
 }
 
