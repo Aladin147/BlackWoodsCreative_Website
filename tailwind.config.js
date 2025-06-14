@@ -9,23 +9,38 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // BlackWoods Creative Brand Colors - Enhanced
+        // BlackWoods Creative - Deep Forest Haze Theme
         bw: {
-          black: '#000000',
+          // Core Background Colors
+          'bg-primary': '#101211',      // Near Black with green tint
+          'text-primary': '#E8E8E3',    // Off-White, warm and soft
+          'accent-gold': '#C3A358',     // Muted Gold, rich ochre
+
+          // Aurora Colors for Background Animation
+          'aurora-teal': '#0D2E2B',     // Dark Teal base
+          'aurora-green': '#1A4230',    // Forest Green blend
+
+          // Utility Colors
+          'border-subtle': '#2A2E2C',   // Low-contrast borders
+
+          // Legacy colors for gradual migration
+          black: '#101211',             // Updated to match bg-primary
           charcoal: '#0f0f0f',
           'dark-gray': '#1a1a1a',
           'medium-gray': '#2a2a2a',
           'light-gray': '#6a6a6a',
-          white: '#ffffff',
+          white: '#E8E8E3',             // Updated to match text-primary
           silver: '#b8b8b8',
           platinum: '#f0f0f0',
-        gold: '#a8e6cf', // Pastel green
+          gold: '#C3A358',              // Fixed to match accent-gold
           red: '#cc3333',
-          // New sophisticated colors
+
+          // Enhanced atmospheric colors
           pearl: '#f8f8f8',
           smoke: '#8a8a8a',
           obsidian: '#0a0a0a',
           champagne: '#f7e7ce',
+
           // Semantic colors
           success: '#28a745',
           warning: '#ffc107',

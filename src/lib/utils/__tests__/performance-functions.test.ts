@@ -26,7 +26,7 @@ jest.mock('../performance', () => {
   };
 
   // Override global performance with proper Jest mocks
-  global.performance = mockPerformance as any;
+  global.performance = mockPerformance as jest.Mocked<Performance>;
 
   return originalModule;
 });

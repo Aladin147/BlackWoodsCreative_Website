@@ -2,37 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Custom Properties - BlackWoods Creative Design System - ELEVATED */
+/* CSS Custom Properties - BlackWoods Creative Deep Forest Haze Theme */
 :root {
-  /* Enhanced Colors - More Sophisticated Contrast */
-  --bw-black: #000000; /* Pure black for maximum contrast */
-  --bw-charcoal: #0f0f0f; /* Deeper charcoal */
-  --bw-dark-gray: #1a1a1a; /* Refined dark gray */
-  --bw-medium-gray: #2a2a2a; /* Elevated medium gray */
-  --bw-light-gray: #6a6a6a; /* More refined light gray */
-  --bw-white: #ffffff; /* Pure white for maximum contrast */
-  --bw-silver: #b8b8b8; /* More sophisticated silver */
-  --bw-platinum: #f0f0f0; /* Brighter platinum for better contrast */
-  --bw-gold: #d4af37; /* Signature gold */
+  /* Core Deep Forest Haze Colors */
+  --bw-bg-primary: #101211; /* Near Black with organic green tint */
+  --bw-text-primary: #E8E8E3; /* Off-White, warm and soft on eyes */
+  --bw-accent-gold: #C3A358; /* Muted Gold, rich ochre for CTAs */
+
+  /* Aurora Background Colors */
+  --bw-aurora-teal: #0D2E2B; /* Dark Teal for gradient base */
+  --bw-aurora-green: #1A4230; /* Forest Green for organic blend */
+
+  /* Utility Colors */
+  --bw-border-subtle: #2A2E2C; /* Low-contrast borders and dividers */
+
+  /* Legacy colors for gradual migration */
+  --bw-black: #101211; /* Updated to match bg-primary */
+  --bw-charcoal: #0f0f0f;
+  --bw-dark-gray: #1a1a1a;
+  --bw-medium-gray: #2a2a2a;
+  --bw-light-gray: #6a6a6a;
+  --bw-white: #E8E8E3; /* Updated to match text-primary */
+  --bw-silver: #b8b8b8;
+  --bw-platinum: #f0f0f0;
+  --bw-gold: #C3A358; /* Fixed to match accent-gold */
   --bw-red: #cc3333;
 
-  /* New Sophisticated Accent Colors */
-  --bw-pearl: #f8f8f8; /* Near-white for subtle highlights */
-  --bw-smoke: #8a8a8a; /* Sophisticated mid-tone */
-  --bw-obsidian: #0a0a0a; /* Deep obsidian for depth */
-  --bw-champagne: #f7e7ce; /* Warm champagne accent */
+  /* Enhanced atmospheric colors */
+  --bw-pearl: #f8f8f8;
+  --bw-smoke: #8a8a8a;
+  --bw-obsidian: #0a0a0a;
+  --bw-champagne: #f7e7ce;
 
-  /* Enhanced Gradients - More Sophisticated Depth */
-  --bw-gradient-dark: linear-gradient(135deg, #000000 0%, #0f0f0f 50%, #1a1a1a 100%);
+  /* Deep Forest Haze Gradients */
+  --bw-gradient-aurora:
+    radial-gradient(circle at 20% 30%, var(--bw-aurora-teal) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, var(--bw-aurora-green) 0%, transparent 35%),
+    radial-gradient(circle at 40% 80%, var(--bw-aurora-teal) 0%, transparent 30%);
+
+  --bw-gradient-primary: linear-gradient(135deg, var(--bw-bg-primary) 0%, #0a0f0b 50%, var(--bw-bg-primary) 100%);
+  --bw-gradient-gold: linear-gradient(135deg, var(--bw-accent-gold) 0%, #d4b85a 50%, var(--bw-accent-gold) 100%);
+  --bw-gradient-glass: linear-gradient(135deg, rgba(16, 18, 17, 0.5) 0%, rgba(16, 18, 17, 0.3) 100%);
+
+  /* Legacy gradients for migration */
+  --bw-gradient-dark: linear-gradient(135deg, var(--bw-bg-primary) 0%, #0f0f0f 50%, #1a1a1a 100%);
   --bw-gradient-silver: linear-gradient(135deg, #b8b8b8 0%, #f0f0f0 100%);
-  --bw-gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
-  --bw-gradient-glow: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-
-  /* New Sophisticated Gradients */
-  --bw-gradient-obsidian: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
-  --bw-gradient-pearl: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+  --bw-gradient-glow: radial-gradient(circle, rgba(232, 232, 227, 0.15) 0%, transparent 70%);
+  --bw-gradient-obsidian: linear-gradient(135deg, var(--bw-bg-primary) 0%, #0a0a0a 100%);
+  --bw-gradient-pearl: linear-gradient(135deg, #f8f8f8 0%, var(--bw-text-primary) 100%);
   --bw-gradient-smoke: linear-gradient(135deg, #6a6a6a 0%, #8a8a8a 100%);
-  --bw-gradient-depth: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+  --bw-gradient-depth: linear-gradient(180deg, transparent 0%, rgba(16,18,17,0.8) 100%);
 
   /* Enhanced Shadows - Sophisticated Depth System */
   --shadow-cinematic: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
@@ -88,6 +107,40 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  background: var(--bw-bg-primary);
+  position: relative;
+}
+
+/* Deep Forest Haze Aurora Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  background: var(--bw-gradient-aurora);
+  filter: blur(100px);
+  animation: auroraFlow 60s ease-in-out infinite alternate;
+  z-index: -2;
+  opacity: 0.6;
+}
+
+/* Secondary aurora layer for depth */
+body::after {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: -30%;
+  right: -30%;
+  bottom: -30%;
+  background:
+    radial-gradient(circle at 60% 20%, var(--bw-aurora-green) 0%, transparent 25%),
+    radial-gradient(circle at 30% 90%, var(--bw-aurora-teal) 0%, transparent 30%);
+  filter: blur(80px);
+  animation: auroraFlow 45s ease-in-out infinite alternate-reverse;
+  z-index: -1;
+  opacity: 0.4;
 }
 
 /* Smooth Scrolling */
@@ -214,28 +267,89 @@ body {
   }
 }
 
-/* Enhanced Component Base Styles - Sophisticated Contrast & Depth */
+/* Deep Forest Haze Component Styles */
 @layer components {
   .btn-primary {
-    @apply rounded-lg bg-gradient-to-r from-bw-gold to-yellow-400 px-8 py-4 font-semibold text-bw-black transition-all duration-300 hover:-translate-y-2 hover:shadow-gold-glow shadow-depth-2;
+    background: var(--bw-accent-gold);
+    color: var(--bw-bg-primary);
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
     letter-spacing: 0.025em;
+    transition: all 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(195, 163, 88, 0.2);
+  }
+
+  .btn-primary:hover {
+    background: #d4b85a;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(195, 163, 88, 0.4);
   }
 
   .btn-secondary {
-    @apply rounded-lg border-2 border-bw-medium-gray bg-transparent px-8 py-4 font-medium text-bw-white transition-all duration-300 hover:border-bw-platinum hover:bg-white/10 hover:shadow-pearl hover:-translate-y-1;
+    background: transparent;
+    color: var(--bw-accent-gold);
+    border: 2px solid var(--bw-accent-gold);
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
     letter-spacing: 0.025em;
+    transition: all 0.3s ease-out;
+  }
+
+  .btn-secondary:hover {
+    background: var(--bw-accent-gold);
+    color: var(--bw-bg-primary);
   }
 
   .card {
-    @apply rounded-2xl border border-bw-dark-gray bg-gradient-to-br from-bw-charcoal to-bw-dark-gray p-8 shadow-depth-2 transition-all duration-500 hover:-translate-y-2 hover:border-bw-medium-gray hover:shadow-depth-3;
+    background: rgba(16, 18, 17, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--bw-border-subtle);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s ease-out;
+  }
+
+  .card:hover {
+    border-color: var(--bw-accent-gold);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(195, 163, 88, 0.15);
   }
 
   .card-elevated {
-    @apply rounded-2xl border border-bw-medium-gray bg-gradient-to-br from-bw-dark-gray to-bw-charcoal p-8 shadow-depth-3 transition-all duration-500 hover:-translate-y-3 hover:border-bw-silver hover:shadow-depth-4;
+    background: rgba(16, 18, 17, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(195, 163, 88, 0.2);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s ease-out;
+  }
+
+  .card-elevated:hover {
+    border-color: var(--bw-accent-gold);
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(195, 163, 88, 0.25);
   }
 
   .card-premium {
-    @apply rounded-2xl border-2 border-bw-gold/20 bg-gradient-to-br from-bw-charcoal via-bw-dark-gray to-bw-charcoal p-8 shadow-depth-4 transition-all duration-500 hover:-translate-y-3 hover:border-bw-gold/40 hover:shadow-gold-glow;
+    background: rgba(16, 18, 17, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(195, 163, 88, 0.3);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s ease-out;
+  }
+
+  .card-premium:hover {
+    border-color: var(--bw-accent-gold);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(195, 163, 88, 0.35);
   }
 
   .input-field {
@@ -282,7 +396,42 @@ body {
   }
 }
 
-/* Animation Keyframes */
+/* Deep Forest Haze Animation Keyframes */
+@keyframes auroraFlow {
+  0% {
+    transform: rotate(0deg) translateX(0px) translateY(0px) scale(1);
+  }
+  25% {
+    transform: rotate(5deg) translateX(30px) translateY(-20px) scale(1.05);
+  }
+  50% {
+    transform: rotate(10deg) translateX(50px) translateY(10px) scale(1.1);
+  }
+  75% {
+    transform: rotate(15deg) translateX(20px) translateY(30px) scale(1.05);
+  }
+  100% {
+    transform: rotate(20deg) translateX(60px) translateY(-10px) scale(1.15);
+  }
+}
+
+@keyframes particleDrift {
+  0% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(50px);
+    opacity: 0;
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -297,10 +446,10 @@ body {
 @keyframes pulseGlow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 20px rgba(195, 163, 88, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+    box-shadow: 0 0 40px rgba(195, 163, 88, 0.6);
   }
 }
 

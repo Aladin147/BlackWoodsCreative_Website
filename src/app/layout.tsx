@@ -15,6 +15,14 @@ const MagneticCursor = dynamic(
   }
 );
 
+const AtmosphericParticles = dynamic(
+  () => import('@/components/interactive').then(mod => ({ default: mod.AtmosphericParticles })),
+  {
+    ssr: false,
+    loading: () => null
+  }
+);
+
 // Performance monitoring (only in production)
 const PerformanceReporter = dynamic(
   () => import('@/lib/utils/performance-monitor').then(mod => ({
@@ -121,14 +129,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
       <body className="font-primary antialiased">
         <ThemeProvider>
-          <div className="bg-bw-white text-bw-black dark:bg-bw-black dark:text-bw-white transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
+          <div className="bg-bw-bg-primary text-bw-text-primary transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
             {/* Skip to main content link for accessibility */}
             <a
               href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-bw-gold focus:text-bw-black focus:rounded-md focus:font-medium"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-bw-accent-gold focus:text-bw-bg-primary focus:rounded-md focus:font-medium"
             >
               Skip to main content
             </a>
+            <AtmosphericParticles />
             <MagneticCursor />
             <ScrollProgress />
             <Header />

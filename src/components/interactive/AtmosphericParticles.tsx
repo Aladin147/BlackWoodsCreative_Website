@@ -1,0 +1,127 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
+
+interface Particle {
+  id: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  opacity: number;
+  size: number;
+  life: number;
+  maxLife: number;
+}
+
+interface AtmosphericParticlesProps {
+  count?: number;
+  className?: string;
+}
+
+export function AtmosphericParticles({ count = 15, className = '' }: AtmosphericParticlesProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const particlesRef = useRef<Particle[]>([]);
+  const animationRef = useRef<number>();
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    const rect = container.getBoundingClientRect();
+
+    // Initialize particles
+    particlesRef.current = Array.from({ length: count }, (_, i) => ({
+      id: i,
+      x: Math.random() * rect.width,
+      y: Math.random() * rect.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.6 + 0.2,
+      size: Math.random() * 3 + 1,
+      life: 0,
+      maxLife: Math.random() * 300 + 200,
+    }));
+
+    // Create particle elements
+    particlesRef.current.forEach((particle) => {
+      const element = document.createElement('div');
+      element.className = 'absolute rounded-full pointer-events-none';
+      element.style.cssText = `
+        width: ${particle.size}px;
+        height: ${particle.size}px;
+        background: var(--bw-accent-gold);
+        opacity: ${particle.opacity};
+        transform: translate(${particle.x}px, ${particle.y}px);
+        transition: opacity 0.3s ease-out;
+        box-shadow: 0 0 ${particle.size * 2}px rgba(195, 163, 88, 0.4);
+      `;
+      element.setAttribute('data-particle-id', particle.id.toString());
+      container.appendChild(element);
+    });
+
+    // Animation loop
+    const animate = () => {
+      const rect = container.getBoundingClientRect();
+      
+      particlesRef.current.forEach((particle) => {
+        // Update position
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.life += 1;
+
+        // Boundary wrapping
+        if (particle.x < -10) particle.x = rect.width + 10;
+        if (particle.x > rect.width + 10) particle.x = -10;
+        if (particle.y < -10) particle.y = rect.height + 10;
+        if (particle.y > rect.height + 10) particle.y = -10;
+
+        // Fade in/out based on life
+        const lifeFactor = particle.life / particle.maxLife;
+        if (lifeFactor < 0.1) {
+          particle.opacity = (lifeFactor / 0.1) * 0.6;
+        } else if (lifeFactor > 0.9) {
+          particle.opacity = ((1 - lifeFactor) / 0.1) * 0.6;
+        }
+
+        // Reset particle when life ends
+        if (particle.life >= particle.maxLife) {
+          particle.x = Math.random() * rect.width;
+          particle.y = Math.random() * rect.height;
+          particle.vx = (Math.random() - 0.5) * 0.5;
+          particle.vy = (Math.random() - 0.5) * 0.3;
+          particle.life = 0;
+          particle.maxLife = Math.random() * 300 + 200;
+        }
+
+        // Update DOM element
+        const element = container.querySelector(`[data-particle-id="${particle.id}"]`) as HTMLElement;
+        if (element) {
+          element.style.transform = `translate(${particle.x}px, ${particle.y}px)`;
+          element.style.opacity = particle.opacity.toString();
+        }
+      });
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    // Cleanup
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      // Remove particle elements
+      container.querySelectorAll('[data-particle-id]').forEach(el => el.remove());
+    };
+  }, [count]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={`fixed inset-0 pointer-events-none z-10 ${className}`}
+      style={{ mixBlendMode: 'screen' }}
+    />
+  );
+}

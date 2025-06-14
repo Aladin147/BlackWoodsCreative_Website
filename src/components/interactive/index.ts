@@ -28,8 +28,10 @@ export {
   TypewriterText,
 } from './MicroInteractions';
 
+// Deep Forest Haze atmospheric effects
+export { AtmosphericParticles } from './AtmosphericParticles';
+
 // Future exports for Phase 4 expansion:
-// export { ParticleSystem } from './ParticleSystem';
 // export { ThreeDScene } from './ThreeDScene';
 // export { AudioVisualizer } from './AudioVisualizer';
 // export { WebGLEffects } from './WebGLEffects';
