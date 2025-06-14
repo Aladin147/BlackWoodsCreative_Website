@@ -162,12 +162,12 @@ export function MagneticCursor() {
           <motion.div
             className={`absolute inset-0 rounded-full border-2 transition-all duration-300 ${
               cursorState.hoverType === 'button'
-                ? 'border-bw-gold w-12 h-12'
+                ? 'border-bw-accent-gold w-12 h-12'
                 : cursorState.hoverType === 'portfolio'
-                ? 'border-bw-gold w-16 h-16'
+                ? 'border-bw-accent-gold w-16 h-16'
                 : cursorState.hoverType === 'link'
-                ? 'border-bw-white w-10 h-10'
-                : 'border-bw-white w-8 h-8'
+                ? 'border-bw-text-primary w-10 h-10'
+                : 'border-bw-text-primary w-8 h-8'
             }`}
             animate={{
               rotate: cursorState.isHovering ? 180 : 0,
@@ -180,10 +180,10 @@ export function MagneticCursor() {
           <motion.div
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ${
               cursorState.hoverType === 'button'
-                ? 'bg-bw-gold w-2 h-2'
+                ? 'bg-bw-accent-gold w-2 h-2'
                 : cursorState.hoverType === 'portfolio'
-                ? 'bg-bw-gold w-3 h-3'
-                : 'bg-bw-white w-1 h-1'
+                ? 'bg-bw-accent-gold w-3 h-3'
+                : 'bg-bw-text-primary w-1 h-1'
             }`}
             animate={{
               scale: cursorState.isHovering ? 0 : 1,

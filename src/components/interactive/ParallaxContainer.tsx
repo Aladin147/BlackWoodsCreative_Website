@@ -152,11 +152,20 @@ export function CinematicParallax({ children, className = '' }: ParallaxContaine
   );
 }
 
-// Magnetic field effect for portfolio items
-export function MagneticField({ children, strength = 0.3 }: { children: ReactNode; strength?: number }) {
+// Enhanced Magnetic field effect for portfolio items
+export function MagneticField({
+  children,
+  strength = 0.3,
+  distance = 150
+}: {
+  children: ReactNode;
+  strength?: number;
+  distance?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const x = useSpring(0, { stiffness: 300, damping: 30 });
-  const y = useSpring(0, { stiffness: 300, damping: 30 });
+  const x = useSpring(0, { stiffness: 400, damping: 25 });
+  const y = useSpring(0, { stiffness: 400, damping: 25 });
+  const scale = useSpring(1, { stiffness: 400, damping: 25 });
 
   useEffect(() => {
     const element = ref.current;
@@ -167,31 +176,43 @@ export function MagneticField({ children, strength = 0.3 }: { children: ReactNod
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      const deltaX = (e.clientX - centerX) * strength;
-      const deltaY = (e.clientY - centerY) * strength;
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
+      const distanceFromCenter = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-      x.set(deltaX);
-      y.set(deltaY);
+      // Only apply magnetic effect within specified distance
+      if (distanceFromCenter < distance) {
+        const magneticStrength = (1 - distanceFromCenter / distance) * strength;
+        x.set(deltaX * magneticStrength);
+        y.set(deltaY * magneticStrength);
+        scale.set(1 + magneticStrength * 0.1); // Subtle scale effect
+      } else {
+        x.set(0);
+        y.set(0);
+        scale.set(1);
+      }
     };
 
     const handleMouseLeave = () => {
       x.set(0);
       y.set(0);
+      scale.set(1);
     };
 
-    element.addEventListener('mousemove', handleMouseMove);
+    // Use global mouse events for better magnetic field effect
+    document.addEventListener('mousemove', handleMouseMove);
     element.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      element.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [x, y, strength]);
+  }, [x, y, scale, strength, distance]);
 
   return (
     <motion.div
       ref={ref}
-      style={{ x, y }}
+      style={{ x, y, scale }}
       className="transform-gpu"
     >
       {children}

@@ -9,7 +9,7 @@ import {
   CheckBadgeIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline';
-import { SectionScrollAnimation, ScrollFadeIn } from '@/components/interactive';
+import { SectionScrollAnimation, ScrollFadeIn, ScrollReveal, StaggeredGrid, MagneticField } from '@/components/interactive';
 
 interface AboutSectionProps {
   className?: string;
@@ -48,8 +48,8 @@ export function AboutSection({ className }: AboutSectionProps) {
   return (
     <section id="about" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        {/* Deep Forest Haze Section Header */}
-        <div className="text-center mb-20">
+        {/* Deep Forest Haze Section Header with Advanced Animation */}
+        <ScrollReveal className="text-center mb-20" direction="up" distance={60}>
           <h2 className="mb-8 text-display-lg">
             About <span className="text-bw-accent-gold">BlackWoods Creative</span>
           </h2>
@@ -57,29 +57,31 @@ export function AboutSection({ className }: AboutSectionProps) {
             We are a premium creative studio specializing in visual storytelling that captivates audiences
             and drives results. Our expertise spans filmmaking, photography, 3D visualization, and immersive scene creation.
           </p>
-        </div>
+        </ScrollReveal>
 
-        {/* Services Grid - Deep Forest Haze Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        {/* Services Grid with Advanced Staggered Animation */}
+        <StaggeredGrid
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+          staggerDelay={0.15}
+        >
           {services.map((service, index) => (
-            <div
-              key={service.title}
-              className="card group text-center"
-            >
-              <div className="mb-8 flex justify-center">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-bw-accent-gold/15 text-bw-accent-gold transition-all duration-300 group-hover:bg-bw-accent-gold group-hover:text-bw-bg-primary group-hover:scale-110">
-                  <service.icon className="h-10 w-10" />
+            <MagneticField key={service.title} strength={0.2} distance={120}>
+              <div className="card group text-center cursor-pointer">
+                <div className="mb-8 flex justify-center">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-bw-accent-gold/15 text-bw-accent-gold transition-all duration-300 group-hover:bg-bw-accent-gold group-hover:text-bw-bg-primary group-hover:scale-110">
+                    <service.icon className="h-10 w-10" />
+                  </div>
                 </div>
+                <h3 className="mb-6 text-display-md">
+                  {service.title}
+                </h3>
+                <p className="text-body-xl">
+                  {service.description}
+                </p>
               </div>
-              <h3 className="mb-6 text-display-md">
-                {service.title}
-              </h3>
-              <p className="text-body-xl">
-                {service.description}
-              </p>
-            </div>
+            </MagneticField>
           ))}
-        </div>
+        </StaggeredGrid>
 
         {/* Company Story - Deep Forest Haze Style */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">

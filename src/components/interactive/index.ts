@@ -32,6 +32,17 @@ export {
 export { AtmosphericParticles } from './AtmosphericParticles';
 export { ScrollFadeIn, StaggeredScrollFadeIn, SectionScrollAnimation } from './ScrollAnimations';
 
+// Phase 2: Advanced Scroll Animations
+export {
+  ScrollReveal,
+  ParallaxText,
+  ScrollProgressBar,
+  CountUp,
+  StaggeredGrid,
+  MorphingShape,
+  ScrollTriggeredCounter
+} from './AdvancedScrollAnimations';
+
 // Future exports for Phase 4 expansion:
 // export { ThreeDScene } from './ThreeDScene';
 // export { AudioVisualizer } from './AudioVisualizer';

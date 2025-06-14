@@ -19,10 +19,23 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
 
   return (
     <motion.div
-      className={`card-elevated group relative overflow-hidden transition-all duration-500 ${className}`}
-      whileHover={{ y: -8, scale: 1.02 }}
-      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={`card-elevated group relative overflow-hidden transition-all duration-500 cursor-pointer ${className}`}
+      whileHover={{
+        y: -12,
+        scale: 1.03,
+        rotateX: 5,
+        rotateY: 5,
+      }}
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        duration: 0.4,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+      }}
       data-testid={testId}
+      data-cursor="portfolio"
     >
       {/* Project Image */}
       <div className="relative aspect-[4/3] overflow-hidden" role="img" aria-label={`Project: ${project.title}`}>
@@ -35,8 +48,8 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
           role="presentation"
         />
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-bw-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        {/* Deep Forest Haze Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-bw-bg-primary/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
         {/* Play Button for Videos */}
         {project.type === 'video' && (
@@ -48,7 +61,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
           >
           <button
             onClick={handleViewProject}
-            className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-gold/90 text-bw-black shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-gold"
+            className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-accent-gold/90 text-bw-bg-primary shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-accent-gold"
             aria-label={`View ${project.title} project details`}
           >
               <PlayIcon className="h-8 w-8 ml-1" data-testid="play-icon" />
@@ -66,7 +79,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
           >
             <button
               onClick={handleViewProject}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-gold/90 text-bw-black shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-gold"
+              className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-accent-gold/90 text-bw-bg-primary shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-accent-gold"
             >
               <EyeIcon className="h-8 w-8" />
             </button>
@@ -108,7 +121,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
               </span>
             ))}
             {project.tags.length > 3 && (
-              <span className="rounded-md bg-bw-medium-gray px-2 py-1 text-xs text-bw-light-gray">
+              <span className="rounded-md bg-bw-border-subtle px-2 py-1 text-xs text-bw-text-primary opacity-60">
                 +{project.tags.length - 3} more
               </span>
             )}
@@ -116,8 +129,8 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
         )}
       </div>
 
-      {/* Hover Border Effect */}
-      <div className="absolute inset-0 rounded-lg border-2 border-transparent transition-colors duration-300 group-hover:border-bw-gold/30" />
+      {/* Deep Forest Haze Hover Border Effect */}
+      <div className="absolute inset-0 rounded-lg border-2 border-transparent transition-colors duration-300 group-hover:border-bw-accent-gold/30" />
     </motion.div>
   );
 }
