@@ -9,6 +9,7 @@ import {
   CheckBadgeIcon,
   TrophyIcon
 } from '@heroicons/react/24/outline';
+import { SectionScrollAnimation, ScrollFadeIn } from '@/components/interactive';
 
 interface AboutSectionProps {
   className?: string;
@@ -45,71 +46,48 @@ const achievements = [
 
 export function AboutSection({ className }: AboutSectionProps) {
   return (
-    <section id="about" className={`bg-gradient-to-br from-bw-dark-gray via-bw-medium-gray to-bw-dark-gray px-6 py-32 ${className}`}>
+    <section id="about" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        {/* Enhanced Section Header */}
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="mb-8 text-display-lg drop-shadow-xl">
-            About <span className="text-gradient-gold">BlackWoods Creative</span>
+        {/* Deep Forest Haze Section Header */}
+        <div className="text-center mb-20">
+          <h2 className="mb-8 text-display-lg">
+            About <span className="text-bw-accent-gold">BlackWoods Creative</span>
           </h2>
-          <p className="mx-auto max-w-4xl text-body-lg text-bw-pearl leading-relaxed">
+          <p className="mx-auto max-w-4xl text-body-xl">
             We are a premium creative studio specializing in visual storytelling that captivates audiences
             and drives results. Our expertise spans filmmaking, photography, 3D visualization, and immersive scene creation.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Services Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
+        {/* Services Grid - Deep Forest Haze Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {services.map((service, index) => (
-            <motion.div
+            <div
               key={service.title}
-              className="card-elevated group text-center"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -8 }}
+              className="card group text-center"
             >
               <div className="mb-8 flex justify-center">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-bw-gold/15 text-bw-gold transition-all duration-500 group-hover:bg-bw-gold group-hover:text-bw-black group-hover:scale-110 shadow-depth-1 group-hover:shadow-gold-glow">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-bw-accent-gold/15 text-bw-accent-gold transition-all duration-300 group-hover:bg-bw-accent-gold group-hover:text-bw-bg-primary group-hover:scale-110">
                   <service.icon className="h-10 w-10" />
                 </div>
               </div>
-              <h3 className="mb-6 font-display text-xl font-semibold text-bw-white">
+              <h3 className="mb-6 text-display-md">
                 {service.title}
               </h3>
-              <p className="text-bw-pearl leading-relaxed">
+              <p className="text-body-xl">
                 {service.description}
               </p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Company Story */}
-        <motion.div
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
+        {/* Company Story - Deep Forest Haze Style */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div>
-            <h3 className="mb-6 font-display text-3xl font-bold text-bw-white">
-              Our <span className="text-gradient-gold">Story</span>
+            <h3 className="mb-6 text-display-lg">
+              Our <span className="text-bw-accent-gold">Story</span>
             </h3>
-            <div className="space-y-4 text-bw-light-gray">
+            <div className="space-y-4 text-body-xl">
               <p>
                 Founded with a passion for visual excellence, BlackWoods Creative has evolved into a
                 premier creative studio that bridges the gap between artistic vision and commercial success.
@@ -127,46 +105,34 @@ export function AboutSection({ className }: AboutSectionProps) {
           </div>
 
           <div className="relative">
-            <div className="aspect-square rounded-lg bg-gradient-to-br from-bw-gold/20 to-bw-silver/10 p-8">
-              <div className="h-full w-full rounded-lg bg-bw-charcoal flex items-center justify-center">
-                <div className="text-center">
-                  <FilmIcon className="h-16 w-16 text-bw-gold mx-auto mb-4" />
-                  <p className="text-bw-light-gray">
-                    Studio Image Placeholder
-                  </p>
-                </div>
+            <div className="card aspect-square flex items-center justify-center">
+              <div className="text-center">
+                <FilmIcon className="h-16 w-16 text-bw-accent-gold mx-auto mb-4" />
+                <p className="text-body-lg">
+                  Studio Image Placeholder
+                </p>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Achievements */}
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="mb-8 font-display text-2xl font-bold text-bw-white">
-            Our <span className="text-gradient-gold">Achievements</span>
+        {/* Achievements - Deep Forest Haze Style */}
+        <div className="text-center">
+          <h3 className="mb-8 text-display-lg">
+            Our <span className="text-bw-accent-gold">Achievements</span>
           </h3>
           <div className="flex flex-wrap justify-center gap-8">
             {achievements.map((achievement, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="flex items-center gap-3 text-bw-light-gray"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                className="flex items-center gap-3 text-body-xl"
               >
-                <achievement.icon className="h-6 w-6 text-bw-gold" />
+                <achievement.icon className="h-6 w-6 text-bw-accent-gold" />
                 <span className="font-medium">{achievement.text}</span>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

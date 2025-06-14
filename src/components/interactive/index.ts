@@ -30,6 +30,7 @@ export {
 
 // Deep Forest Haze atmospheric effects
 export { AtmosphericParticles } from './AtmosphericParticles';
+export { ScrollFadeIn, StaggeredScrollFadeIn, SectionScrollAnimation } from './ScrollAnimations';
 
 // Future exports for Phase 4 expansion:
 // export { ThreeDScene } from './ThreeDScene';

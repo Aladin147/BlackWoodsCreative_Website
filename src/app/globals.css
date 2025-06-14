@@ -69,18 +69,13 @@
   --shadow-depth-4: 0 32px 64px rgba(0, 0, 0, 0.6);
   --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 
-  /* Enhanced Spacing System - Better White Space */
-  --space-micro: 0.125rem; /* 2px - Micro spacing */
-  --space-xs: 0.25rem; /* 4px - Extra small */
-  --space-sm: 0.5rem; /* 8px - Small */
-  --space-md: 1rem; /* 16px - Medium */
-  --space-lg: 1.5rem; /* 24px - Large */
-  --space-xl: 2rem; /* 32px - Extra large */
-  --space-2xl: 3rem; /* 48px - 2X large */
-  --space-3xl: 4rem; /* 64px - 3X large */
-  --space-4xl: 6rem; /* 96px - 4X large */
-  --space-5xl: 8rem; /* 128px - 5X large */
-  --space-6xl: 12rem; /* 192px - 6X large */
+  /* Deep Forest Haze Spacing System - 8px Grid */
+  --space-xs: 4px;   /* $space-xs from theme guide */
+  --space-sm: 8px;   /* $space-sm from theme guide */
+  --space-md: 16px;  /* $space-md from theme guide */
+  --space-lg: 32px;  /* $space-lg from theme guide */
+  --space-xl: 64px;  /* $space-xl from theme guide */
+  --space-xxl: 128px; /* $space-xxl from theme guide */
 
   /* Section Spacing - Generous White Space */
   --section-padding-sm: var(--space-4xl); /* 96px */
@@ -275,52 +270,50 @@ body::after {
   .btn-primary {
     background: var(--bw-accent-gold);
     color: var(--bw-bg-primary);
-    padding: 16px 32px;
+    padding: var(--space-md) var(--space-lg); /* 16px 32px per theme guide */
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    letter-spacing: 0.025em;
     transition: all 0.3s ease-out;
-    box-shadow: 0 4px 12px rgba(195, 163, 88, 0.2);
+    border: none;
+    cursor: pointer;
   }
 
   .btn-primary:hover {
-    background: #d4b85a;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(195, 163, 88, 0.4);
+    background: #d4b85a; /* 10% brighter per theme guide */
+    transform: translateY(-3px); /* subtle lift per theme guide */
   }
 
   .btn-secondary {
     background: transparent;
     color: var(--bw-accent-gold);
     border: 2px solid var(--bw-accent-gold);
-    padding: 16px 32px;
+    padding: var(--space-md) var(--space-lg); /* 16px 32px per theme guide */
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    letter-spacing: 0.025em;
     transition: all 0.3s ease-out;
+    cursor: pointer;
   }
 
   .btn-secondary:hover {
-    background: var(--bw-accent-gold);
-    color: var(--bw-bg-primary);
+    background: var(--bw-accent-gold); /* fills with accent-gold per theme guide */
+    color: var(--bw-bg-primary); /* text becomes bg-primary per theme guide */
   }
 
   .card {
-    background: rgba(16, 18, 17, 0.5);
-    backdrop-filter: blur(12px);
+    background: rgba(16, 18, 17, 0.5); /* semi-transparent black per theme guide */
+    backdrop-filter: blur(12px); /* frosted glass effect per theme guide */
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--bw-border-subtle);
     border-radius: 16px;
-    padding: 32px;
+    padding: var(--space-lg); /* 32px per theme guide */
     transition: all 0.3s ease-out;
   }
 
   .card:hover {
-    border-color: var(--bw-accent-gold);
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(195, 163, 88, 0.15);
+    border-color: var(--bw-accent-gold); /* border animates to accent-gold per theme guide */
+    transform: translateY(-2px); /* subtle lift per theme guide */
   }
 
   .card-elevated {

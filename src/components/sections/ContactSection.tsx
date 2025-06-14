@@ -12,6 +12,7 @@ import {
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { validateEmail } from '@/lib/utils';
+import { SectionScrollAnimation } from '@/components/interactive';
 
 interface ContactSectionProps {
   className?: string;
@@ -163,23 +164,17 @@ export function ContactSection({ className }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className={`bg-bw-black px-4 py-24 ${className}`}>
+    <section id="contact" className={`bg-bw-bg-primary px-4 py-24 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
+        {/* Deep Forest Haze Section Header */}
+        <div className="text-center mb-16">
           <h2 className="mb-6 text-display-lg">
-            Ready to Create Something <span className="text-gradient-gold">Amazing</span>?
+            Ready to Create Something <span className="text-bw-accent-gold">Amazing</span>?
           </h2>
-          <p className="mx-auto max-w-2xl text-body-lg text-bw-light-gray">
+          <p className="mx-auto max-w-2xl text-body-xl">
             Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
@@ -190,7 +185,7 @@ export function ContactSection({ className }: ContactSectionProps) {
             viewport={{ once: true }}
           >
             <div className="card">
-              <h3 className="mb-6 font-display text-2xl font-bold text-bw-white">
+              <h3 className="mb-6 text-display-md">
                 Start Your Project
               </h3>
 
@@ -204,10 +199,10 @@ export function ContactSection({ className }: ContactSectionProps) {
                   <div className="mb-4 flex justify-center">
                     <CheckCircleIcon className="h-16 w-16 text-bw-gold" />
                   </div>
-                  <h4 className="mb-2 text-xl font-semibold text-bw-gold">
+                  <h4 className="mb-2 text-display-md text-bw-accent-gold">
                     Thank You!
                   </h4>
-                  <p className="text-bw-light-gray">
+                  <p className="text-body-xl">
                     We&apos;ll get back to you within 24 hours.
                   </p>
                 </motion.div>
@@ -395,10 +390,10 @@ export function ContactSection({ className }: ContactSectionProps) {
           >
             <div className="space-y-8">
               <div>
-                <h3 className="mb-6 font-display text-2xl font-bold text-bw-white">
+                <h3 className="mb-6 text-display-md">
                   Get in Touch
                 </h3>
-                <p className="text-bw-light-gray mb-8">
+                <p className="text-body-xl mb-8">
                   Ready to bring your vision to life? We&apos;re here to help you create something extraordinary.
                   Reach out to discuss your project and let&apos;s start crafting your story.
                 </p>
