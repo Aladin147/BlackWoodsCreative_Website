@@ -4,7 +4,8 @@ import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 import {
   TextReveal,
-  ParallaxLayer
+  MagneticField,
+  ScrollReveal
 } from '@/components/interactive';
 
 interface VisionSectionProps {
@@ -93,41 +94,56 @@ function CinematicFinale() {
         <div className="w-full h-full bg-bw-bg-primary" />
       </motion.div>
 
-      {/* Multiple Parallax Layers */}
-      <ParallaxLayer speed={0.2} direction="up" className="absolute inset-0 z-10">
+      {/* Enhanced Atmospheric Layers */}
+      <motion.div
+        className="absolute inset-0 z-10"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, -50]) }}
+      >
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-bw-aurora-teal/20 rounded-full blur-3xl" />
-      </ParallaxLayer>
+      </motion.div>
 
-      <ParallaxLayer speed={0.4} direction="down" className="absolute inset-0 z-10">
+      <motion.div
+        className="absolute inset-0 z-10"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 100]) }}
+      >
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-bw-aurora-green/15 rounded-full blur-3xl" />
-      </ParallaxLayer>
+      </motion.div>
 
-      <ParallaxLayer speed={0.6} direction="up" className="absolute inset-0 z-10">
+      <motion.div
+        className="absolute inset-0 z-10"
+        style={{ x: useTransform(scrollYProgress, [0, 1], [0, -80]) }}
+      >
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-bw-aurora-bright/15 rounded-full blur-2xl" />
-      </ParallaxLayer>
+      </motion.div>
 
-      {/* Content */}
+      {/* Enhanced Content with Magnetic Effects */}
       <motion.div
         className="relative z-20 h-full flex items-center justify-center text-center px-6"
         style={{ y: contentY, opacity: contentOpacity }}
       >
-        <div className="max-w-4xl">
-          <TextReveal
-            text="Experience the Difference"
-            className="text-display-xl mb-8"
-            delay={0.05}
-          />
-          <motion.p
-            className="text-body-xl"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-            viewport={{ once: true }}
-          >
-            Our commitment to excellence and innovation creates immersive experiences that engage your audience
-            and leave lasting impressions. Every project is carefully crafted for maximum impact.
-          </motion.p>
-        </div>
+        <MagneticField strength={0.1} distance={250}>
+          <div className="max-w-4xl">
+            <ScrollReveal direction="up" distance={60} delay={0.2}>
+              <TextReveal
+                text="Experience the Difference"
+                className="text-display-xl mb-8 cursor-pointer"
+                delay={0.05}
+              />
+            </ScrollReveal>
+            <ScrollReveal direction="up" distance={40} delay={0.4}>
+              <motion.p
+                className="text-body-xl"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                viewport={{ once: true }}
+              >
+                Our commitment to excellence and innovation creates immersive experiences that engage your audience
+                and leave lasting impressions. Every project is carefully crafted for maximum impact.
+              </motion.p>
+            </ScrollReveal>
+          </div>
+        </MagneticField>
       </motion.div>
     </div>
   );

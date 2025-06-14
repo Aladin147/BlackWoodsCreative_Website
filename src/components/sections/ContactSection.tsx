@@ -166,25 +166,21 @@ export function ContactSection({ className }: ContactSectionProps) {
   return (
     <section id="contact" className={`bg-bw-bg-primary px-4 py-24 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        {/* Deep Forest Haze Section Header */}
-        <div className="text-center mb-16">
+        {/* Advanced Section Header with Scroll Animations */}
+        <ScrollReveal className="text-center mb-16" direction="up" distance={60} delay={0.2}>
           <h2 className="mb-6 text-display-lg">
             Ready to Create Something <span className="text-bw-accent-gold">Amazing</span>?
           </h2>
           <p className="mx-auto max-w-2xl text-body-xl">
             Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <div className="card">
+          {/* Advanced Contact Form with Magnetic Effects */}
+          <ScrollReveal direction="left" distance={50} delay={0.3}>
+            <MagneticField strength={0.1} distance={200}>
+              <div className="card">
               <h3 className="mb-6 text-display-md">
                 Start Your Project
               </h3>
@@ -213,18 +209,20 @@ export function ContactSection({ className }: ContactSectionProps) {
                       <label htmlFor="name" className="block text-sm font-medium text-bw-text-primary mb-2">
                         Name *
                       </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
+                      <MagneticField strength={0.05} distance={80}>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
                         onChange={handleInputChange}
                         required
                         aria-invalid={formErrors.name ? 'true' : 'false'}
                         aria-describedby={formErrors.name ? 'name-error' : undefined}
-                        className={`input-field ${formErrors.name ? 'border-red-500 focus:border-red-500' : ''}`}
-                        placeholder="Your full name"
-                      />
+                          className={`input-field ${formErrors.name ? 'border-red-500 focus:border-red-500' : ''}`}
+                          placeholder="Your full name"
+                        />
+                      </MagneticField>
                       {formErrors.name && (
                         <motion.div
                           id="name-error"
@@ -241,7 +239,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                       )}
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-bw-light-gray mb-2">
+                      <label htmlFor="email" className="block text-sm font-medium text-bw-text-primary mb-2">
                         Email *
                       </label>
                       <input
@@ -378,8 +376,9 @@ export function ContactSection({ className }: ContactSectionProps) {
                   </motion.button>
                 </form>
               )}
-            </div>
-          </motion.div>
+              </div>
+            </MagneticField>
+          </ScrollReveal>
 
           {/* Contact Information */}
           <motion.div

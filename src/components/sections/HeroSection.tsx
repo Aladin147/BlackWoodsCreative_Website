@@ -7,10 +7,7 @@ import {
   TextReveal,
   PulseGlow,
   MorphingButton,
-  ParallaxLayer,
-  ParallaxContainer,
   MagneticField,
-  ScrollReveal,
   ParallaxText
 } from '@/components/interactive';
 
@@ -54,79 +51,68 @@ export function HeroSection({ className }: HeroSectionProps) {
       id="hero"
       className={`relative flex h-screen items-center justify-center bg-bw-bg-primary ${className}`}
     >
-        {/* Advanced Parallax Background Elements */}
+        {/* Enhanced Deep Forest Haze Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Primary aurora-teal orb with parallax */}
-          <ParallaxLayer speed={0.2} direction="up" className="absolute inset-0">
-            <motion.div
-              className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-bw-aurora-teal/50 blur-3xl"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.7, 1, 0.7],
-                x: [0, 30, 0],
-                y: [0, -20, 0],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          </ParallaxLayer>
-
-          {/* Secondary aurora-green orb with parallax */}
-          <ParallaxLayer speed={0.4} direction="down" className="absolute inset-0">
-            <motion.div
-              className="absolute bottom-1/4 right-1/4 h-[700px] w-[700px] rounded-full bg-bw-aurora-green/45 blur-3xl"
-              animate={{
-                scale: [1.2, 1, 1.3],
-                opacity: [0.6, 0.9, 0.6],
-                x: [0, -40, 0],
-                y: [0, 25, 0],
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 3,
-              }}
-            />
-          </ParallaxLayer>
-
-          {/* Bright accent orb with parallax */}
-          <ParallaxLayer speed={0.6} direction="left" className="absolute inset-0">
-            <motion.div
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-bw-aurora-bright/35 blur-2xl"
-              animate={{
-                rotate: [0, 360],
-                scale: [0.8, 1.3, 0.8],
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 20,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-            />
-          </ParallaxLayer>
-
-          {/* Additional atmospheric layer with parallax */}
-          <ParallaxLayer speed={0.3} direction="right" className="absolute inset-0">
-            <motion.div
-              className="absolute top-1/3 right-1/3 h-[400px] w-[400px] rounded-full bg-bw-aurora-teal/25 blur-3xl"
-              animate={{
-                scale: [1.1, 0.9, 1.1],
-                opacity: [0.3, 0.6, 0.3],
-                rotate: [0, -180, 0],
-              }}
-              transition={{
-                duration: 12,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: 5,
-              }}
-            />
-          </ParallaxLayer>
+          {/* Primary aurora-teal orb - Enhanced */}
+          <motion.div
+            className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-bw-aurora-teal/50 blur-3xl"
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.7, 1, 0.7],
+              x: [0, 30, 0],
+              y: [0, -20, 0],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+          {/* Secondary aurora-green orb - Enhanced */}
+          <motion.div
+            className="absolute bottom-1/4 right-1/4 h-[700px] w-[700px] rounded-full bg-bw-aurora-green/45 blur-3xl"
+            animate={{
+              scale: [1.2, 1, 1.3],
+              opacity: [0.6, 0.9, 0.6],
+              x: [0, -40, 0],
+              y: [0, 25, 0],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: 3,
+            }}
+          />
+          {/* Bright accent orb - Enhanced */}
+          <motion.div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-bw-aurora-bright/35 blur-2xl"
+            animate={{
+              rotate: [0, 360],
+              scale: [0.8, 1.3, 0.8],
+              opacity: [0.5, 0.8, 0.5],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          />
+          {/* Additional atmospheric layer */}
+          <motion.div
+            className="absolute top-1/3 right-1/3 h-[400px] w-[400px] rounded-full bg-bw-aurora-teal/25 blur-3xl"
+            animate={{
+              scale: [1.1, 0.9, 1.1],
+              opacity: [0.3, 0.6, 0.3],
+              rotate: [0, -180, 0],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: 5,
+            }}
+          />
         </div>
 
         {/* Advanced Main Content with Magnetic Interactions */}
@@ -197,8 +183,6 @@ export function HeroSection({ className }: HeroSectionProps) {
               </MorphingButton>
             </MagneticField>
           </motion.div>
-      </div>
-
         </div>
 
         {/* Magnetic Scroll Indicator */}
