@@ -37,9 +37,12 @@ Object.defineProperty(window, 'cancelAnimationFrame', {
 });
 
 // Helper to trigger RAF callbacks
-const triggerRAF = () => {
+const triggerRAF = (times = 12) => {
   act(() => {
-    rafCallbacks.forEach(callback => callback(performance.now()));
+    // Need at least 10 frames for metrics to update (see measureFrame function)
+    for (let i = 0; i < times; i++) {
+      rafCallbacks.forEach(callback => callback(performance.now() + i * 16.67));
+    }
     rafCallbacks = [];
   });
 };
@@ -114,16 +117,14 @@ describe('useAnimationPerformance', () => {
     it('tracks frame rate correctly', () => {
       const { result } = renderHook(() => useAnimationPerformance());
 
-      // Simulate multiple frames
-      mockPerformance.now
-        .mockReturnValueOnce(0)
-        .mockReturnValueOnce(16.67)
-        .mockReturnValueOnce(33.33)
-        .mockReturnValueOnce(50);
+      // Mock performance.now to return increasing values for multiple frames
+      let time = 0;
+      mockPerformance.now.mockImplementation(() => {
+        time += 16.67; // 60fps timing
+        return time;
+      });
 
-      triggerRAF();
-      triggerRAF();
-      triggerRAF();
+      triggerRAF(); // This will trigger 12 frames
 
       expect(result.current.metrics.fps).toBeGreaterThan(0);
       expect(result.current.metrics.frameTime).toBeGreaterThan(0);
