@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { MagneticField } from './ParallaxContainer';
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
@@ -30,8 +30,7 @@ export function AdvancedPortfolioFilter({
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortBy, setSortBy] = useState<'title' | 'category' | 'featured'>('featured');
-  const [isAnimating, setIsAnimating] = useState(false);
-  const { getAdaptiveMagneticProps, deviceInfo } = useDeviceAdaptation();
+  const { getAdaptiveMagneticProps } = useDeviceAdaptation();
 
   // Filter and sort items
   const filteredItems = useMemo(() => {
@@ -71,12 +70,7 @@ export function AdvancedPortfolioFilter({
 
   const handleCategoryChange = (category: string) => {
     if (category === activeCategory) return;
-    
-    setIsAnimating(true);
     setActiveCategory(category);
-    
-    // Reset animation flag after transition
-    setTimeout(() => setIsAnimating(false), 600);
   };
 
   const categoryButtonVariants = {

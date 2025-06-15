@@ -58,8 +58,11 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
       const fps = Math.round(1000 / avgFrameTime);
       
       // Get memory usage if available
-      const memoryUsage = (performance as any).memory 
-        ? Math.round((performance as any).memory.usedJSHeapSize / 1024 / 1024)
+      const performanceWithMemory = performance as Performance & {
+        memory?: { usedJSHeapSize: number }
+      };
+      const memoryUsage = performanceWithMemory.memory
+        ? Math.round(performanceWithMemory.memory.usedJSHeapSize / 1024 / 1024)
         : 0;
 
       const isOptimal = fps >= finalConfig.targetFPS * 0.9 && avgFrameTime <= finalConfig.maxFrameTime * 1.1;
@@ -147,12 +150,10 @@ export function useAnimationRegistration() {
 }
 
 // Performance monitoring component for development
-export function AnimationPerformanceMonitor({
-  enabled = false // Temporarily disabled due to className corruption issues
-}: {
+export function AnimationPerformanceMonitor({}: {
   enabled?: boolean;
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }) {
-  // Temporarily return null to fix build
+  // Temporarily return null to fix build - component disabled due to className corruption issues
   return null;
 }

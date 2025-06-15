@@ -25,8 +25,9 @@ export function ScrollFadeIn({ children, className = '', delay = 0 }: ScrollAnim
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             // Visible state per theme guide
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            const htmlElement = entry.target as HTMLElement;
+            htmlElement.style.opacity = '1';
+            htmlElement.style.transform = 'translateY(0)';
           }
         });
       },

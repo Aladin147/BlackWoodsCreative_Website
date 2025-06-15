@@ -1,15 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { portfolioData } from '@/lib/data/portfolio';
-import { PortfolioCard } from '@/components/ui/PortfolioCard';
 import {
-  HoverMagnify,
   MagneticField,
   ScrollReveal,
   ParallaxText,
-  StaggeredGrid,
   AdvancedPortfolioFilter
 } from '@/components/interactive';
 
@@ -17,20 +13,29 @@ interface PortfolioSectionProps {
   className?: string;
 }
 
+interface PortfolioItem {
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  tags: string[];
+  featured: boolean;
+}
+
 const categories = ['All', 'Film', 'Photography', '3D Visualization', 'Scene Creation'];
 
 export function PortfolioSection({ className }: PortfolioSectionProps) {
   // Convert portfolio data to AdvancedPortfolioFilter format
-  const portfolioItems = portfolioData.map(project => ({
+  const portfolioItems: PortfolioItem[] = portfolioData.map(project => ({
     id: project.id,
     title: project.title,
     category: project.category,
     image: project.image,
-    tags: project.tags || [project.category],
-    featured: project.featured || false
+    tags: project.tags ?? [project.category],
+    featured: project.featured ?? false
   }));
 
-  const handleItemClick = (item: any) => {
+  const handleItemClick = (item: PortfolioItem) => {
     // Handle portfolio item click - could open modal, navigate, etc.
     console.log('Portfolio item clicked:', item);
   };

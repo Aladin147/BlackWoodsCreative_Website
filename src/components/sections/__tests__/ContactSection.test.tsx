@@ -164,7 +164,7 @@ describe('ContactSection', () => {
         // The form should handle the error gracefully without crashing
         expect(submitButton).toBeInTheDocument();
       }, { timeout: 2000 });
-    } catch (error) {
+    } catch {
       // Catch any unhandled errors to prevent worker crashes
     }
 

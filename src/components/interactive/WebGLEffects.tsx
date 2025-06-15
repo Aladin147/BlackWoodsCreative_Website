@@ -162,7 +162,7 @@ export function WebGLAuroraEffect({
 
     // Check if WebGL is supported
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (!gl) {
+    if (!gl || !(gl instanceof WebGLRenderingContext)) {
       setWebglState(prev => ({
         ...prev,
         error: 'WebGL not supported',
@@ -291,6 +291,7 @@ export function WebGLAuroraEffect({
       document.addEventListener('mousemove', handleMouseMove);
       return () => document.removeEventListener('mousemove', handleMouseMove);
     }
+    return undefined;
   }, [interactive, webglState.canvas, handleMouseMove]);
 
   // Fallback for unsupported devices

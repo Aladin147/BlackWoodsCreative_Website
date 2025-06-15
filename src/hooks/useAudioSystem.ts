@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useCallback, useEffect, useState } from 'react';
+import { useRef, useCallback, useEffect, useState } from 'react';
 import { useDeviceAdaptation } from './useDeviceAdaptation';
 
 interface AudioConfig {
@@ -98,7 +98,8 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
     }
 
     // Check if audio is supported
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const windowWithWebkit = window as Window & { webkitAudioContext?: typeof AudioContext };
+    const AudioContextClass = window.AudioContext || windowWithWebkit.webkitAudioContext;
     if (!AudioContextClass) {
       setAudioState(prev => ({ ...prev, isSupported: false }));
       return;
@@ -151,7 +152,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
 
       audioBuffersRef.current.set(soundEffect.id, audioBuffer);
       return audioBuffer;
-    } catch (error) {
+    } catch {
       // Gracefully handle audio loading errors
       console.info(`Audio system: ${soundEffect.url} not available - continuing without audio`);
       return null;
@@ -190,7 +191,10 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
     if (!audioBuffer) {
       const soundEffect = defaultSoundEffects.find(effect => effect.id === soundId);
       if (soundEffect) {
-        audioBuffer = await loadAudioBuffer(soundEffect);
+        const loadedBuffer = await loadAudioBuffer(soundEffect);
+        if (loadedBuffer) {
+          audioBuffer = loadedBuffer;
+        }
       }
     }
 

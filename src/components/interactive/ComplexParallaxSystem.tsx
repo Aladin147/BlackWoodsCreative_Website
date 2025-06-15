@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState, ReactNode } from 'react';
+import { useRef, useEffect, useState, useMemo, ReactNode } from 'react';
 import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 
@@ -11,16 +11,16 @@ interface ParallaxLayer {
   opacity?: MotionValue<number>;
   scale?: MotionValue<number>;
   blur?: MotionValue<number>;
+  y?: MotionValue<number>;
   children: ReactNode;
   className?: string;
 }
 
 interface ComplexParallaxSystemProps {
-  layers: Omit<ParallaxLayer, 'opacity' | 'scale' | 'blur'>[];
+  layers: Omit<ParallaxLayer, 'opacity' | 'scale' | 'blur' | 'y'>[];
   height?: string;
   className?: string;
   enableDepthOfField?: boolean;
-  enableAtmosphericPerspective?: boolean;
   storyTriggers?: {
     position: number; // 0-1 scroll position
     action: () => void;
@@ -33,7 +33,6 @@ export function ComplexParallaxSystem({
   height = '200vh',
   className = '',
   enableDepthOfField = true,
-  enableAtmosphericPerspective = true,
   storyTriggers = []
 }: ComplexParallaxSystemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,31 +51,40 @@ export function ComplexParallaxSystem({
     restDelta: 0.001
   });
 
-  // Create enhanced parallax layers with depth effects
-  const enhancedLayers: ParallaxLayer[] = layers.map((layer, index) => {
-    const baseY = useTransform(smoothProgress, [0, 1], [0, layer.speed * -100]);
-    
-    // Depth of field effects
-    const opacity = enableDepthOfField 
-      ? useTransform(smoothProgress, [0, 0.3, 0.7, 1], [0.4, 1, 1, 0.4])
-      : useTransform(smoothProgress, [0, 1], [1, 1]);
-    
-    const scale = enableDepthOfField
-      ? useTransform(smoothProgress, [0, 0.5, 1], [0.8 + layer.depth * 0.1, 1, 1.2 - layer.depth * 0.1])
-      : useTransform(smoothProgress, [0, 1], [1, 1]);
-    
-    // Atmospheric perspective (distant objects become blurred)
-    const blur = enableAtmosphericPerspective
-      ? useTransform(smoothProgress, [0, 1], [layer.depth * 2, layer.depth * 4])
-      : useTransform(smoothProgress, [0, 1], [0, 0]);
+  // Create all transforms at the component level to avoid hook violations
+  // Base shared transforms
+  const baseOpacityTransform = useTransform(smoothProgress, [0, 0.3, 0.7, 1], [0.4, 1, 1, 0.4]);
+  const staticOpacityTransform = useTransform(smoothProgress, [0, 1], [1, 1]);
+  const staticScaleTransform = useTransform(smoothProgress, [0, 1], [1, 1]);
+  const staticBlurTransform = useTransform(smoothProgress, [0, 1], [0, 0]);
+  const staticBlurFilter = useTransform(staticBlurTransform, (value) => `blur(${value}px)`);
 
-    return {
+  // Pre-compute y transforms for each layer to avoid hook violations in render
+  // Create transforms for common speed values to avoid calling hooks in loops
+  const slowTransform = useTransform(smoothProgress, [0, 1], [0, -20]);
+  const mediumTransform = useTransform(smoothProgress, [0, 1], [0, -50]);
+  const fastTransform = useTransform(smoothProgress, [0, 1], [0, -80]);
+  const veryFastTransform = useTransform(smoothProgress, [0, 1], [0, -120]);
+
+  // Function to get appropriate transform based on speed
+  const getTransformForSpeed = (speed: number) => {
+    if (speed <= 0.3) return slowTransform;
+    if (speed <= 0.6) return mediumTransform;
+    if (speed <= 0.9) return fastTransform;
+    return veryFastTransform;
+  };
+
+  // Create enhanced layers with all transforms pre-computed
+  const enhancedLayers = useMemo(() => {
+    return layers.map((layer) => ({
       ...layer,
-      opacity,
-      scale,
-      blur
-    };
-  });
+      opacity: enableDepthOfField ? baseOpacityTransform : staticOpacityTransform,
+      scale: staticScaleTransform,
+      blur: staticBlurTransform,
+      blurFilter: staticBlurFilter,
+      y: getTransformForSpeed(layer.speed)
+    }));
+  }, [layers, enableDepthOfField, baseOpacityTransform, staticOpacityTransform, staticScaleTransform, staticBlurTransform, staticBlurFilter, getTransformForSpeed]);
 
   // Story trigger system
   useEffect(() => {
@@ -90,7 +98,7 @@ export function ComplexParallaxSystem({
           !triggeredStories.has(trigger.id)
         ) {
           trigger.action();
-          setTriggeredStories(prev => new Set([...prev, trigger.id]));
+          setTriggeredStories(prev => new Set(Array.from(prev).concat(trigger.id)));
         }
       });
     });
@@ -122,10 +130,10 @@ export function ComplexParallaxSystem({
           key={layer.id}
           className={`absolute inset-0 will-change-transform ${layer.className || ''}`}
           style={{
-            y: useTransform(smoothProgress, [0, 1], [0, layer.speed * -100]),
+            y: layer.y,
             opacity: layer.opacity,
             scale: layer.scale,
-            filter: layer.blur ? useTransform(layer.blur, (value) => `blur(${value}px)`) : undefined,
+            filter: layer.blurFilter,
             zIndex: Math.round((1 - layer.depth) * 100)
           }}
         >
@@ -238,8 +246,7 @@ export function CinematicParallaxScene({
       layers={parallaxLayers}
       height="150vh"
       className={className}
-      enableDepthOfField={shouldEnableFeature('enableComplexAnimations')}
-      enableAtmosphericPerspective={shouldEnableFeature('enableComplexAnimations')}
+      enableDepthOfField={Boolean(shouldEnableFeature('enableComplexAnimations'))}
       storyTriggers={storyTriggers}
     />
   );

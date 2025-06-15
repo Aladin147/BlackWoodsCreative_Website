@@ -13,10 +13,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { validateEmail } from '@/lib/utils';
 import {
-  SectionScrollAnimation,
   ScrollReveal,
   MagneticField,
-  StaggeredGrid,
   AtmosphericLayer,
   ParallaxText
 } from '@/components/interactive';
@@ -163,7 +161,7 @@ export function ContactSection({ className }: ContactSectionProps) {
           message: '',
         });
       }, 3000);
-    } catch (error) {
+    } catch {
       setIsSubmitting(false);
       // Handle error state - could implement proper error reporting here
       // For now, just reset the form state

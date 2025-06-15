@@ -12,7 +12,7 @@ interface AnalyticsEvent {
   timestamp: number;
   sessionId: string;
   userId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface UserInteraction {
@@ -21,14 +21,14 @@ interface UserInteraction {
   position: { x: number; y: number };
   timestamp: number;
   duration?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface PerformanceMetric {
   metric: string;
   value: number;
   timestamp: number;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 interface AnalyticsConfig {
@@ -157,19 +157,6 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
     performanceQueueRef.current = [];
 
     try {
-      // In a real implementation, this would send to your analytics service
-      const analyticsData = {
-        events,
-        interactions,
-        performance,
-        session: {
-          id: sessionIdRef.current,
-          userId: userIdRef.current,
-          deviceInfo,
-          timestamp: Date.now()
-        }
-      };
-
       // For development, log to console
       if (process.env.NODE_ENV === 'development') {
         console.group('📊 Analytics Data');
@@ -178,6 +165,19 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
         console.log('Performance:', performance);
         console.groupEnd();
       }
+
+      // In a real implementation, this would send to your analytics service
+      // const analyticsData = {
+      //   events,
+      //   interactions,
+      //   performance,
+      //   session: {
+      //     id: sessionIdRef.current,
+      //     userId: userIdRef.current,
+      //     deviceInfo,
+      //     timestamp: Date.now()
+      //   }
+      // };
 
       // Send to analytics service (placeholder)
       // await fetch('/api/analytics', {
@@ -297,19 +297,23 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
         }
         
         if (entry.entryType === 'first-input') {
+          const fidEntry = entry as PerformanceEventTiming;
           trackPerformance({
             metric: 'FID',
-            value: (entry as any).processingStart - entry.startTime,
+            value: fidEntry.processingStart - entry.startTime,
             context: { url: window.location.pathname }
           });
         }
-        
-        if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
-          trackPerformance({
-            metric: 'CLS',
-            value: (entry as any).value,
-            context: { url: window.location.pathname }
-          });
+
+        if (entry.entryType === 'layout-shift') {
+          const clsEntry = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
+          if (!clsEntry.hadRecentInput) {
+            trackPerformance({
+              metric: 'CLS',
+              value: clsEntry.value,
+              context: { url: window.location.pathname }
+            });
+          }
         }
       }
     });

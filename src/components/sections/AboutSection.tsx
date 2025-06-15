@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import {
   FilmIcon,
   CameraIcon,
@@ -10,8 +9,6 @@ import {
   TrophyIcon
 } from '@heroicons/react/24/outline';
 import {
-  SectionScrollAnimation,
-  ScrollFadeIn,
   ScrollReveal,
   StaggeredGrid,
   MagneticField,
@@ -83,7 +80,7 @@ export function AboutSection({ className }: AboutSectionProps) {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
           staggerDelay={0.15}
         >
-          {services.map((service, index) => (
+          {services.map((service) => (
             <MagneticField key={service.title} strength={0.2} distance={120}>
               <div className="card group text-center cursor-pointer">
                 <div className="mb-8 flex justify-center">
