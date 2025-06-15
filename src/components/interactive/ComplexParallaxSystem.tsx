@@ -233,17 +233,17 @@ export function CinematicParallaxScene({
   const storyTriggers = [
     {
       position: 0.2,
-      action: () => console.log('Story chapter 1 triggered'),
+      action: () => {}, // Story chapter 1 trigger
       id: 'chapter-1'
     },
     {
       position: 0.5,
-      action: () => console.log('Story climax triggered'),
+      action: () => {}, // Story climax trigger
       id: 'climax'
     },
     {
       position: 0.8,
-      action: () => console.log('Story conclusion triggered'),
+      action: () => {}, // Story conclusion trigger
       id: 'conclusion'
     }
   ];

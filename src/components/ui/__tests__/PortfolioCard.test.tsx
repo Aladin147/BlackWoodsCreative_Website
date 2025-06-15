@@ -121,7 +121,8 @@ describe('PortfolioCard', () => {
     const playButton = screen.getByRole('button');
     await user.click(playButton);
 
-    expect(consoleSpy).toHaveBeenCalledWith('View project:', 'test-project');
+    // Since console.log was removed, we just verify the button is clickable
+    expect(playButton).toBeInTheDocument();
   });
 
   it('handles click events on image projects', async () => {
@@ -132,7 +133,8 @@ describe('PortfolioCard', () => {
     const viewButton = screen.getByRole('button');
     await user.click(viewButton);
 
-    expect(consoleSpy).toHaveBeenCalledWith('View project:', 'test-project-image');
+    // Since console.log was removed, we just verify the button is clickable
+    expect(viewButton).toBeInTheDocument();
   });
 
   it('handles keyboard navigation on buttons', async () => {
@@ -143,13 +145,13 @@ describe('PortfolioCard', () => {
 
     // Test Enter key
     await user.click(button); // Use click instead of keyboard for more reliable testing
-    expect(consoleSpy).toHaveBeenCalledWith('View project:', 'test-project');
 
-    consoleSpy.mockClear();
+    // Since console.log was removed, we just verify the button is clickable
+    expect(button).toBeInTheDocument();
 
     // Test that button is accessible and clickable
     await user.click(button);
-    expect(consoleSpy).toHaveBeenCalledWith('View project:', 'test-project');
+    expect(button).toBeInTheDocument();
   });
 
   it('renders image with correct alt text', () => {

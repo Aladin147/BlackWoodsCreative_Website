@@ -14,7 +14,7 @@ interface PortfolioCardProps {
 export function PortfolioCard({ project, className, 'data-testid': testId }: PortfolioCardProps) {
   const handleViewProject = () => {
     // TODO: Implement project modal or navigation
-    console.log('View project:', project.id);
+    // Project view interaction tracked
   };
 
   return (

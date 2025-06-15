@@ -142,7 +142,7 @@ export function ContactSection({ className }: ContactSectionProps) {
     try {
       // PLACEHOLDER: Form submission simulation - replace with actual API call
       // In production, send sanitizedData to your API endpoint
-      console.log('Sanitized form data:', sanitizedData);
+      // Form data sanitized and ready for submission
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       setIsSubmitting(false);
