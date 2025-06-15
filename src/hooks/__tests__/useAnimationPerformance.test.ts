@@ -59,6 +59,9 @@ describe('useAnimationPerformance', () => {
         result.current.registerAnimation();
       });
 
+      // Trigger animation frame to update metrics
+      triggerRAF();
+
       expect(result.current.metrics.animationCount).toBe(1);
     });
 
@@ -69,6 +72,9 @@ describe('useAnimationPerformance', () => {
         result.current.registerAnimation();
         result.current.unregisterAnimation();
       });
+
+      // Trigger animation frame to update metrics
+      triggerRAF();
 
       expect(result.current.metrics.animationCount).toBe(0);
     });
@@ -82,6 +88,9 @@ describe('useAnimationPerformance', () => {
         result.current.registerAnimation();
       });
 
+      // Trigger animation frame to update metrics
+      triggerRAF();
+
       expect(result.current.metrics.animationCount).toBe(3);
     });
 
@@ -93,6 +102,9 @@ describe('useAnimationPerformance', () => {
           result.current.unregisterAnimation();
         });
       }).not.toThrow();
+
+      // Trigger animation frame to update metrics
+      triggerRAF();
 
       expect(result.current.metrics.animationCount).toBe(0);
     });
@@ -157,6 +169,9 @@ describe('useAnimationPerformance', () => {
         result.current.registerAnimation();
       });
 
+      // Trigger animation frame to update metrics
+      triggerRAF();
+
       expect(result.current.metrics.animationCount).toBe(3);
     });
 
@@ -198,6 +213,9 @@ describe('useAnimationPerformance', () => {
         }
       });
 
+      // Trigger animation frame to update metrics
+      triggerRAF();
+
       expect(result.current.metrics.animationCount).toBe(20);
     });
   });
@@ -218,6 +236,9 @@ describe('useAnimationPerformance', () => {
         result.current.registerAnimation();
         result.current.unregisterAnimation();
       });
+
+      // Trigger animation frame to update metrics
+      triggerRAF();
 
       expect(result.current.metrics.animationCount).toBe(0);
     });
