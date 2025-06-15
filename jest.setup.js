@@ -111,27 +111,40 @@ global.console = {
 
 // Mock complex interactive components that cause test issues
 jest.mock('@/components/interactive', () => ({
-  ScrollReveal: ({ children, className }) => <div className={className} data-testid="scroll-reveal">{children}</div>,
-  MagneticField: ({ children, className }) => <div className={className} data-testid="magnetic-field">{children}</div>,
-  AtmosphericLayer: ({ className }) => <div className={className} data-testid="atmospheric-layer" />,
-  ParallaxText: ({ children, className }) => <div className={className} data-testid="parallax-text">{children}</div>,
-  AtmosphericParticles: ({ className }) => <div className={className} data-testid="atmospheric-particles" />,
-  ScrollFadeIn: ({ children, className }) => <div className={className} data-testid="scroll-fade-in">{children}</div>,
-  StaggeredScrollFadeIn: ({ children, className }) => <div className={className} data-testid="staggered-scroll-fade-in">{children}</div>,
-  SectionScrollAnimation: ({ children, className }) => <div className={className} data-testid="section-scroll-animation">{children}</div>,
-  ParallaxContainer: ({ children, className }) => <div className={className} data-testid="parallax-container">{children}</div>,
-  ParallaxLayer: ({ children, className }) => <div className={className} data-testid="parallax-layer">{children}</div>,
-  MagneticCursor: ({ children, className }) => <div className={className} data-testid="magnetic-cursor">{children}</div>,
-  HoverMagnify: ({ children, className }) => <div className={className} data-testid="hover-magnify">{children}</div>,
-  FloatingElement: ({ children, className }) => <div className={className} data-testid="floating-element">{children}</div>,
-  PulseGlow: ({ children, className }) => <div className={className} data-testid="pulse-glow">{children}</div>,
-  GlitchText: ({ text, className }) => <span className={className} data-testid="glitch-text">{text}</span>,
-  TypewriterText: ({ text, className }) => <span className={className} data-testid="typewriter-text">{text}</span>,
-  TextReveal: ({ text, className }) => <div className={className} data-testid="text-reveal">{text}</div>,
-  MorphingButton: ({ children, className, onClick }) => <button className={className} onClick={onClick} data-testid="morphing-button">{children}</button>,
-  TiltCard: ({ children, className }) => <div className={className} data-testid="tilt-card">{children}</div>,
-  RippleEffect: ({ children, className }) => <div className={className} data-testid="ripple-effect">{children}</div>,
-  StaggeredReveal: ({ children, className }) => <div className={className} data-testid="staggered-reveal">{children}</div>,
+  // Core components used in HeroSection
+  FloatingElement: ({ children, className, ...props }) => <div className={className} data-testid="floating-element" {...props}>{children}</div>,
+  TextReveal: ({ text, className, ...props }) => <div className={className} data-testid="text-reveal" {...props}>{text}</div>,
+  PulseGlow: ({ children, className, ...props }) => <div className={className} data-testid="pulse-glow" {...props}>{children}</div>,
+  MorphingButton: ({ children, className, onClick, ...props }) => <button className={className} onClick={onClick} data-testid="morphing-button" {...props}>{children}</button>,
+  MagneticField: ({ children, className, ...props }) => <div className={className} data-testid="magnetic-field" {...props}>{children}</div>,
+  ParallaxText: ({ children, className, ...props }) => <div className={className} data-testid="parallax-text" {...props}>{children}</div>,
+  AtmosphericLayer: ({ className, ...props }) => <div className={className} data-testid="atmospheric-layer" {...props} />,
+
+  // Additional components for other sections
+  ScrollReveal: ({ children, className, ...props }) => <div className={className} data-testid="scroll-reveal" {...props}>{children}</div>,
+  AtmosphericParticles: ({ className, ...props }) => <div className={className} data-testid="atmospheric-particles" {...props} />,
+  ScrollFadeIn: ({ children, className, ...props }) => <div className={className} data-testid="scroll-fade-in" {...props}>{children}</div>,
+  StaggeredScrollFadeIn: ({ children, className, ...props }) => <div className={className} data-testid="staggered-scroll-fade-in" {...props}>{children}</div>,
+  SectionScrollAnimation: ({ children, className, ...props }) => <div className={className} data-testid="section-scroll-animation" {...props}>{children}</div>,
+  ParallaxContainer: ({ children, className, ...props }) => <div className={className} data-testid="parallax-container" {...props}>{children}</div>,
+  ParallaxLayer: ({ children, className, ...props }) => <div className={className} data-testid="parallax-layer" {...props}>{children}</div>,
+  MagneticCursor: ({ children, className, ...props }) => <div className={className} data-testid="magnetic-cursor" {...props}>{children}</div>,
+  HoverMagnify: ({ children, className, ...props }) => <div className={className} data-testid="hover-magnify" {...props}>{children}</div>,
+  GlitchText: ({ text, className, ...props }) => <span className={className} data-testid="glitch-text" {...props}>{text}</span>,
+  TypewriterText: ({ text, className, ...props }) => <span className={className} data-testid="typewriter-text" {...props}>{text}</span>,
+  TiltCard: ({ children, className, ...props }) => <div className={className} data-testid="tilt-card" {...props}>{children}</div>,
+  RippleEffect: ({ children, className, ...props }) => <div className={className} data-testid="ripple-effect" {...props}>{children}</div>,
+  StaggeredReveal: ({ children, className, ...props }) => <div className={className} data-testid="staggered-reveal" {...props}>{children}</div>,
+}));
+
+// Mock heroicons
+jest.mock('@heroicons/react/24/outline', () => ({
+  ArrowDownIcon: (props) => <svg data-testid="arrow-down-icon" {...props} />,
+  ChevronDownIcon: (props) => <svg data-testid="chevron-down-icon" {...props} />,
+  PlayIcon: (props) => <svg data-testid="play-icon" {...props} />,
+  PauseIcon: (props) => <svg data-testid="pause-icon" {...props} />,
+  XMarkIcon: (props) => <svg data-testid="x-mark-icon" {...props} />,
+  Bars3Icon: (props) => <svg data-testid="bars-3-icon" {...props} />,
 }));
 
 // Setup test environment

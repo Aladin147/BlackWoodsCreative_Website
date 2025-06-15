@@ -22,7 +22,10 @@ jest.mock('@/components/interactive', () => ({
   PulseGlow: ({ children }: { children: React.ReactNode }) => <div data-testid="pulse-glow">{children}</div>,
   MorphingButton: ({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => <button data-testid="morphing-button" onClick={onClick} {...props}>{children}</button>,
   MagneticCursor: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-cursor">{children}</div>,
+  MagneticField: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-field">{children}</div>,
   ParallaxContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="parallax-container">{children}</div>,
+  ParallaxText: ({ children }: { children: React.ReactNode }) => <div data-testid="parallax-text">{children}</div>,
+  AtmosphericLayer: ({ className }: { className?: string }) => <div className={className} data-testid="atmospheric-layer" />,
 }));
 
 // Mock Heroicons
@@ -301,7 +304,7 @@ describe('HeroSection', () => {
         'h-screen',
         'items-center',
         'justify-center',
-        'bg-gradient-to-br'
+        'bg-bw-bg-primary'
       );
     });
 
