@@ -187,12 +187,11 @@ jest.mock('@/components/interactive', () => ({
   ),
 }));
 
-// Mock ThemeContext
+// Mock ThemeContext - Single Deep Forest Haze theme
 jest.mock('@/context/ThemeContext', () => ({
   ThemeProvider: ({ children }) => children,
   useTheme: () => ({
-    theme: 'dark',
-    toggleTheme: jest.fn(),
+    theme: 'deep-forest-haze',
   }),
 }));
 

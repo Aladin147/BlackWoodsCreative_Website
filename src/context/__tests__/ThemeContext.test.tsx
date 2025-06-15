@@ -1,65 +1,24 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+
+// Unmock ThemeContext for this test file to test the actual implementation
+jest.unmock('@/context/ThemeContext');
+
 import { ThemeProvider, useTheme } from '../ThemeContext';
-
-// Mock localStorage
-const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-};
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
-
-// Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
 
 // Test component that uses the theme context
 function TestComponent() {
-  const { theme, toggleTheme } = useTheme();
-  
+  const { theme } = useTheme();
+
   return (
     <div>
       <span data-testid="current-theme">{theme}</span>
-      <button data-testid="toggle-theme" onClick={toggleTheme}>
-        Toggle Theme
-      </button>
     </div>
   );
 }
 
 describe('ThemeContext', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    localStorageMock.getItem.mockReturnValue(null);
-    // Reset matchMedia mock
-    (window.matchMedia as jest.Mock).mockImplementation(query => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    }));
-  });
-
   describe('ThemeProvider', () => {
     it('renders children correctly', () => {
       render(
@@ -72,18 +31,19 @@ describe('ThemeContext', () => {
       expect(screen.getByText('Test Child')).toBeInTheDocument();
     });
 
-    it('provides default dark theme when no saved preference', () => {
+    it('provides Deep Forest Haze theme', () => {
       render(
         <ThemeProvider>
           <TestComponent />
         </ThemeProvider>
       );
 
-      expect(screen.getByTestId('current-theme')).toHaveTextContent('dark');
+      expect(screen.getByTestId('current-theme')).toHaveTextContent('deep-forest-haze');
     });
 
-    it('calls localStorage.getItem on mount', () => {
-      localStorageMock.getItem.mockReturnValue('light');
+    it('applies theme class to document', () => {
+      const addClassSpy = jest.spyOn(document.documentElement.classList, 'add');
+      const removeClassSpy = jest.spyOn(document.documentElement.classList, 'remove');
 
       render(
         <ThemeProvider>
@@ -91,110 +51,32 @@ describe('ThemeContext', () => {
         </ThemeProvider>
       );
 
-      // Should call localStorage.getItem to check for saved theme
-      expect(localStorageMock.getItem).toHaveBeenCalledWith('theme');
-    });
+      // Should add the Deep Forest Haze theme class
+      expect(addClassSpy).toHaveBeenCalledWith('deep-forest-haze');
 
-    it('respects system preference when no saved theme', () => {
-      (window.matchMedia as jest.Mock).mockImplementation(query => ({
-        matches: query === '(prefers-color-scheme: dark)',
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      }));
-
-      render(
-        <ThemeProvider>
-          <TestComponent />
-        </ThemeProvider>
-      );
-
-      expect(screen.getByTestId('current-theme')).toHaveTextContent('dark');
-    });
-
-    it('checks system preference when no saved theme', () => {
-      (window.matchMedia as jest.Mock).mockImplementation(query => ({
-        matches: query === '(prefers-color-scheme: light)',
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-      }));
-
-      render(
-        <ThemeProvider>
-          <TestComponent />
-        </ThemeProvider>
-      );
-
-      // Should call matchMedia to check system preference
-      expect(window.matchMedia).toHaveBeenCalledWith('(prefers-color-scheme: dark)');
-    });
-
-    it('provides toggle function', () => {
-      render(
-        <ThemeProvider>
-          <TestComponent />
-        </ThemeProvider>
-      );
-
-      // Should render toggle button
-      const toggleButton = screen.getByTestId('toggle-theme');
-      expect(toggleButton).toBeInTheDocument();
-
-      // Should be clickable
-      expect(() => {
-        fireEvent.click(toggleButton);
-      }).not.toThrow();
-    });
-
-    it('calls localStorage.setItem when theme changes', () => {
-      render(
-        <ThemeProvider>
-          <TestComponent />
-        </ThemeProvider>
-      );
-
-      // Clear previous calls
-      localStorageMock.setItem.mockClear();
-
-      fireEvent.click(screen.getByTestId('toggle-theme'));
-
-      // Should call setItem (though the value might vary based on initial state)
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', expect.any(String));
-    });
-
-    it('manipulates document classes', () => {
-      const documentElement = document.documentElement;
-      const addClassSpy = jest.spyOn(documentElement.classList, 'add');
-      const removeClassSpy = jest.spyOn(documentElement.classList, 'remove');
-
-      render(
-        <ThemeProvider>
-          <TestComponent />
-        </ThemeProvider>
-      );
-
-      // Should manipulate document classes
-      expect(addClassSpy).toHaveBeenCalled();
-      expect(removeClassSpy).toHaveBeenCalled();
-
-      // Toggle theme
-      fireEvent.click(screen.getByTestId('toggle-theme'));
-
-      // Should continue to manipulate classes
-      expect(addClassSpy).toHaveBeenCalled();
-      expect(removeClassSpy).toHaveBeenCalled();
+      // Should clean up old theme classes
+      expect(removeClassSpy).toHaveBeenCalledWith('light', 'dark');
 
       addClassSpy.mockRestore();
       removeClassSpy.mockRestore();
+    });
+
+    it('provides context value correctly', () => {
+      let contextValue: any;
+
+      function TestContextConsumer() {
+        contextValue = useTheme();
+        return <div>Test</div>;
+      }
+
+      render(
+        <ThemeProvider>
+          <TestContextConsumer />
+        </ThemeProvider>
+      );
+
+      expect(contextValue.theme).toBe('deep-forest-haze');
+      expect(contextValue.toggleTheme).toBeUndefined(); // No toggle in single theme
     });
   });
 
@@ -204,12 +86,8 @@ describe('ThemeContext', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
       function TestComponentWithoutProvider() {
-        try {
-          useTheme();
-          return <div>Test</div>;
-        } catch (error) {
-          throw error;
-        }
+        useTheme(); // This should throw
+        return <div>Should not render</div>;
       }
 
       expect(() => {
@@ -219,14 +97,12 @@ describe('ThemeContext', () => {
       consoleSpy.mockRestore();
     });
 
-    it('provides theme and toggleTheme function', () => {
+    it('provides theme value', () => {
       let themeValue: any;
-      let toggleThemeFunction: any;
 
       function TestComponentWithHook() {
         const theme = useTheme();
         themeValue = theme.theme;
-        toggleThemeFunction = theme.toggleTheme;
         return <div>Test</div>;
       }
 
@@ -236,52 +112,8 @@ describe('ThemeContext', () => {
         </ThemeProvider>
       );
 
-      expect(themeValue).toBe('dark');
-      expect(typeof toggleThemeFunction).toBe('function');
+      expect(themeValue).toBe('deep-forest-haze');
     });
   });
 
-  describe('Edge cases', () => {
-    it('handles invalid localStorage values gracefully', () => {
-      localStorageMock.getItem.mockReturnValue('invalid-theme');
-
-      render(
-        <ThemeProvider>
-          <TestComponent />
-        </ThemeProvider>
-      );
-
-      // Should fall back to system preference or default
-      expect(screen.getByTestId('current-theme')).toHaveTextContent('dark');
-    });
-
-    it('handles localStorage errors gracefully', () => {
-      localStorageMock.getItem.mockImplementation(() => {
-        throw new Error('localStorage error');
-      });
-
-      expect(() => {
-        render(
-          <ThemeProvider>
-            <TestComponent />
-          </ThemeProvider>
-        );
-      }).not.toThrow();
-    });
-
-    it('handles matchMedia not being available', () => {
-      // Remove matchMedia
-      delete (window as any).matchMedia;
-
-      expect(() => {
-        render(
-          <ThemeProvider>
-            <TestComponent />
-          </ThemeProvider>
-        );
-      }).not.toThrow();
-
-      expect(screen.getByTestId('current-theme')).toHaveTextContent('dark');
-    });
-  });
 });
