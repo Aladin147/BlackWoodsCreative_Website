@@ -482,23 +482,20 @@ body::after {
     transform: translateY(0);
   }
 
-  /* Deep Forest Haze Focus States for Accessibility */
-  *:focus {
-    outline: 2px solid var(--bw-accent-gold);
-    outline-offset: 2px;
-  }
-
-  button:focus,
-  a:focus,
-  input:focus,
-  textarea:focus,
-  select:focus {
+  /* Deep Forest Haze Focus States for Accessibility - FIXED */
+  /* Only show focus for keyboard navigation, not mouse clicks */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
     outline: 2px solid var(--bw-accent-gold);
     outline-offset: 2px;
     box-shadow: 0 0 0 4px rgba(195, 163, 88, 0.2);
   }
 
-  /* Remove default focus for mouse users, keep for keyboard users */
+  /* Remove default focus for mouse users */
   *:focus:not(:focus-visible) {
     outline: none;
     box-shadow: none;
@@ -616,11 +613,7 @@ body::after {
 }
 
 /* Accessibility Enhancements - Phase 4 */
-/* Focus indicators for keyboard navigation */
-.focus-visible {
-  outline: 2px solid var(--bw-accent-gold);
-  outline-offset: 2px;
-}
+/* Focus indicators handled by :focus-visible pseudo-class above */
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {

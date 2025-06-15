@@ -292,7 +292,7 @@ export function MagneticField({
     <motion.div
       ref={ref}
       style={{ x, y, scale }}
-      className="transform-gpu focus-visible"
+      className="transform-gpu"
       tabIndex={0}
       role="button"
       aria-label="Interactive magnetic field element"
