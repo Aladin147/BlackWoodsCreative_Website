@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, useMemo, ReactNode } from 'react';
 import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
+import { useAnimationPerformance } from '@/hooks/useAnimationPerformance';
 
 interface ParallaxLayer {
   id: string;
@@ -38,6 +39,7 @@ export function ComplexParallaxSystem({
   const containerRef = useRef<HTMLDivElement>(null);
   const [triggeredStories, setTriggeredStories] = useState<Set<string>>(new Set());
   const { shouldEnableFeature } = useDeviceAdaptation();
+  const { registerAnimation, unregisterAnimation } = useAnimationPerformance();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -86,15 +88,17 @@ export function ComplexParallaxSystem({
     }));
   }, [layers, enableDepthOfField, baseOpacityTransform, staticOpacityTransform, staticScaleTransform, staticBlurTransform, staticBlurFilter, slowTransform, mediumTransform, fastTransform, veryFastTransform]);
 
-  // Story trigger system
+  // Story trigger system with performance monitoring
   useEffect(() => {
     if (!shouldEnableFeature('enableComplexAnimations')) return;
+
+    registerAnimation(); // Register this parallax system
 
     const unsubscribe = smoothProgress.on('change', (progress) => {
       storyTriggers.forEach((trigger) => {
         if (
-          progress >= trigger.position && 
-          progress <= trigger.position + 0.1 && 
+          progress >= trigger.position &&
+          progress <= trigger.position + 0.1 &&
           !triggeredStories.has(trigger.id)
         ) {
           trigger.action();
@@ -103,8 +107,11 @@ export function ComplexParallaxSystem({
       });
     });
 
-    return unsubscribe;
-  }, [smoothProgress, storyTriggers, triggeredStories, shouldEnableFeature]);
+    return () => {
+      unsubscribe();
+      unregisterAnimation(); // Unregister on cleanup
+    };
+  }, [smoothProgress, storyTriggers, triggeredStories, shouldEnableFeature, registerAnimation, unregisterAnimation]);
 
   if (!shouldEnableFeature('enableParallax')) {
     // Fallback for devices that don't support parallax
@@ -128,7 +135,7 @@ export function ComplexParallaxSystem({
       {enhancedLayers.map((layer) => (
         <motion.div
           key={layer.id}
-          className={`absolute inset-0 will-change-transform ${layer.className || ''}`}
+          className={`absolute inset-0 parallax-element animate-optimized ${layer.className || ''}`}
           style={{
             y: layer.y,
             opacity: layer.opacity,

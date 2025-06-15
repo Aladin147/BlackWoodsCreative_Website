@@ -95,10 +95,10 @@ export function AtmosphericParticles({ count = 60, className = '' }: Atmospheric
           particle.maxLife = Math.random() * 300 + 200;
         }
 
-        // Update DOM element
+        // Update DOM element with GPU acceleration
         const element = container.querySelector(`[data-particle-id="${particle.id}"]`) as HTMLElement;
         if (element) {
-          element.style.transform = `translate(${particle.x}px, ${particle.y}px)`;
+          element.style.transform = `translate3d(${particle.x}px, ${particle.y}px, 0)`;
           element.style.opacity = particle.opacity.toString();
         }
       });

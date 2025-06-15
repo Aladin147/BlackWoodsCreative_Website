@@ -236,6 +236,33 @@ export function MagneticField({
       }, 150);
     };
 
+    // Keyboard navigation support
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if user prefers reduced motion
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return;
+
+      if (e.key === 'Enter' || e.key === ' ') {
+        // Provide focus feedback for keyboard users
+        scale.set(1.05);
+        setTimeout(() => scale.set(1), 150);
+      }
+    };
+
+    const handleFocus = () => {
+      // Subtle focus indication for keyboard users
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReducedMotion) {
+        scale.set(1.02);
+      }
+    };
+
+    const handleBlur = () => {
+      x.set(0);
+      y.set(0);
+      scale.set(1);
+    };
+
     // Use global mouse events for better magnetic field effect
     if (hasHover) {
       document.addEventListener('mousemove', handleMouseMove);
@@ -246,10 +273,18 @@ export function MagneticField({
       element.addEventListener('touchstart', handleTouchStart);
     }
 
+    // Add keyboard accessibility
+    element.addEventListener('keydown', handleKeyDown);
+    element.addEventListener('focus', handleFocus);
+    element.addEventListener('blur', handleBlur);
+
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', handleMouseLeave);
       element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('keydown', handleKeyDown);
+      element.removeEventListener('focus', handleFocus);
+      element.removeEventListener('blur', handleBlur);
     };
   }, [x, y, scale, strength, distance, disabled]);
 
@@ -257,7 +292,10 @@ export function MagneticField({
     <motion.div
       ref={ref}
       style={{ x, y, scale }}
-      className="transform-gpu"
+      className="transform-gpu focus-visible"
+      tabIndex={0}
+      role="button"
+      aria-label="Interactive magnetic field element"
     >
       {children}
     </motion.div>

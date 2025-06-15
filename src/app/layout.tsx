@@ -138,9 +138,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
-      <body className="font-primary antialiased">
+      <body className="bg-bw-bg-primary text-bw-text-primary font-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
         <ThemeProvider>
-          <div className="bg-bw-bg-primary text-bw-text-primary transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
+          <div>
             {/* Skip to main content link for accessibility */}
             <a
               href="#main-content"

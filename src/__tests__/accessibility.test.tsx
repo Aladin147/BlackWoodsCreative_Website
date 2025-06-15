@@ -49,10 +49,10 @@ describe('Accessibility Utilities', () => {
     });
 
     it('validates brand colors meet contrast requirements', () => {
-      // Test key brand color combinations
-      expect(meetsContrastRequirement(colorPalette['bw-white'], colorPalette['bw-black'])).toBe(true);
-      expect(meetsContrastRequirement(colorPalette['bw-black'], colorPalette['bw-gold'])).toBe(true);
-      expect(meetsContrastRequirement(colorPalette['bw-white'], colorPalette['bw-dark-gray'])).toBe(true);
+      // Test key brand color combinations using theme guide colors
+      expect(meetsContrastRequirement(colorPalette['bw-text-primary'], colorPalette['bw-bg-primary'])).toBe(true);
+      expect(meetsContrastRequirement(colorPalette['bw-bg-primary'], colorPalette['bw-accent-gold'])).toBe(true);
+      expect(meetsContrastRequirement(colorPalette['bw-text-primary'], colorPalette['bw-border-subtle'])).toBe(true);
     });
   });
 

@@ -64,10 +64,10 @@ jest.mock('next/font/google', () => ({
 const MockRootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" data-testid="html-element">
-      <body className="bg-bw-black font-primary text-bw-white antialiased" data-testid="body-element">
+      <body className="bg-bw-bg-primary text-bw-text-primary font-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" data-testid="body-element">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-bw-gold focus:text-bw-black focus:rounded-md focus:font-medium"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-bw-accent-gold focus:text-bw-bg-primary focus:rounded-md focus:font-medium"
         >
           Skip to main content
         </a>
@@ -110,9 +110,9 @@ describe('RootLayout', () => {
     render(<MockRootLayout>{mockChildren}</MockRootLayout>);
 
     const body = screen.getByTestId('body-element');
-    expect(body).toHaveClass('bg-bw-black');
+    expect(body).toHaveClass('bg-bw-bg-primary');
     expect(body).toHaveClass('font-primary');
-    expect(body).toHaveClass('text-bw-white');
+    expect(body).toHaveClass('text-bw-text-primary');
     expect(body).toHaveClass('antialiased');
   });
 
@@ -255,20 +255,24 @@ describe('Actual RootLayout Component', () => {
       const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
 
       const bodyElement = container.querySelector('body');
+      expect(bodyElement).toHaveClass('bg-bw-bg-primary');
+      expect(bodyElement).toHaveClass('text-bw-text-primary');
       expect(bodyElement).toHaveClass('font-primary');
       expect(bodyElement).toHaveClass('antialiased');
     });
 
     it('applies theme transition classes', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+      const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
 
-      const themeContainer = screen.getByTestId('theme-provider').firstChild;
-      expect(themeContainer).toHaveClass('bg-bw-white');
-      expect(themeContainer).toHaveClass('text-bw-black');
-      expect(themeContainer).toHaveClass('dark:bg-bw-black');
-      expect(themeContainer).toHaveClass('dark:text-bw-white');
-      expect(themeContainer).toHaveClass('transition-colors');
-      expect(themeContainer).toHaveClass('duration-500');
+      // Theme classes are now applied to body element
+      const bodyElement = container.querySelector('body');
+      expect(bodyElement).toHaveClass('bg-bw-bg-primary');
+      expect(bodyElement).toHaveClass('text-bw-text-primary');
+      expect(bodyElement).toHaveClass('transition-colors');
+      expect(bodyElement).toHaveClass('duration-500');
+
+      // The component uses semantic color classes that adapt to theme automatically
+      // rather than explicit dark: prefixed classes
     });
   });
 
@@ -291,8 +295,8 @@ describe('Actual RootLayout Component', () => {
       expect(skipLink).toHaveClass('focus:z-50');
       expect(skipLink).toHaveClass('focus:px-4');
       expect(skipLink).toHaveClass('focus:py-2');
-      expect(skipLink).toHaveClass('focus:bg-bw-gold');
-      expect(skipLink).toHaveClass('focus:text-bw-black');
+      expect(skipLink).toHaveClass('focus:bg-bw-accent-gold');
+      expect(skipLink).toHaveClass('focus:text-bw-bg-primary');
       expect(skipLink).toHaveClass('focus:rounded-md');
       expect(skipLink).toHaveClass('focus:font-medium');
     });

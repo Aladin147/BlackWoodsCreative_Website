@@ -74,6 +74,25 @@ Object.defineProperty(window, 'matchMedia', {
 // Mock scrollTo
 global.scrollTo = jest.fn();
 
+// Mock document.documentElement properties
+Object.defineProperty(document.documentElement, 'scrollHeight', {
+  writable: true,
+  configurable: true,
+  value: 2000,
+});
+
+Object.defineProperty(document.documentElement, 'scrollTop', {
+  writable: true,
+  configurable: true,
+  value: 0,
+});
+
+Object.defineProperty(document.documentElement, 'clientHeight', {
+  writable: true,
+  configurable: true,
+  value: 800,
+});
+
 // Mock Performance API
 global.performance = {
   ...global.performance,
@@ -166,6 +185,15 @@ jest.mock('@/components/interactive', () => ({
       </div>
     </div>
   ),
+}));
+
+// Mock ThemeContext
+jest.mock('@/context/ThemeContext', () => ({
+  ThemeProvider: ({ children }) => children,
+  useTheme: () => ({
+    theme: 'dark',
+    toggleTheme: jest.fn(),
+  }),
 }));
 
 // Mock heroicons

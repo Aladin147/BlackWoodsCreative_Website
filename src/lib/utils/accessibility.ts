@@ -263,14 +263,22 @@ export function auditAccessibility(): {
   };
 }
 
-// Export color palette for contrast checking
+// Export color palette for contrast checking - UPDATED TO MATCH THEME GUIDE
 export const colorPalette = {
-  'bw-black': '#0a0a0a',
-  'bw-white': '#ffffff',
-  'bw-gold': '#d4af37',
-  'bw-charcoal': '#1a1a1a',
-  'bw-dark-gray': '#2a2a2a',
-  'bw-medium-gray': '#4a4a4a',
-  'bw-light-gray': '#8a8a8a',
-  'bw-pearl': '#f5f5f5',
+  'bw-bg-primary': '#101211',      // Near Black with green tint
+  'bw-text-primary': '#E8E8E3',    // Off-White, warm and soft
+  'bw-accent-gold': '#C3A358',     // Muted Gold, rich ochre
+  'bw-aurora-teal': '#0F3530',     // Enhanced Dark Teal
+  'bw-aurora-green': '#1E4A38',    // Enhanced Forest Green
+  'bw-border-subtle': '#2A2E2C',   // Low-contrast borders
+
+  // Legacy colors for backward compatibility
+  'bw-black': '#101211',           // Updated to match bg-primary
+  'bw-white': '#E8E8E3',           // Updated to match text-primary
+  'bw-gold': '#C3A358',            // Updated to match accent-gold
+  'bw-charcoal': '#0f0f0f',
+  'bw-dark-gray': '#1a1a1a',
+  'bw-medium-gray': '#2a2a2a',
+  'bw-light-gray': '#6a6a6a',
+  'bw-pearl': '#f8f8f8',
 } as const;

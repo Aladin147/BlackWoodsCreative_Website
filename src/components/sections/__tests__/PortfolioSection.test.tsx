@@ -16,19 +16,25 @@ jest.mock('framer-motion', () => ({
 jest.mock('@/components/interactive', () => ({
   HoverMagnify: ({ children }: { children: React.ReactNode }) => <div data-testid="hover-magnify">{children}</div>,
   MagneticField: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-field">{children}</div>,
-  ScrollReveal: ({ children, className, ...props }: any) => (
+  ScrollReveal: ({ children, className, ...props }: { children: React.ReactNode; className?: string; [key: string]: unknown }) => (
     <div className={className} data-testid="scroll-reveal" {...props}>{children}</div>
   ),
-  ParallaxText: ({ children, speed, ...props }: any) => (
+  ParallaxText: ({ children, speed, ...props }: { children: React.ReactNode; speed?: number; [key: string]: unknown }) => (
     <div data-testid="parallax-text" data-speed={speed} {...props}>{children}</div>
   ),
-  AdvancedPortfolioFilter: ({ items, categories, onItemClick, className, ...props }: any) => {
+  AdvancedPortfolioFilter: ({ items, categories, onItemClick, className, ...props }: {
+    items: Array<{ id: string; title: string; category: string; [key: string]: unknown }>;
+    categories: string[];
+    onItemClick?: (item: unknown) => void;
+    className?: string;
+    [key: string]: unknown
+  }) => {
     const [activeCategory, setActiveCategory] = React.useState('All');
     const allCategories = ['All', ...(categories || [])];
 
     const filteredItems = activeCategory === 'All'
       ? items
-      : items?.filter((item: any) => item.category === activeCategory);
+      : items?.filter((item: { category: string }) => item.category === activeCategory);
 
     return (
       <div className={className} data-testid="advanced-portfolio-filter" {...props}>
@@ -40,7 +46,7 @@ jest.mock('@/components/interactive', () => ({
               data-testid={`filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
               aria-label={`Filter portfolio by ${category}`}
               aria-pressed={activeCategory === category ? 'true' : 'false'}
-              className={activeCategory === category ? 'bg-bw-gold text-bw-black' : ''}
+              className={activeCategory === category ? 'bg-bw-accent-gold text-bw-bg-primary' : ''}
               onClick={() => setActiveCategory(category)}
             >
               {category}
@@ -54,7 +60,7 @@ jest.mock('@/components/interactive', () => ({
           aria-label={`Portfolio projects filtered by ${activeCategory}`}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {filteredItems?.map((item: any, index: number) => (
+          {filteredItems?.map((item: { id: string; title: string; category: string }, index: number) => (
             <div
               key={item.id || index}
               data-testid="portfolio-item"
@@ -183,8 +189,8 @@ describe('PortfolioSection', () => {
 
       const allButton = screen.getByRole('button', { name: /Filter portfolio by All/ });
       expect(allButton).toHaveAttribute('aria-pressed', 'true');
-      expect(allButton).toHaveClass('bg-bw-gold');
-      expect(allButton).toHaveClass('text-bw-black');
+      expect(allButton).toHaveClass('bg-bw-accent-gold');
+      expect(allButton).toHaveClass('text-bw-bg-primary');
     });
 
     it('changes active category when filter button is clicked', async () => {

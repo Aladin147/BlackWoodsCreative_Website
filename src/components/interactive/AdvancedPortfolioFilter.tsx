@@ -142,8 +142,12 @@ export function AdvancedPortfolioFilter({
       <div className="space-y-6">
         {/* Search Bar */}
         <div className="relative max-w-md mx-auto">
+          <label htmlFor="portfolio-search" className="sr-only">
+            Search portfolio projects
+          </label>
           <MagneticField {...getAdaptiveMagneticProps(0.1, 80)}>
             <motion.input
+              id="portfolio-search"
               type="text"
               placeholder="Search portfolio..."
               value={searchTerm}
@@ -151,44 +155,51 @@ export function AdvancedPortfolioFilter({
               className="w-full px-4 py-3 bg-bw-border-subtle border border-bw-border-subtle rounded-full text-bw-text-primary placeholder-bw-text-secondary focus:outline-none focus:border-bw-accent-gold focus:ring-2 focus:ring-bw-accent-gold/20 transition-all duration-300"
               whileFocus={{ scale: 1.02 }}
               data-cursor="input"
+              aria-label="Search portfolio projects"
+              aria-describedby="search-results-count"
             />
           </MagneticField>
         </div>
 
         {/* Category Filter Buttons */}
-        <LayoutGroup>
-          <div className="flex flex-wrap justify-center gap-3">
-            {['All', ...categories].map((category) => {
-              const magneticProps = getAdaptiveMagneticProps(0.15, 100);
-              
-              return (
-                <MagneticField key={category} {...magneticProps}>
-                  <motion.button
-                    onClick={() => handleCategoryChange(category)}
-                    className="relative px-6 py-3 rounded-full border-2 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold/50"
-                    variants={categoryButtonVariants}
-                    initial="inactive"
-                    animate={activeCategory === category ? 'active' : 'inactive'}
-                    whileHover="hover"
-                    whileTap={{ scale: 0.95 }}
-                    data-cursor="button"
-                    layout
-                  >
-                    {category}
-                    {activeCategory === category && (
-                      <motion.div
-                        className="absolute inset-0 rounded-full bg-bw-accent-gold"
-                        layoutId="activeCategory"
-                        style={{ zIndex: -1 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      />
-                    )}
-                  </motion.button>
-                </MagneticField>
-              );
-            })}
-          </div>
-        </LayoutGroup>
+        <fieldset>
+          <legend className="sr-only">Filter portfolio by category</legend>
+          <LayoutGroup>
+            <div className="flex flex-wrap justify-center gap-3" role="group" aria-label="Category filters">
+              {['All', ...categories].map((category) => {
+                const magneticProps = getAdaptiveMagneticProps(0.15, 100);
+
+                return (
+                  <MagneticField key={category} {...magneticProps}>
+                    <motion.button
+                      onClick={() => handleCategoryChange(category)}
+                      className="relative px-6 py-3 rounded-full border-2 font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold/50"
+                      variants={categoryButtonVariants}
+                      initial="inactive"
+                      animate={activeCategory === category ? 'active' : 'inactive'}
+                      whileHover="hover"
+                      whileTap={{ scale: 0.95 }}
+                      data-cursor="button"
+                      layout
+                      aria-pressed={activeCategory === category}
+                      aria-label={`Filter by ${category} category`}
+                    >
+                      {category}
+                      {activeCategory === category && (
+                        <motion.div
+                          className="absolute inset-0 rounded-full bg-bw-accent-gold"
+                          layoutId="activeCategory"
+                          style={{ zIndex: -1 }}
+                          transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        />
+                      )}
+                    </motion.button>
+                  </MagneticField>
+                );
+              })}
+            </div>
+          </LayoutGroup>
+        </fieldset>
 
         {/* Sort Controls */}
         <div className="flex justify-center items-center gap-4 text-sm">
@@ -220,11 +231,14 @@ export function AdvancedPortfolioFilter({
 
         {/* Results Count */}
         <motion.div
+          id="search-results-count"
           className="text-center text-bw-text-secondary text-sm"
           key={filteredItems.length}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
+          role="status"
+          aria-live="polite"
         >
           {filteredItems.length} {filteredItems.length === 1 ? 'project' : 'projects'} found
         </motion.div>
@@ -249,6 +263,15 @@ export function AdvancedPortfolioFilter({
               className="group cursor-pointer"
               onClick={() => onItemClick?.(item)}
               data-cursor="portfolio"
+              role="button"
+              tabIndex={0}
+              aria-label={`View ${item.title} project in ${item.category} category`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onItemClick?.(item);
+                }
+              }}
             >
               <MagneticField {...getAdaptiveMagneticProps(0.2, 120)}>
                 <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-bw-border-subtle">

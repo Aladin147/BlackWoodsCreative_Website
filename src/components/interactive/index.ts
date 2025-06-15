@@ -7,7 +7,12 @@ import React from 'react';
 // export { ScrollStoryTeller } from './ScrollStoryTeller';
 
 // Temporary stub for ScrollStoryTeller only (until we implement it)
-export const ScrollStoryTeller = (props: any) => {
+interface ScrollStoryTellerProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export const ScrollStoryTeller: React.FC<ScrollStoryTellerProps> = (props) => {
   return React.createElement('div', {
     'data-testid': 'scroll-story-teller',
     className: props.className

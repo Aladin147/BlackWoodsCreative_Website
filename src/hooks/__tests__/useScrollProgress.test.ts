@@ -41,18 +41,15 @@ describe('useScrollProgress', () => {
     // Reset scroll values
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-
-    // Use a more robust approach for scrollHeight
-    Object.defineProperty(document.documentElement, 'scrollHeight', {
-      value: 2000,
-      writable: true,
-      configurable: true
-    });
     window.innerHeight = 1000;
+
+    // Use global setup values, but allow override if needed
+    document.documentElement.scrollHeight = 2000;
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   it('initializes with correct default values', () => {
@@ -136,14 +133,12 @@ describe('useScrollProgress', () => {
   });
 
   it('handles edge case when scrollHeight equals innerHeight', () => {
+    // Set scrollHeight to equal innerHeight for this test
+    document.documentElement.scrollHeight = 1000;
+
     const { result } = renderHook(() => useScrollProgress());
 
     act(() => {
-      Object.defineProperty(document.documentElement, 'scrollHeight', {
-        value: 1000,
-        writable: true,
-        configurable: true
-      });
       window.innerHeight = 1000;
       window.dispatchEvent(new Event('scroll'));
     });
@@ -347,17 +342,15 @@ describe('useScrollAnimation', () => {
     // Reset scroll values
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-
-    Object.defineProperty(document.documentElement, 'scrollHeight', {
-      value: 2000,
-      writable: true,
-      configurable: true
-    });
     window.innerHeight = 1000;
+
+    // Use global setup values
+    document.documentElement.scrollHeight = 2000;
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   it('returns animation progress based on scroll range', () => {
@@ -414,17 +407,15 @@ describe('useScrollTrigger', () => {
 
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-
-    Object.defineProperty(document.documentElement, 'scrollHeight', {
-      value: 2000,
-      writable: true,
-      configurable: true
-    });
     window.innerHeight = 1000;
+
+    // Use global setup values
+    document.documentElement.scrollHeight = 2000;
   });
 
   afterEach(() => {
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   it('triggers at specified scroll point', () => {
@@ -509,13 +500,14 @@ describe('useParallaxScroll', () => {
     jest.clearAllMocks();
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-
-    Object.defineProperty(document.documentElement, 'scrollHeight', {
-      value: 2000,
-      writable: true,
-      configurable: true
-    });
     window.innerHeight = 1000;
+
+    // Use global setup values
+    document.documentElement.scrollHeight = 2000;
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('calculates parallax offset', () => {
@@ -561,12 +553,14 @@ describe('useScrollProgressIndicator', () => {
     jest.clearAllMocks();
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-    Object.defineProperty(document.documentElement, 'scrollHeight', {
-      value: 2000,
-      writable: true,
-      configurable: true
-    });
     window.innerHeight = 1000;
+
+    // Use global setup values
+    document.documentElement.scrollHeight = 2000;
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('tracks progress through sections', () => {

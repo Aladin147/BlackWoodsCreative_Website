@@ -68,12 +68,12 @@ module.exports = {
         // small (Captions, Meta info) - Inter, 0.875rem, 400 weight
         'caption': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
 
-        // Legacy sizes for backward compatibility
+        // Current implementation classes (keep for compatibility)
         'display-xl': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'display-lg': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'display-md': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
-        'body-xl': ['1.25rem', { lineHeight: '1.6' }],
-        'body-lg': ['1.125rem', { lineHeight: '1.6' }],
+        'display-lg': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        'display-md': ['1.5rem', { lineHeight: '1.3' }],
+        'body-xl': ['1rem', { lineHeight: '1.6' }],
+        'body-lg': ['0.875rem', { lineHeight: '1.5' }],
         'body-md': ['1rem', { lineHeight: '1.6' }],
 
         // Standard sizes
