@@ -18,8 +18,6 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@react-three/drei": "^9.88.0",
-    "@react-three/fiber": "^8.15.0",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.35.0",
     "clsx": "^2.0.0",
@@ -29,7 +27,6 @@
     "react-dom": "^18.2.0",
     "sharp": "^0.32.0",
     "tailwind-merge": "^2.0.0",
-    "three": "^0.158.0",
     "typescript": "^5.0.0"
   },
   "devDependencies": {
@@ -43,7 +40,6 @@
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@types/three": "^0.158.0",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.34.0",
     "autoprefixer": "^10.4.0",
@@ -72,8 +68,7 @@
     "3d-visualization",
     "next.js",
     "typescript",
-    "framer-motion",
-    "three.js"
+    "framer-motion"
   ],
   "author": "BlackWoods Creative",
   "license": "UNLICENSED"

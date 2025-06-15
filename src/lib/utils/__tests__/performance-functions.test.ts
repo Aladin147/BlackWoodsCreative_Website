@@ -62,9 +62,6 @@ import {
   checkPerformanceBudget,
 } from '../performance';
 
-// Get the mocked performance object
-const mockedPerformance = mockPerformance;
-
 // Mock window properties
 Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
 Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });

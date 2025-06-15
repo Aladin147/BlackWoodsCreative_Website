@@ -69,11 +69,6 @@ tailwindcss@latest
 framer-motion@latest
 @tailwindcss/typography
 
-# 3D & Visual Effects
-three@latest
-@react-three/fiber@latest
-@react-three/drei@latest
-
 # Media & Performance
 sharp@latest                 # Image optimization
 @next/bundle-analyzer       # Performance monitoring
@@ -140,9 +135,9 @@ blackwoods-creative/
 │   │   │   ├── Portfolio/          # Work showcase
 │   │   │   ├── About/              # Company info
 │   │   │   └── Contact/            # Contact form
-│   │   ├── 📁 interactive/         # 3D & animation components
-│   │   │   ├── 📁 3d/              # Three.js components
+│   │   ├── 📁 interactive/         # Animation & interaction components
 │   │   │   ├── 📁 animations/      # Framer Motion components
+│   │   │   ├── 📁 effects/         # Visual effects components
 │   │   │   └── 📁 media/           # Video/image components
 │   │   └── 📁 forms/               # Form components
 │   ├── 📁 lib/
@@ -157,7 +152,6 @@ blackwoods-creative/
 │   ├── 📁 assets/
 │   │   ├── 📁 videos/              # Hero & portfolio videos
 │   │   ├── 📁 images/              # Optimized images
-│   │   ├── 📁 models/              # 3D models (.glb/.gltf)
 │   │   └── 📁 audio/               # Sound effects (optional)
 │   └── 📁 icons/                   # Favicons & logo variants
 ├── 📁 docs/                        # Documentation
@@ -214,10 +208,10 @@ The website follows a single-page, scroll-based narrative:
 
 ### **Future Enhancements** _(Phase 5 Ready)_
 
-- 🔄 **3D Scene Integration** - Three.js powered 3D elements
-- 🔄 **Particle Systems** - GPU-accelerated particle effects
+- 🔄 **Advanced Particle Systems** - GPU-accelerated particle effects
 - 🔄 **WebGL Shader Effects** - Custom visual effects
 - 🔄 **Audio Integration** - Sound design and audio visualization
+- 🔄 **Enhanced Animations** - More sophisticated motion design
 
 ### **Performance Optimizations**
 
@@ -406,7 +400,7 @@ public/assets/videos/       # Project videos
 
 - **Images** - WebP format, multiple sizes, optimized for Core Web Vitals
 - **Videos** - MP4 format, compressed for web, poster images required
-- **3D Models** - GLTF/GLB format, optimized file sizes
+
 - **Copy** - Professional tone, benefit-focused, SEO-optimized
 
 ---
