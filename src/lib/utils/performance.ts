@@ -14,19 +14,30 @@ export async function measurePerformance<T>(
   const endMark = `${name}-end`;
 
   try {
-    performance.mark(startMark);
+    // Safely call performance.mark with fallback
+    if (typeof performance !== 'undefined' && performance.mark) {
+      performance.mark(startMark);
+    }
+
     const result = await fn();
-    performance.mark(endMark);
+
+    if (typeof performance !== 'undefined' && performance.mark) {
+      performance.mark(endMark);
+    }
 
     try {
-      performance.measure(name, startMark, endMark);
+      if (typeof performance !== 'undefined' && performance.measure) {
+        performance.measure(name, startMark, endMark);
+      }
     } catch (error) {
       console.warn(`Performance measurement failed for ${name}:`, error);
     }
 
     return result;
   } catch (error) {
-    performance.mark(endMark);
+    if (typeof performance !== 'undefined' && performance.mark) {
+      performance.mark(endMark);
+    }
     throw error;
   }
 }
@@ -44,14 +55,14 @@ export function trackScrollPerformance(
   throttleMs: number = 16 // ~60fps
 ): () => void {
   let lastScrollY = window.scrollY;
-  let lastTimestamp = performance.now();
+  let lastTimestamp = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
   let ticking = false;
 
   const handleScroll = () => {
     if (!ticking) {
       requestAnimationFrame(() => {
         const currentScrollY = window.scrollY;
-        const currentTimestamp = performance.now();
+        const currentTimestamp = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
         const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPercent = scrollHeight > 0 ? (currentScrollY / scrollHeight) * 100 : 0;
@@ -153,10 +164,10 @@ export function withPerformanceMonitoring<P extends object>(
 ) {
   return function PerformanceMonitoredComponent(props: P) {
     React.useEffect(() => {
-      const startTime = performance.now();
+      const startTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
       return () => {
-        const endTime = performance.now();
+        const endTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
         const renderTime = endTime - startTime;
 
         if (renderTime > 16) { // More than one frame at 60fps
@@ -174,11 +185,11 @@ export function createLazyComponent<T extends React.ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>
 ) {
   return React.lazy(async () => {
-    const start = performance.now();
+    const start = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
     try {
       const componentModule = await importFn();
-      const end = performance.now();
+      const end = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
       console.log(`Lazy component loaded in ${(end - start).toFixed(2)}ms`);
       return componentModule;
@@ -209,12 +220,12 @@ export function monitorMemoryUsage(): {
 // FPS monitoring
 export function monitorFPS(callback: (fps: number) => void): () => void {
   let frames = 0;
-  let lastTime = performance.now();
+  let lastTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
   let animationId: number;
 
   function tick() {
     frames++;
-    const currentTime = performance.now();
+    const currentTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
     if (currentTime >= lastTime + 1000) {
       const fps = Math.round((frames * 1000) / (currentTime - lastTime));
