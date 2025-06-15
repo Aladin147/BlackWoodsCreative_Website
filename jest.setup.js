@@ -30,6 +30,14 @@ jest.mock('framer-motion', () => ({
     stop: jest.fn(),
     set: jest.fn(),
   }),
+  useInView: () => true, // Mock useInView to always return true (element is in view)
+  useScroll: () => ({
+    scrollY: { get: () => 0 },
+    scrollYProgress: { get: () => 0 },
+  }),
+  useTransform: () => ({ get: () => 0 }),
+  useSpring: () => ({ get: () => 0 }),
+  useMotionValue: () => ({ get: () => 0, set: jest.fn() }),
 }));
 
 // Mock IntersectionObserver
@@ -100,6 +108,31 @@ global.console = {
   ...console,
   error: jest.fn(),
 };
+
+// Mock complex interactive components that cause test issues
+jest.mock('@/components/interactive', () => ({
+  ScrollReveal: ({ children, className }) => <div className={className} data-testid="scroll-reveal">{children}</div>,
+  MagneticField: ({ children, className }) => <div className={className} data-testid="magnetic-field">{children}</div>,
+  AtmosphericLayer: ({ className }) => <div className={className} data-testid="atmospheric-layer" />,
+  ParallaxText: ({ children, className }) => <div className={className} data-testid="parallax-text">{children}</div>,
+  AtmosphericParticles: ({ className }) => <div className={className} data-testid="atmospheric-particles" />,
+  ScrollFadeIn: ({ children, className }) => <div className={className} data-testid="scroll-fade-in">{children}</div>,
+  StaggeredScrollFadeIn: ({ children, className }) => <div className={className} data-testid="staggered-scroll-fade-in">{children}</div>,
+  SectionScrollAnimation: ({ children, className }) => <div className={className} data-testid="section-scroll-animation">{children}</div>,
+  ParallaxContainer: ({ children, className }) => <div className={className} data-testid="parallax-container">{children}</div>,
+  ParallaxLayer: ({ children, className }) => <div className={className} data-testid="parallax-layer">{children}</div>,
+  MagneticCursor: ({ children, className }) => <div className={className} data-testid="magnetic-cursor">{children}</div>,
+  HoverMagnify: ({ children, className }) => <div className={className} data-testid="hover-magnify">{children}</div>,
+  FloatingElement: ({ children, className }) => <div className={className} data-testid="floating-element">{children}</div>,
+  PulseGlow: ({ children, className }) => <div className={className} data-testid="pulse-glow">{children}</div>,
+  GlitchText: ({ text, className }) => <span className={className} data-testid="glitch-text">{text}</span>,
+  TypewriterText: ({ text, className }) => <span className={className} data-testid="typewriter-text">{text}</span>,
+  TextReveal: ({ text, className }) => <div className={className} data-testid="text-reveal">{text}</div>,
+  MorphingButton: ({ children, className, onClick }) => <button className={className} onClick={onClick} data-testid="morphing-button">{children}</button>,
+  TiltCard: ({ children, className }) => <div className={className} data-testid="tilt-card">{children}</div>,
+  RippleEffect: ({ children, className }) => <div className={className} data-testid="ripple-effect">{children}</div>,
+  StaggeredReveal: ({ children, className }) => <div className={className} data-testid="staggered-reveal">{children}</div>,
+}));
 
 // Setup test environment
 beforeEach(() => {
