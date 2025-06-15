@@ -5,7 +5,7 @@ import RootLayout, { metadata } from '../layout';
 // Mock Next.js dynamic imports
 jest.mock('next/dynamic', () => {
   return function mockDynamic(
-    importFunc: () => Promise<{ default: React.ComponentType<Record<string, unknown>> }>,
+    _importFunc: () => Promise<{ default: React.ComponentType<Record<string, unknown>> }>,
     options?: { loading?: () => JSX.Element }
   ) {
     const Component = () => {
@@ -110,7 +110,10 @@ describe('RootLayout', () => {
     render(<MockRootLayout>{mockChildren}</MockRootLayout>);
 
     const body = screen.getByTestId('body-element');
-    expect(body).toHaveClass('bg-bw-black', 'font-primary', 'text-bw-white', 'antialiased');
+    expect(body).toHaveClass('bg-bw-black');
+    expect(body).toHaveClass('font-primary');
+    expect(body).toHaveClass('text-bw-white');
+    expect(body).toHaveClass('antialiased');
   });
 
   it('sets correct document language', () => {
@@ -243,28 +246,29 @@ describe('Actual RootLayout Component', () => {
       const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
 
       const htmlElement = container.querySelector('html');
-      expect(htmlElement).toHaveClass('--font-primary', '--font-display', '--font-mono');
+      expect(htmlElement).toHaveClass('--font-primary');
+      expect(htmlElement).toHaveClass('--font-display');
+      expect(htmlElement).toHaveClass('--font-mono');
     });
 
     it('applies proper body classes', () => {
       const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
 
       const bodyElement = container.querySelector('body');
-      expect(bodyElement).toHaveClass('font-primary', 'antialiased');
+      expect(bodyElement).toHaveClass('font-primary');
+      expect(bodyElement).toHaveClass('antialiased');
     });
 
     it('applies theme transition classes', () => {
       render(<RootLayout>{mockChildren}</RootLayout>);
 
       const themeContainer = screen.getByTestId('theme-provider').firstChild;
-      expect(themeContainer).toHaveClass(
-        'bg-bw-white',
-        'text-bw-black',
-        'dark:bg-bw-black',
-        'dark:text-bw-white',
-        'transition-colors',
-        'duration-500'
-      );
+      expect(themeContainer).toHaveClass('bg-bw-white');
+      expect(themeContainer).toHaveClass('text-bw-black');
+      expect(themeContainer).toHaveClass('dark:bg-bw-black');
+      expect(themeContainer).toHaveClass('dark:text-bw-white');
+      expect(themeContainer).toHaveClass('transition-colors');
+      expect(themeContainer).toHaveClass('duration-500');
     });
   });
 
@@ -280,19 +284,17 @@ describe('Actual RootLayout Component', () => {
       render(<RootLayout>{mockChildren}</RootLayout>);
 
       const skipLink = screen.getByText('Skip to main content');
-      expect(skipLink).toHaveClass(
-        'focus:not-sr-only',
-        'focus:absolute',
-        'focus:top-4',
-        'focus:left-4',
-        'focus:z-50',
-        'focus:px-4',
-        'focus:py-2',
-        'focus:bg-bw-gold',
-        'focus:text-bw-black',
-        'focus:rounded-md',
-        'focus:font-medium'
-      );
+      expect(skipLink).toHaveClass('focus:not-sr-only');
+      expect(skipLink).toHaveClass('focus:absolute');
+      expect(skipLink).toHaveClass('focus:top-4');
+      expect(skipLink).toHaveClass('focus:left-4');
+      expect(skipLink).toHaveClass('focus:z-50');
+      expect(skipLink).toHaveClass('focus:px-4');
+      expect(skipLink).toHaveClass('focus:py-2');
+      expect(skipLink).toHaveClass('focus:bg-bw-gold');
+      expect(skipLink).toHaveClass('focus:text-bw-black');
+      expect(skipLink).toHaveClass('focus:rounded-md');
+      expect(skipLink).toHaveClass('focus:font-medium');
     });
 
     it('provides proper main landmark', () => {
@@ -340,7 +342,8 @@ describe('Metadata Configuration', () => {
     });
 
     expect(metadata.openGraph?.images).toHaveLength(1);
-    expect(metadata.openGraph?.images?.[0]).toMatchObject({
+    const images = metadata.openGraph?.images;
+    expect(Array.isArray(images) ? images[0] : images).toMatchObject({
       url: '/assets/images/og-image.jpg',
       width: 1200,
       height: 630,

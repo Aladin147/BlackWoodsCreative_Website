@@ -150,9 +150,10 @@ describe('useIntersectionObserver', () => {
   });
 
   it('should not create observer when IntersectionObserver is not supported', () => {
-    // Temporarily remove IntersectionObserver support
-    const originalIO = global.IntersectionObserver;
-    delete (global as typeof globalThis).IntersectionObserver;
+    // Temporarily remove IntersectionObserver to test fallback
+    const originalIntersectionObserver = global.IntersectionObserver;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (global as any).IntersectionObserver = undefined;
 
     const { result } = renderHook(() => useIntersectionObserver());
     const mockElement = document.createElement('div');
@@ -165,7 +166,7 @@ describe('useIntersectionObserver', () => {
     expect(result.current[1]).toBeNull();
 
     // Restore IntersectionObserver
-    global.IntersectionObserver = originalIO;
+    global.IntersectionObserver = originalIntersectionObserver;
   });
 
   it('should simulate intersection entry update', () => {

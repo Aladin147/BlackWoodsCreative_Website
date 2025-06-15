@@ -1,5 +1,8 @@
 import type { PortfolioProject } from '@/lib/types/portfolio';
 
+// Re-export the type for easier imports
+export type { PortfolioProject };
+
 export const portfolioData: PortfolioProject[] = [
   {
     id: 'cinematic-brand-film',

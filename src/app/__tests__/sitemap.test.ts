@@ -132,8 +132,10 @@ describe('sitemap', () => {
     const result = sitemap();
 
     result.forEach(entry => {
-      expect(() => new Date(entry.lastModified)).not.toThrow();
-      expect(new Date(entry.lastModified).toISOString()).toBe(entry.lastModified);
+      if (entry.lastModified) {
+        expect(() => new Date(entry.lastModified as string)).not.toThrow();
+        expect(new Date(entry.lastModified).toISOString()).toBe(entry.lastModified);
+      }
     });
   });
 

@@ -27,7 +27,7 @@ jest.mock('framer-motion', () => ({
   useScroll: () => ({
     scrollYProgress: { on: jest.fn(), get: () => 0 }
   }),
-  useTransform: (motionValue: MockMotionValue | MockTransformFunction, input?: number[], output?: (number | string)[]): MockMotionValue => {
+  useTransform: (motionValue: MockMotionValue | MockTransformFunction, _input?: number[], output?: (number | string)[]): MockMotionValue => {
     if (typeof motionValue === 'function') {
       return { on: jest.fn(), get: () => motionValue(0) };
     }
@@ -252,7 +252,8 @@ describe('ParallaxContainer', () => {
     );
 
     const containerElement = container.firstChild;
-    expect(containerElement).toHaveClass('relative', 'overflow-hidden');
+    expect(containerElement).toHaveClass('relative');
+    expect(containerElement).toHaveClass('overflow-hidden');
   });
 
   it('renders without className', () => {
@@ -297,7 +298,9 @@ describe('CinematicParallax', () => {
     );
 
     const cinematicContainer = container.firstChild;
-    expect(cinematicContainer).toHaveClass('relative', 'h-screen', 'overflow-hidden');
+    expect(cinematicContainer).toHaveClass('relative');
+    expect(cinematicContainer).toHaveClass('h-screen');
+    expect(cinematicContainer).toHaveClass('overflow-hidden');
   });
 
   it('renders background gradient', () => {

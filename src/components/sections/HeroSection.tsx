@@ -58,12 +58,12 @@ export function HeroSection({ className }: HeroSectionProps) {
           <AtmosphericLayer type="mist" intensity={0.6} color="bw-aurora-teal" />
           <AtmosphericLayer type="particles" intensity={0.4} color="bw-aurora-green" />
           <AtmosphericLayer type="orbs" intensity={0.3} color="bw-aurora-bright" />
-          {/* Primary aurora-teal orb - Enhanced */}
+          {/* Primary aurora-green orb - Enhanced Forest Prominence */}
           <motion.div
-            className="absolute left-1/4 top-1/4 h-[600px] w-[600px] rounded-full bg-bw-aurora-teal/50 blur-3xl"
+            className="absolute left-1/4 top-1/4 h-[700px] w-[700px] rounded-full bg-bw-aurora-green/60 blur-3xl"
             animate={{
               scale: [1, 1.5, 1],
-              opacity: [0.7, 1, 0.7],
+              opacity: [0.8, 1, 0.8],
               x: [0, 30, 0],
               y: [0, -20, 0],
             }}
@@ -75,10 +75,10 @@ export function HeroSection({ className }: HeroSectionProps) {
           />
           {/* Secondary aurora-green orb - Enhanced */}
           <motion.div
-            className="absolute bottom-1/4 right-1/4 h-[700px] w-[700px] rounded-full bg-bw-aurora-green/45 blur-3xl"
+            className="absolute bottom-1/4 right-1/4 h-[800px] w-[800px] rounded-full bg-bw-aurora-green/55 blur-3xl"
             animate={{
               scale: [1.2, 1, 1.3],
-              opacity: [0.6, 0.9, 0.6],
+              opacity: [0.7, 1, 0.7],
               x: [0, -40, 0],
               y: [0, 25, 0],
             }}
@@ -89,13 +89,13 @@ export function HeroSection({ className }: HeroSectionProps) {
               delay: 3,
             }}
           />
-          {/* Bright accent orb - Enhanced */}
+          {/* Forest green accent orb - Enhanced */}
           <motion.div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-bw-aurora-bright/35 blur-2xl"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-bw-aurora-green/40 blur-2xl"
             animate={{
               rotate: [0, 360],
               scale: [0.8, 1.3, 0.8],
-              opacity: [0.5, 0.8, 0.5],
+              opacity: [0.6, 0.9, 0.6],
             }}
             transition={{
               duration: 20,
@@ -103,12 +103,12 @@ export function HeroSection({ className }: HeroSectionProps) {
               ease: 'linear',
             }}
           />
-          {/* Additional atmospheric layer */}
+          {/* Additional forest green atmospheric layer */}
           <motion.div
-            className="absolute top-1/3 right-1/3 h-[400px] w-[400px] rounded-full bg-bw-aurora-teal/25 blur-3xl"
+            className="absolute top-1/3 right-1/3 h-[500px] w-[500px] rounded-full bg-bw-aurora-green/30 blur-3xl"
             animate={{
               scale: [1.1, 0.9, 1.1],
-              opacity: [0.3, 0.6, 0.3],
+              opacity: [0.4, 0.7, 0.4],
               rotate: [0, -180, 0],
             }}
             transition={{
@@ -127,7 +127,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             <div className="mb-8">
               <TextReveal
                 text="BlackWoods Creative"
-                className="text-heading-1 font-display text-bw-accent-gold drop-shadow-2xl cursor-pointer"
+                className="text-display-xl font-display text-bw-accent-gold drop-shadow-2xl cursor-pointer"
                 delay={0.08}
               />
             </div>

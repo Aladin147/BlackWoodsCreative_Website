@@ -70,9 +70,9 @@ describe('PortfolioCard', () => {
     render(<PortfolioCard project={mockProject} />);
 
     // Category appears in the badge - use more specific selector since Film appears twice
-    const categoryBadge = screen.getByText('Film', { selector: '.text-bw-gold' });
+    const categoryBadge = screen.getByText('Film', { selector: '.text-bw-accent-gold' });
     expect(categoryBadge).toBeInTheDocument();
-    expect(categoryBadge).toHaveClass('text-bw-gold');
+    expect(categoryBadge).toHaveClass('text-bw-accent-gold');
   });
 
   it('renders project tags (limited to 3)', () => {

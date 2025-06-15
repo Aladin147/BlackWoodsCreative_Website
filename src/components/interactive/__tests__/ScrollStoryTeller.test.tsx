@@ -26,7 +26,7 @@ const mockSections = [
     parallaxSpeed: 0.8,
     effects: {
       scale: [0.9, 1, 1.1] as [number, number, number],
-      opacity: [0, 1, 0] as [number, number, number],
+      opacity: [0, 1, 1, 0] as [number, number, number, number],
     }
   },
   {
@@ -36,7 +36,7 @@ const mockSections = [
     backgroundImage: 'https://example.com/image2.jpg',
     parallaxSpeed: 1.2,
     effects: {
-      rotate: [-2, 0, 2] as [number, number, number],
+      rotate: [-2, 2] as [number, number],
     }
   },
 ];
@@ -177,9 +177,9 @@ describe('ScrollStoryTeller', () => {
         content: 'Section with multiple effects',
         effects: {
           scale: [0.8, 1, 1.2] as [number, number, number],
-          opacity: [0, 1, 0] as [number, number, number],
-          blur: [10, 0, 10] as [number, number, number],
-          rotate: [-5, 0, 5] as [number, number, number],
+          opacity: [0, 1, 1, 0] as [number, number, number, number],
+          blur: [10, 0, 0, 10] as [number, number, number, number],
+          rotate: [-5, 5] as [number, number],
         }
       }
     ];

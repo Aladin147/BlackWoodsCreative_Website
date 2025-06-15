@@ -41,7 +41,13 @@ describe('useScrollProgress', () => {
     // Reset scroll values
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-    document.documentElement.scrollHeight = 2000;
+
+    // Use a more robust approach for scrollHeight
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true
+    });
     window.innerHeight = 1000;
   });
 
@@ -133,7 +139,11 @@ describe('useScrollProgress', () => {
     const { result } = renderHook(() => useScrollProgress());
 
     act(() => {
-      document.documentElement.scrollHeight = 1000;
+      Object.defineProperty(document.documentElement, 'scrollHeight', {
+        value: 1000,
+        writable: true,
+        configurable: true
+      });
       window.innerHeight = 1000;
       window.dispatchEvent(new Event('scroll'));
     });
@@ -337,7 +347,12 @@ describe('useScrollAnimation', () => {
     // Reset scroll values
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-    document.documentElement.scrollHeight = 2000;
+
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true
+    });
     window.innerHeight = 1000;
   });
 
@@ -399,7 +414,12 @@ describe('useScrollTrigger', () => {
 
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-    document.documentElement.scrollHeight = 2000;
+
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true
+    });
     window.innerHeight = 1000;
   });
 
@@ -489,7 +509,12 @@ describe('useParallaxScroll', () => {
     jest.clearAllMocks();
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-    document.documentElement.scrollHeight = 2000;
+
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true
+    });
     window.innerHeight = 1000;
   });
 
@@ -536,7 +561,11 @@ describe('useScrollProgressIndicator', () => {
     jest.clearAllMocks();
     window.pageYOffset = 0;
     document.documentElement.scrollTop = 0;
-    document.documentElement.scrollHeight = 2000;
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true
+    });
     window.innerHeight = 1000;
   });
 

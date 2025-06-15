@@ -111,17 +111,24 @@ describe('AboutSection', () => {
     it('displays all achievement items', () => {
       render(<AboutSection />);
 
-      expect(screen.getByText('50+ Award-Winning Projects')).toBeInTheDocument();
-      expect(screen.getByText('100+ Satisfied Clients')).toBeInTheDocument();
-      expect(screen.getByText('5+ Years of Excellence')).toBeInTheDocument();
+      // Check for achievement numbers and text separately since they're in different elements
+      expect(screen.getByText('50')).toBeInTheDocument();
+      expect(screen.getByText('Award-Winning Projects')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
+      expect(screen.getByText('Satisfied Clients')).toBeInTheDocument();
+      expect(screen.getByText('5')).toBeInTheDocument();
+      expect(screen.getByText('Years of Excellence')).toBeInTheDocument();
     });
 
     it('renders achievement icons', () => {
       render(<AboutSection />);
 
-      // Check that achievements have the proper structure
-      const achievements = screen.getAllByText(/50\+ Award-Winning Projects|100\+ Satisfied Clients|5\+ Years of Excellence/);
-      expect(achievements).toHaveLength(3);
+      // Check that achievement icons are rendered
+      const trophyIcon = screen.getByTestId('trophy-icon');
+      const checkBadgeIcons = screen.getAllByTestId('check-badge-icon');
+
+      expect(trophyIcon).toBeInTheDocument();
+      expect(checkBadgeIcons).toHaveLength(2);
     });
   });
 
@@ -130,7 +137,10 @@ describe('AboutSection', () => {
       render(<AboutSection />);
 
       const section = document.querySelector('#about');
-      expect(section).toHaveClass('bg-gradient-to-br', 'from-bw-dark-gray', 'via-bw-medium-gray', 'to-bw-dark-gray');
+      expect(section).toHaveClass('relative');
+      expect(section).toHaveClass('bg-bw-bg-primary');
+      expect(section).toHaveClass('px-6');
+      expect(section).toHaveClass('py-32');
     });
 
     it('uses responsive grid layouts', () => {
@@ -138,7 +148,7 @@ describe('AboutSection', () => {
 
       // Services should be in a responsive grid
       const filmmaking = screen.getByText('Filmmaking');
-      const serviceCard = filmmaking.closest('.card-elevated');
+      const serviceCard = filmmaking.closest('.card');
       expect(serviceCard).toBeInTheDocument();
     });
 
@@ -146,7 +156,8 @@ describe('AboutSection', () => {
       render(<AboutSection />);
 
       const section = document.querySelector('#about');
-      expect(section).toHaveClass('px-6', 'py-32');
+      expect(section).toHaveClass('px-6');
+      expect(section).toHaveClass('py-32');
     });
 
     it('has centered content with max width', () => {
@@ -216,9 +227,13 @@ describe('AboutSection', () => {
     it('displays realistic achievements', () => {
       render(<AboutSection />);
 
-      expect(screen.getByText('50+ Award-Winning Projects')).toBeInTheDocument();
-      expect(screen.getByText('100+ Satisfied Clients')).toBeInTheDocument();
-      expect(screen.getByText('5+ Years of Excellence')).toBeInTheDocument();
+      // Check for achievement numbers and text separately since they're in different elements
+      expect(screen.getByText('50')).toBeInTheDocument();
+      expect(screen.getByText('Award-Winning Projects')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
+      expect(screen.getByText('Satisfied Clients')).toBeInTheDocument();
+      expect(screen.getByText('5')).toBeInTheDocument();
+      expect(screen.getByText('Years of Excellence')).toBeInTheDocument();
     });
   });
 
@@ -227,7 +242,7 @@ describe('AboutSection', () => {
       render(<AboutSection />);
 
       const filmmaking = screen.getByText('Filmmaking');
-      const serviceCard = filmmaking.closest('.card-elevated');
+      const serviceCard = filmmaking.closest('.card');
       expect(serviceCard).toHaveClass('group');
     });
 
@@ -238,9 +253,9 @@ describe('AboutSection', () => {
       const mainHeading = screen.getByText('BlackWoods Creative');
       expect(mainHeading.closest('h2')).toHaveClass('text-display-lg');
 
-      // Service titles should be smaller
+      // Service titles use display classes
       const serviceTitle = screen.getByText('Filmmaking');
-      expect(serviceTitle.closest('h3')).toHaveClass('text-xl');
+      expect(serviceTitle.closest('h3')).toHaveClass('text-display-md');
     });
   });
 
@@ -259,7 +274,7 @@ describe('AboutSection', () => {
 
       // Story section should have responsive grid
       const section = document.querySelector('#about');
-      const storyGrid = section?.querySelector('.grid.grid-cols-1.lg\\:grid-cols-2');
+      const storyGrid = section?.querySelector('.grid.grid-cols-1.lg\\:grid-cols-12');
       expect(storyGrid).toBeInTheDocument();
     });
 
@@ -277,7 +292,11 @@ describe('AboutSection', () => {
 
       // Should use BlackWoods brand colors
       const section = document.querySelector('#about');
-      expect(section).toHaveClass('bg-gradient-to-br', 'from-bw-dark-gray');
+      expect(section).toHaveClass('bg-bw-bg-primary');
+
+      // Check for brand accent colors
+      const goldElements = document.querySelectorAll('.text-bw-accent-gold');
+      expect(goldElements.length).toBeGreaterThan(0);
     });
 
     it('applies brand typography', () => {

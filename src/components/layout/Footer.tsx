@@ -87,10 +87,10 @@ export function Footer({ className }: FooterProps) {
           <ScrollReveal direction="up" distance={40} delay={0.1}>
             <MagneticField strength={0.1} distance={150}>
               <div className="lg:col-span-1">
-            <h3 className="font-display text-2xl font-bold text-bw-text-primary mb-4">
+            <h3 className="text-display-md font-display text-bw-text-primary mb-4">
               BlackWoods Creative
             </h3>
-            <p className="text-bw-text-secondary mb-6 leading-relaxed">
+            <p className="text-body-xl text-bw-text-secondary mb-6">
               Premium visual storytelling through filmmaking, photography, and 3D visualization.
               Creating compelling narratives that captivate and convert.
             </p>

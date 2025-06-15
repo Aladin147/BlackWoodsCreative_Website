@@ -54,8 +54,8 @@ function DefaultErrorFallback({ error, resetError }: { error?: Error; resetError
       transition={{ duration: 0.5 }}
     >
       <div className="mb-6 text-6xl">⚠️</div>
-      <h2 className="mb-4 text-2xl font-bold text-bw-white">Something went wrong</h2>
-      <p className="mb-6 max-w-md text-bw-light-gray">
+      <h2 className="mb-4 text-display-md text-bw-white">Something went wrong</h2>
+      <p className="mb-6 max-w-md text-body-xl text-bw-light-gray">
         We encountered an unexpected error. Please try refreshing the page or contact us if the problem persists.
       </p>
       {process.env.NODE_ENV === 'development' && error && (

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { portfolioData } from '@/lib/data/portfolio';
+import type { PortfolioProject } from '@/lib/types/portfolio';
 import {
   MagneticField,
   ScrollReveal,
@@ -13,20 +14,21 @@ interface PortfolioSectionProps {
   className?: string;
 }
 
+// Use the AdvancedPortfolioFilter's expected interface
 interface PortfolioItem {
   id: string;
   title: string;
   category: string;
   image: string;
   tags: string[];
-  featured: boolean;
+  featured?: boolean;
 }
 
 const categories = ['All', 'Film', 'Photography', '3D Visualization', 'Scene Creation'];
 
 export function PortfolioSection({ className }: PortfolioSectionProps) {
   // Convert portfolio data to AdvancedPortfolioFilter format
-  const portfolioItems: PortfolioItem[] = portfolioData.map(project => ({
+  const portfolioItems: PortfolioItem[] = portfolioData.map((project: PortfolioProject) => ({
     id: project.id,
     title: project.title,
     category: project.category,
@@ -46,12 +48,12 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
         {/* Advanced Section Header with Parallax */}
         <ScrollReveal className="text-center mb-20" direction="up" distance={80} delay={0.2}>
           <ParallaxText speed={0.2}>
-            <h2 className="mb-8 text-heading-2 font-display">
+            <h2 className="mb-8 text-display-lg font-display">
               Our <span className="text-bw-accent-gold">Portfolio</span>
             </h2>
           </ParallaxText>
           <ScrollReveal direction="up" distance={40} delay={0.4}>
-            <p className="mx-auto max-w-3xl text-body-text font-primary opacity-85">
+            <p className="mx-auto max-w-3xl text-body-xl font-primary">
               Explore our diverse range of creative projects that showcase our expertise in visual storytelling and premium craftsmanship.
             </p>
           </ScrollReveal>

@@ -9,10 +9,10 @@
   --bw-text-primary: #E8E8E3; /* Off-White, warm and soft on eyes */
   --bw-accent-gold: #C3A358; /* Muted Gold, rich ochre for CTAs */
 
-  /* Aurora Background Colors - AUTHENTIC THEME GUIDE */
-  --bw-aurora-teal: #0D2E2B; /* Dark Teal - authentic Deep Forest Haze */
-  --bw-aurora-green: #1A4230; /* Forest Green - authentic Deep Forest Haze */
-  --bw-aurora-bright: #2A5B54; /* Brighter accent for highlights only */
+  /* Aurora Background Colors - ENHANCED VISIBILITY */
+  --bw-aurora-teal: #0F3530; /* Enhanced Dark Teal - more visible */
+  --bw-aurora-green: #1E4A38; /* Enhanced Forest Green - more visible */
+  --bw-aurora-bright: #2E6B5E; /* Enhanced Brighter accent - more visible */
 
   /* Utility Colors */
   --bw-border-subtle: #2A2E2C; /* Low-contrast borders and dividers */
@@ -35,12 +35,13 @@
   --bw-obsidian: #0a0a0a;
   --bw-champagne: #f7e7ce;
 
-  /* Deep Forest Haze Gradients - ENHANCED VISIBILITY */
+  /* Deep Forest Haze Gradients - ENHANCED FOREST GREEN PROMINENCE */
   --bw-gradient-aurora:
-    radial-gradient(circle at 20% 30%, var(--bw-aurora-teal) 0%, transparent 60%),
-    radial-gradient(circle at 80% 70%, var(--bw-aurora-green) 0%, transparent 55%),
-    radial-gradient(circle at 40% 80%, var(--bw-aurora-bright) 0%, transparent 50%),
-    radial-gradient(circle at 60% 20%, var(--bw-aurora-teal) 0%, transparent 45%);
+    radial-gradient(circle at 20% 30%, var(--bw-aurora-green) 0%, transparent 65%),
+    radial-gradient(circle at 80% 70%, var(--bw-aurora-green) 0%, transparent 60%),
+    radial-gradient(circle at 40% 80%, var(--bw-aurora-teal) 0%, transparent 55%),
+    radial-gradient(circle at 60% 20%, var(--bw-aurora-green) 0%, transparent 50%),
+    radial-gradient(circle at 30% 60%, var(--bw-aurora-bright) 0%, transparent 45%);
 
   --bw-gradient-primary: linear-gradient(135deg, var(--bw-bg-primary) 0%, #0a0f0b 50%, var(--bw-bg-primary) 100%);
   --bw-gradient-gold: linear-gradient(135deg, var(--bw-accent-gold) 0%, #d4b85a 50%, var(--bw-accent-gold) 100%);
@@ -120,10 +121,10 @@ body::before {
   filter: blur(60px);
   animation: auroraFlow 60s ease-in-out infinite alternate;
   z-index: -2;
-  opacity: 0.9;
+  opacity: 1.0; /* Enhanced visibility */
 }
 
-/* Secondary aurora layer for depth */
+/* Secondary aurora layer for depth - ENHANCED FOREST GREEN BLEEDING */
 body::after {
   content: '';
   position: fixed;
@@ -132,13 +133,15 @@ body::after {
   right: -20%;
   bottom: -20%;
   background:
-    radial-gradient(circle at 60% 20%, var(--bw-aurora-bright) 0%, transparent 40%),
-    radial-gradient(circle at 30% 90%, var(--bw-aurora-green) 0%, transparent 45%),
-    radial-gradient(circle at 70% 80%, var(--bw-aurora-teal) 0%, transparent 35%);
+    radial-gradient(circle at 60% 20%, var(--bw-aurora-green) 0%, transparent 45%),
+    radial-gradient(circle at 30% 90%, var(--bw-aurora-green) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, var(--bw-aurora-green) 0%, transparent 40%),
+    radial-gradient(circle at 15% 50%, var(--bw-aurora-teal) 0%, transparent 35%),
+    radial-gradient(circle at 85% 40%, var(--bw-aurora-bright) 0%, transparent 30%);
   filter: blur(40px);
   animation: auroraFlow 45s ease-in-out infinite alternate-reverse;
   z-index: -1;
-  opacity: 0.7;
+  opacity: 0.85; /* Enhanced visibility */
 }
 
 /* Smooth Scrolling */
@@ -302,7 +305,9 @@ body::after {
   }
 
   .card {
-    background: rgba(16, 18, 17, 0.5); /* semi-transparent black per theme guide */
+    background:
+      linear-gradient(135deg, rgba(16, 18, 17, 0.5) 0%, rgba(26, 66, 48, 0.1) 100%),
+      rgba(16, 18, 17, 0.5); /* Forest green bleeding effect */
     backdrop-filter: blur(12px); /* frosted glass effect per theme guide */
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--bw-border-subtle);
@@ -317,7 +322,9 @@ body::after {
   }
 
   .card-elevated {
-    background: rgba(16, 18, 17, 0.7);
+    background:
+      linear-gradient(135deg, rgba(16, 18, 17, 0.7) 0%, rgba(30, 74, 56, 0.15) 100%),
+      rgba(16, 18, 17, 0.7); /* Enhanced forest green bleeding */
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(195, 163, 88, 0.2);
@@ -333,7 +340,9 @@ body::after {
   }
 
   .card-premium {
-    background: rgba(16, 18, 17, 0.8);
+    background:
+      linear-gradient(135deg, rgba(16, 18, 17, 0.8) 0%, rgba(46, 107, 94, 0.2) 100%),
+      rgba(16, 18, 17, 0.8); /* Premium forest green bleeding */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 2px solid rgba(195, 163, 88, 0.3);

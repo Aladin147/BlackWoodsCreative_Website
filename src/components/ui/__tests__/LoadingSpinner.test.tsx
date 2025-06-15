@@ -56,21 +56,24 @@ describe('LoadingSpinner', () => {
     render(<LoadingSpinner />);
 
     const spinner = document.querySelector('.rounded-full.border-2');
-    expect(spinner).toHaveClass('h-8', 'w-8');
+    expect(spinner).toHaveClass('h-8');
+    expect(spinner).toHaveClass('w-8');
   });
 
   it('applies small size when specified', () => {
     render(<LoadingSpinner size="sm" />);
 
     const spinner = document.querySelector('.rounded-full.border-2');
-    expect(spinner).toHaveClass('h-4', 'w-4');
+    expect(spinner).toHaveClass('h-4');
+    expect(spinner).toHaveClass('w-4');
   });
 
   it('applies large size when specified', () => {
     render(<LoadingSpinner size="lg" />);
 
     const spinner = document.querySelector('.rounded-full.border-2');
-    expect(spinner).toHaveClass('h-12', 'w-12');
+    expect(spinner).toHaveClass('h-12');
+    expect(spinner).toHaveClass('w-12');
   });
 
   it('applies custom className', () => {
@@ -85,14 +88,21 @@ describe('LoadingSpinner', () => {
     render(<LoadingSpinner />);
 
     const container = document.querySelector('.flex.flex-col.items-center.justify-center.gap-4');
-    expect(container).toHaveClass('flex', 'flex-col', 'items-center', 'justify-center', 'gap-4');
+    expect(container).toHaveClass('flex');
+    expect(container).toHaveClass('flex-col');
+    expect(container).toHaveClass('items-center');
+    expect(container).toHaveClass('justify-center');
+    expect(container).toHaveClass('gap-4');
   });
 
   it('has correct spinner styling', () => {
     render(<LoadingSpinner />);
 
     const spinner = document.querySelector('.rounded-full.border-2');
-    expect(spinner).toHaveClass('rounded-full', 'border-2', 'border-bw-medium-gray', 'border-t-bw-gold');
+    expect(spinner).toHaveClass('rounded-full');
+    expect(spinner).toHaveClass('border-2');
+    expect(spinner).toHaveClass('border-bw-border-subtle');
+    expect(spinner).toHaveClass('border-t-bw-accent-gold');
   });
 
   it('has correct animation properties', () => {
@@ -127,7 +137,9 @@ describe('LoadingSpinner', () => {
     render(<LoadingSpinner text={testText} />);
     
     const text = screen.getByText(testText);
-    expect(text).toHaveClass('text-sm', 'text-bw-light-gray');
+    expect(text).toHaveClass('text-sm');
+    expect(text).toHaveClass('text-bw-text-primary');
+    expect(text).toHaveClass('opacity-60');
   });
 
   it('has correct text animation properties', () => {
@@ -158,7 +170,8 @@ describe('LoadingSpinner', () => {
       const spinner = document.querySelector('.rounded-full.border-2');
       const [heightClass, widthClass] = expectedClasses[index].split(' ');
 
-      expect(spinner).toHaveClass(heightClass, widthClass);
+      expect(spinner).toHaveClass(heightClass);
+      expect(spinner).toHaveClass(widthClass);
       unmount();
     });
   });
@@ -168,7 +181,7 @@ describe('LoadingSkeleton', () => {
   it('renders without crashing', () => {
     render(<LoadingSkeleton />);
 
-    const skeleton = document.querySelector('.rounded-lg.bg-bw-dark-gray');
+    const skeleton = document.querySelector('.rounded-lg.bg-bw-border-subtle');
     expect(skeleton).toBeInTheDocument();
   });
 
@@ -176,21 +189,22 @@ describe('LoadingSkeleton', () => {
     const customClass = 'custom-skeleton-class';
     render(<LoadingSkeleton className={customClass} />);
 
-    const skeleton = document.querySelector('.rounded-lg.bg-bw-dark-gray');
+    const skeleton = document.querySelector('.rounded-lg.bg-bw-border-subtle');
     expect(skeleton).toHaveClass(customClass);
   });
 
   it('has correct default styling', () => {
     render(<LoadingSkeleton />);
 
-    const skeleton = document.querySelector('.rounded-lg.bg-bw-dark-gray');
-    expect(skeleton).toHaveClass('rounded-lg', 'bg-bw-dark-gray');
+    const skeleton = document.querySelector('.rounded-lg.bg-bw-border-subtle');
+    expect(skeleton).toHaveClass('rounded-lg');
+    expect(skeleton).toHaveClass('bg-bw-border-subtle');
   });
 
   it('has correct animation properties', () => {
     render(<LoadingSkeleton />);
 
-    const skeleton = document.querySelector('.rounded-lg.bg-bw-dark-gray');
+    const skeleton = document.querySelector('.rounded-lg.bg-bw-border-subtle');
     expect(skeleton).toHaveAttribute('data-animate', JSON.stringify({
       opacity: [0.5, 1, 0.5],
     }));
@@ -204,7 +218,7 @@ describe('LoadingSkeleton', () => {
   it('works without className prop', () => {
     render(<LoadingSkeleton />);
 
-    const skeleton = document.querySelector('.rounded-lg.bg-bw-dark-gray');
+    const skeleton = document.querySelector('.rounded-lg.bg-bw-border-subtle');
     expect(skeleton).toBeInTheDocument();
     expect(skeleton).toHaveClass('rounded-lg');
   });
@@ -213,7 +227,7 @@ describe('LoadingSkeleton', () => {
     const customClass = 'my-custom-skeleton';
     render(<LoadingSkeleton className={customClass} />);
 
-    const skeleton = document.querySelector('.rounded-lg.bg-bw-dark-gray');
+    const skeleton = document.querySelector('.rounded-lg.bg-bw-border-subtle');
     expect(skeleton).toHaveClass(customClass);
     expect(skeleton).toHaveClass('rounded-lg');
   });
@@ -223,31 +237,34 @@ describe('PortfolioCardSkeleton', () => {
   it('renders without crashing', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     expect(container).toBeInTheDocument();
   });
 
   it('has correct container styling', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
-    expect(container).toHaveClass('overflow-hidden', 'rounded-lg', 'bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
+    expect(container).toHaveClass('overflow-hidden');
+    expect(container).toHaveClass('rounded-lg');
+    expect(container).toHaveClass('bg-bw-border-subtle');
   });
 
   it('contains image skeleton with correct aspect ratio', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     const imageSkeleton = container?.querySelector('.aspect-\\[4\\/3\\]');
 
     expect(imageSkeleton).toBeInTheDocument();
-    expect(imageSkeleton).toHaveClass('aspect-[4/3]', 'w-full');
+    expect(imageSkeleton).toHaveClass('aspect-[4/3]');
+    expect(imageSkeleton).toHaveClass('w-full');
   });
 
   it('contains content area with padding', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     const contentArea = container?.querySelector('.p-6');
 
     expect(contentArea).toBeInTheDocument();
@@ -257,7 +274,7 @@ describe('PortfolioCardSkeleton', () => {
   it('contains title skeleton', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     const titleSkeleton = container?.querySelector('.mb-2.h-6.w-3\\/4');
 
     expect(titleSkeleton).toBeInTheDocument();
@@ -266,7 +283,7 @@ describe('PortfolioCardSkeleton', () => {
   it('contains description skeleton', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     const descriptionSkeleton = container?.querySelector('.mb-4.h-4.w-full');
 
     expect(descriptionSkeleton).toBeInTheDocument();
@@ -275,7 +292,7 @@ describe('PortfolioCardSkeleton', () => {
   it('contains category skeleton', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     const categorySkeleton = container?.querySelector('.h-4.w-1\\/2');
 
     expect(categorySkeleton).toBeInTheDocument();
@@ -284,11 +301,13 @@ describe('PortfolioCardSkeleton', () => {
   it('contains tags area with multiple tag skeletons', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     const tagsArea = container?.querySelector('.mt-4.flex.gap-2');
 
     expect(tagsArea).toBeInTheDocument();
-    expect(tagsArea).toHaveClass('mt-4', 'flex', 'gap-2');
+    expect(tagsArea).toHaveClass('mt-4');
+    expect(tagsArea).toHaveClass('flex');
+    expect(tagsArea).toHaveClass('gap-2');
 
     // Should have 3 tag skeletons
     const tagSkeletons = tagsArea?.querySelectorAll('.h-6');
@@ -298,7 +317,7 @@ describe('PortfolioCardSkeleton', () => {
   it('has correct tag skeleton sizes', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
     const tagsArea = container?.querySelector('.mt-4.flex.gap-2');
     const tagSkeletons = tagsArea?.querySelectorAll('.h-6');
 
@@ -310,7 +329,7 @@ describe('PortfolioCardSkeleton', () => {
   it('maintains proper structure hierarchy', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
 
     // Should have image skeleton and content area
     expect(container?.children).toHaveLength(2);
@@ -324,8 +343,8 @@ describe('PortfolioCardSkeleton', () => {
     render(<PortfolioCardSkeleton />);
 
     // Should contain multiple LoadingSkeleton instances
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
-    const skeletonElements = container?.querySelectorAll('.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
+    const skeletonElements = container?.querySelectorAll('.rounded-lg.bg-bw-border-subtle');
 
     expect(skeletonElements?.length).toBeGreaterThan(0);
   });
@@ -333,7 +352,7 @@ describe('PortfolioCardSkeleton', () => {
   it('has consistent spacing and layout', () => {
     render(<PortfolioCardSkeleton />);
 
-    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-dark-gray');
+    const container = document.querySelector('.overflow-hidden.rounded-lg.bg-bw-border-subtle');
 
     // Check for proper margin classes
     expect(container?.querySelector('.mb-2')).toBeInTheDocument();

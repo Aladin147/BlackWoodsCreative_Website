@@ -278,7 +278,7 @@ describe('sanitizeFormData', () => {
       age: 25,
     };
 
-    const result = sanitizeFormData(formData);
+    const result = sanitizeFormData(formData as unknown as Record<string, unknown>);
 
     // TypeScript should maintain the UserForm type
     expect(typeof result.username).toBe('string');

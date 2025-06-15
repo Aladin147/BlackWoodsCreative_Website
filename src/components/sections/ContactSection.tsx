@@ -180,12 +180,12 @@ export function ContactSection({ className }: ContactSectionProps) {
         {/* Enhanced Section Header with Parallax Text */}
         <ScrollReveal className="text-center mb-16" direction="up" distance={60} delay={0.2}>
           <ParallaxText speed={0.2}>
-            <h2 className="mb-6 text-heading-2 font-display">
+            <h2 className="mb-6 text-display-lg font-display">
               Ready to Create Something <span className="text-bw-accent-gold">Amazing</span>?
             </h2>
           </ParallaxText>
           <ScrollReveal direction="up" distance={40} delay={0.4}>
-            <p className="mx-auto max-w-2xl text-body-text font-primary opacity-85">
+            <p className="mx-auto max-w-2xl text-body-xl font-primary">
               Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
             </p>
           </ScrollReveal>

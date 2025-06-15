@@ -17,10 +17,10 @@ module.exports = {
           'text-secondary': '#A8A8A3',  // Muted secondary text
           'accent-gold': '#C3A358',     // Muted Gold, rich ochre
 
-          // Aurora Colors for Background Animation - AUTHENTIC THEME GUIDE
-          'aurora-teal': '#0D2E2B',     // Dark Teal - authentic Deep Forest Haze
-          'aurora-green': '#1A4230',    // Forest Green - authentic Deep Forest Haze
-          'aurora-bright': '#2A5B54',   // Brighter accent for highlights only
+          // Aurora Colors for Background Animation - ENHANCED VISIBILITY
+          'aurora-teal': '#0F3530',     // Enhanced Dark Teal - more visible
+          'aurora-green': '#1E4A38',    // Enhanced Forest Green - more visible
+          'aurora-bright': '#2E6B5E',   // Enhanced Brighter accent - more visible
 
           // Utility Colors
           'border-subtle': '#2A2E2C',   // Low-contrast borders

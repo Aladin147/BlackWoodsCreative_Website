@@ -11,7 +11,7 @@ jest.mock('framer-motion', () => ({
   useScroll: () => ({
     scrollYProgress: { on: jest.fn(), get: () => 0 }
   }),
-  useTransform: (value: unknown, input: number[], output: (number | string)[]) => ({ on: jest.fn(), get: () => output[0] }),
+  useTransform: (_value: unknown, _input: number[], output: (number | string)[]) => ({ on: jest.fn(), get: () => output[0] }),
   useSpring: () => ({ on: jest.fn(() => jest.fn()), get: () => 0 }),
 }));
 
@@ -22,6 +22,15 @@ jest.mock('@/components/interactive', () => ({
   ),
   ParallaxLayer: ({ children, className }: { children: React.ReactNode; className?: string }) => (
     <div className={className} data-testid="parallax-layer">{children}</div>
+  ),
+  MagneticField: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    <div className={className} data-testid="magnetic-field">{children}</div>
+  ),
+  ScrollReveal: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    <div className={className} data-testid="scroll-reveal">{children}</div>
+  ),
+  WebGLEnhancedBackground: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+    <div className={className} data-testid="webgl-enhanced-background">{children}</div>
   ),
 }));
 
@@ -42,7 +51,8 @@ describe('VisionSection', () => {
 
       const section = document.querySelector('section');
       expect(section).toBeInTheDocument();
-      expect(section).toHaveClass('relative', 'bg-bw-black');
+      expect(section).toHaveClass('relative');
+      expect(section).toHaveClass('bg-bw-bg-primary/80');
     });
 
     it('applies custom className', () => {
@@ -54,7 +64,8 @@ describe('VisionSection', () => {
       render(<VisionSection />);
 
       const section = document.querySelector('section');
-      expect(section).toHaveClass('relative', 'bg-bw-black');
+      expect(section).toHaveClass('relative');
+      expect(section).toHaveClass('bg-bw-bg-primary/80');
     });
   });
 
@@ -144,8 +155,9 @@ describe('VisionSection', () => {
     it('renders parallax layers in finale', () => {
       render(<VisionSection />);
 
-      const parallaxLayers = screen.getAllByTestId('parallax-layer');
-      expect(parallaxLayers.length).toBeGreaterThan(0);
+      // Check for aurora effect layers in the finale section
+      const auroraLayers = document.querySelectorAll('.bg-bw-aurora-teal\\/20, .bg-bw-aurora-green\\/15, .bg-bw-aurora-bright\\/15');
+      expect(auroraLayers.length).toBeGreaterThan(0);
     });
   });
 
@@ -197,7 +209,8 @@ describe('VisionSection', () => {
       render(<VisionSection />);
 
       const section = document.querySelector('section');
-      expect(section).toHaveClass('relative', 'bg-bw-black');
+      expect(section).toHaveClass('relative');
+      expect(section).toHaveClass('bg-bw-bg-primary/80');
     });
 
     it('content has proper max width and centering', () => {
@@ -303,7 +316,7 @@ describe('VisionSection', () => {
       render(<VisionSection />);
 
       const section = document.querySelector('section');
-      expect(section).toHaveClass('bg-bw-black');
+      expect(section).toHaveClass('bg-bw-bg-primary/80');
     });
 
     it('applies brand typography classes', () => {
@@ -318,11 +331,11 @@ describe('VisionSection', () => {
       render(<VisionSection />);
 
       // Should use brand color classes
-      const goldElements = document.querySelectorAll('.text-bw-gold');
-      const pearlElements = document.querySelectorAll('.text-bw-pearl');
-      const whiteElements = document.querySelectorAll('.text-bw-white');
+      const goldElements = document.querySelectorAll('.text-bw-accent-gold');
+      const bodyElements = document.querySelectorAll('.text-body-xl');
+      const displayElements = document.querySelectorAll('.text-display-xl');
 
-      expect(goldElements.length + pearlElements.length + whiteElements.length).toBeGreaterThan(0);
+      expect(goldElements.length + bodyElements.length + displayElements.length).toBeGreaterThan(0);
     });
   });
 });

@@ -253,7 +253,9 @@ describe('HeroSection', () => {
 
       const heroSection = container.querySelector('section');
       expect(heroSection).toBeInTheDocument();
-      expect(heroSection).toHaveClass('relative', 'flex', 'h-screen');
+      expect(heroSection).toHaveClass('relative');
+      expect(heroSection).toHaveClass('flex');
+      expect(heroSection).toHaveClass('h-screen');
     });
   });
 
@@ -298,14 +300,12 @@ describe('HeroSection', () => {
 
       const heroSection = container.querySelector('section');
       expect(heroSection).toHaveAttribute('id', 'hero');
-      expect(heroSection).toHaveClass(
-        'relative',
-        'flex',
-        'h-screen',
-        'items-center',
-        'justify-center',
-        'bg-bw-bg-primary'
-      );
+      expect(heroSection).toHaveClass('relative');
+      expect(heroSection).toHaveClass('flex');
+      expect(heroSection).toHaveClass('h-screen');
+      expect(heroSection).toHaveClass('items-center');
+      expect(heroSection).toHaveClass('justify-center');
+      expect(heroSection).toHaveClass('bg-bw-bg-primary');
     });
 
     it('renders background animation elements', () => {

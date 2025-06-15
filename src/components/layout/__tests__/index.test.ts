@@ -118,7 +118,7 @@ describe('Layout Components Barrel Export', () => {
       expect(typeof Component).toBe('function');
 
       // Components should have a name
-      expect(Component.name || Component.displayName).toBeTruthy();
+      expect(Component.name || (Component as { displayName?: string }).displayName).toBeTruthy();
 
       // Components should be callable (this is what makes them valid React components)
       expect(Component).toBeInstanceOf(Function);
@@ -134,7 +134,7 @@ describe('Layout Components Barrel Export', () => {
     ];
 
     componentsWithDisplayNames.forEach(component => {
-      expect(component.name || component.displayName).toBeTruthy();
+      expect(component.name || (component as { displayName?: string }).displayName).toBeTruthy();
     });
   });
 

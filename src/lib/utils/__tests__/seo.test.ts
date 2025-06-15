@@ -88,24 +88,28 @@ describe('generateSEO', () => {
     const absoluteImage = 'https://example.com/image.jpg';
     const result = generateSEO({ image: absoluteImage });
 
-    expect(result.openGraph?.images?.[0]?.url).toBe(absoluteImage);
-    expect(result.twitter?.images?.[0]).toBe(absoluteImage);
+    const ogImages = result.openGraph?.images;
+    const twitterImages = result.twitter?.images;
+    expect(Array.isArray(ogImages) ? (ogImages[0] as { url?: string })?.url : (ogImages as { url?: string })?.url).toBe(absoluteImage);
+    expect(Array.isArray(twitterImages) ? twitterImages[0] : twitterImages).toBe(absoluteImage);
   });
 
   it('handles relative image URLs correctly', () => {
     const relativeImage = '/images/custom.jpg';
     const result = generateSEO({ image: relativeImage });
 
-    expect(result.openGraph?.images?.[0]?.url).toBe(`${siteConfig.url}${relativeImage}`);
-    expect(result.twitter?.images?.[0]).toBe(`${siteConfig.url}${relativeImage}`);
+    const ogImages = result.openGraph?.images;
+    const twitterImages = result.twitter?.images;
+    expect(Array.isArray(ogImages) ? (ogImages[0] as { url?: string })?.url : (ogImages as { url?: string })?.url).toBe(`${siteConfig.url}${relativeImage}`);
+    expect(Array.isArray(twitterImages) ? twitterImages[0] : twitterImages).toBe(`${siteConfig.url}${relativeImage}`);
   });
 
   it('sets correct OpenGraph type', () => {
     const websiteResult = generateSEO({ type: 'website' });
     const articleResult = generateSEO({ type: 'article' });
 
-    expect(websiteResult.openGraph?.type).toBe('website');
-    expect(articleResult.openGraph?.type).toBe('article');
+    expect((websiteResult.openGraph as { type?: string })?.type).toBe('website');
+    expect((articleResult.openGraph as { type?: string })?.type).toBe('article');
   });
 
   it('includes published and modified times for articles', () => {
@@ -118,21 +122,21 @@ describe('generateSEO', () => {
       modifiedTime,
     });
 
-    expect(result.openGraph?.publishedTime).toBe(publishedTime);
-    expect(result.openGraph?.modifiedTime).toBe(modifiedTime);
+    expect((result.openGraph as { publishedTime?: string })?.publishedTime).toBe(publishedTime);
+    expect((result.openGraph as { modifiedTime?: string })?.modifiedTime).toBe(modifiedTime);
   });
 
   it('excludes published and modified times when not provided', () => {
     const result = generateSEO({ type: 'article' });
 
-    expect(result.openGraph?.publishedTime).toBeUndefined();
-    expect(result.openGraph?.modifiedTime).toBeUndefined();
+    expect((result.openGraph as { publishedTime?: string })?.publishedTime).toBeUndefined();
+    expect((result.openGraph as { modifiedTime?: string })?.modifiedTime).toBeUndefined();
   });
 
   it('includes proper Twitter metadata', () => {
     const result = generateSEO();
 
-    expect(result.twitter?.card).toBe('summary_large_image');
+    expect((result.twitter as { card?: string })?.card).toBe('summary_large_image');
     expect(result.twitter?.creator).toBe('@blackwoodscreative');
     expect(result.twitter?.title).toBe(siteConfig.name);
     expect(result.twitter?.description).toBe(siteConfig.description);
@@ -141,21 +145,24 @@ describe('generateSEO', () => {
   it('includes proper robots metadata', () => {
     const result = generateSEO();
 
-    expect(result.robots?.index).toBe(true);
-    expect(result.robots?.follow).toBe(true);
-    expect(result.robots?.googleBot?.index).toBe(true);
-    expect(result.robots?.googleBot?.follow).toBe(true);
-    expect(result.robots?.googleBot?.['max-video-preview']).toBe(-1);
-    expect(result.robots?.googleBot?.['max-image-preview']).toBe('large');
-    expect(result.robots?.googleBot?.['max-snippet']).toBe(-1);
+    const robots = result.robots as { index?: boolean; follow?: boolean; googleBot?: Record<string, unknown> };
+    expect(robots?.index).toBe(true);
+    expect(robots?.follow).toBe(true);
+    expect(robots?.googleBot?.index).toBe(true);
+    expect(robots?.googleBot?.follow).toBe(true);
+    expect(robots?.googleBot?.['max-video-preview']).toBe(-1);
+    expect(robots?.googleBot?.['max-image-preview']).toBe('large');
+    expect(robots?.googleBot?.['max-snippet']).toBe(-1);
   });
 
   it('includes proper image metadata', () => {
     const result = generateSEO();
 
-    expect(result.openGraph?.images?.[0]?.width).toBe(1200);
-    expect(result.openGraph?.images?.[0]?.height).toBe(630);
-    expect(result.openGraph?.images?.[0]?.alt).toBe(siteConfig.name);
+    const ogImages = result.openGraph?.images;
+    type ImageProps = { width?: number; height?: number; alt?: string };
+    expect(Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.width : (ogImages as ImageProps)?.width).toBe(1200);
+    expect(Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.height : (ogImages as ImageProps)?.height).toBe(630);
+    expect(Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.alt : (ogImages as ImageProps)?.alt).toBe(siteConfig.name);
   });
 
   it('includes proper locale', () => {

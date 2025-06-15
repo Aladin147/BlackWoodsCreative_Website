@@ -7,7 +7,7 @@ declare global {
       toBeInTheDocument(): R;
       toHaveClass(className: string): R;
       toHaveAttribute(attr: string, value?: string): R;
-      toHaveStyle(style: string | Record<string, any>): R;
+      toHaveStyle(style: string | Record<string, unknown>): R;
       toHaveTextContent(text: string | RegExp): R;
       toBeVisible(): R;
       toBeDisabled(): R;

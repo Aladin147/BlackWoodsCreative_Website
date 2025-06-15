@@ -42,7 +42,7 @@ jest.mock('framer-motion', () => ({
   useScroll: () => ({
     scrollYProgress: { get: () => 0.5 }
   }),
-  useSpring: (value: MockMotionValue, config: MockSpringConfig): MockMotionValue => ({
+  useSpring: (_value: MockMotionValue, config: MockSpringConfig): MockMotionValue => ({
     get: () => 0.5,
     set: jest.fn(),
     ...config
@@ -94,7 +94,12 @@ describe('ScrollProgress', () => {
     render(<ScrollProgress />);
 
     const progressContainer = document.querySelector('.fixed.top-0.left-0.right-0.z-50.h-1');
-    expect(progressContainer).toHaveClass('fixed', 'top-0', 'left-0', 'right-0', 'z-50', 'h-1');
+    expect(progressContainer).toHaveClass('fixed');
+    expect(progressContainer).toHaveClass('top-0');
+    expect(progressContainer).toHaveClass('left-0');
+    expect(progressContainer).toHaveClass('right-0');
+    expect(progressContainer).toHaveClass('z-50');
+    expect(progressContainer).toHaveClass('h-1');
     expect(progressContainer).toHaveClass('bg-bw-dark-gray/50');
   });
 
@@ -105,7 +110,11 @@ describe('ScrollProgress', () => {
     const progressBar = progressContainer?.querySelector('div');
 
     expect(progressBar).toBeInTheDocument();
-    expect(progressBar).toHaveClass('h-full', 'bg-gradient-to-r', 'from-bw-gold', 'to-yellow-400', 'origin-left');
+    expect(progressBar).toHaveClass('h-full');
+    expect(progressBar).toHaveClass('bg-gradient-to-r');
+    expect(progressBar).toHaveClass('from-bw-gold');
+    expect(progressBar).toHaveClass('to-yellow-400');
+    expect(progressBar).toHaveClass('origin-left');
   });
 
   it('sets up scroll event listener', () => {
@@ -209,7 +218,8 @@ describe('ScrollProgress', () => {
     render(<ScrollProgress />);
 
     const progressContainer = document.querySelector('.fixed.top-0.left-0.right-0.z-50.h-1');
-    expect(progressContainer).toHaveClass('left-0', 'right-0');
+    expect(progressContainer).toHaveClass('left-0');
+    expect(progressContainer).toHaveClass('right-0');
   });
 
   it('is positioned at top', () => {

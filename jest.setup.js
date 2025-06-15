@@ -135,6 +135,37 @@ jest.mock('@/components/interactive', () => ({
   TiltCard: ({ children, className, ...props }) => <div className={className} data-testid="tilt-card" {...props}>{children}</div>,
   RippleEffect: ({ children, className, ...props }) => <div className={className} data-testid="ripple-effect" {...props}>{children}</div>,
   StaggeredReveal: ({ children, className, ...props }) => <div className={className} data-testid="staggered-reveal" {...props}>{children}</div>,
+  // AboutSection components
+  StaggeredGrid: ({ children, className, ...props }) => <div className={className} data-testid="staggered-grid" {...props}>{children}</div>,
+  CountUp: ({ end, duration, delay, ...props }) => <span data-testid="count-up" {...props}>{end}</span>,
+
+  // PortfolioSection components
+  AdvancedPortfolioFilter: ({ items, categories, onItemClick, className, ...props }) => (
+    <div className={className} data-testid="advanced-portfolio-filter" {...props}>
+      {/* Mock filter buttons */}
+      <div data-testid="filter-buttons">
+        <button data-testid="filter-all">All</button>
+        {categories?.map((category, index) => (
+          <button key={index} data-testid={`filter-${category.toLowerCase().replace(/\s+/g, '-')}`}>
+            {category}
+          </button>
+        ))}
+      </div>
+      {/* Mock portfolio items */}
+      <div data-testid="portfolio-grid">
+        {items?.map((item, index) => (
+          <div
+            key={item.id || index}
+            data-testid="portfolio-item"
+            onClick={() => onItemClick?.(item)}
+          >
+            <h3>{item.title}</h3>
+            <p>{item.category}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  ),
 }));
 
 // Mock heroicons
@@ -142,9 +173,28 @@ jest.mock('@heroicons/react/24/outline', () => ({
   ArrowDownIcon: (props) => <svg data-testid="arrow-down-icon" {...props} />,
   ChevronDownIcon: (props) => <svg data-testid="chevron-down-icon" {...props} />,
   PlayIcon: (props) => <svg data-testid="play-icon" {...props} />,
+  EyeIcon: (props) => <svg data-testid="eye-icon" {...props} />,
   PauseIcon: (props) => <svg data-testid="pause-icon" {...props} />,
   XMarkIcon: (props) => <svg data-testid="x-mark-icon" {...props} />,
   Bars3Icon: (props) => <svg data-testid="bars-3-icon" {...props} />,
+  // Footer icons
+  EnvelopeIcon: (props) => <svg data-testid="envelope-icon" {...props} />,
+  PhoneIcon: (props) => <svg data-testid="phone-icon" {...props} />,
+  MapPinIcon: (props) => <svg data-testid="map-pin-icon" {...props} />,
+  ArrowUpIcon: (props) => <svg data-testid="arrow-up-icon" {...props} />,
+  CameraIcon: (props) => <svg data-testid="camera-icon" {...props} />,
+  BriefcaseIcon: (props) => <svg data-testid="briefcase-icon" {...props} />,
+  FilmIcon: (props) => <svg data-testid="film-icon" {...props} />,
+  PaintBrushIcon: (props) => <svg data-testid="paint-brush-icon" {...props} />,
+  // AboutSection icons
+  CubeIcon: (props) => <svg data-testid="cube-icon" {...props} />,
+  SparklesIcon: (props) => <svg data-testid="sparkles-icon" {...props} />,
+  CheckBadgeIcon: (props) => <svg data-testid="check-badge-icon" {...props} />,
+  TrophyIcon: (props) => <svg data-testid="trophy-icon" {...props} />,
+  // ContactSection icons
+  PaperAirplaneIcon: (props) => <svg data-testid="paper-airplane-icon" {...props} />,
+  ExclamationTriangleIcon: (props) => <svg data-testid="exclamation-triangle-icon" {...props} />,
+  CheckCircleIcon: (props) => <svg data-testid="check-circle-icon" {...props} />,
 }));
 
 // Setup test environment

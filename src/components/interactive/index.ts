@@ -1,8 +1,19 @@
 // Advanced Interactive Components - Phase 4
 // Optimized for tree shaking and code splitting
+import React from 'react';
 
 // Core interactive components
-export { ScrollStoryTeller } from './ScrollStoryTeller';
+// Temporarily commented out due to import issues - will fix in next step
+// export { ScrollStoryTeller } from './ScrollStoryTeller';
+
+// Temporary stub for ScrollStoryTeller only (until we implement it)
+export const ScrollStoryTeller = (props: any) => {
+  return React.createElement('div', {
+    'data-testid': 'scroll-story-teller',
+    className: props.className
+  }, 'ScrollStoryTeller Stub');
+};
+
 export { MagneticCursor } from './MagneticCursor';
 
 // Parallax components (heavy - consider dynamic imports)

@@ -216,7 +216,7 @@ describe('siteConfig', () => {
           expect(value).not.toBeUndefined();
           
           if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-            checkForUndefined(value, currentPath);
+            checkForUndefined(value as Record<string, unknown>, currentPath);
           }
         });
       };
@@ -230,7 +230,7 @@ describe('siteConfig', () => {
           if (typeof value === 'string') {
             expect(value.trim()).not.toBe('');
           } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-            checkForEmptyStrings(value);
+            checkForEmptyStrings(value as Record<string, unknown>);
           } else if (Array.isArray(value)) {
             value.forEach(item => {
               if (typeof item === 'object' && item !== null) {

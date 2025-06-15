@@ -66,16 +66,16 @@ export function ComplexParallaxSystem({
   const fastTransform = useTransform(smoothProgress, [0, 1], [0, -80]);
   const veryFastTransform = useTransform(smoothProgress, [0, 1], [0, -120]);
 
-  // Function to get appropriate transform based on speed
-  const getTransformForSpeed = (speed: number) => {
-    if (speed <= 0.3) return slowTransform;
-    if (speed <= 0.6) return mediumTransform;
-    if (speed <= 0.9) return fastTransform;
-    return veryFastTransform;
-  };
-
   // Create enhanced layers with all transforms pre-computed
   const enhancedLayers = useMemo(() => {
+    // Function to get appropriate transform based on speed
+    const getTransformForSpeed = (speed: number) => {
+      if (speed <= 0.3) return slowTransform;
+      if (speed <= 0.6) return mediumTransform;
+      if (speed <= 0.9) return fastTransform;
+      return veryFastTransform;
+    };
+
     return layers.map((layer) => ({
       ...layer,
       opacity: enableDepthOfField ? baseOpacityTransform : staticOpacityTransform,
@@ -84,7 +84,7 @@ export function ComplexParallaxSystem({
       blurFilter: staticBlurFilter,
       y: getTransformForSpeed(layer.speed)
     }));
-  }, [layers, enableDepthOfField, baseOpacityTransform, staticOpacityTransform, staticScaleTransform, staticBlurTransform, staticBlurFilter, getTransformForSpeed]);
+  }, [layers, enableDepthOfField, baseOpacityTransform, staticOpacityTransform, staticScaleTransform, staticBlurTransform, staticBlurFilter, slowTransform, mediumTransform, fastTransform, veryFastTransform]);
 
   // Story trigger system
   useEffect(() => {
@@ -319,7 +319,7 @@ export function AtmosphericLayer({
     case 'particles':
       return (
         <div className={baseClasses}>
-          {Array.from({ length: Math.round(20 * intensity) }).map((_, i) => (
+          {Array.from({ length: Math.round(80 * intensity) }).map((_, i) => (
             <motion.div
               key={i}
               className={`absolute w-1 h-1 bg-${color} rounded-full opacity-60`}

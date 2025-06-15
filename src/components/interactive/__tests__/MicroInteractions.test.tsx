@@ -269,11 +269,11 @@ describe('MicroInteractions', () => {
       render(<TextReveal text="Hello World" />);
 
       // Text is split into individual characters, so we need to check for the container
-      expect(screen.getByText((content, element) => {
+      expect(screen.getByText((_content, element) => {
         return element?.textContent === 'Hello';
       })).toBeInTheDocument();
 
-      expect(screen.getByText((content, element) => {
+      expect(screen.getByText((_content, element) => {
         return element?.textContent === 'World';
       })).toBeInTheDocument();
     });
@@ -289,11 +289,11 @@ describe('MicroInteractions', () => {
     it('accepts custom delay', () => {
       render(<TextReveal text="Slow Reveal" delay={0.1} />);
 
-      expect(screen.getByText((content, element) => {
+      expect(screen.getByText((_content, element) => {
         return element?.textContent === 'Slow';
       })).toBeInTheDocument();
 
-      expect(screen.getByText((content, element) => {
+      expect(screen.getByText((_content, element) => {
         return element?.textContent === 'Reveal';
       })).toBeInTheDocument();
     });
@@ -301,11 +301,11 @@ describe('MicroInteractions', () => {
     it('handles special characters', () => {
       render(<TextReveal text="Hello, World!" />);
 
-      expect(screen.getByText((content, element) => {
+      expect(screen.getByText((_content, element) => {
         return element?.textContent === 'Hello,';
       })).toBeInTheDocument();
 
-      expect(screen.getByText((content, element) => {
+      expect(screen.getByText((_content, element) => {
         return element?.textContent === 'World!';
       })).toBeInTheDocument();
     });

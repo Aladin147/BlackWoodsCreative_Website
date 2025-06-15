@@ -71,8 +71,8 @@ describe('portfolioData', () => {
   it('has non-empty tags arrays', () => {
     portfolioData.forEach(project => {
       expect(Array.isArray(project.tags)).toBe(true);
-      expect(project.tags.length).toBeGreaterThan(0);
-      project.tags.forEach(tag => {
+      expect(project.tags?.length).toBeGreaterThan(0);
+      project.tags?.forEach(tag => {
         expect(typeof tag).toBe('string');
         expect(tag.trim()).toBeTruthy();
       });
@@ -82,8 +82,8 @@ describe('portfolioData', () => {
   it('has non-empty software arrays', () => {
     portfolioData.forEach(project => {
       expect(Array.isArray(project.software)).toBe(true);
-      expect(project.software.length).toBeGreaterThan(0);
-      project.software.forEach(software => {
+      expect(project.software?.length).toBeGreaterThan(0);
+      project.software?.forEach(software => {
         expect(typeof software).toBe('string');
         expect(software.trim()).toBeTruthy();
       });
@@ -208,7 +208,7 @@ describe('portfolioData', () => {
 
     it('has consistent tag format', () => {
       portfolioData.forEach(project => {
-        project.tags.forEach(tag => {
+        project.tags?.forEach(tag => {
           expect(tag).toMatch(/^[A-Za-z0-9\s-]+$/);
         });
       });
@@ -216,7 +216,7 @@ describe('portfolioData', () => {
 
     it('has consistent software format', () => {
       portfolioData.forEach(project => {
-        project.software.forEach(software => {
+        project.software?.forEach(software => {
           expect(software).toBeTruthy();
           expect(typeof software).toBe('string');
         });

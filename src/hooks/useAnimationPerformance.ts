@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface PerformanceMetrics {
   fps: number;
@@ -39,14 +39,14 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
   const animationFrameRef = useRef<number>();
   const animationCountRef = useRef<number>(0);
 
-  const measureFrame = () => {
+  const measureFrame = useCallback(() => {
     const now = performance.now();
     const frameTime = now - lastFrameTimeRef.current;
     lastFrameTimeRef.current = now;
 
     // Add frame time to our sample
     frameTimesRef.current.push(frameTime);
-    
+
     // Keep only the last N samples
     if (frameTimesRef.current.length > finalConfig.sampleSize) {
       frameTimesRef.current.shift();
@@ -56,7 +56,7 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
     if (frameTimesRef.current.length >= 10) {
       const avgFrameTime = frameTimesRef.current.reduce((a, b) => a + b, 0) / frameTimesRef.current.length;
       const fps = Math.round(1000 / avgFrameTime);
-      
+
       // Get memory usage if available
       const performanceWithMemory = performance as Performance & {
         memory?: { usedJSHeapSize: number }
@@ -83,7 +83,7 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
     }
 
     animationFrameRef.current = requestAnimationFrame(measureFrame);
-  };
+  }, [finalConfig.sampleSize, finalConfig.targetFPS, finalConfig.maxFrameTime, finalConfig.enableLogging]);
 
   const registerAnimation = () => {
     animationCountRef.current++;
@@ -117,13 +117,13 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
 
   useEffect(() => {
     animationFrameRef.current = requestAnimationFrame(measureFrame);
-    
+
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, []);
+  }, [measureFrame]);
 
   return {
     metrics,
@@ -140,11 +140,11 @@ export function useAnimationRegistration() {
   
   useEffect(() => {
     performanceContext.registerAnimation();
-    
+
     return () => {
       performanceContext.unregisterAnimation();
     };
-  }, []);
+  }, [performanceContext]);
 
   return performanceContext;
 }

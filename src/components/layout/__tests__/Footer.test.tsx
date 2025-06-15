@@ -1,16 +1,9 @@
+// Note: Interactive components are mocked globally in jest.setup.js
+// Note: Framer Motion is mocked globally in jest.setup.js
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Footer } from '../Footer';
-
-// Mock framer-motion
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
-    a: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
-    li: ({ children, ...props }: React.ComponentProps<'li'>) => <li {...props}>{children}</li>,
-  },
-}));
 
 // Mock window.scrollTo
 const mockScrollTo = jest.fn();

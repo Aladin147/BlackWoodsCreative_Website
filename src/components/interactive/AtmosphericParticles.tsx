@@ -19,7 +19,7 @@ interface AtmosphericParticlesProps {
   className?: string;
 }
 
-export function AtmosphericParticles({ count = 20, className = '' }: AtmosphericParticlesProps) {
+export function AtmosphericParticles({ count = 60, className = '' }: AtmosphericParticlesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>();

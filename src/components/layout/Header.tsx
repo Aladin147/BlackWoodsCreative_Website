@@ -202,7 +202,7 @@ export function Header({ className }: HeaderProps) {
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
                     aria-label={`Navigate to ${item.name} section`}
-                    className="text-bw-black dark:text-bw-white font-display text-2xl font-medium hover:text-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md px-4 py-2 transition-all duration-300"
+                    className="text-bw-black dark:text-bw-white text-display-md font-display hover:text-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md px-4 py-2 transition-all duration-300"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -216,7 +216,7 @@ export function Header({ className }: HeaderProps) {
                 {/* Mobile Theme Toggle */}
                 <motion.button
                   onClick={() => toggleTheme()}
-                  className="text-bw-white font-display text-2xl font-medium hover:text-bw-gold transition-colors duration-300"
+                  className="text-bw-white text-display-md font-display hover:text-bw-gold transition-colors duration-300"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: siteConfig.navigation.length * 0.1 }}

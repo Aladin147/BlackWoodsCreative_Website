@@ -14,7 +14,9 @@ jest.mock('@upstash/redis', () => ({
 jest.mock('@upstash/ratelimit', () => {
   const mockRatelimitClass = jest.fn().mockImplementation(() => ({
     limit: jest.fn(),
-  }));
+  })) as unknown as jest.MockedFunction<() => { limit: jest.MockedFunction<() => unknown> }> & {
+    slidingWindow: jest.MockedFunction<() => string>;
+  };
 
   // Add static methods to the mock class
   mockRatelimitClass.slidingWindow = jest.fn(() => 'mocked-limiter');

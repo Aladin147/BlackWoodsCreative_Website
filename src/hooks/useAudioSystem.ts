@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useEffect, useState } from 'react';
+import { useRef, useCallback, useEffect, useState, useMemo } from 'react';
 import { useDeviceAdaptation } from './useDeviceAdaptation';
 
 interface AudioConfig {
@@ -71,7 +71,7 @@ const defaultSoundEffects: SoundEffect[] = [
 ];
 
 export function useAudioSystem(config: Partial<AudioConfig> = {}) {
-  const finalConfig = { ...defaultConfig, ...config };
+  const finalConfig = useMemo(() => ({ ...defaultConfig, ...config }), [config]);
   const [audioState, setAudioState] = useState<AudioContextState>({
     context: null,
     isSupported: false,

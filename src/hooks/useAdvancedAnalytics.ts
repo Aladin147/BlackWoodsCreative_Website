@@ -86,62 +86,24 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
     sessionIdRef.current = generateSessionId();
     userIdRef.current = getUserId();
 
-    // Track page view
-    trackEvent({
+    // Track page view - add directly to queue to avoid circular dependency
+    const pageViewEvent: AnalyticsEvent = {
       event: 'page_view',
       category: 'navigation',
       action: 'view',
       label: window.location.pathname,
+      timestamp: Date.now(),
+      sessionId: sessionIdRef.current,
+      userId: userIdRef.current,
       metadata: {
         referrer: document.referrer,
         userAgent: navigator.userAgent,
         deviceInfo
       }
-    });
+    };
+
+    eventsQueueRef.current.push(pageViewEvent);
   }, [generateSessionId, getUserId, deviceInfo]);
-
-  // Track custom event
-  const trackEvent = useCallback((eventData: Omit<AnalyticsEvent, 'timestamp' | 'sessionId' | 'userId'>) => {
-    if (!finalConfig.enableTracking) return;
-
-    const event: AnalyticsEvent = {
-      ...eventData,
-      timestamp: Date.now(),
-      sessionId: sessionIdRef.current,
-      userId: userIdRef.current
-    };
-
-    eventsQueueRef.current.push(event);
-
-    // Auto-flush if batch size reached
-    if (eventsQueueRef.current.length >= finalConfig.batchSize) {
-      flushEvents();
-    }
-  }, [finalConfig.enableTracking, finalConfig.batchSize]);
-
-  // Track user interaction
-  const trackInteraction = useCallback((interaction: Omit<UserInteraction, 'timestamp'>) => {
-    if (!finalConfig.enableHeatmap) return;
-
-    const fullInteraction: UserInteraction = {
-      ...interaction,
-      timestamp: Date.now()
-    };
-
-    interactionsQueueRef.current.push(fullInteraction);
-  }, [finalConfig.enableHeatmap]);
-
-  // Track performance metric
-  const trackPerformance = useCallback((metric: Omit<PerformanceMetric, 'timestamp'>) => {
-    if (!finalConfig.enablePerformanceTracking) return;
-
-    const fullMetric: PerformanceMetric = {
-      ...metric,
-      timestamp: Date.now()
-    };
-
-    performanceQueueRef.current.push(fullMetric);
-  }, [finalConfig.enablePerformanceTracking]);
 
   // Flush events to analytics service
   const flushEvents = useCallback(async () => {
@@ -188,13 +150,58 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
 
     } catch (error) {
       console.warn('Failed to send analytics data:', error);
-      
+
       // Re-queue events on failure
       eventsQueueRef.current.unshift(...events);
       interactionsQueueRef.current.unshift(...interactions);
       performanceQueueRef.current.unshift(...performance);
     }
-  }, [deviceInfo]);
+  }, []);
+
+  // Track custom event
+  const trackEvent = useCallback((eventData: Omit<AnalyticsEvent, 'timestamp' | 'sessionId' | 'userId'>) => {
+    if (!finalConfig.enableTracking) return;
+
+    const event: AnalyticsEvent = {
+      ...eventData,
+      timestamp: Date.now(),
+      sessionId: sessionIdRef.current,
+      userId: userIdRef.current
+    };
+
+    eventsQueueRef.current.push(event);
+
+    // Auto-flush if batch size reached
+    if (eventsQueueRef.current.length >= finalConfig.batchSize) {
+      flushEvents();
+    }
+  }, [finalConfig.enableTracking, finalConfig.batchSize, flushEvents]);
+
+  // Track user interaction
+  const trackInteraction = useCallback((interaction: Omit<UserInteraction, 'timestamp'>) => {
+    if (!finalConfig.enableHeatmap) return;
+
+    const fullInteraction: UserInteraction = {
+      ...interaction,
+      timestamp: Date.now()
+    };
+
+    interactionsQueueRef.current.push(fullInteraction);
+  }, [finalConfig.enableHeatmap]);
+
+  // Track performance metric
+  const trackPerformance = useCallback((metric: Omit<PerformanceMetric, 'timestamp'>) => {
+    if (!finalConfig.enablePerformanceTracking) return;
+
+    const fullMetric: PerformanceMetric = {
+      ...metric,
+      timestamp: Date.now()
+    };
+
+    performanceQueueRef.current.push(fullMetric);
+  }, [finalConfig.enablePerformanceTracking]);
+
+
 
   // Track scroll behavior
   const trackScrollBehavior = useCallback(() => {
