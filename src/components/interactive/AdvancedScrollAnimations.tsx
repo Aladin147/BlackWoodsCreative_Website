@@ -75,7 +75,7 @@ export function ParallaxText({ children, className = '', speed = 0.5 }: Parallax
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, speed * 100]);
-  const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
+  const smoothY = useSpring(y, { stiffness: 60, damping: 40 });
 
   return (
     <motion.div

@@ -211,7 +211,7 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
                   ? 'bg-bw-accent-gold shadow-[0_0_20px_rgba(195,163,88,0.6)]'
                   : 'bg-bw-border-subtle hover:bg-bw-accent-gold/30'
               }`}
-              whileHover={{ scale: 1.1, x: 2 }}
+              whileHover={{ scale: 1.02, x: 1 }}
               onClick={() => {
                 const element = document.getElementById(section.id);
                 element?.scrollIntoView({ behavior: 'smooth' });
@@ -272,7 +272,7 @@ function SimpleStorySection({
   const scale = useTransform(
     sectionProgress,
     [0, 0.5, 1],
-    [0.8, 1, 1.2]
+    [0.95, 1, 1.05]
   );
 
   const opacity = useTransform(

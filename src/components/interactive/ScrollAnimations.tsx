@@ -94,7 +94,7 @@ export function SectionScrollAnimation({ children, className = '', id }: Section
       const htmlElement = element as HTMLElement;
       htmlElement.style.opacity = '0';
       htmlElement.style.transform = 'translateY(20px)';
-      htmlElement.style.transition = `opacity 0.8s ease-out ${index * 100}ms, transform 0.6s ease-out ${index * 100}ms`;
+      htmlElement.style.transition = `opacity 1.0s ease-out ${index * 150}ms, transform 0.8s ease-out ${index * 150}ms`;
     });
 
     const observer = new IntersectionObserver(

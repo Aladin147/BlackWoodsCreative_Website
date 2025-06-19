@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import { siteConfig } from '@/lib/constants/siteConfig';
 import { cn, scrollToElement, throttle } from '@/lib/utils';
 
@@ -78,8 +77,8 @@ export function Header({ className }: HeaderProps) {
             <MagneticField strength={0.2} distance={100}>
               <motion.div
                 className="flex-shrink-0 flex items-center justify-center"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.4 }}
               >
                 <button
                   onClick={() => handleNavClick('#hero')}
@@ -88,14 +87,9 @@ export function Header({ className }: HeaderProps) {
                   aria-label="BlackWoods Creative - Go to homepage"
                   title="BlackWoods Creative - Go to homepage"
                 >
-                  <Image
-                    src="/icons/logo-optimized.svg"
-                    alt="BlackWoods Creative Logo"
-                    width={160}
-                    height={48}
-                    className="h-8 w-auto"
-                    priority
-                  />
+                  <span className="text-display-lg font-display text-bw-accent-gold">
+                    BlackWoods Creative
+                  </span>
                 </button>
               </motion.div>
             </MagneticField>
@@ -108,10 +102,10 @@ export function Header({ className }: HeaderProps) {
                     onClick={() => handleNavClick(item.href)}
                     aria-label={`Navigate to ${item.name} section`}
                     className="text-bw-text-primary/70 hover:text-bw-accent-gold font-medium transition-colors duration-300 relative group focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 rounded-md px-2 py-1 cursor-pointer"
-                    initial={{ opacity: 0, y: -20 }}
+                    initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.8, delay: index * 0.15 }}
+                    whileHover={{ y: -1 }}
                     data-cursor="link"
                   >
                     {item.name}
@@ -128,7 +122,7 @@ export function Header({ className }: HeaderProps) {
               <motion.button
                 className="md:hidden relative w-6 h-6 flex flex-col justify-center items-center focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md p-2 cursor-pointer"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                whileTap={{ scale: 0.95 }}
+                whileTap={{ scale: 0.98 }}
                 aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-menu"
@@ -168,7 +162,7 @@ export function Header({ className }: HeaderProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.5 }}
           >
             {/* Backdrop */}
             <motion.div
@@ -186,7 +180,7 @@ export function Header({ className }: HeaderProps) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <nav className="flex flex-col items-center space-y-8" role="navigation" aria-label="Mobile navigation">
                 {siteConfig.navigation.map((item, index) => (
@@ -197,9 +191,9 @@ export function Header({ className }: HeaderProps) {
                     className="text-bw-black dark:text-bw-white text-display-md font-display hover:text-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 rounded-md px-4 py-2 transition-all duration-300"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.6, delay: index * 0.15 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     {item.name}
                   </motion.button>
