@@ -120,8 +120,24 @@ describe('Security Utilities', () => {
 
     it('excludes unsafe-eval in production mode', () => {
       const csp = buildCSP({ isDevelopment: false });
-      
+
       expect(csp).not.toContain("'unsafe-eval'");
+    });
+
+    it('excludes unsafe-inline when nonce is provided', () => {
+      const nonce = 'test-nonce-123';
+      const csp = buildCSP({ nonce });
+
+      expect(csp).not.toContain("'unsafe-inline'");
+      expect(csp).toContain(`'nonce-${nonce}'`);
+    });
+
+    it('includes stricter CSP directives', () => {
+      const csp = buildCSP({ nonce: 'test-nonce' });
+
+      expect(csp).toContain("child-src 'none'");
+      expect(csp).toContain('script-src-elem');
+      expect(csp).toContain('style-src-elem');
     });
 
     it('includes development-specific connect-src in dev mode', () => {

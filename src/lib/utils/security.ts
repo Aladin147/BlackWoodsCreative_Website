@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 
+// Ensure Node.js runtime for crypto operations
+export const runtime = 'nodejs';
+
 /**
  * Security utilities for BlackWoods Creative website
  * Implements comprehensive security measures including CSP, CSRF protection, and more
@@ -40,11 +43,10 @@ export function verifyCSRFToken(token: string, sessionToken: string): boolean {
 export interface CSPConfig {
   nonce?: string;
   isDevelopment?: boolean;
-  allowUnsafeEval?: boolean;
 }
 
 export function buildCSP(config: CSPConfig = {}): string {
-  const { nonce, isDevelopment = false, allowUnsafeEval = false } = config;
+  const { nonce, isDevelopment = false } = config;
   
   // Base CSP directives
   const directives: Record<string, string[]> = {
@@ -53,16 +55,19 @@ export function buildCSP(config: CSPConfig = {}): string {
       "'self'",
       ...(nonce ? [`'nonce-${nonce}'`] : []),
       ...(isDevelopment ? ["'unsafe-eval'"] : []),
-      ...(allowUnsafeEval ? ["'unsafe-eval'"] : []),
       // Allow specific trusted domains for analytics/monitoring
       'https://www.googletagmanager.com',
       'https://www.google-analytics.com',
       'https://vercel.live',
+      // Allow specific script hashes for critical inline scripts if needed
+      "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='", // Empty string hash for safety
     ],
     'style-src': [
       "'self'",
-      ...(nonce ? [`'nonce-${nonce}'`] : ["'unsafe-inline'"]),
+      ...(nonce ? [`'nonce-${nonce}'`] : []),
       'https://fonts.googleapis.com',
+      // Allow hashed styles for critical CSS
+      "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='", // Empty string hash for safety
     ],
     'img-src': [
       "'self'",
@@ -92,6 +97,20 @@ export function buildCSP(config: CSPConfig = {}): string {
     'worker-src': ["'self'", 'blob:'],
     'manifest-src': ["'self'"],
     'media-src': ["'self'", 'data:', 'blob:'],
+    // Additional security directives
+    'child-src': ["'none'"],
+    'script-src-elem': [
+      "'self'",
+      ...(nonce ? [`'nonce-${nonce}'`] : []),
+      'https://www.googletagmanager.com',
+      'https://www.google-analytics.com',
+      'https://vercel.live',
+    ],
+    'style-src-elem': [
+      "'self'",
+      ...(nonce ? [`'nonce-${nonce}'`] : []),
+      'https://fonts.googleapis.com',
+    ],
   };
 
   // Build CSP string
@@ -105,10 +124,13 @@ export function buildCSP(config: CSPConfig = {}): string {
 // Security headers configuration
 export function getSecurityHeaders(nonce?: string): Record<string, string> {
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
+
+  // Always generate a nonce if not provided for maximum security
+  const secureNonce = nonce || generateNonce();
+
   return {
     // Content Security Policy
-    'Content-Security-Policy': buildCSP({ nonce, isDevelopment }),
+    'Content-Security-Policy': buildCSP({ nonce: secureNonce, isDevelopment }),
     
     // Prevent MIME type sniffing
     'X-Content-Type-Options': 'nosniff',

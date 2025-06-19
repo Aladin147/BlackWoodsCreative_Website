@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
 import { Header, ScrollProgress } from '@/components/layout';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { headers } from 'next/headers';
 import dynamic from 'next/dynamic';
 import './globals.css';
 
@@ -136,8 +137,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Get nonce from middleware headers for CSP
+  const headersList = headers();
+  const nonce = headersList.get('x-nonce') || undefined;
+
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
+      <head>
+        {nonce && <meta name="csp-nonce" content={nonce} />}
+      </head>
       <body className="bg-bw-bg-primary text-bw-text-primary font-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
         <ThemeProvider>
           <div>
