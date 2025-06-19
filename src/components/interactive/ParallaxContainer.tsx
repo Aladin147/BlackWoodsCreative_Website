@@ -165,9 +165,9 @@ export function MagneticField({
   disabled?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const x = useSpring(0, { stiffness: 400, damping: 25 });
-  const y = useSpring(0, { stiffness: 400, damping: 25 });
-  const scale = useSpring(1, { stiffness: 400, damping: 25 });
+  const x = useSpring(0, { stiffness: 200, damping: 40 });
+  const y = useSpring(0, { stiffness: 200, damping: 40 });
+  const scale = useSpring(1, { stiffness: 200, damping: 40 });
 
   useEffect(() => {
     const element = ref.current;

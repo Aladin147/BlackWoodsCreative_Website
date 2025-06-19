@@ -123,7 +123,7 @@ export function HeroSection({ className }: HeroSectionProps) {
         {/* Advanced Main Content with Magnetic Interactions */}
         <div className="relative z-10 text-center px-6 py-12 max-w-5xl mx-auto w-full">
           {/* Main Title with Magnetic Effect */}
-          <MagneticField strength={0.15} distance={200}>
+          <MagneticField strength={0.08} distance={150}>
             <div className="mb-8">
               <TextReveal
                 text="BlackWoods Creative"
@@ -154,7 +154,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            <MagneticField strength={0.25} distance={150}>
+            <MagneticField strength={0.12} distance={120}>
               <PulseGlow intensity={0.4} duration={3}>
                 <MorphingButton
                   className="btn-primary"
@@ -173,7 +173,7 @@ export function HeroSection({ className }: HeroSectionProps) {
               </PulseGlow>
             </MagneticField>
 
-            <MagneticField strength={0.2} distance={130}>
+            <MagneticField strength={0.1} distance={100}>
               <MorphingButton
                 className="btn-secondary"
                 onClick={handleStartProject}
@@ -199,13 +199,13 @@ export function HeroSection({ className }: HeroSectionProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.2 }}
         >
-          <MagneticField strength={0.3} distance={100}>
+          <MagneticField strength={0.15} distance={80}>
             <motion.button
               onClick={handleScrollToPortfolio}
               className="flex flex-col items-center text-body-lg hover:text-bw-accent-gold transition-colors duration-300 cursor-pointer"
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              whileHover={{ scale: 1.1 }}
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+              whileHover={{ scale: 1.02 }}
             >
               <span className="text-sm font-medium mb-2">Scroll to explore</span>
               <ArrowDownIcon className="w-5 h-5" />

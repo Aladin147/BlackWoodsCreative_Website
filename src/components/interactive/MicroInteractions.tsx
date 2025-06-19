@@ -17,7 +17,7 @@ export function HoverMagnify({ children, scale = 1.02, className = '' }: HoverMa
     <motion.div
       className={className}
       whileHover={{ scale: animationConfig.scale.hover * scale }}
-      transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ duration: animationConfig.duration.slow, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       {children}
     </motion.div>
