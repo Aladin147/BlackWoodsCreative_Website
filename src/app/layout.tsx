@@ -137,14 +137,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Get nonce from middleware headers for CSP
+  // Get nonce and CSRF token from middleware headers
   const headersList = headers();
   const nonce = headersList.get('x-nonce') || undefined;
+  const csrfToken = headersList.get('x-csrf-token') || undefined;
 
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
       <head>
         {nonce && <meta name="csp-nonce" content={nonce} />}
+        {csrfToken && <meta name="csrf-token" content={csrfToken} />}
       </head>
       <body className="bg-bw-bg-primary text-bw-text-primary font-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
         <ThemeProvider>

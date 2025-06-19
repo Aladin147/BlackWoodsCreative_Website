@@ -88,6 +88,9 @@ export async function middleware(request: NextRequest) {
       sameSite: 'strict',
       maxAge: 60 * 60 * 24, // 24 hours
     });
+
+    // Also set CSRF token in headers for client-side access
+    secureResponse.headers.set('x-csrf-token', csrfToken);
   }
 
   return secureResponse;
@@ -95,7 +98,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    // Apply to all API routes for rate limiting and security
     '/api/:path*',
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    // Apply to all pages for CSRF token generation (exclude static assets)
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|gif|png|svg|ico|webp)).*)',
   ],
 };

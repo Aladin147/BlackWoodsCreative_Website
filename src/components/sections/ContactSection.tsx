@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { sanitizeFormData } from '@/lib/utils/sanitize';
+import { useCSRFProtection } from '@/hooks/useCSRFProtection';
 import { motion } from 'framer-motion';
 import {
   EnvelopeIcon,
@@ -91,6 +92,9 @@ export function ContactSection({ className }: ContactSectionProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // CSRF Protection
+  const { csrfToken, isLoading: csrfLoading, makeProtectedRequest } = useCSRFProtection();
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -140,12 +144,9 @@ export function ContactSection({ className }: ContactSectionProps) {
     setIsSubmitting(true);
 
     try {
-      // Submit form data to API endpoint
-      const response = await fetch('/api/contact', {
+      // Submit form data to API endpoint with CSRF protection
+      const response = await makeProtectedRequest('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(sanitizedData),
       });
 
@@ -219,7 +220,30 @@ export function ContactSection({ className }: ContactSectionProps) {
                 Start Your Project
               </h3>
 
-              {isSubmitted ? (
+              {csrfLoading ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-bw-accent-gold border-t-transparent mx-auto mb-4" />
+                  <p className="text-body-text font-primary opacity-85">
+                    Initializing secure form...
+                  </p>
+                </div>
+              ) : !csrfToken ? (
+                <div className="text-center py-12">
+                  <ExclamationTriangleIcon className="h-16 w-16 text-red-400 mx-auto mb-4" />
+                  <h4 className="mb-2 text-heading-3 font-primary text-red-400">
+                    Security Error
+                  </h4>
+                  <p className="text-body-text font-primary opacity-85 mb-4">
+                    Unable to initialize secure form. Please refresh the page.
+                  </p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="btn-secondary"
+                  >
+                    Refresh Page
+                  </button>
+                </div>
+              ) : isSubmitted ? (
                 <motion.div
                   className="text-center py-12"
                   initial={{ opacity: 0, scale: 0.9 }}
