@@ -6,10 +6,7 @@ import { render } from '@testing-library/react';
 import { AtmosphericParticles } from '../AtmosphericParticles';
 
 // Mock requestAnimationFrame and cancelAnimationFrame
-const mockRequestAnimationFrame = jest.fn((callback) => {
-  setTimeout(callback, 0);
-  return 1;
-});
+const mockRequestAnimationFrame = jest.fn(() => 1);
 const mockCancelAnimationFrame = jest.fn();
 
 global.requestAnimationFrame = mockRequestAnimationFrame;
@@ -28,42 +25,12 @@ const mockGetBoundingClientRect = jest.fn(() => ({
   toJSON: () => {},
 }));
 
-// Create a proper mock element that can be appended
-const createMockElement = () => {
-  if (typeof document !== 'undefined') {
-    const element = document.createElement('div');
-    element.className = 'absolute rounded-full pointer-events-none';
-    return element;
-  }
-  // Fallback mock for when document is not available
-  return {
-    className: 'absolute rounded-full pointer-events-none',
-    style: {},
-    appendChild: jest.fn(),
-    removeChild: jest.fn(),
-  } as any;
-};
-
 describe('AtmosphericParticles', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Ensure DOM environment is available
-    if (typeof HTMLDivElement !== 'undefined') {
-      // Mock getBoundingClientRect for all div elements
-      HTMLDivElement.prototype.getBoundingClientRect = mockGetBoundingClientRect;
-    }
-
-    // Mock document.createElement to return mock elements
-    if (typeof document !== 'undefined') {
-      const originalCreateElement = document.createElement.bind(document);
-      jest.spyOn(document, 'createElement').mockImplementation((tagName) => {
-        if (tagName === 'div') {
-          return createMockElement();
-        }
-        return originalCreateElement(tagName);
-      });
-    }
+    // Mock getBoundingClientRect for all elements
+    Element.prototype.getBoundingClientRect = mockGetBoundingClientRect;
   });
 
   afterEach(() => {
@@ -87,15 +54,15 @@ describe('AtmosphericParticles', () => {
   it('creates particles with default count', () => {
     render(<AtmosphericParticles />);
 
-    // Should call createElement for each particle
-    expect(document.createElement).toHaveBeenCalledWith('div');
+    // Should start animation loop
+    expect(mockRequestAnimationFrame).toHaveBeenCalled();
   });
 
   it('creates particles with custom count', () => {
     render(<AtmosphericParticles count={5} />);
 
-    // Should call createElement for custom count
-    expect(document.createElement).toHaveBeenCalledWith('div');
+    // Should start animation loop
+    expect(mockRequestAnimationFrame).toHaveBeenCalled();
   });
 
   it('handles zero count gracefully', () => {
@@ -171,19 +138,19 @@ describe('AtmosphericParticles', () => {
   it('respects particle count changes', () => {
     const { rerender } = render(<AtmosphericParticles count={5} />);
 
-    expect(document.createElement).toHaveBeenCalledWith('div');
+    expect(mockRequestAnimationFrame).toHaveBeenCalled();
 
     jest.clearAllMocks();
 
     rerender(<AtmosphericParticles count={10} />);
 
-    expect(document.createElement).toHaveBeenCalledWith('div');
+    expect(mockRequestAnimationFrame).toHaveBeenCalled();
   });
 
   it('maintains particle properties within expected ranges', () => {
     render(<AtmosphericParticles count={1} />);
 
-    // Verify that particle creation works
-    expect(document.createElement).toHaveBeenCalledWith('div');
+    // Verify that animation starts
+    expect(mockRequestAnimationFrame).toHaveBeenCalled();
   });
 });

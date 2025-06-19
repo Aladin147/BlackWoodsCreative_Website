@@ -258,12 +258,8 @@ describe('Security Utilities', () => {
     it('detects non-HTTPS requests in production', () => {
       const originalEnv = process.env.NODE_ENV;
 
-      // Use Object.defineProperty to modify read-only property
-      Object.defineProperty(process.env, 'NODE_ENV', {
-        value: 'production',
-        writable: true,
-        configurable: true,
-      });
+      // Mock NODE_ENV for this test
+      process.env.NODE_ENV = 'production';
 
       const mockRequest = {
         url: 'http://example.com/test',
@@ -276,13 +272,11 @@ describe('Security Utilities', () => {
         issue.category === 'transport' && issue.description.includes('HTTPS')
       );
       expect(httpsIssue).toBeDefined();
+      expect(httpsIssue?.severity).toBe('high');
+      expect(httpsIssue?.description).toBe('Request not using HTTPS in production');
 
       // Restore original environment
-      Object.defineProperty(process.env, 'NODE_ENV', {
-        value: originalEnv,
-        writable: true,
-        configurable: true,
-      });
+      process.env.NODE_ENV = originalEnv;
     });
 
     it('calculates score based on issue severity', () => {

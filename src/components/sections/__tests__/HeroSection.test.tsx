@@ -354,8 +354,8 @@ describe('HeroSection', () => {
     it('provides meaningful button text', () => {
       render(<HeroSection />);
 
-      expect(screen.getByRole('button', { name: /View Our Work/ })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Start Your Project/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /View our portfolio and previous work/ })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /Start your project - Contact us to begin/ })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Scroll to explore/ })).toBeInTheDocument();
     });
 

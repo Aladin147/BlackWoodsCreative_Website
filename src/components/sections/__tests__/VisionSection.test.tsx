@@ -298,8 +298,8 @@ describe('VisionSection', () => {
     it('has responsive layout classes', () => {
       render(<VisionSection />);
 
-      // Progress indicator should be hidden on small screens
-      const progressContainer = document.querySelector('.hidden.lg\\:block');
+      // Progress indicator should be hidden on small screens and visible on large screens
+      const progressContainer = document.querySelector('.hidden.lg\\:flex');
       expect(progressContainer).toBeInTheDocument();
     });
 

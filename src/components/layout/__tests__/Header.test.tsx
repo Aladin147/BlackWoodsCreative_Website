@@ -69,10 +69,10 @@ describe('Header', () => {
     });
   });
 
-  it('renders header with logo and navigation', () => {
+  it('renders header with brand text and navigation', () => {
     renderHeader();
 
-    expect(screen.getByAltText('BlackWoods Creative Logo')).toBeInTheDocument();
+    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
     expect(screen.getByText('Portfolio')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
     expect(screen.getByText('Contact')).toBeInTheDocument();
@@ -156,8 +156,9 @@ describe('Header', () => {
   });
 
   it('applies custom className', () => {
-    const { container } = renderHeader({ className: "custom-header" });
-    expect(container.firstChild).toHaveClass('custom-header');
+    renderHeader({ className: "custom-header" });
+    const header = screen.getByRole('banner');
+    expect(header).toHaveClass('custom-header');
   });
 
   it('renders all navigation items', () => {
