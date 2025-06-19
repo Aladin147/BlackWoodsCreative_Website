@@ -9,6 +9,7 @@ import {
   logSecurityEvent,
   rateLimitConfigs
 } from './lib/utils/security';
+import { getRequestLogger } from './lib/utils/request-logger';
 
 // Initialize rate limiters for different endpoints
 const rateLimiters = {
@@ -25,9 +26,17 @@ const rateLimiters = {
 };
 
 export async function middleware(request: NextRequest) {
+  const startTime = Date.now();
   const response = NextResponse.next();
   const ip = request.ip ?? '127.0.0.1';
   const userAgent = request.headers.get('user-agent') ?? '';
+
+  // Initialize request logging
+  const requestLogger = getRequestLogger();
+  const requestId = requestLogger.logRequest(request, {
+    userId: request.headers.get('x-user-id') || undefined,
+    sessionId: request.headers.get('x-session-id') || undefined,
+  });
 
   // Generate nonce for CSP
   const nonce = generateNonce();
@@ -61,7 +70,9 @@ export async function middleware(request: NextRequest) {
         },
       });
 
-      return new NextResponse('Too many requests', {
+      // Update request log with rate limit info
+      const responseTime = Date.now() - startTime;
+      const rateLimitResponse = new NextResponse('Too many requests', {
         status: 429,
         headers: {
           'Retry-After': Math.round((reset - Date.now()) / 1000).toString(),
@@ -71,12 +82,35 @@ export async function middleware(request: NextRequest) {
           'Content-Type': 'text/plain',
         },
       });
+
+      requestLogger.updateRequestResponse(
+        requestId,
+        rateLimitResponse,
+        responseTime,
+        'Rate limit exceeded'
+      );
+
+      return rateLimitResponse;
     }
 
     // Add rate limit headers to successful responses
     secureResponse.headers.set('X-RateLimit-Limit', limit.toString());
     secureResponse.headers.set('X-RateLimit-Remaining', remaining.toString());
     secureResponse.headers.set('X-RateLimit-Reset', reset.toString());
+
+    // Update request log with rate limit info
+    const logIndex = requestLogger.getRecentLogs(1).findIndex(log => log.id === requestId);
+    if (logIndex !== -1) {
+      const logs = requestLogger.getRecentLogs(1000);
+      const currentLog = logs.find(log => log.id === requestId);
+      if (currentLog) {
+        currentLog.rateLimitInfo = {
+          limit,
+          remaining,
+          reset,
+        };
+      }
+    }
   }
 
   // Generate and set CSRF token for non-API routes
@@ -91,7 +125,21 @@ export async function middleware(request: NextRequest) {
 
     // Also set CSRF token in headers for client-side access
     secureResponse.headers.set('x-csrf-token', csrfToken);
+
+    // Update request log with CSRF token
+    const logs = requestLogger.getRecentLogs(1000);
+    const currentLog = logs.find(log => log.id === requestId);
+    if (currentLog) {
+      currentLog.csrfToken = csrfToken;
+    }
   }
+
+  // Add request ID to response headers for tracking
+  secureResponse.headers.set('x-request-id', requestId);
+
+  // Log successful response
+  const responseTime = Date.now() - startTime;
+  requestLogger.updateRequestResponse(requestId, secureResponse, responseTime);
 
   return secureResponse;
 }

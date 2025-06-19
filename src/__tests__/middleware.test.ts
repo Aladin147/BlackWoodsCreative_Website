@@ -72,6 +72,7 @@ describe('Middleware', () => {
 
     it('handles non-API routes without rate limiting', async () => {
       const request = {
+        url: 'https://example.com/about',
         nextUrl: { pathname: '/about' },
         ip: '192.168.1.1',
         headers: new Map([
@@ -98,6 +99,7 @@ describe('Middleware', () => {
   describe('Security Features', () => {
     it('adds security headers to all responses', async () => {
       const request = {
+        url: 'https://example.com/about',
         nextUrl: { pathname: '/about' },
         ip: '192.168.1.1',
         headers: new Map([
@@ -115,6 +117,7 @@ describe('Middleware', () => {
 
     it('generates and sets nonce for CSP', async () => {
       const request = {
+        url: 'https://example.com/test',
         nextUrl: { pathname: '/test' },
         ip: '192.168.1.1',
         headers: new Map([
@@ -132,6 +135,7 @@ describe('Middleware', () => {
 
     it('sets CSRF token cookie for non-API routes', async () => {
       const request = {
+        url: 'https://example.com/contact',
         nextUrl: { pathname: '/contact' },
         ip: '192.168.1.1',
         headers: new Map([
@@ -143,6 +147,7 @@ describe('Middleware', () => {
 
       // Check if CSRF cookie is set (would need to check response.cookies in real implementation)
       expect(response).toBeDefined();
+      expect(response.headers.get('x-request-id')).toBeDefined();
     });
   });
 
@@ -151,7 +156,10 @@ describe('Middleware', () => {
       const middlewareModule = await import('../middleware');
       const config = middlewareModule.config;
       expect(config).toEqual({
-        matcher: '/api/:path*',
+        matcher: [
+          '/api/:path*',
+          '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|gif|png|svg|ico|webp)).*)',
+        ],
       });
     });
   });
