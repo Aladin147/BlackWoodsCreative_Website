@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
+import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 
 interface Particle {
   id: number;
@@ -20,19 +21,46 @@ interface AtmosphericParticlesProps {
 }
 
 export function AtmosphericParticles({ count = 60, className = '' }: AtmosphericParticlesProps) {
+  const { deviceInfo } = useDeviceAdaptation();
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>();
 
+  // Adaptive particle count based on device capabilities
+  const getAdaptiveParticleCount = useCallback(() => {
+    if (deviceInfo.optimizationProfile) {
+      return Math.min(count, deviceInfo.optimizationProfile.rendering.particleCount);
+    }
+
+    // Fallback to basic device detection
+    if (deviceInfo.isMobile) return Math.min(count, 20);
+    if (deviceInfo.isTablet) return Math.min(count, 40);
+    return count;
+  }, [count, deviceInfo.optimizationProfile, deviceInfo.isMobile, deviceInfo.isTablet]);
+
+  // Check if particles should be enabled
+  const shouldEnableParticles = useCallback(() => {
+    if (deviceInfo.prefersReducedMotion) return false;
+
+    if (deviceInfo.optimizationProfile) {
+      return deviceInfo.optimizationProfile.animations.particles;
+    }
+
+    return !deviceInfo.isMobile;
+  }, [deviceInfo.prefersReducedMotion, deviceInfo.optimizationProfile, deviceInfo.isMobile]);
+
   useEffect(() => {
-    if (!containerRef.current) return;
+    const shouldEnable = shouldEnableParticles();
+    const adaptiveCount = getAdaptiveParticleCount();
+
+    if (!containerRef.current || !shouldEnable) return;
 
     const container = containerRef.current;
     const rect = container.getBoundingClientRect();
 
     // Initialize particles - AUTHENTIC THEME GUIDE SPECIFICATION
     // Small 2px x 2px divs, border-radius: 50%, background-color: $accent-gold, with varying opacities
-    particlesRef.current = Array.from({ length: count }, (_, i) => ({
+    particlesRef.current = Array.from({ length: adaptiveCount }, (_, i) => ({
       id: i,
       x: Math.random() * rect.width,
       y: Math.random() * rect.height,
@@ -44,19 +72,36 @@ export function AtmosphericParticles({ count = 60, className = '' }: Atmospheric
       maxLife: Math.random() * 500 + 300, // Longer life for subtle effect
     }));
 
-    // Create particle elements - AUTHENTIC THEME GUIDE SPECIFICATION
+    // Create particle elements - AUTHENTIC THEME GUIDE SPECIFICATION with adaptive performance
+    const useGPUAcceleration = deviceInfo.capabilities?.performance.graphics !== 'low';
+
     particlesRef.current.forEach((particle) => {
       const element = document.createElement('div');
       element.className = 'absolute rounded-full pointer-events-none';
-      element.style.cssText = `
-        width: ${particle.size}px;
-        height: ${particle.size}px;
-        background-color: var(--bw-accent-gold);
-        border-radius: 50%;
-        opacity: ${particle.opacity};
-        transform: translate(${particle.x}px, ${particle.y}px);
-        transition: opacity 0.5s ease-out;
-      `;
+
+      // Adaptive styling based on device capabilities
+      if (useGPUAcceleration) {
+        element.style.cssText = `
+          width: ${particle.size}px;
+          height: ${particle.size}px;
+          background-color: var(--bw-accent-gold);
+          border-radius: 50%;
+          opacity: ${particle.opacity};
+          transform: translate3d(${particle.x}px, ${particle.y}px, 0);
+          will-change: transform, opacity;
+        `;
+      } else {
+        element.style.cssText = `
+          width: ${particle.size}px;
+          height: ${particle.size}px;
+          background-color: var(--bw-accent-gold);
+          border-radius: 50%;
+          opacity: ${particle.opacity};
+          transform: translate(${particle.x}px, ${particle.y}px);
+          transition: opacity 0.5s ease-out;
+        `;
+      }
+
       element.setAttribute('data-particle-id', particle.id.toString());
       container.appendChild(element);
     });
@@ -116,7 +161,7 @@ export function AtmosphericParticles({ count = 60, className = '' }: Atmospheric
       // Remove particle elements
       container.querySelectorAll('[data-particle-id]').forEach(el => el.remove());
     };
-  }, [count]);
+  }, [count, getAdaptiveParticleCount, shouldEnableParticles, deviceInfo.capabilities?.performance.graphics]);
 
   return (
     <div

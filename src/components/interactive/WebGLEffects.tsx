@@ -273,8 +273,21 @@ export function WebGLAuroraEffect({
   }, [interactive, webglState.canvas]);
 
   useEffect(() => {
-    if (!shouldEnableFeature('enableComplexAnimations') || deviceInfo.isMobile) {
-      return; // Skip WebGL on mobile or when complex animations are disabled
+    // Enhanced device capability checking
+    const canUseWebGL = () => {
+      if (!shouldEnableFeature('enableComplexAnimations')) return false;
+
+      // Check optimization profile if available
+      if (deviceInfo.optimizationProfile) {
+        return deviceInfo.optimizationProfile.rendering.webgl;
+      }
+
+      // Fallback to basic device detection
+      return !deviceInfo.isMobile && deviceInfo.hasHover;
+    };
+
+    if (!canUseWebGL()) {
+      return; // Skip WebGL based on device capabilities
     }
 
     initWebGL();
@@ -284,7 +297,7 @@ export function WebGLAuroraEffect({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [initWebGL, shouldEnableFeature, deviceInfo.isMobile]);
+  }, [initWebGL, shouldEnableFeature, deviceInfo]);
 
   useEffect(() => {
     if (interactive && webglState.canvas) {
@@ -294,19 +307,35 @@ export function WebGLAuroraEffect({
     return undefined;
   }, [interactive, webglState.canvas, handleMouseMove]);
 
-  // Fallback for unsupported devices
-  if (!shouldEnableFeature('enableComplexAnimations') || deviceInfo.isMobile || !webglState.isSupported) {
+  // Enhanced fallback for unsupported devices
+  const shouldUseFallback = () => {
+    if (!shouldEnableFeature('enableComplexAnimations') || !webglState.isSupported) return true;
+
+    // Check optimization profile
+    if (deviceInfo.optimizationProfile) {
+      return !deviceInfo.optimizationProfile.rendering.webgl;
+    }
+
+    // Fallback to basic device detection
+    return deviceInfo.isMobile;
+  };
+
+  if (shouldUseFallback()) {
+    // Adaptive fallback based on device capabilities
+    const animationDuration = deviceInfo.optimizationProfile?.animations.duration || 8;
+    const shouldAnimate = deviceInfo.optimizationProfile?.animations.enabled !== false;
+
     return (
       <div className={`absolute inset-0 ${className}`}>
         {/* CSS fallback aurora effect */}
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-bw-aurora-teal/20 via-bw-aurora-green/15 to-bw-aurora-bright/10"
-          animate={{
+          animate={shouldAnimate ? {
             opacity: [0.3, 0.6, 0.3],
             scale: [1, 1.05, 1]
-          }}
+          } : {}}
           transition={{
-            duration: 8,
+            duration: animationDuration,
             repeat: Infinity,
             ease: 'easeInOut'
           }}
@@ -334,10 +363,32 @@ export function WebGLParticleSystem({
 }) {
   const { deviceInfo, shouldEnableFeature } = useDeviceAdaptation();
 
-  // Reduce particle count on mobile
-  const adaptedParticleCount = deviceInfo.isMobile ? Math.min(particleCount, 50) : particleCount;
+  // Enhanced particle count adaptation based on device capabilities
+  const getAdaptedParticleCount = () => {
+    if (deviceInfo.optimizationProfile) {
+      return deviceInfo.optimizationProfile.rendering.particleCount;
+    }
 
-  if (!shouldEnableFeature('enableComplexAnimations')) {
+    // Fallback to basic device detection
+    if (deviceInfo.isMobile) return Math.min(particleCount, 30);
+    if (deviceInfo.isTablet) return Math.min(particleCount, 60);
+    return particleCount;
+  };
+
+  const adaptedParticleCount = getAdaptedParticleCount();
+
+  // Enhanced feature checking
+  const shouldRender = () => {
+    if (!shouldEnableFeature('enableComplexAnimations')) return false;
+
+    if (deviceInfo.optimizationProfile) {
+      return deviceInfo.optimizationProfile.animations.particles;
+    }
+
+    return !deviceInfo.isMobile;
+  };
+
+  if (!shouldRender()) {
     return null;
   }
 

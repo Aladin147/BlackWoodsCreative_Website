@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { getDeviceCapabilities, getOptimizationProfile, DeviceCapabilities, OptimizationProfile } from '@/lib/utils/device-capabilities';
 
 interface DeviceInfo {
   isMobile: boolean;
@@ -12,6 +13,9 @@ interface DeviceInfo {
   pixelRatio: number;
   hasHover: boolean;
   prefersReducedMotion: boolean;
+  // Enhanced device information
+  capabilities?: DeviceCapabilities;
+  optimizationProfile?: OptimizationProfile;
 }
 
 interface AdaptiveConfig {
@@ -60,12 +64,14 @@ export function useDeviceAdaptation() {
     orientation: 'landscape',
     pixelRatio: 1,
     hasHover: true,
-    prefersReducedMotion: false
+    prefersReducedMotion: false,
+    capabilities: undefined,
+    optimizationProfile: undefined
   });
 
   const [adaptiveConfig, setAdaptiveConfig] = useState<AdaptiveConfig>(defaultDesktopConfig);
 
-  const detectDevice = () => {
+  const detectDevice = async () => {
     if (typeof window === 'undefined') return;
 
     const width = window.innerWidth;
@@ -95,6 +101,17 @@ export function useDeviceAdaptation() {
     // Motion preference detection
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Enhanced device capabilities detection
+    let capabilities: DeviceCapabilities | undefined;
+    let optimizationProfile: OptimizationProfile | undefined;
+
+    try {
+      capabilities = await getDeviceCapabilities();
+      optimizationProfile = await getOptimizationProfile();
+    } catch (error) {
+      console.warn('Failed to detect device capabilities:', error);
+    }
+
     const newDeviceInfo: DeviceInfo = {
       isMobile,
       isTablet,
@@ -104,27 +121,46 @@ export function useDeviceAdaptation() {
       orientation,
       pixelRatio,
       hasHover,
-      prefersReducedMotion
+      prefersReducedMotion,
+      capabilities,
+      optimizationProfile
     };
 
     setDeviceInfo(newDeviceInfo);
 
-    // Set adaptive config based on device
+    // Set adaptive config based on device and capabilities
     let config = defaultDesktopConfig;
-    if (isMobile) {
-      config = defaultMobileConfig;
-    } else if (isTablet) {
-      config = defaultTabletConfig;
+
+    if (optimizationProfile) {
+      // Use advanced optimization profile if available
+      config = {
+        magneticStrength: optimizationProfile.animations.magnetic ?
+          (optimizationProfile.animations.complexity === 'full' ? 0.25 :
+           optimizationProfile.animations.complexity === 'enhanced' ? 0.15 : 0.1) : 0,
+        magneticDistance: optimizationProfile.animations.magnetic ? 120 : 0,
+        animationDuration: optimizationProfile.animations.duration,
+        enableParallax: optimizationProfile.animations.parallax,
+        enableMagnetic: optimizationProfile.animations.magnetic,
+        enableComplexAnimations: optimizationProfile.animations.complexity !== 'minimal'
+      };
+    } else {
+      // Fallback to basic device detection
+      if (isMobile) {
+        config = defaultMobileConfig;
+      } else if (isTablet) {
+        config = defaultTabletConfig;
+      }
     }
 
-    // Apply motion preferences
+    // Apply motion preferences (always override optimization profile)
     if (prefersReducedMotion) {
       config = {
         ...config,
-        magneticStrength: config.magneticStrength * 0.5,
-        animationDuration: config.animationDuration * 0.5,
+        magneticStrength: 0,
+        animationDuration: 0.1,
         enableParallax: false,
-        enableComplexAnimations: false
+        enableComplexAnimations: false,
+        enableMagnetic: false
       };
     }
 
