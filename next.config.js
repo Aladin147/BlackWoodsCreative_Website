@@ -24,7 +24,15 @@ const nextConfig = {
   swcMinify: true,
   reactStrictMode: true,
   experimental: {
-    optimizePackageImports: ['framer-motion', '@heroicons/react'],
+    optimizePackageImports: [
+      'framer-motion',
+      '@heroicons/react',
+      'react-dom',
+      'clsx',
+      'tailwind-merge'
+    ],
+    // Optimize server components
+    serverComponentsExternalPackages: ['sharp'],
   },
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,

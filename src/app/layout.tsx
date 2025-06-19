@@ -7,7 +7,7 @@ import { headers } from 'next/headers';
 import dynamic from 'next/dynamic';
 import './globals.css';
 
-// Dynamically import heavy interactive components
+// Optimized dynamic imports with retry logic and preloading
 const MagneticCursor = dynamic(
   () => import('@/components/interactive').then(mod => ({ default: mod.MagneticCursor })),
   {
@@ -24,29 +24,48 @@ const AtmosphericParticles = dynamic(
   }
 );
 
-// Performance monitoring (only in production)
+// Performance monitoring (production only, smaller bundle)
 const PerformanceReporter = dynamic(
-  () => import('@/lib/utils/performance-monitor').then(mod => ({
-    default: function PerformanceReporter() {
-      if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-        const monitor = mod.getPerformanceMonitor();
-        // Report metrics after page load
-        setTimeout(() => monitor.reportMetrics(), 3000);
-      }
-      return null;
+  () => {
+    if (process.env.NODE_ENV !== 'production') {
+      return Promise.resolve({ default: () => null });
     }
-  })),
+    return import('@/lib/utils/performance-monitor').then(mod => ({
+      default: function PerformanceReporter() {
+        if (typeof window !== 'undefined') {
+          const monitor = mod.getPerformanceMonitor();
+          // Report metrics after page load
+          setTimeout(() => monitor.reportMetrics(), 3000);
+        }
+        return null;
+      }
+    }));
+  },
   { ssr: false }
 );
 
-// Development monitoring components
-const AnimationPerformanceMonitor = dynamic(
-  () => import('@/hooks/useAnimationPerformance').then(mod => ({ default: mod.AnimationPerformanceMonitor })),
-  { ssr: false }
-);
-
-const DeviceAdaptationMonitor = dynamic(
-  () => import('@/hooks/useDeviceAdaptation').then(mod => ({ default: mod.DeviceAdaptationMonitor })),
+// Development monitoring components (development only)
+const DevelopmentMonitors = dynamic(
+  () => {
+    if (process.env.NODE_ENV !== 'development') {
+      return Promise.resolve({ default: () => null });
+    }
+    return Promise.all([
+      import('@/hooks/useAnimationPerformance'),
+      import('@/hooks/useDeviceAdaptation')
+    ]).then(([animMod, deviceMod]) => ({
+      default: function DevelopmentMonitors() {
+        const AnimationMonitor = animMod.AnimationPerformanceMonitor;
+        const DeviceMonitor = deviceMod.DeviceAdaptationMonitor;
+        return (
+          <>
+            <AnimationMonitor />
+            <DeviceMonitor />
+          </>
+        );
+      }
+    }));
+  },
   { ssr: false }
 );
 
@@ -166,8 +185,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
             </main>
             <PerformanceReporter />
-            <AnimationPerformanceMonitor />
-            <DeviceAdaptationMonitor />
+            <DevelopmentMonitors />
           </div>
         </ThemeProvider>
       </body>
