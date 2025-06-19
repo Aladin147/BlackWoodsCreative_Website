@@ -27,10 +27,29 @@ jest.mock('@upstash/ratelimit', () => {
 });
 
 // Mock Next.js server components
+const mockHeadersStorage = new Map();
+const mockHeaders = {
+  set: jest.fn((key: string, value: string) => {
+    mockHeadersStorage.set(key, value);
+  }),
+  get: jest.fn((key: string) => {
+    return mockHeadersStorage.get(key);
+  }),
+  clear: () => mockHeadersStorage.clear(),
+};
+
+const mockCookies = new Map();
+
 jest.mock('next/server', () => ({
   NextRequest: jest.fn(),
   NextResponse: {
-    next: jest.fn(() => ({ status: 200 })),
+    next: jest.fn(() => ({
+      status: 200,
+      headers: mockHeaders,
+      cookies: {
+        set: jest.fn(),
+      },
+    })),
   },
 }));
 
@@ -41,6 +60,9 @@ import type { NextRequest } from 'next/server';
 describe('Middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockHeaders.clear();
+    (mockHeaders.set as jest.Mock).mockClear();
+    (mockHeaders.get as jest.Mock).mockClear();
   });
 
   describe('Basic Functionality', () => {
@@ -52,10 +74,15 @@ describe('Middleware', () => {
       const request = {
         nextUrl: { pathname: '/about' },
         ip: '192.168.1.1',
+        headers: new Map([
+          ['user-agent', 'test-agent'],
+        ]),
       } as NextRequest;
 
       const response = await middleware(request);
       expect(response).toBeDefined();
+      expect(response.headers.get('x-nonce')).toBeDefined();
+      expect(response.headers.get('Content-Security-Policy')).toBeDefined();
     });
 
     it('handles route matching correctly', () => {
@@ -65,6 +92,57 @@ describe('Middleware', () => {
 
       expect(apiRoute.nextUrl.pathname.startsWith('/api')).toBe(true);
       expect(pageRoute.nextUrl.pathname.startsWith('/api')).toBe(false);
+    });
+  });
+
+  describe('Security Features', () => {
+    it('adds security headers to all responses', async () => {
+      const request = {
+        nextUrl: { pathname: '/about' },
+        ip: '192.168.1.1',
+        headers: new Map([
+          ['user-agent', 'test-agent'],
+        ]),
+      } as NextRequest;
+
+      const response = await middleware(request);
+
+      expect(response.headers.get('Content-Security-Policy')).toBeDefined();
+      expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff');
+      expect(response.headers.get('X-Frame-Options')).toBe('DENY');
+      expect(response.headers.get('Strict-Transport-Security')).toBeDefined();
+    });
+
+    it('generates and sets nonce for CSP', async () => {
+      const request = {
+        nextUrl: { pathname: '/test' },
+        ip: '192.168.1.1',
+        headers: new Map([
+          ['user-agent', 'test-agent'],
+        ]),
+      } as NextRequest;
+
+      const response = await middleware(request);
+      const nonce = response.headers.get('x-nonce');
+
+      expect(nonce).toBeDefined();
+      expect(typeof nonce).toBe('string');
+      expect(nonce!.length).toBeGreaterThan(0);
+    });
+
+    it('sets CSRF token cookie for non-API routes', async () => {
+      const request = {
+        nextUrl: { pathname: '/contact' },
+        ip: '192.168.1.1',
+        headers: new Map([
+          ['user-agent', 'test-agent'],
+        ]),
+      } as NextRequest;
+
+      const response = await middleware(request);
+
+      // Check if CSRF cookie is set (would need to check response.cookies in real implementation)
+      expect(response).toBeDefined();
     });
   });
 

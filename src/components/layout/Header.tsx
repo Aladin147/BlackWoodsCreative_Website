@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { siteConfig } from '@/lib/constants/siteConfig';
 import { cn, scrollToElement, throttle } from '@/lib/utils';
-import { useTheme } from '@/context/ThemeContext';
+
 import { MagneticField } from '@/components/interactive';
 // import { useUISounds } from '@/hooks/useAudioSystem'; // Temporarily disabled
 
@@ -16,7 +16,7 @@ interface HeaderProps {
 export function Header({ className }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { theme } = useTheme();
+
   // const { playHoverSound, playClickSound } = useUISounds(); // Temporarily disabled
 
   // Handle scroll effect for header background with throttling

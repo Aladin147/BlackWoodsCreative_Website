@@ -1,3 +1,10 @@
+// Type definitions for browser APIs
+interface MemoryInfo {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
 // Mock Performance API at the very top level
 const mockPerformance = {
   mark: jest.fn(),

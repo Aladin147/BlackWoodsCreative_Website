@@ -19,7 +19,7 @@ const mockMatchMedia = (matches: boolean) => {
 };
 
 // Mock window.navigator
-const mockNavigator = (userAgent: string, connection?: any) => {
+const mockNavigator = (userAgent: string, connection?: { effectiveType?: string; downlink?: number }) => {
   Object.defineProperty(window, 'navigator', {
     writable: true,
     value: {
@@ -226,6 +226,7 @@ describe('useDeviceAdaptation', () => {
     it('handles unknown features gracefully', () => {
       const { result } = renderHook(() => useDeviceAdaptation());
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(result.current.shouldEnableFeature('unknownFeature' as any)).toBe(undefined);
     });
   });
@@ -239,6 +240,7 @@ describe('useDeviceAdaptation', () => {
       Object.defineProperty(window, 'innerHeight', { writable: true, value: 720 });
 
       // Ensure no touch support for desktop
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (window as any).ontouchstart;
       Object.defineProperty(navigator, 'maxTouchPoints', {
         value: 0,
@@ -267,6 +269,7 @@ describe('useDeviceAdaptation', () => {
   describe('Edge Cases', () => {
     it('handles missing navigator gracefully', () => {
       const originalNavigator = global.navigator;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (global as any).navigator;
 
       expect(() => {
@@ -277,6 +280,7 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('handles missing screen gracefully', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (window as any).screen;
 
       expect(() => {
@@ -285,6 +289,7 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('handles missing matchMedia gracefully', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (window as any).matchMedia;
 
       expect(() => {

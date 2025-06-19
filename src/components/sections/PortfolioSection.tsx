@@ -39,6 +39,7 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
 
   const handleItemClick = (item: PortfolioItem) => {
     // Handle portfolio item click - could open modal, navigate, etc.
+    console.log('Portfolio item clicked:', item.title);
     // Portfolio item interaction tracked
   };
 

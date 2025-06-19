@@ -136,15 +136,34 @@ export function ContactSection({ className }: ContactSectionProps) {
 
     // Sanitize user inputs to prevent XSS attacks
     const sanitizedData = sanitizeFormData(formData as unknown as Record<string, unknown>);
-    
+
     setIsSubmitting(true);
 
     try {
-      // PLACEHOLDER: Form submission simulation - replace with actual API call
-      // In production, send sanitizedData to your API endpoint
-      // Form data sanitized and ready for submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Submit form data to API endpoint
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sanitizedData),
+      });
 
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result.errors) {
+          // Handle validation errors from server
+          setFormErrors(result.errors);
+        } else {
+          // Handle other errors (rate limiting, server errors, etc.)
+          console.error('Form submission error:', result.message);
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Success
       setIsSubmitting(false);
       setIsSubmitted(true);
 
@@ -161,10 +180,10 @@ export function ContactSection({ className }: ContactSectionProps) {
           message: '',
         });
       }, 3000);
-    } catch {
+    } catch (error) {
+      console.error('Network error:', error);
       setIsSubmitting(false);
-      // Handle error state - could implement proper error reporting here
-      // For now, just reset the form state
+      // Could show a user-friendly error message here
     }
   };
 

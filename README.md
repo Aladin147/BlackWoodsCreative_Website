@@ -1,6 +1,6 @@
 # BlackWoods Creative - Technical Documentation
 
-A sophisticated, production-ready portfolio website built with Next.js 14, featuring advanced animations, WebGL effects, and comprehensive accessibility support.
+A portfolio website built with Next.js 14, featuring advanced animations, WebGL effects, and accessibility support.
 
 ## 🏗️ Architecture Overview
 
@@ -12,13 +12,6 @@ A sophisticated, production-ready portfolio website built with Next.js 14, featu
 - **Testing**: Jest + Testing Library + Playwright
 - **Performance**: Built-in optimization + custom monitoring
 
-### Key Features
-- 🎨 **Deep Forest Haze Theme**: Custom design system with enhanced aurora effects
-- ⚡ **Performance Optimized**: Device adaptation, lazy loading, bundle optimization
-- 🎭 **Advanced Animations**: Parallax, WebGL, scroll-triggered interactions
-- ♿ **Accessibility First**: WCAG 2.1 AA compliance, screen reader support
-- 📱 **Responsive Design**: Mobile-first approach with device-specific optimizations
-- 🔒 **Security**: CSP headers, XSS protection, input sanitization
 
 ## 🚀 Quick Start
 
@@ -104,21 +97,6 @@ const theme = {
 }
 ```
 
-## 🧪 Testing Strategy
-
-### Current Coverage: 43.19%
-- **Components/UI**: 100% ✅
-- **Components/SEO**: 100% ✅  
-- **Components/Sections**: 93.12% ✅
-- **Components/Layout**: 89.74% ✅
-- **Hooks**: 44.46% ⚠️
-- **Interactive**: 18.89% ⚠️
-
-### Test Types
-- **Unit Tests**: Component behavior, hook functionality
-- **Integration Tests**: Component interactions, data flow
-- **Accessibility Tests**: WCAG compliance, screen reader support
-- **Performance Tests**: Animation performance, load times
 
 ### Running Tests
 ```bash
@@ -132,18 +110,7 @@ npm run test:watch
 npm test -- ContactSection.test.tsx
 ```
 
-## ⚡ Performance Optimization
 
-### Device Adaptation
-- **Mobile**: Reduced animations, optimized assets
-- **Tablet**: Balanced performance and visual effects
-- **Desktop**: Full animation suite, WebGL effects
-
-### Bundle Optimization
-- **Code Splitting**: Dynamic imports for heavy components
-- **Tree Shaking**: Unused code elimination
-- **Image Optimization**: Next.js Image component with WebP/AVIF
-- **Font Optimization**: Preloaded custom fonts
 
 ### Monitoring
 ```typescript
@@ -202,45 +169,7 @@ NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
 - [ ] SEO optimization verified
 - [ ] Security headers configured
 
-## 📊 Project Status
-
-### ✅ Production Ready
-- Core functionality complete
-- Performance optimized
-- Security measures implemented
-- Accessibility compliant
-- Comprehensive testing
-
-### 🔄 Ongoing Improvements
-- Expanding test coverage to 80%
-- Adding real portfolio content
-- Performance monitoring setup
-- Analytics integration
-
-## 🤝 Contributing
-
-### Development Setup
-1. Fork the repository
-2. Create feature branch
-3. Follow coding standards
-4. Add tests for new features
-5. Submit pull request
-
-### Code Standards
-- TypeScript strict mode
-- Component-driven architecture
-- Accessibility-first design
-- Performance-conscious development
-- Comprehensive testing
-
-## 📞 Support
-
-For technical questions or issues:
-- Create GitHub issue with detailed description
-- Include steps to reproduce
-- Provide environment details
-- Add relevant logs/screenshots
-
+## 📜 License
 ---
 
 **BlackWoods Creative** - Professional portfolio website showcasing cinema, photography, and 3D artistry with cutting-edge web technologies.

@@ -9,6 +9,28 @@ jest.mock('framer-motion', () => ({
   },
 }));
 
+// Mock interactive components
+jest.mock('@/components/interactive', () => ({
+  ScrollReveal: ({ children, className }: any) => <div className={className} data-testid="scroll-reveal">{children}</div>,
+  StaggeredGrid: ({ children, className }: any) => <div className={className} data-testid="staggered-grid">{children}</div>,
+  MagneticField: ({ children }: any) => <div data-testid="magnetic-field">{children}</div>,
+  AtmosphericLayer: ({ type, intensity, color }: any) => (
+    <div data-testid="atmospheric-layer" data-type={type} data-intensity={intensity} data-color={color} />
+  ),
+  ParallaxText: ({ children }: any) => <div data-testid="parallax-text">{children}</div>,
+  CountUp: ({ end }: any) => <span data-testid="count-up" data-end={end}>{end}</span>,
+}));
+
+// Mock Heroicons
+jest.mock('@heroicons/react/24/outline', () => ({
+  FilmIcon: ({ className }: any) => <div className={className} data-testid="film-icon" />,
+  CameraIcon: ({ className }: any) => <div className={className} data-testid="camera-icon" />,
+  CubeIcon: ({ className }: any) => <div className={className} data-testid="cube-icon" />,
+  SparklesIcon: ({ className }: any) => <div className={className} data-testid="sparkles-icon" />,
+  CheckBadgeIcon: ({ className }: any) => <div className={className} data-testid="check-badge-icon" />,
+  TrophyIcon: ({ className }: any) => <div className={className} data-testid="trophy-icon" />,
+}));
+
 describe('AboutSection', () => {
   beforeEach(() => {
     jest.clearAllMocks();

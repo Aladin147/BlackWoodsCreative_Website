@@ -62,7 +62,7 @@ describe('ThemeContext', () => {
     });
 
     it('provides context value correctly', () => {
-      let contextValue: any;
+      let contextValue: { theme: string } | undefined;
 
       function TestContextConsumer() {
         contextValue = useTheme();
@@ -75,8 +75,9 @@ describe('ThemeContext', () => {
         </ThemeProvider>
       );
 
-      expect(contextValue.theme).toBe('deep-forest-haze');
-      expect(contextValue.toggleTheme).toBeUndefined(); // No toggle in single theme
+      expect(contextValue).toBeDefined();
+      expect(contextValue!.theme).toBe('deep-forest-haze');
+      // Note: toggleTheme doesn't exist in this single-theme implementation
     });
   });
 
@@ -98,7 +99,7 @@ describe('ThemeContext', () => {
     });
 
     it('provides theme value', () => {
-      let themeValue: any;
+      let themeValue: string | undefined;
 
       function TestComponentWithHook() {
         const theme = useTheme();
@@ -112,6 +113,7 @@ describe('ThemeContext', () => {
         </ThemeProvider>
       );
 
+      expect(themeValue).toBeDefined();
       expect(themeValue).toBe('deep-forest-haze');
     });
   });

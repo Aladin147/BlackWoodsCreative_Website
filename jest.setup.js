@@ -56,42 +56,48 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 };
 
-// Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+// Mock browser APIs only in jsdom environment
+if (typeof window !== 'undefined') {
+  // Mock matchMedia
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
 
-// Mock scrollTo
-global.scrollTo = jest.fn();
+  // Mock scrollTo
+  global.scrollTo = jest.fn();
+}
 
-// Mock document.documentElement properties
-Object.defineProperty(document.documentElement, 'scrollHeight', {
-  writable: true,
-  configurable: true,
-  value: 2000,
-});
+// Mock document APIs only when document exists
+if (typeof document !== 'undefined') {
+  // Mock document.documentElement properties
+  Object.defineProperty(document.documentElement, 'scrollHeight', {
+    writable: true,
+    configurable: true,
+    value: 2000,
+  });
 
-Object.defineProperty(document.documentElement, 'scrollTop', {
-  writable: true,
-  configurable: true,
-  value: 0,
-});
+  Object.defineProperty(document.documentElement, 'scrollTop', {
+    writable: true,
+    configurable: true,
+    value: 0,
+  });
 
-Object.defineProperty(document.documentElement, 'clientHeight', {
-  writable: true,
-  configurable: true,
-  value: 800,
-});
+  Object.defineProperty(document.documentElement, 'clientHeight', {
+    writable: true,
+    configurable: true,
+    value: 800,
+  });
+}
 
 // Mock Performance API
 global.performance = {

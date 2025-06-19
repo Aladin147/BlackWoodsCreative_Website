@@ -2,6 +2,40 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ContactSection } from '../ContactSection';
 
+// Mock framer-motion
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    a: ({ children, ...props }: any) => <a {...props}>{children}</a>,
+    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+  },
+}));
+
+// Mock interactive components
+jest.mock('@/components/interactive', () => ({
+  ScrollReveal: ({ children, className }: any) => <div className={className} data-testid="scroll-reveal">{children}</div>,
+  MagneticField: ({ children }: any) => <div data-testid="magnetic-field">{children}</div>,
+  AtmosphericLayer: ({ type, intensity, color }: any) => (
+    <div data-testid="atmospheric-layer" data-type={type} data-intensity={intensity} data-color={color} />
+  ),
+  ParallaxText: ({ children }: any) => <div data-testid="parallax-text">{children}</div>,
+}));
+
+// Mock Heroicons
+jest.mock('@heroicons/react/24/outline', () => ({
+  EnvelopeIcon: ({ className }: any) => <div className={className} data-testid="envelope-icon" />,
+  PhoneIcon: ({ className }: any) => <div className={className} data-testid="phone-icon" />,
+  MapPinIcon: ({ className }: any) => <div className={className} data-testid="map-pin-icon" />,
+  PaperAirplaneIcon: ({ className }: any) => <div className={className} data-testid="paper-airplane-icon" />,
+  ExclamationTriangleIcon: ({ className }: any) => <div className={className} data-testid="exclamation-triangle-icon" />,
+  CheckCircleIcon: ({ className }: any) => <div className={className} data-testid="check-circle-icon" />,
+}));
+
+// Mock the sanitizeFormData function
+jest.mock('@/lib/utils/sanitize', () => ({
+  sanitizeFormData: jest.fn((data: any) => data),
+}));
+
 // Mock the validateEmail function
 jest.mock('@/lib/utils', () => ({
   validateEmail: jest.fn((email: string) => {
@@ -112,6 +146,19 @@ describe('ContactSection', () => {
   });
 
   it('submits form with valid data', async () => {
+    // Mock successful API response with a delay to test loading state
+    global.fetch = jest.fn().mockImplementation(() =>
+      new Promise(resolve =>
+        setTimeout(() => resolve({
+          ok: true,
+          json: async () => ({
+            success: true,
+            message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
+          }),
+        }), 100)
+      )
+    );
+
     const user = userEvent.setup();
     render(<ContactSection />);
 
@@ -129,17 +176,29 @@ describe('ContactSection', () => {
     // Check for loading state
     await waitFor(() => {
       expect(screen.getByText(/Sending/)).toBeInTheDocument();
-    });
+    }, { timeout: 1000 });
 
     // Check for success state
     await waitFor(() => {
       expect(screen.getByText(/Thank You!/)).toBeInTheDocument();
     }, { timeout: 3000 });
+
+    // Verify API was called correctly
+    expect(global.fetch).toHaveBeenCalledWith('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: expect.stringContaining('John Doe'),
+    });
   });
 
   it('handles form submission error gracefully', async () => {
     // Mock console.error to avoid noise in test output
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    // Mock fetch to simulate error
+    global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
 
     const user = userEvent.setup();
     render(<ContactSection />);
@@ -153,20 +212,16 @@ describe('ContactSection', () => {
     await user.type(emailInput, 'john@example.com');
     await user.type(messageInput, 'This is a detailed project description.');
 
-    // Mock fetch to simulate error
-    global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
+    await user.click(submitButton);
 
-    try {
-      await user.click(submitButton);
+    // Wait for error handling - the form should return to normal state
+    await waitFor(() => {
+      expect(screen.queryByText(/Sending/)).not.toBeInTheDocument();
+    }, { timeout: 2000 });
 
-      // Wait for error handling
-      await waitFor(() => {
-        // The form should handle the error gracefully without crashing
-        expect(submitButton).toBeInTheDocument();
-      }, { timeout: 2000 });
-    } catch {
-      // Catch any unhandled errors to prevent worker crashes
-    }
+    // The form should still be present and functional
+    expect(submitButton).toBeInTheDocument();
+    expect(submitButton).not.toBeDisabled();
 
     consoleSpy.mockRestore();
   });

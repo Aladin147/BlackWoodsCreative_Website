@@ -248,6 +248,7 @@ describe('useAnimationPerformance', () => {
   describe('Edge Cases', () => {
     it('handles missing performance API gracefully', () => {
       const originalPerformance = global.performance;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (global as any).performance;
 
       expect(() => {
@@ -259,6 +260,7 @@ describe('useAnimationPerformance', () => {
 
     it('handles missing requestAnimationFrame gracefully', () => {
       const originalRAF = global.requestAnimationFrame;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (global as any).requestAnimationFrame;
 
       expect(() => {

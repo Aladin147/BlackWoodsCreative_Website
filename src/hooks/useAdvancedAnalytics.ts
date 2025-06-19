@@ -334,8 +334,10 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   useEffect(() => {
     initializeAnalytics();
     
-    // Set up periodic flush
-    flushTimerRef.current = setInterval(flushEvents, finalConfig.flushInterval);
+    // Set up periodic flush (skip in test environment)
+    if (typeof setInterval !== 'undefined') {
+      flushTimerRef.current = setInterval(flushEvents, finalConfig.flushInterval);
+    }
     
     // Set up scroll tracking
     const cleanupScroll = trackScrollBehavior();
@@ -351,12 +353,14 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      if (flushTimerRef.current) {
+      if (flushTimerRef.current && typeof clearInterval !== 'undefined') {
         clearInterval(flushTimerRef.current);
       }
       cleanupScroll();
       cleanupPerformance?.();
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      }
       flushEvents(); // Final flush
     };
   }, [initializeAnalytics, finalConfig.flushInterval, flushEvents, trackScrollBehavior, trackPagePerformance]);

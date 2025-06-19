@@ -44,7 +44,11 @@ describe('useScrollProgress', () => {
     window.innerHeight = 1000;
 
     // Use global setup values, but allow override if needed
-    document.documentElement.scrollHeight = 2000;
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
@@ -134,7 +138,11 @@ describe('useScrollProgress', () => {
 
   it('handles edge case when scrollHeight equals innerHeight', () => {
     // Set scrollHeight to equal innerHeight for this test
-    document.documentElement.scrollHeight = 1000;
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 1000,
+      writable: true,
+      configurable: true,
+    });
 
     const { result } = renderHook(() => useScrollProgress());
 
@@ -345,7 +353,11 @@ describe('useScrollAnimation', () => {
     window.innerHeight = 1000;
 
     // Use global setup values
-    document.documentElement.scrollHeight = 2000;
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
@@ -410,7 +422,11 @@ describe('useScrollTrigger', () => {
     window.innerHeight = 1000;
 
     // Use global setup values
-    document.documentElement.scrollHeight = 2000;
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
@@ -503,7 +519,11 @@ describe('useParallaxScroll', () => {
     window.innerHeight = 1000;
 
     // Use global setup values
-    document.documentElement.scrollHeight = 2000;
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
@@ -556,7 +576,11 @@ describe('useScrollProgressIndicator', () => {
     window.innerHeight = 1000;
 
     // Use global setup values
-    document.documentElement.scrollHeight = 2000;
+    Object.defineProperty(document.documentElement, 'scrollHeight', {
+      value: 2000,
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
