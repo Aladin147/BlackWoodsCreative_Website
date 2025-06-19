@@ -52,6 +52,14 @@ export function Header({ className }: HeaderProps) {
 
   return (
     <>
+      {/* Skip Links for Accessibility */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <a href="#navigation" className="skip-link">
+        Skip to navigation
+      </a>
+
       <motion.header
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
@@ -69,7 +77,7 @@ export function Header({ className }: HeaderProps) {
             {/* Logo with Magnetic Effect */}
             <MagneticField strength={0.2} distance={100}>
               <motion.div
-                className="flex-shrink-0"
+                className="flex-shrink-0 flex items-center justify-center"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
@@ -77,12 +85,14 @@ export function Header({ className }: HeaderProps) {
                   onClick={() => handleNavClick('#hero')}
                   className="text-bw-text-primary hover:text-bw-accent-gold transition-colors duration-300 cursor-pointer"
                   data-cursor="button"
+                  aria-label="BlackWoods Creative - Go to homepage"
+                  title="BlackWoods Creative - Go to homepage"
                 >
                   <Image
-                    src="/icons/logo.svg"
+                    src="/icons/logo-optimized.svg"
                     alt="BlackWoods Creative Logo"
-                    width={32}
-                    height={32}
+                    width={160}
+                    height={48}
                     className="h-8 w-auto"
                     priority
                   />
@@ -91,7 +101,7 @@ export function Header({ className }: HeaderProps) {
             </MagneticField>
 
             {/* Desktop Navigation with Magnetic Effects */}
-            <nav className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
+            <nav id="navigation" className="hidden md:flex items-center space-x-8" role="navigation" aria-label="Main navigation">
               {siteConfig.navigation.map((item, index) => (
                 <MagneticField key={item.name} strength={0.15} distance={80}>
                   <motion.button

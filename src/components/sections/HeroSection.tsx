@@ -121,7 +121,7 @@ export function HeroSection({ className }: HeroSectionProps) {
         </div>
 
         {/* Advanced Main Content with Magnetic Interactions */}
-        <div className="relative z-10 text-center px-6 py-12">
+        <div className="relative z-10 text-center px-6 py-12 max-w-5xl mx-auto w-full">
           {/* Main Title with Magnetic Effect */}
           <MagneticField strength={0.15} distance={200}>
             <div className="mb-8">
@@ -149,7 +149,7 @@ export function HeroSection({ className }: HeroSectionProps) {
 
           {/* CTA Buttons with Magnetic Effects */}
           <motion.div
-            className="flex flex-col justify-center gap-6 sm:flex-row"
+            className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:items-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -159,6 +159,7 @@ export function HeroSection({ className }: HeroSectionProps) {
                 <MorphingButton
                   className="btn-primary"
                   onClick={handleViewWork}
+                  aria-label="View our portfolio and previous work"
                   hoverChildren={
                     <span className="flex items-center gap-2">
                       Explore Portfolio
@@ -176,6 +177,7 @@ export function HeroSection({ className }: HeroSectionProps) {
               <MorphingButton
                 className="btn-secondary"
                 onClick={handleStartProject}
+                aria-label="Start your project - Contact us to begin"
                 hoverChildren={
                   <span className="flex items-center gap-2">
                     Let&apos;s Create
@@ -192,7 +194,7 @@ export function HeroSection({ className }: HeroSectionProps) {
 
         {/* Magnetic Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.2 }}

@@ -95,7 +95,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
       </div>
 
       {/* Project Info */}
-      <div className="p-6">
+      <div className="p-6 text-center">
         <h3
           className="mb-2 text-display-md group-hover:text-bw-accent-gold transition-colors duration-300"
           id={`project-title-${project.id}`}
@@ -111,7 +111,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
 
         {/* Tags */}
         {project.tags && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {project.tags.slice(0, 3).map((tag, index) => (
               <span
                 key={index}

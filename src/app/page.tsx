@@ -67,10 +67,12 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <PortfolioSection />
-      <VisionSection />
-      <AboutSection />
-      <ContactSection />
+      <main id="main-content" role="main" aria-label="Main content">
+        <PortfolioSection />
+        <VisionSection />
+        <AboutSection />
+        <ContactSection />
+      </main>
       <Footer />
     </>
   );

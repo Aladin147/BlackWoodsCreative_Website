@@ -83,12 +83,13 @@
   --section-padding-md: var(--space-5xl); /* 128px */
   --section-padding-lg: var(--space-6xl); /* 192px */
 
-  /* Animation Timing */
+  /* Animation Timing - Refined for Tasteful Interactions */
   --ease-cinematic: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-dramatic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --duration-fast: 150ms;
-  --duration-normal: 300ms;
-  --duration-slow: 500ms;
+  --ease-gentle: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 600ms;
   --duration-cinematic: 800ms;
 }
 
@@ -280,11 +281,15 @@ body::after {
     transition: all 0.3s ease-out;
     border: none;
     cursor: pointer;
+    min-height: 44px; /* Accessibility: Minimum touch target size */
+    min-width: 44px;
   }
 
   .btn-primary:hover {
     background: #d4b85a; /* 10% brighter per theme guide */
-    transform: translateY(-3px); /* subtle lift per theme guide */
+    transform: translateY(-1px); /* more subtle lift */
+    box-shadow: 0 4px 15px rgba(195, 163, 88, 0.2);
+    transition: all var(--duration-normal) var(--ease-gentle);
   }
 
   .btn-secondary {
@@ -297,6 +302,8 @@ body::after {
     font-weight: 600;
     transition: all 0.3s ease-out;
     cursor: pointer;
+    min-height: 44px; /* Accessibility: Minimum touch target size */
+    min-width: 44px;
   }
 
   .btn-secondary:hover {
@@ -318,7 +325,8 @@ body::after {
 
   .card:hover {
     border-color: var(--bw-accent-gold); /* border animates to accent-gold per theme guide */
-    transform: translateY(-2px); /* subtle lift per theme guide */
+    transform: translateY(-1px); /* more subtle lift */
+    transition: all var(--duration-normal) var(--ease-gentle);
   }
 
   .card-elevated {
@@ -335,8 +343,9 @@ body::after {
 
   .card-elevated:hover {
     border-color: var(--bw-accent-gold);
-    transform: translateY(-8px);
-    box-shadow: 0 16px 40px rgba(195, 163, 88, 0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(195, 163, 88, 0.15);
+    transition: all var(--duration-normal) var(--ease-gentle);
   }
 
   .card-premium {
@@ -353,8 +362,9 @@ body::after {
 
   .card-premium:hover {
     border-color: var(--bw-accent-gold);
-    transform: translateY(-10px);
-    box-shadow: 0 20px 50px rgba(195, 163, 88, 0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(195, 163, 88, 0.25);
+    transition: all var(--duration-normal) var(--ease-gentle);
   }
 
   .input-field {
@@ -467,7 +477,7 @@ body::after {
   }
 
   .transition-bounce {
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all var(--duration-normal) var(--ease-gentle);
   }
 
   /* Theme Guide Scroll Animation - Intersection Observer */
@@ -482,7 +492,7 @@ body::after {
     transform: translateY(0);
   }
 
-  /* Deep Forest Haze Focus States for Accessibility - FIXED */
+  /* Deep Forest Haze Focus States for Accessibility - ENHANCED */
   /* Only show focus for keyboard navigation, not mouse clicks */
   button:focus-visible,
   a:focus-visible,
@@ -490,9 +500,28 @@ body::after {
   textarea:focus-visible,
   select:focus-visible,
   [tabindex]:focus-visible {
-    outline: 2px solid var(--bw-accent-gold);
+    outline: 3px solid var(--bw-accent-gold);
     outline-offset: 2px;
-    box-shadow: 0 0 0 4px rgba(195, 163, 88, 0.2);
+    box-shadow: 0 0 0 1px var(--bw-bg-primary), 0 0 8px rgba(195, 163, 88, 0.6);
+  }
+
+  /* Skip Links for Accessibility */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--bw-accent-gold);
+    color: var(--bw-bg-primary);
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    z-index: 1000;
+    transition: top 0.3s ease;
+  }
+
+  .skip-link:focus {
+    top: 6px;
   }
 
   /* Remove default focus for mouse users */
@@ -615,7 +644,7 @@ body::after {
 /* Accessibility Enhancements - Phase 4 */
 /* Focus indicators handled by :focus-visible pseudo-class above */
 
-/* Reduced motion support */
+/* Enhanced Reduced Motion Support for Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -626,6 +655,7 @@ body::after {
     scroll-behavior: auto !important;
   }
 
+  /* Disable specific animations */
   .parallax-element {
     transform: none !important;
   }
@@ -633,6 +663,38 @@ body::after {
   .animate-optimized {
     animation: none !important;
     transform: none !important;
+  }
+
+  /* Disable floating animations */
+  .animate-float {
+    animation: none !important;
+  }
+
+  /* Disable pulse animations */
+  .animate-pulse-slow {
+    animation: none !important;
+  }
+
+  /* Disable aurora background animation */
+  body::before {
+    animation: none !important;
+  }
+
+  /* Disable particle animations */
+  .particle {
+    animation: none !important;
+    opacity: 0.3 !important;
+  }
+
+  /* Disable magnetic field effects */
+  [data-magnetic] {
+    transform: none !important;
+  }
+
+  /* Disable hover scale effects */
+  *:hover {
+    transform: none !important;
+    scale: none !important;
   }
 }
 
@@ -678,14 +740,4 @@ body::after {
   top: 6px;
 }
 
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+/* Duplicate removed - consolidated above */

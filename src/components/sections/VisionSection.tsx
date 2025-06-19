@@ -197,7 +197,7 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
     <div ref={containerRef} className="relative">
       {/* Progress Indicator */}
       <motion.div
-        className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 hidden lg:block"
+        className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 hidden lg:flex lg:flex-col lg:items-center"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 1 }}

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, ReactNode } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useAnimationConfig } from '@/hooks/useReducedMotion';
 
 interface HoverMagnifyProps {
   children: ReactNode;
@@ -9,12 +10,14 @@ interface HoverMagnifyProps {
   className?: string;
 }
 
-export function HoverMagnify({ children, scale = 1.05, className = '' }: HoverMagnifyProps) {
+export function HoverMagnify({ children, scale = 1.02, className = '' }: HoverMagnifyProps) {
+  const animationConfig = useAnimationConfig();
+
   return (
     <motion.div
       className={className}
-      whileHover={{ scale }}
-      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+      whileHover={{ scale: animationConfig.scale.hover * scale }}
+      transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       {children}
     </motion.div>
@@ -27,16 +30,23 @@ interface TiltCardProps {
   className?: string;
 }
 
-export function TiltCard({ children, maxTilt = 15, className = '' }: TiltCardProps) {
+export function TiltCard({ children, maxTilt = 8, className = '' }: TiltCardProps) {
+  const animationConfig = useAnimationConfig();
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [maxTilt, -maxTilt]));
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-maxTilt, maxTilt]));
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [
+    animationConfig.disableAnimations ? 0 : maxTilt,
+    animationConfig.disableAnimations ? 0 : -maxTilt
+  ]));
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [
+    animationConfig.disableAnimations ? 0 : -maxTilt,
+    animationConfig.disableAnimations ? 0 : maxTilt
+  ]));
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (!ref.current || animationConfig.disableAnimations) return;
 
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
@@ -60,14 +70,14 @@ export function TiltCard({ children, maxTilt = 15, className = '' }: TiltCardPro
       ref={ref}
       className={className}
       style={{
-        rotateX,
-        rotateY,
+        rotateX: animationConfig.disableAnimations ? 0 : rotateX,
+        rotateY: animationConfig.disableAnimations ? 0 : rotateY,
         transformStyle: 'preserve-3d',
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ scale: animationConfig.scale.hover }}
+      transition={{ duration: animationConfig.duration.slow, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       {children}
     </motion.div>
@@ -87,16 +97,18 @@ export function FloatingElement({
   frequency = 2,
   className = ''
 }: FloatingElementProps) {
+  const animationConfig = useAnimationConfig();
+
   return (
     <motion.div
       className={className}
-      animate={{
+      animate={animationConfig.disableAnimations ? {} : {
         y: [-amplitude, amplitude, -amplitude],
         rotate: [-1, 1, -1],
       }}
       transition={{
         duration: frequency,
-        repeat: Infinity,
+        repeat: animationConfig.disableAnimations ? 0 : Infinity,
         ease: 'easeInOut',
       }}
     >
@@ -119,10 +131,12 @@ export function PulseGlow({
   duration = 2,
   className = ''
 }: PulseGlowProps) {
+  const animationConfig = useAnimationConfig();
+
   return (
     <motion.div
       className={className}
-      animate={{
+      animate={animationConfig.disableAnimations ? {} : {
         boxShadow: [
           `0 0 20px rgba(195, 163, 88, ${intensity})`,
           `0 0 40px rgba(195, 163, 88, ${intensity * 2})`,
@@ -131,7 +145,7 @@ export function PulseGlow({
       }}
       transition={{
         duration,
-        repeat: Infinity,
+        repeat: animationConfig.disableAnimations ? 0 : Infinity,
         ease: 'easeInOut',
       }}
     >
@@ -145,14 +159,19 @@ interface MorphingButtonProps {
   hoverChildren?: ReactNode;
   className?: string;
   onClick?: () => void;
+  'aria-label'?: string;
+  title?: string;
 }
 
 export function MorphingButton({
   children,
   hoverChildren,
   className = '',
-  onClick
+  onClick,
+  'aria-label': ariaLabel,
+  title
 }: MorphingButtonProps) {
+  const animationConfig = useAnimationConfig();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -161,12 +180,14 @@ export function MorphingButton({
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onClick={onClick}
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.2 }}
+      whileTap={{ scale: animationConfig.scale.tap }}
+      transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
+      aria-label={ariaLabel}
+      title={title}
     >
       <motion.div
-        animate={{ y: isHovered ? -40 : 0 }}
-        transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        animate={{ y: animationConfig.disableAnimations ? 0 : (isHovered ? -40 : 0) }}
+        transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         {children}
       </motion.div>
@@ -174,8 +195,8 @@ export function MorphingButton({
       {hoverChildren && (
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
-          animate={{ y: isHovered ? 0 : 40 }}
-          transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+          animate={{ y: animationConfig.disableAnimations ? 40 : (isHovered ? 0 : 40) }}
+          transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           {hoverChildren}
         </motion.div>

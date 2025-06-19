@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" fill="none">
+  <!-- BlackWoods Creative - Optimized Web Logo -->
+
+  <!-- Forest Icon/Symbol -->
+  <g transform="translate(8, 8)">
+    <!-- Stylized tree/forest silhouette -->
+    <path d="M4 28h4l-2-8 2-8h-4l2 8-2 8z" fill="currentColor" opacity="0.6"/>
+    <path d="M8 28h6l-3-12 3-12h-6l3 12-3 12z" fill="currentColor" opacity="0.8"/>
+    <path d="M14 28h4l-2-10 2-10h-4l2 10-2 10z" fill="currentColor"/>
+    <path d="M18 28h6l-3-14 3-14h-6l3 14-3 14z" fill="currentColor" opacity="0.9"/>
+
+    <!-- Ground line -->
+    <rect x="0" y="28" width="28" height="2" fill="currentColor" opacity="0.4"/>
+  </g>
+
+  <!-- Company Name -->
+  <g transform="translate(44, 14)" fill="currentColor">
+    <!-- BlackWoods -->
+    <text x="0" y="12" font-family="Playfair Display, serif" font-size="14" font-weight="600" letter-spacing="-0.02em">
+      BlackWoods
+    </text>
+    <!-- Creative -->
+    <text x="0" y="26" font-family="Inter, sans-serif" font-size="8" font-weight="400" letter-spacing="0.1em" opacity="0.7">
+      CREATIVE
+    </text>
+  </g>
+
+  <!-- Decorative accent -->
+  <circle cx="140" cy="24" r="2" fill="currentColor" opacity="0.5"/>
+  <circle cx="148" cy="24" r="1.5" fill="currentColor" opacity="0.3"/>
+  <circle cx="154" cy="24" r="1" fill="currentColor" opacity="0.2"/>
+</svg>
