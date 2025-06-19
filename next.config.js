@@ -39,20 +39,46 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer({
   ...nextConfig,
   async headers() {
-    // Import security utilities
-    const { getSecurityHeaders } = require('./src/lib/utils/security');
+    try {
+      // Import security utilities with proper path resolution
+      const path = require('path');
+      const securityPath = path.resolve(__dirname, 'src/lib/utils/security');
+      const { getSecurityHeaders } = require(securityPath);
 
-    // Get comprehensive security headers
-    const securityHeaders = getSecurityHeaders();
+      // Get comprehensive security headers
+      const securityHeaders = getSecurityHeaders();
 
-    return [
-      {
-        source: '/(.*)',
-        headers: Object.entries(securityHeaders).map(([key, value]) => ({
-          key,
-          value,
-        })),
-      },
-    ];
+      return [
+        {
+          source: '/(.*)',
+          headers: Object.entries(securityHeaders).map(([key, value]) => ({
+            key,
+            value,
+          })),
+        },
+      ];
+    } catch (error) {
+      console.warn('Security headers not available during build:', error.message);
+      // Fallback to basic security headers
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            {
+              key: 'X-Content-Type-Options',
+              value: 'nosniff',
+            },
+            {
+              key: 'X-Frame-Options',
+              value: 'DENY',
+            },
+            {
+              key: 'X-XSS-Protection',
+              value: '1; mode=block',
+            },
+          ],
+        },
+      ];
+    }
   },
 });

@@ -38,7 +38,7 @@ const mockHeaders = {
   clear: () => mockHeadersStorage.clear(),
 };
 
-const mockCookies = new Map();
+// Removed unused mockCookies variable
 
 jest.mock('next/server', () => ({
   NextRequest: jest.fn(),
@@ -77,7 +77,7 @@ describe('Middleware', () => {
         headers: new Map([
           ['user-agent', 'test-agent'],
         ]),
-      } as NextRequest;
+      } as unknown as NextRequest;
 
       const response = await middleware(request);
       expect(response).toBeDefined();
@@ -103,7 +103,7 @@ describe('Middleware', () => {
         headers: new Map([
           ['user-agent', 'test-agent'],
         ]),
-      } as NextRequest;
+      } as unknown as NextRequest;
 
       const response = await middleware(request);
 
@@ -120,7 +120,7 @@ describe('Middleware', () => {
         headers: new Map([
           ['user-agent', 'test-agent'],
         ]),
-      } as NextRequest;
+      } as unknown as NextRequest;
 
       const response = await middleware(request);
       const nonce = response.headers.get('x-nonce');
@@ -137,7 +137,7 @@ describe('Middleware', () => {
         headers: new Map([
           ['user-agent', 'test-agent'],
         ]),
-      } as NextRequest;
+      } as unknown as NextRequest;
 
       const response = await middleware(request);
 

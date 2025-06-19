@@ -1,12 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { generateCSRFToken } from '@/lib/utils/security';
+
+// Use Node.js runtime for crypto operations
+export const runtime = 'nodejs';
 
 /**
  * CSRF Token API Endpoint
  * Provides CSRF tokens for client-side form protection
  */
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Generate a new CSRF token
     const token = generateCSRFToken();

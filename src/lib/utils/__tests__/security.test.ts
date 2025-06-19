@@ -14,7 +14,8 @@ import {
 } from '../security';
 
 // Mock console methods
-const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+// Mock console to prevent test output noise
+jest.spyOn(console, 'log').mockImplementation();
 const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
 describe('Security Utilities', () => {
@@ -256,21 +257,32 @@ describe('Security Utilities', () => {
 
     it('detects non-HTTPS requests in production', () => {
       const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
-      
+
+      // Use Object.defineProperty to modify read-only property
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'production',
+        writable: true,
+        configurable: true,
+      });
+
       const mockRequest = {
         url: 'http://example.com/test',
         headers: new Map(),
       } as any;
-      
+
       const audit = auditSecurity(mockRequest);
-      
-      const httpsIssue = audit.issues.find(issue => 
+
+      const httpsIssue = audit.issues.find(issue =>
         issue.category === 'transport' && issue.description.includes('HTTPS')
       );
       expect(httpsIssue).toBeDefined();
-      
-      process.env.NODE_ENV = originalEnv;
+
+      // Restore original environment
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: originalEnv,
+        writable: true,
+        configurable: true,
+      });
     });
 
     it('calculates score based on issue severity', () => {

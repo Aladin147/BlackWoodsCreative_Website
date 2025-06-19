@@ -4,6 +4,9 @@ import { sanitizeFormData } from '@/lib/utils/sanitize';
 import { sendContactEmail, sendAutoReplyEmail } from '@/lib/services';
 import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
 
+// Use Node.js runtime for crypto operations
+export const runtime = 'nodejs';
+
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes
 const RATE_LIMIT_MAX_REQUESTS = 5; // Max 5 submissions per 10 minutes per IP

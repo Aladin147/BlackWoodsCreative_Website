@@ -79,9 +79,10 @@ Object.defineProperty(window, 'removeEventListener', {
 });
 
 // Mock console methods
-const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-const consoleGroupSpy = jest.spyOn(console, 'group').mockImplementation();
-const consoleGroupEndSpy = jest.spyOn(console, 'groupEnd').mockImplementation();
+// Mock console methods to prevent test output noise
+jest.spyOn(console, 'log').mockImplementation();
+jest.spyOn(console, 'group').mockImplementation();
+jest.spyOn(console, 'groupEnd').mockImplementation();
 
 // Mock timers - must be done before importing the hook
 jest.useFakeTimers();

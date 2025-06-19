@@ -14,7 +14,8 @@ jest.mock('resend', () => ({
 import { sendContactEmail, sendAutoReplyEmail } from '../email';
 
 // Mock console methods
-const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+// Mock console to prevent test output noise
+jest.spyOn(console, 'log').mockImplementation();
 const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 

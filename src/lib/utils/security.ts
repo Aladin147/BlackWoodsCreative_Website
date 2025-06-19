@@ -30,7 +30,7 @@ export function verifyCSRFToken(token: string, sessionToken: string): boolean {
     }
 
     return crypto.timingSafeEqual(tokenBuffer, sessionBuffer);
-  } catch (error) {
+  } catch {
     // Handle invalid hex strings
     return false;
   }
