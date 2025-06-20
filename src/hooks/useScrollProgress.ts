@@ -228,7 +228,7 @@ export function useScrollProgressIndicator(
 
     const sectionSize = 100 / sections.length;
     const currentSectionIndex = Math.floor(scrollProgress / sectionSize);
-    const currentSection = sections[currentSectionIndex] || sections[sections.length - 1];
+    const currentSection = sections[currentSectionIndex] || sections[sections.length - 1] || null;
 
     setActiveSection(currentSection);
 

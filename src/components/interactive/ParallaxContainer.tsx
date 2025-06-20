@@ -234,6 +234,8 @@ export function MagneticField({
       if (!isTouchDevice) return;
 
       const touch = e.touches[0];
+      if (!touch) return;
+
       const rect = element.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;

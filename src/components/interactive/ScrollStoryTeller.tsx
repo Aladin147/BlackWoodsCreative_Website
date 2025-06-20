@@ -69,8 +69,11 @@ export function ScrollStoryTeller({ sections, className }: ScrollStoryTellerProp
               }`}
               whileHover={{ scale: 1.2 }}
               onClick={() => {
-                const element = document.getElementById(sections[index].id);
-                element?.scrollIntoView({ behavior: 'smooth' });
+                const section = sections[index];
+                if (section) {
+                  const element = document.getElementById(section.id);
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
             />
           ))}

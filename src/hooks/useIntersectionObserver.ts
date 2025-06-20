@@ -44,11 +44,14 @@ export function useIntersectionObserver(
     if (triggerOnce && hasTriggered) return;
 
     const observerParams = { threshold, root, rootMargin };
-    const observer = new IntersectionObserver(([entry]) => {
-      setEntry(entry);
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry) {
+        setEntry(entry);
 
-      if (triggerOnce && entry.isIntersecting) {
-        setHasTriggered(true);
+        if (triggerOnce && entry.isIntersecting) {
+          setHasTriggered(true);
+        }
       }
     }, observerParams);
 

@@ -17,16 +17,16 @@ const rateLimiters = {
   api: new Ratelimit({
     redis: Redis.fromEnv(),
     limiter: Ratelimit.slidingWindow(
-      rateLimitConfigs.api.maxRequests,
-      `${rateLimitConfigs.api.windowMs / 1000} s`
+      rateLimitConfigs.api?.maxRequests ?? 100,
+      `${(rateLimitConfigs.api?.windowMs ?? 900000) / 1000} s`
     ),
     prefix: '@upstash/ratelimit:api',
   }),
   contact: new Ratelimit({
     redis: Redis.fromEnv(),
     limiter: Ratelimit.slidingWindow(
-      rateLimitConfigs.contact.maxRequests,
-      `${rateLimitConfigs.contact.windowMs / 1000} s`
+      rateLimitConfigs.contact?.maxRequests ?? 10,
+      `${(rateLimitConfigs.contact?.windowMs ?? 900000) / 1000} s`
     ),
     prefix: '@upstash/ratelimit:contact',
   }),
@@ -40,9 +40,11 @@ export async function middleware(request: NextRequest) {
 
   // Initialize request logging
   const requestLogger = getRequestLogger();
+  const userId = request.headers.get('x-user-id');
+  const sessionId = request.headers.get('x-session-id');
   const requestId = requestLogger.logRequest(request, {
-    userId: request.headers.get('x-user-id') || undefined,
-    sessionId: request.headers.get('x-session-id') || undefined,
+    ...(userId && { userId }),
+    ...(sessionId && { sessionId }),
   });
 
   // Generate nonce for CSP

@@ -101,6 +101,7 @@ class RequestLogger {
       }
     });
 
+    const referer = request.headers.get('referer');
     const logEntry: RequestLogEntry = {
       id: requestId,
       timestamp,
@@ -111,7 +112,7 @@ class RequestLogger {
       headers,
       ip: request.ip ?? '127.0.0.1',
       userAgent: request.headers.get('user-agent') ?? '',
-      referer: request.headers.get('referer') ?? undefined,
+      ...(referer && { referer }),
       ...additionalData,
     };
 
@@ -144,9 +145,13 @@ class RequestLogger {
     if (logIndex === -1) return;
 
     const logEntry = this.logs[logIndex];
+    if (!logEntry) return;
+
     logEntry.statusCode = response.status;
     logEntry.responseTime = responseTime;
-    logEntry.error = error;
+    if (error) {
+      logEntry.error = error;
+    }
 
     // Try to get response size from headers
     const contentLength = response.headers.get('content-length');

@@ -17,7 +17,7 @@ export function getContrastRatio(color1: string, color2: string): number {
       return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     });
 
-    return 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
+    return 0.2126 * (sRGB[0] ?? 0) + 0.7152 * (sRGB[1] ?? 0) + 0.0722 * (sRGB[2] ?? 0);
   };
 
   const lum1 = getLuminance(color1);
@@ -53,8 +53,12 @@ export class FocusManager {
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
 
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
+    const firstElement = focusableElements[0] as HTMLElement | undefined;
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement | undefined;
+
+    if (!firstElement || !lastElement) {
+      return () => {}; // No focusable elements, return empty cleanup
+    }
 
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
@@ -82,7 +86,7 @@ export class FocusManager {
     container.addEventListener('keydown', handleEscapeKey);
 
     // Focus first element
-    firstElement?.focus();
+    firstElement.focus();
 
     return () => {
       container.removeEventListener('keydown', handleTabKey);

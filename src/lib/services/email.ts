@@ -164,7 +164,7 @@ This email was sent from the BlackWoods Creative contact form.
     console.log('📧 Email sent successfully:', result.data?.id);
     return {
       success: true,
-      messageId: result.data?.id,
+      ...(result.data?.id && { messageId: result.data.id }),
     };
   } catch (error) {
     console.error('Email service error:', error);
@@ -272,7 +272,7 @@ This is an automated response. Please do not reply to this email.
     console.log('📧 Auto-reply sent successfully:', result.data?.id);
     return {
       success: true,
-      messageId: result.data?.id,
+      ...(result.data?.id && { messageId: result.data.id }),
     };
   } catch (error) {
     console.error('Auto-reply service error:', error);

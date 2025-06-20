@@ -296,9 +296,9 @@ export function ParallaxStorySequence({
         <CinematicParallaxScene
           key={scene.id}
           title={scene.title}
-          subtitle={scene.subtitle}
+          {...(scene.subtitle && { subtitle: scene.subtitle })}
           backgroundLayers={scene.backgroundLayers}
-          foregroundElements={scene.foregroundElements}
+          {...(scene.foregroundElements && { foregroundElements: scene.foregroundElements })}
           className={index > 0 ? '-mt-32' : ''} // Overlap scenes for seamless flow
         />
       ))}

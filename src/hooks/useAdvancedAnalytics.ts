@@ -406,13 +406,14 @@ export function useComponentAnalytics(componentName: string) {
 
   const trackComponentEvent = useCallback(
     (action: string, label?: string, value?: number) => {
-      analytics.trackEvent({
+      const eventData: Omit<AnalyticsEvent, 'timestamp' | 'sessionId' | 'userId'> = {
         event: 'component_interaction',
         category: 'components',
         action: `${componentName}.${action}`,
-        label,
-        value,
-      });
+        ...(label && { label }),
+        ...(value !== undefined && { value }),
+      };
+      analytics.trackEvent(eventData);
     },
     [analytics, componentName]
   );

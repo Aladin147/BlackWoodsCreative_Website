@@ -71,8 +71,6 @@ export function useDeviceAdaptation() {
     pixelRatio: 1,
     hasHover: true,
     prefersReducedMotion: false,
-    capabilities: undefined,
-    optimizationProfile: undefined,
   });
 
   const [adaptiveConfig, setAdaptiveConfig] = useState<AdaptiveConfig>(defaultDesktopConfig);
@@ -129,8 +127,8 @@ export function useDeviceAdaptation() {
       pixelRatio,
       hasHover,
       prefersReducedMotion,
-      capabilities,
-      optimizationProfile,
+      ...(capabilities && { capabilities }),
+      ...(optimizationProfile && { optimizationProfile }),
     };
 
     setDeviceInfo(newDeviceInfo);
