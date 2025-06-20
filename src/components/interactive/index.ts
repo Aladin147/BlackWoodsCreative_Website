@@ -12,11 +12,15 @@ interface ScrollStoryTellerProps {
   children?: React.ReactNode;
 }
 
-export const ScrollStoryTeller: React.FC<ScrollStoryTellerProps> = (props) => {
-  return React.createElement('div', {
-    'data-testid': 'scroll-story-teller',
-    className: props.className
-  }, 'ScrollStoryTeller Stub');
+export const ScrollStoryTeller: React.FC<ScrollStoryTellerProps> = props => {
+  return React.createElement(
+    'div',
+    {
+      'data-testid': 'scroll-story-teller',
+      className: props.className,
+    },
+    'ScrollStoryTeller Stub'
+  );
 };
 
 export { MagneticCursor } from './MagneticCursor';
@@ -27,7 +31,7 @@ export {
   ParallaxContainer,
   CinematicParallax,
   MagneticField,
-  DepthOfField
+  DepthOfField,
 } from './ParallaxContainer';
 
 // Micro-interactions (lighter components)
@@ -56,7 +60,7 @@ export {
   CountUp,
   StaggeredGrid,
   MorphingShape,
-  ScrollTriggeredCounter
+  ScrollTriggeredCounter,
 } from './AdvancedScrollAnimations';
 
 // Phase 2: Advanced Portfolio Features
@@ -67,15 +71,11 @@ export {
   ComplexParallaxSystem,
   CinematicParallaxScene,
   ParallaxStorySequence,
-  AtmosphericLayer
+  AtmosphericLayer,
 } from './ComplexParallaxSystem';
 
 // Phase 2: WebGL Effects
-export {
-  WebGLAuroraEffect,
-  WebGLParticleSystem,
-  WebGLEnhancedBackground
-} from './WebGLEffects';
+export { WebGLAuroraEffect, WebGLParticleSystem, WebGLEnhancedBackground } from './WebGLEffects';
 
 // Future exports for Phase 4 expansion:
 // export { ThreeDScene } from './ThreeDScene';

@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { ContactSection } from '../ContactSection';
 
 // Mock framer-motion
@@ -13,10 +14,19 @@ jest.mock('framer-motion', () => ({
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
-  ScrollReveal: ({ children, className }: any) => <div className={className} data-testid="scroll-reveal">{children}</div>,
+  ScrollReveal: ({ children, className }: any) => (
+    <div className={className} data-testid="scroll-reveal">
+      {children}
+    </div>
+  ),
   MagneticField: ({ children }: any) => <div data-testid="magnetic-field">{children}</div>,
   AtmosphericLayer: ({ type, intensity, color }: any) => (
-    <div data-testid="atmospheric-layer" data-type={type} data-intensity={intensity} data-color={color} />
+    <div
+      data-testid="atmospheric-layer"
+      data-type={type}
+      data-intensity={intensity}
+      data-color={color}
+    />
   ),
   ParallaxText: ({ children }: any) => <div data-testid="parallax-text">{children}</div>,
 }));
@@ -26,9 +36,15 @@ jest.mock('@heroicons/react/24/outline', () => ({
   EnvelopeIcon: ({ className }: any) => <div className={className} data-testid="envelope-icon" />,
   PhoneIcon: ({ className }: any) => <div className={className} data-testid="phone-icon" />,
   MapPinIcon: ({ className }: any) => <div className={className} data-testid="map-pin-icon" />,
-  PaperAirplaneIcon: ({ className }: any) => <div className={className} data-testid="paper-airplane-icon" />,
-  ExclamationTriangleIcon: ({ className }: any) => <div className={className} data-testid="exclamation-triangle-icon" />,
-  CheckCircleIcon: ({ className }: any) => <div className={className} data-testid="check-circle-icon" />,
+  PaperAirplaneIcon: ({ className }: any) => (
+    <div className={className} data-testid="paper-airplane-icon" />
+  ),
+  ExclamationTriangleIcon: ({ className }: any) => (
+    <div className={className} data-testid="exclamation-triangle-icon" />
+  ),
+  CheckCircleIcon: ({ className }: any) => (
+    <div className={className} data-testid="check-circle-icon" />
+  ),
 }));
 
 // Mock the sanitizeFormData function
@@ -44,9 +60,33 @@ jest.mock('@/lib/utils', () => ({
   }),
 }));
 
+// Mock the useCSRFProtection hook
+const mockMakeProtectedRequest = jest.fn();
+const mockUseCSRFProtection = jest.fn();
+
+jest.mock('@/hooks/useCSRFProtection', () => ({
+  useCSRFProtection: () => mockUseCSRFProtection(),
+}));
+
 describe('ContactSection', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Setup default CSRF protection mock
+    mockMakeProtectedRequest.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ success: true, message: 'Message sent successfully' }),
+    });
+
+    mockUseCSRFProtection.mockReturnValue({
+      csrfToken: 'test-csrf-token-123',
+      isLoading: false,
+      makeProtectedRequest: mockMakeProtectedRequest,
+      getProtectedHeaders: jest.fn(() => ({
+        'X-CSRF-Token': 'test-csrf-token-123',
+        'Content-Type': 'application/json',
+      })),
+    });
   });
 
   it('renders contact section with all elements', () => {
@@ -65,7 +105,9 @@ describe('ContactSection', () => {
 
     expect(screen.getByText('hello@blackwoodscreative.com')).toBeInTheDocument();
     expect(screen.getByText('+1 (555) 123-4567')).toBeInTheDocument();
-    expect(screen.getByText('MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco')).toBeInTheDocument();
+    expect(
+      screen.getByText('MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco')
+    ).toBeInTheDocument();
   });
 
   it('validates required fields', async () => {
@@ -120,7 +162,9 @@ describe('ContactSection', () => {
     await user.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Please provide more details about your project')).toBeInTheDocument();
+      expect(
+        screen.getByText('Please provide more details about your project')
+      ).toBeInTheDocument();
     });
   });
 
@@ -147,16 +191,21 @@ describe('ContactSection', () => {
 
   it('submits form with valid data', async () => {
     // Mock successful API response with a delay to test loading state
-    global.fetch = jest.fn().mockImplementation(() =>
-      new Promise(resolve =>
-        setTimeout(() => resolve({
-          ok: true,
-          json: async () => ({
-            success: true,
-            message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
-          }),
-        }), 100)
-      )
+    mockMakeProtectedRequest.mockImplementation(
+      () =>
+        new Promise(resolve =>
+          setTimeout(
+            () =>
+              resolve({
+                ok: true,
+                json: async () => ({
+                  success: true,
+                  message: "Thank you for your message! We'll get back to you within 24 hours.",
+                }),
+              }),
+            100
+          )
+        )
     );
 
     const user = userEvent.setup();
@@ -174,21 +223,24 @@ describe('ContactSection', () => {
     await user.click(submitButton);
 
     // Check for loading state
-    await waitFor(() => {
-      expect(screen.getByText(/Sending/)).toBeInTheDocument();
-    }, { timeout: 1000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Sending/)).toBeInTheDocument();
+      },
+      { timeout: 1000 }
+    );
 
     // Check for success state
-    await waitFor(() => {
-      expect(screen.getByText(/Thank You!/)).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Thank You!/)).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
 
     // Verify API was called correctly
-    expect(global.fetch).toHaveBeenCalledWith('/api/contact', {
+    expect(mockMakeProtectedRequest).toHaveBeenCalledWith('/api/contact', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: expect.stringContaining('John Doe'),
     });
   });
@@ -197,8 +249,8 @@ describe('ContactSection', () => {
     // Mock console.error to avoid noise in test output
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
-    // Mock fetch to simulate error
-    global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
+    // Mock makeProtectedRequest to simulate error
+    mockMakeProtectedRequest.mockRejectedValue(new Error('Network error'));
 
     const user = userEvent.setup();
     render(<ContactSection />);
@@ -215,9 +267,12 @@ describe('ContactSection', () => {
     await user.click(submitButton);
 
     // Wait for error handling - the form should return to normal state
-    await waitFor(() => {
-      expect(screen.queryByText(/Sending/)).not.toBeInTheDocument();
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        expect(screen.queryByText(/Sending/)).not.toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
 
     // The form should still be present and functional
     expect(submitButton).toBeInTheDocument();
@@ -230,9 +285,9 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const nameInput = screen.getByLabelText(/Name \*/) as HTMLInputElement;
-    const emailInput = screen.getByLabelText(/Email \*/) as HTMLInputElement;
-    const companyInput = screen.getByLabelText(/Company/) as HTMLInputElement;
+    const nameInput = screen.getByLabelText(/Name \*/);
+    const emailInput = screen.getByLabelText(/Email \*/);
+    const companyInput = screen.getByLabelText(/Company/);
 
     await user.type(nameInput, 'John Doe');
     await user.type(emailInput, 'john@example.com');
@@ -247,8 +302,8 @@ describe('ContactSection', () => {
     const user = userEvent.setup();
     render(<ContactSection />);
 
-    const projectTypeSelect = screen.getByLabelText(/Project Type/) as HTMLSelectElement;
-    const budgetSelect = screen.getByLabelText(/Budget Range/) as HTMLSelectElement;
+    const projectTypeSelect = screen.getByLabelText(/Project Type/);
+    const budgetSelect = screen.getByLabelText(/Budget Range/);
 
     await user.selectOptions(projectTypeSelect, 'Brand Film');
     await user.selectOptions(budgetSelect, '$10K - $25K');

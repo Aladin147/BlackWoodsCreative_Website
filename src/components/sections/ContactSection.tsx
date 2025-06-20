@@ -1,24 +1,25 @@
 'use client';
 
-import { useState } from 'react';
-import { sanitizeFormData } from '@/lib/utils/sanitize';
-import { useCSRFProtection } from '@/hooks/useCSRFProtection';
-import { motion } from 'framer-motion';
 import {
   EnvelopeIcon,
   PhoneIcon,
   MapPinIcon,
   PaperAirplaneIcon,
   ExclamationTriangleIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { validateEmail } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+
 import {
   ScrollReveal,
   MagneticField,
   AtmosphericLayer,
-  ParallaxText
+  ParallaxText,
 } from '@/components/interactive';
+import { useCSRFProtection } from '@/hooks/useCSRFProtection';
+import { validateEmail } from '@/lib/utils';
+import { sanitizeFormData } from '@/lib/utils/sanitize';
 
 interface ContactSectionProps {
   className?: string;
@@ -198,124 +199,232 @@ export function ContactSection({ className }: ContactSectionProps) {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Enhanced Section Header with Parallax Text */}
-        <ScrollReveal className="text-center mb-16" direction="up" distance={60} delay={0.2}>
+        <ScrollReveal className="mb-16 text-center" direction="up" distance={60} delay={0.2}>
           <ParallaxText speed={0.2}>
-            <h2 className="mb-6 text-display-lg font-display">
+            <h2 className="mb-6 font-display text-display-lg">
               Ready to Create Something <span className="text-bw-accent-gold">Amazing</span>?
             </h2>
           </ParallaxText>
           <ScrollReveal direction="up" distance={40} delay={0.4}>
-            <p className="mx-auto max-w-2xl text-body-xl font-primary">
-              Let&apos;s discuss your vision and bring it to life with our expertise in visual storytelling.
+            <p className="mx-auto max-w-2xl font-primary text-body-xl">
+              Let&apos;s discuss your vision and bring it to life with our expertise in visual
+              storytelling.
             </p>
           </ScrollReveal>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           {/* Advanced Contact Form with Magnetic Effects */}
           <ScrollReveal direction="left" distance={50} delay={0.3}>
             <MagneticField strength={0.1} distance={200}>
               <div className="card">
-              <h3 className="mb-6 text-heading-3 font-primary">
-                Start Your Project
-              </h3>
+                <h3 className="mb-6 font-primary text-heading-3">Start Your Project</h3>
 
-              {csrfLoading ? (
-                <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-bw-accent-gold border-t-transparent mx-auto mb-4" />
-                  <p className="text-body-text font-primary opacity-85">
-                    Initializing secure form...
-                  </p>
-                </div>
-              ) : !csrfToken ? (
-                <div className="text-center py-12">
-                  <ExclamationTriangleIcon className="h-16 w-16 text-red-400 mx-auto mb-4" />
-                  <h4 className="mb-2 text-heading-3 font-primary text-red-400">
-                    Security Error
-                  </h4>
-                  <p className="text-body-text font-primary opacity-85 mb-4">
-                    Unable to initialize secure form. Please refresh the page.
-                  </p>
-                  <button
-                    onClick={() => window.location.reload()}
-                    className="btn-secondary"
-                  >
-                    Refresh Page
-                  </button>
-                </div>
-              ) : isSubmitted ? (
-                <motion.div
-                  className="text-center py-12"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <div className="mb-4 flex justify-center">
-                    <CheckCircleIcon className="h-16 w-16 text-bw-accent-gold" />
+                {csrfLoading ? (
+                  <div className="py-12 text-center">
+                    <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-bw-accent-gold border-t-transparent" />
+                    <p className="font-primary text-body-text opacity-85">
+                      Initializing secure form...
+                    </p>
                   </div>
-                  <h4 className="mb-2 text-heading-3 font-primary text-bw-accent-gold">
-                    Thank You!
-                  </h4>
-                  <p className="text-body-text font-primary opacity-85">
-                    We&apos;ll get back to you within 24 hours.
-                  </p>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6" noValidate aria-label="Contact form">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-bw-text-primary mb-2">
-                        Name *
-                      </label>
-                      <MagneticField strength={0.05} distance={80}>
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        aria-invalid={formErrors.name ? 'true' : 'false'}
-                        aria-describedby={formErrors.name ? 'name-error' : undefined}
-                          className={`input-field ${formErrors.name ? 'border-red-500 focus:border-red-500' : ''}`}
-                          placeholder="Your full name"
-                        />
-                      </MagneticField>
-                      {formErrors.name && (
-                        <motion.div
-                          id="name-error"
-                          className="mt-2 flex items-center gap-2 text-red-400 text-sm"
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3 }}
-                          role="alert"
-                          aria-live="polite"
-                        >
-                          <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
-                          {formErrors.name}
-                        </motion.div>
-                      )}
+                ) : !csrfToken ? (
+                  <div className="py-12 text-center">
+                    <ExclamationTriangleIcon className="mx-auto mb-4 h-16 w-16 text-red-400" />
+                    <h4 className="mb-2 font-primary text-heading-3 text-red-400">
+                      Security Error
+                    </h4>
+                    <p className="mb-4 font-primary text-body-text opacity-85">
+                      Unable to initialize secure form. Please refresh the page.
+                    </p>
+                    <button onClick={() => window.location.reload()} className="btn-secondary">
+                      Refresh Page
+                    </button>
+                  </div>
+                ) : isSubmitted ? (
+                  <motion.div
+                    className="py-12 text-center"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <div className="mb-4 flex justify-center">
+                      <CheckCircleIcon className="h-16 w-16 text-bw-accent-gold" />
                     </div>
+                    <h4 className="mb-2 font-primary text-heading-3 text-bw-accent-gold">
+                      Thank You!
+                    </h4>
+                    <p className="font-primary text-body-text opacity-85">
+                      We&apos;ll get back to you within 24 hours.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-6"
+                    noValidate
+                    aria-label="Contact form"
+                  >
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="mb-2 block text-sm font-medium text-bw-text-primary"
+                        >
+                          Name *
+                        </label>
+                        <MagneticField strength={0.05} distance={80}>
+                          <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            required
+                            aria-invalid={formErrors.name ? 'true' : 'false'}
+                            aria-describedby={formErrors.name ? 'name-error' : undefined}
+                            className={`input-field ${formErrors.name ? 'border-red-500 focus:border-red-500' : ''}`}
+                            placeholder="Your full name"
+                          />
+                        </MagneticField>
+                        {formErrors.name && (
+                          <motion.div
+                            id="name-error"
+                            className="mt-2 flex items-center gap-2 text-sm text-red-400"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            role="alert"
+                            aria-live="polite"
+                          >
+                            <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
+                            {formErrors.name}
+                          </motion.div>
+                        )}
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="mb-2 block text-sm font-medium text-bw-text-primary"
+                        >
+                          Email *
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                          aria-invalid={formErrors.email ? 'true' : 'false'}
+                          aria-describedby={formErrors.email ? 'email-error' : undefined}
+                          className={`input-field ${formErrors.email ? 'border-red-500 focus:border-red-500' : ''}`}
+                          placeholder="your@email.com"
+                        />
+                        {formErrors.email && (
+                          <motion.div
+                            id="email-error"
+                            className="mt-2 flex items-center gap-2 text-sm text-red-400"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            role="alert"
+                            aria-live="polite"
+                          >
+                            <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
+                            {formErrors.email}
+                          </motion.div>
+                        )}
+                      </div>
+                    </div>
+
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-bw-text-primary mb-2">
-                        Email *
+                      <label
+                        htmlFor="company"
+                        className="mb-2 block text-sm font-medium text-bw-text-secondary"
+                      >
+                        Company
                       </label>
                       <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
+                        type="text"
+                        id="company"
+                        name="company"
+                        value={formData.company}
+                        onChange={handleInputChange}
+                        className="input-field"
+                        placeholder="Your company name"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                      <div>
+                        <label
+                          htmlFor="projectType"
+                          className="mb-2 block text-sm font-medium text-bw-text-secondary"
+                        >
+                          Project Type
+                        </label>
+                        <select
+                          id="projectType"
+                          name="projectType"
+                          value={formData.projectType}
+                          onChange={handleInputChange}
+                          className="input-field"
+                        >
+                          <option value="">Select project type</option>
+                          {projectTypes.map(type => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="budget"
+                          className="mb-2 block text-sm font-medium text-bw-text-secondary"
+                        >
+                          Budget Range
+                        </label>
+                        <select
+                          id="budget"
+                          name="budget"
+                          value={formData.budget}
+                          onChange={handleInputChange}
+                          className="input-field"
+                        >
+                          <option value="">Select budget range</option>
+                          {budgetRanges.map(range => (
+                            <option key={range} value={range}>
+                              {range}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="message"
+                        className="mb-2 block text-sm font-medium text-bw-text-secondary"
+                      >
+                        Project Details *
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
                         onChange={handleInputChange}
                         required
-                        aria-invalid={formErrors.email ? 'true' : 'false'}
-                        aria-describedby={formErrors.email ? 'email-error' : undefined}
-                        className={`input-field ${formErrors.email ? 'border-red-500 focus:border-red-500' : ''}`}
-                        placeholder="your@email.com"
+                        rows={4}
+                        aria-invalid={formErrors.message ? 'true' : 'false'}
+                        aria-describedby={formErrors.message ? 'message-error' : undefined}
+                        className={`input-field resize-none ${formErrors.message ? 'border-red-500 focus:border-red-500' : ''}`}
+                        placeholder="Tell us about your project vision, goals, and any specific requirements..."
                       />
-                      {formErrors.email && (
+                      {formErrors.message && (
                         <motion.div
-                          id="email-error"
-                          className="mt-2 flex items-center gap-2 text-red-400 text-sm"
+                          id="message-error"
+                          className="mt-2 flex items-center gap-2 text-sm text-red-400"
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3 }}
@@ -323,117 +432,32 @@ export function ContactSection({ className }: ContactSectionProps) {
                           aria-live="polite"
                         >
                           <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
-                          {formErrors.email}
+                          {formErrors.message}
                         </motion.div>
                       )}
                     </div>
-                  </div>
 
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-bw-text-secondary mb-2">
-                      Company
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                      className="input-field"
-                      placeholder="Your company name"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="projectType" className="block text-sm font-medium text-bw-text-secondary mb-2">
-                        Project Type
-                      </label>
-                      <select
-                        id="projectType"
-                        name="projectType"
-                        value={formData.projectType}
-                        onChange={handleInputChange}
-                        className="input-field"
-                      >
-                        <option value="">Select project type</option>
-                        {projectTypes.map(type => (
-                          <option key={type} value={type}>{type}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label htmlFor="budget" className="block text-sm font-medium text-bw-text-secondary mb-2">
-                        Budget Range
-                      </label>
-                      <select
-                        id="budget"
-                        name="budget"
-                        value={formData.budget}
-                        onChange={handleInputChange}
-                        className="input-field"
-                      >
-                        <option value="">Select budget range</option>
-                        {budgetRanges.map(range => (
-                          <option key={range} value={range}>{range}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-bw-text-secondary mb-2">
-                      Project Details *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required
-                      rows={4}
-                      aria-invalid={formErrors.message ? 'true' : 'false'}
-                      aria-describedby={formErrors.message ? 'message-error' : undefined}
-                      className={`input-field resize-none ${formErrors.message ? 'border-red-500 focus:border-red-500' : ''}`}
-                      placeholder="Tell us about your project vision, goals, and any specific requirements..."
-                    />
-                    {formErrors.message && (
-                      <motion.div
-                        id="message-error"
-                        className="mt-2 flex items-center gap-2 text-red-400 text-sm"
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        role="alert"
-                        aria-live="polite"
-                      >
-                        <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
-                        {formErrors.message}
-                      </motion.div>
-                    )}
-                  </div>
-
-                  <motion.button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-primary w-full flex items-center justify-center gap-2"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-bw-black border-t-transparent" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <PaperAirplaneIcon className="h-5 w-5" />
-                        Send Message
-                      </>
-                    )}
-                  </motion.button>
-                </form>
-              )}
+                    <motion.button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="btn-primary flex w-full items-center justify-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-bw-black border-t-transparent" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <PaperAirplaneIcon className="h-5 w-5" />
+                          Send Message
+                        </>
+                      )}
+                    </motion.button>
+                  </form>
+                )}
               </div>
             </MagneticField>
           </ScrollReveal>
@@ -447,12 +471,11 @@ export function ContactSection({ className }: ContactSectionProps) {
           >
             <div className="space-y-8">
               <div>
-                <h3 className="mb-6 text-heading-3 font-primary">
-                  Get in Touch
-                </h3>
-                <p className="text-body-text font-primary opacity-85 mb-8">
-                  Ready to bring your vision to life? We&apos;re here to help you create something extraordinary.
-                  Reach out to discuss your project and let&apos;s start crafting your story.
+                <h3 className="mb-6 font-primary text-heading-3">Get in Touch</h3>
+                <p className="mb-8 font-primary text-body-text opacity-85">
+                  Ready to bring your vision to life? We&apos;re here to help you create something
+                  extraordinary. Reach out to discuss your project and let&apos;s start crafting
+                  your story.
                 </p>
               </div>
 
@@ -462,14 +485,14 @@ export function ContactSection({ className }: ContactSectionProps) {
                     key={info.label}
                     href={info.href}
                     aria-label={`${info.label}: ${info.value}`}
-                    className="flex items-center gap-4 p-4 rounded-lg bg-bw-dark-gray hover:bg-bw-medium-gray focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 transition-all duration-300 group"
+                    className="group flex items-center gap-4 rounded-lg bg-bw-dark-gray p-4 transition-all duration-300 hover:bg-bw-medium-gray focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ x: 5 }}
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-bw-gold/10 text-bw-gold group-hover:bg-bw-gold group-hover:text-bw-black transition-all duration-300">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-bw-gold/10 text-bw-gold transition-all duration-300 group-hover:bg-bw-gold group-hover:text-bw-black">
                       <info.icon className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
@@ -480,13 +503,11 @@ export function ContactSection({ className }: ContactSectionProps) {
                 ))}
               </div>
 
-              <div className="mt-8 p-6 rounded-lg bg-gradient-to-br from-bw-gold/10 to-bw-silver/5 border border-bw-gold/20">
-                <h4 className="mb-3 font-semibold text-bw-white">
-                  Response Time
-                </h4>
+              <div className="mt-8 rounded-lg border border-bw-gold/20 bg-gradient-to-br from-bw-gold/10 to-bw-silver/5 p-6">
+                <h4 className="mb-3 font-semibold text-bw-white">Response Time</h4>
                 <p className="text-bw-light-gray">
-                  We typically respond to all inquiries within 24 hours. For urgent projects,
-                  please call us directly.
+                  We typically respond to all inquiries within 24 hours. For urgent projects, please
+                  call us directly.
                 </p>
               </div>
             </div>

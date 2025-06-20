@@ -30,12 +30,7 @@ export function createOptimizedLazyComponent<T extends ComponentType<Record<stri
   importFn: () => Promise<{ default: T }>,
   options: LazyComponentOptions = {}
 ): LazyExoticComponent<T> & { preload: () => Promise<void> } {
-  const {
-    retryCount = 3,
-    retryDelay = 1000,
-    preload = false,
-    chunkName
-  } = options;
+  const { retryCount = 3, retryDelay = 1000, preload = false, chunkName } = options;
 
   let importPromise: Promise<{ default: T }> | null = null;
 
@@ -47,28 +42,33 @@ export function createOptimizedLazyComponent<T extends ComponentType<Record<stri
 
       importPromise = importFn();
       const result = await importPromise;
-      
+
       // Log successful chunk load in development
       if (process.env.NODE_ENV === 'development' && chunkName) {
         console.log(`✅ Loaded chunk: ${chunkName}`);
       }
-      
+
       return result;
     } catch (error) {
       importPromise = null; // Reset promise on failure
-      
+
       if (attempt < retryCount) {
-        console.warn(`Failed to load component (attempt ${attempt}/${retryCount}), retrying...`, error);
+        console.warn(
+          `Failed to load component (attempt ${attempt}/${retryCount}), retrying...`,
+          error
+        );
         await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
         return loadComponent(attempt + 1);
       }
-      
+
       console.error(`Failed to load component after ${retryCount} attempts:`, error);
       throw error;
     }
   };
 
-  const LazyComponent = lazy(() => loadComponent()) as LazyExoticComponent<T> & { preload: () => Promise<void> };
+  const LazyComponent = lazy(() => loadComponent()) as LazyExoticComponent<T> & {
+    preload: () => Promise<void>;
+  };
 
   // Add preload method
   LazyComponent.preload = async () => {
@@ -134,7 +134,7 @@ export class ComponentPreloader {
   // Preload components based on user interaction hints
   async preloadOnHover(name: string): Promise<void> {
     if (this.isPreloading) return;
-    
+
     this.isPreloading = true;
     await this.preload(name);
     this.isPreloading = false;
@@ -147,8 +147,8 @@ export class ComponentPreloader {
     }
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             this.preload(name);
             observer.unobserve(element);
@@ -163,11 +163,7 @@ export class ComponentPreloader {
 
   // Preload critical components after initial page load
   async preloadCritical(): Promise<void> {
-    const criticalComponents = [
-      'HeroSection',
-      'PortfolioSection',
-      'ContactSection'
-    ];
+    const criticalComponents = ['HeroSection', 'PortfolioSection', 'ContactSection'];
 
     for (const component of criticalComponents) {
       if (this.preloadQueue.has(component)) {
@@ -180,17 +176,17 @@ export class ComponentPreloader {
 // Bundle size monitoring and optimization recommendations
 export class BundleOptimizer {
   private static readonly SIZE_THRESHOLDS = {
-    SMALL: 50 * 1024,    // 50KB
-    MEDIUM: 200 * 1024,  // 200KB
-    LARGE: 500 * 1024,   // 500KB
-    HUGE: 1024 * 1024,   // 1MB
+    SMALL: 50 * 1024, // 50KB
+    MEDIUM: 200 * 1024, // 200KB
+    LARGE: 500 * 1024, // 500KB
+    HUGE: 1024 * 1024, // 1MB
   };
 
   // Analyze current bundle and provide recommendations
   static analyzeBundlePerformance(): BundleAnalysis {
     // In a real implementation, this would analyze actual webpack stats
     // For now, provide mock analysis with realistic recommendations
-    
+
     const analysis: BundleAnalysis = {
       totalSize: 850 * 1024, // 850KB
       gzippedSize: 280 * 1024, // 280KB
@@ -198,21 +194,21 @@ export class BundleOptimizer {
         {
           name: 'main',
           size: 450 * 1024,
-          modules: ['app', 'components', 'utils']
+          modules: ['app', 'components', 'utils'],
         },
         {
           name: 'vendors',
           size: 300 * 1024,
-          modules: ['react', 'react-dom', 'framer-motion']
+          modules: ['react', 'react-dom', 'framer-motion'],
         },
         {
           name: 'common',
           size: 100 * 1024,
-          modules: ['shared-utilities', 'constants']
-        }
+          modules: ['shared-utilities', 'constants'],
+        },
       ],
       duplicates: [],
-      recommendations: []
+      recommendations: [],
     };
 
     // Generate recommendations based on analysis
@@ -233,14 +229,18 @@ export class BundleOptimizer {
     // Check individual chunks
     analysis.chunks.forEach(chunk => {
       if (chunk.size > this.SIZE_THRESHOLDS.MEDIUM) {
-        recommendations.push(`Chunk "${chunk.name}" is large (${Math.round(chunk.size / 1024)}KB) - consider splitting further`);
+        recommendations.push(
+          `Chunk "${chunk.name}" is large (${Math.round(chunk.size / 1024)}KB) - consider splitting further`
+        );
       }
     });
 
     // Check compression ratio
     const compressionRatio = analysis.gzippedSize / analysis.totalSize;
     if (compressionRatio > 0.4) {
-      recommendations.push('Bundle compression ratio could be improved - check for duplicate code or large assets');
+      recommendations.push(
+        'Bundle compression ratio could be improved - check for duplicate code or large assets'
+      );
     }
 
     // Check for duplicates
@@ -264,18 +264,20 @@ export class BundleOptimizer {
     }
 
     console.group('📦 Bundle Size Monitor');
-    
+
     const analysis = this.analyzeBundlePerformance();
-    
+
     console.log(`Total Size: ${Math.round(analysis.totalSize / 1024)}KB`);
     console.log(`Gzipped: ${Math.round(analysis.gzippedSize / 1024)}KB`);
-    console.log(`Compression Ratio: ${((analysis.gzippedSize / analysis.totalSize) * 100).toFixed(1)}%`);
-    
+    console.log(
+      `Compression Ratio: ${((analysis.gzippedSize / analysis.totalSize) * 100).toFixed(1)}%`
+    );
+
     if (analysis.recommendations.length > 0) {
       console.log('\n💡 Recommendations:');
       analysis.recommendations.forEach(rec => console.log(`  • ${rec}`));
     }
-    
+
     console.groupEnd();
   }
 }

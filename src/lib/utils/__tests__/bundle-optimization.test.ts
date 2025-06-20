@@ -1,12 +1,13 @@
-import { 
-  createOptimizedLazyComponent, 
-  ComponentPreloader, 
+import React from 'react';
+
+import {
+  createOptimizedLazyComponent,
+  ComponentPreloader,
   BundleOptimizer,
   TreeShakingUtils,
   bundleOptimizer,
-  componentPreloader
+  componentPreloader,
 } from '../bundle-optimization';
-import React from 'react';
 
 // Mock dynamic import
 const mockImport = jest.fn();
@@ -38,11 +39,11 @@ describe('Bundle Optimization Utils', () => {
   describe('createOptimizedLazyComponent', () => {
     it('creates a lazy component with retry logic', async () => {
       const importFn = jest.fn().mockResolvedValue({ default: mockComponent });
-      
+
       const LazyComponent = createOptimizedLazyComponent(importFn, {
         retryCount: 2,
         retryDelay: 100,
-        chunkName: 'test-chunk'
+        chunkName: 'test-chunk',
       });
 
       expect(LazyComponent).toBeDefined();
@@ -50,13 +51,14 @@ describe('Bundle Optimization Utils', () => {
     });
 
     it('retries failed imports', async () => {
-      const importFn = jest.fn()
+      const importFn = jest
+        .fn()
         .mockRejectedValueOnce(new Error('Network error'))
         .mockResolvedValueOnce({ default: mockComponent });
 
       const LazyComponent = createOptimizedLazyComponent(importFn, {
         retryCount: 3,
-        retryDelay: 10
+        retryDelay: 10,
       });
 
       await LazyComponent.preload();
@@ -69,7 +71,7 @@ describe('Bundle Optimization Utils', () => {
 
       const LazyComponent = createOptimizedLazyComponent(importFn, {
         retryCount: 2,
-        retryDelay: 10
+        retryDelay: 10,
       });
 
       await expect(LazyComponent.preload()).rejects.toThrow('Persistent error');
@@ -81,9 +83,9 @@ describe('Bundle Optimization Utils', () => {
       process.env.NODE_ENV = 'development';
 
       const importFn = jest.fn().mockResolvedValue({ default: mockComponent });
-      
+
       const LazyComponent = createOptimizedLazyComponent(importFn, {
-        chunkName: 'test-chunk'
+        chunkName: 'test-chunk',
       });
 
       await LazyComponent.preload();
@@ -107,50 +109,52 @@ describe('Bundle Optimization Utils', () => {
     it('is a singleton', () => {
       const instance1 = ComponentPreloader.getInstance();
       const instance2 = ComponentPreloader.getInstance();
-      
+
       expect(instance1).toBe(instance2);
     });
 
     it('registers components for preloading', () => {
       const preloadFn = jest.fn().mockResolvedValue(undefined);
-      
+
       preloader.register('TestComponent', preloadFn);
-      
+
       expect((preloader as any).preloadQueue.has('TestComponent')).toBe(true);
     });
 
     it('preloads registered components', async () => {
       const preloadFn = jest.fn().mockResolvedValue(undefined);
-      
+
       preloader.register('TestComponent', preloadFn);
       await preloader.preload('TestComponent');
-      
+
       expect(preloadFn).toHaveBeenCalledTimes(1);
       expect(console.log).toHaveBeenCalledWith('✅ Preloaded component: TestComponent');
     });
 
     it('does not preload the same component twice', async () => {
       const preloadFn = jest.fn().mockResolvedValue(undefined);
-      
+
       preloader.register('TestComponent', preloadFn);
       await preloader.preload('TestComponent');
       await preloader.preload('TestComponent');
-      
+
       expect(preloadFn).toHaveBeenCalledTimes(1);
     });
 
     it('warns when trying to preload unregistered component', async () => {
       await preloader.preload('UnregisteredComponent');
-      
-      expect(console.warn).toHaveBeenCalledWith('Component UnregisteredComponent not registered for preloading');
+
+      expect(console.warn).toHaveBeenCalledWith(
+        'Component UnregisteredComponent not registered for preloading'
+      );
     });
 
     it('handles preload errors gracefully', async () => {
       const preloadFn = jest.fn().mockRejectedValue(new Error('Preload failed'));
-      
+
       preloader.register('FailingComponent', preloadFn);
       await preloader.preload('FailingComponent');
-      
+
       expect(console.error).toHaveBeenCalledWith(
         'Failed to preload component FailingComponent:',
         expect.any(Error)
@@ -161,13 +165,13 @@ describe('Bundle Optimization Utils', () => {
       const heroPreload = jest.fn().mockResolvedValue(undefined);
       const portfolioPreload = jest.fn().mockResolvedValue(undefined);
       const contactPreload = jest.fn().mockResolvedValue(undefined);
-      
+
       preloader.register('HeroSection', heroPreload);
       preloader.register('PortfolioSection', portfolioPreload);
       preloader.register('ContactSection', contactPreload);
-      
+
       await preloader.preloadCritical();
-      
+
       expect(heroPreload).toHaveBeenCalledTimes(1);
       expect(portfolioPreload).toHaveBeenCalledTimes(1);
       expect(contactPreload).toHaveBeenCalledTimes(1);
@@ -177,13 +181,13 @@ describe('Bundle Optimization Utils', () => {
   describe('BundleOptimizer', () => {
     it('analyzes bundle performance', () => {
       const analysis = BundleOptimizer.analyzeBundlePerformance();
-      
+
       expect(analysis).toHaveProperty('totalSize');
       expect(analysis).toHaveProperty('gzippedSize');
       expect(analysis).toHaveProperty('chunks');
       expect(analysis).toHaveProperty('duplicates');
       expect(analysis).toHaveProperty('recommendations');
-      
+
       expect(Array.isArray(analysis.chunks)).toBe(true);
       expect(Array.isArray(analysis.duplicates)).toBe(true);
       expect(Array.isArray(analysis.recommendations)).toBe(true);
@@ -191,11 +195,13 @@ describe('Bundle Optimization Utils', () => {
 
     it('generates recommendations for large bundles', () => {
       const analysis = BundleOptimizer.analyzeBundlePerformance();
-      
+
       expect(analysis.recommendations.length).toBeGreaterThan(0);
-      expect(analysis.recommendations.some(rec => 
-        rec.includes('code splitting') || rec.includes('optimized')
-      )).toBe(true);
+      expect(
+        analysis.recommendations.some(
+          rec => rec.includes('code splitting') || rec.includes('optimized')
+        )
+      ).toBe(true);
     });
 
     it('monitors bundle size in development', () => {
@@ -225,12 +231,12 @@ describe('Bundle Optimization Utils', () => {
   describe('TreeShakingUtils', () => {
     it('marks functions for tree shaking', () => {
       const testFn = () => 'test';
-      
+
       const result1 = TreeShakingUtils.markForTreeShaking(testFn, true);
       const result2 = TreeShakingUtils.markForTreeShaking(testFn, false);
-      
+
       expect(result1).toBe(testFn);
-      
+
       // In test environment, should return the function regardless
       // In production with used=false, it would return undefined
       expect(result2).toBeDefined();
@@ -238,10 +244,10 @@ describe('Bundle Optimization Utils', () => {
 
     it('handles conditional imports', async () => {
       const importFn = jest.fn().mockResolvedValue('imported');
-      
+
       const result1 = await TreeShakingUtils.conditionalImport(true, importFn);
       const result2 = await TreeShakingUtils.conditionalImport(false, importFn);
-      
+
       expect(result1).toBe('imported');
       expect(result2).toBe(null);
       expect(importFn).toHaveBeenCalledTimes(1);
@@ -249,31 +255,31 @@ describe('Bundle Optimization Utils', () => {
 
     it('handles development-only code', () => {
       const originalEnv = process.env.NODE_ENV;
-      
+
       process.env.NODE_ENV = 'development';
       const devResult = TreeShakingUtils.devOnly('dev-code');
-      
+
       process.env.NODE_ENV = 'production';
       const prodResult = TreeShakingUtils.devOnly('dev-code');
-      
+
       expect(devResult).toBe('dev-code');
       expect(prodResult).toBeUndefined();
-      
+
       process.env.NODE_ENV = originalEnv;
     });
 
     it('handles production-only code', () => {
       const originalEnv = process.env.NODE_ENV;
-      
+
       process.env.NODE_ENV = 'production';
       const prodResult = TreeShakingUtils.prodOnly('prod-code');
-      
+
       process.env.NODE_ENV = 'development';
       const devResult = TreeShakingUtils.prodOnly('prod-code');
-      
+
       expect(prodResult).toBe('prod-code');
       expect(devResult).toBeUndefined();
-      
+
       process.env.NODE_ENV = originalEnv;
     });
   });

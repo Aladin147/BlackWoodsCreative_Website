@@ -1,13 +1,14 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Image from 'next/image';
-import { 
-  getContrastRatio, 
-  meetsContrastRequirement, 
+import React from 'react';
+
+import {
+  getContrastRatio,
+  meetsContrastRequirement,
   colorPalette,
   FocusManager,
-  auditAccessibility 
+  auditAccessibility,
 } from '@/lib/utils/accessibility';
 
 // Mock components for testing
@@ -50,9 +51,15 @@ describe('Accessibility Utilities', () => {
 
     it('validates brand colors meet contrast requirements', () => {
       // Test key brand color combinations using theme guide colors
-      expect(meetsContrastRequirement(colorPalette['bw-text-primary'], colorPalette['bw-bg-primary'])).toBe(true);
-      expect(meetsContrastRequirement(colorPalette['bw-bg-primary'], colorPalette['bw-accent-gold'])).toBe(true);
-      expect(meetsContrastRequirement(colorPalette['bw-text-primary'], colorPalette['bw-border-subtle'])).toBe(true);
+      expect(
+        meetsContrastRequirement(colorPalette['bw-text-primary'], colorPalette['bw-bg-primary'])
+      ).toBe(true);
+      expect(
+        meetsContrastRequirement(colorPalette['bw-bg-primary'], colorPalette['bw-accent-gold'])
+      ).toBe(true);
+      expect(
+        meetsContrastRequirement(colorPalette['bw-text-primary'], colorPalette['bw-border-subtle'])
+      ).toBe(true);
     });
   });
 
@@ -67,7 +74,7 @@ describe('Accessibility Utilities', () => {
       document.body.appendChild(container);
 
       const cleanup = FocusManager.trapFocus(container);
-      
+
       // First button should be focused
       expect(document.activeElement).toBe(container.querySelector('button'));
 
@@ -82,7 +89,7 @@ describe('Accessibility Utilities', () => {
       button.focus();
 
       FocusManager.saveFocus();
-      
+
       // Focus something else
       const otherButton = document.createElement('button');
       document.body.appendChild(otherButton);
@@ -165,9 +172,9 @@ describe('Accessibility Utilities', () => {
       const user = userEvent.setup();
 
       render(<MockButton onClick={handleClick}>Test Button</MockButton>);
-      
+
       const button = screen.getByRole('button');
-      
+
       // Test click
       await user.click(button);
       expect(handleClick).toHaveBeenCalledTimes(1);
@@ -183,21 +190,21 @@ describe('Accessibility Utilities', () => {
 
     it('form has proper labels and associations', () => {
       render(<MockForm />);
-      
+
       const input = screen.getByLabelText('Test Input');
       expect(input).toBeInTheDocument();
       expect(input).toHaveAttribute('id', 'test-input');
-      
+
       const label = screen.getByText('Test Input');
       expect(label).toHaveAttribute('for', 'test-input');
     });
 
     it('images have appropriate alt text', () => {
       render(<MockImageGallery />);
-      
+
       expect(screen.getByAltText('Test image 1')).toBeInTheDocument();
       expect(screen.getByAltText('Test image 2')).toBeInTheDocument();
-      
+
       // Decorative image should have empty alt
       const decorativeImage = screen.getByRole('presentation');
       expect(decorativeImage).toHaveAttribute('alt', '');
@@ -207,7 +214,7 @@ describe('Accessibility Utilities', () => {
   describe('Keyboard Navigation', () => {
     it('supports tab navigation', async () => {
       const user = userEvent.setup();
-      
+
       render(
         <div>
           <button>First</button>
@@ -217,21 +224,21 @@ describe('Accessibility Utilities', () => {
       );
 
       const buttons = screen.getAllByRole('button');
-      
+
       // Tab through buttons
       await user.tab();
       expect(document.activeElement).toBe(buttons[0]);
-      
+
       await user.tab();
       expect(document.activeElement).toBe(buttons[1]);
-      
+
       await user.tab();
       expect(document.activeElement).toBe(buttons[2]);
     });
 
     it('supports shift+tab for reverse navigation', async () => {
       const user = userEvent.setup();
-      
+
       render(
         <div>
           <button>First</button>
@@ -240,10 +247,10 @@ describe('Accessibility Utilities', () => {
       );
 
       const buttons = screen.getAllByRole('button');
-      
+
       // Focus last button first
       buttons[1].focus();
-      
+
       // Shift+Tab should go to previous
       await user.keyboard('{Shift>}{Tab}{/Shift}');
       expect(document.activeElement).toBe(buttons[0]);

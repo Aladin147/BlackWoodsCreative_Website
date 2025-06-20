@@ -1,6 +1,7 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+
 import ErrorBoundary from '../ErrorBoundary';
 
 // Component that throws an error
@@ -48,7 +49,7 @@ describe('ErrorBoundary', () => {
   it('renders default error fallback when error occurs', () => {
     render(
       <ErrorBoundary>
-        <ThrowError shouldThrow={true} />
+        <ThrowError shouldThrow />
       </ErrorBoundary>
     );
 
@@ -60,7 +61,7 @@ describe('ErrorBoundary', () => {
   it('renders custom fallback when provided', () => {
     render(
       <ErrorBoundary fallback={CustomFallback}>
-        <ThrowError shouldThrow={true} />
+        <ThrowError shouldThrow />
       </ErrorBoundary>
     );
 
@@ -77,7 +78,7 @@ describe('ErrorBoundary', () => {
 
     render(
       <ErrorBoundary>
-        <ThrowError shouldThrow={true} />
+        <ThrowError shouldThrow />
       </ErrorBoundary>
     );
 
@@ -97,7 +98,7 @@ describe('ErrorBoundary', () => {
 
     render(
       <ErrorBoundary>
-        <ThrowError shouldThrow={true} />
+        <ThrowError shouldThrow />
       </ErrorBoundary>
     );
 
@@ -138,9 +139,12 @@ describe('ErrorBoundary', () => {
     await user.click(resetButton);
 
     // Component should now render successfully
-    await waitFor(() => {
-      expect(screen.getByText('No error')).toBeInTheDocument();
-    }, { timeout: 1000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText('No error')).toBeInTheDocument();
+      },
+      { timeout: 1000 }
+    );
   });
 
   it('logs error information', () => {
@@ -148,7 +152,7 @@ describe('ErrorBoundary', () => {
 
     render(
       <ErrorBoundary>
-        <ThrowError shouldThrow={true} />
+        <ThrowError shouldThrow />
       </ErrorBoundary>
     );
 
@@ -223,7 +227,7 @@ describe('ErrorBoundary', () => {
     render(
       <div>
         <ErrorBoundary>
-          <ThrowError shouldThrow={true} />
+          <ThrowError shouldThrow />
         </ErrorBoundary>
         <ErrorBoundary>
           <ThrowError shouldThrow={false} />

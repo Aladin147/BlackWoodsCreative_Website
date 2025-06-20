@@ -6,7 +6,9 @@ describe('siteConfig', () => {
   });
 
   it('has correct site description', () => {
-    expect(siteConfig.description).toBe('Premium visual storytelling through filmmaking, photography, and 3D visualization.');
+    expect(siteConfig.description).toBe(
+      'Premium visual storytelling through filmmaking, photography, and 3D visualization.'
+    );
   });
 
   it('has correct site URL', () => {
@@ -27,7 +29,9 @@ describe('siteConfig', () => {
     });
 
     it('has correct address', () => {
-      expect(siteConfig.links.address).toBe('MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco');
+      expect(siteConfig.links.address).toBe(
+        'MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco'
+      );
     });
 
     it('has correct Instagram URL', () => {
@@ -71,7 +75,9 @@ describe('siteConfig', () => {
       const filmService = siteConfig.services.find(service => service.id === 'film');
       expect(filmService).toBeDefined();
       expect(filmService?.name).toBe('Film Production');
-      expect(filmService?.description).toBe('Cinematic storytelling that captivates audiences and drives results.');
+      expect(filmService?.description).toBe(
+        'Cinematic storytelling that captivates audiences and drives results.'
+      );
       expect(filmService?.icon).toBe('FilmIcon');
     });
 
@@ -79,7 +85,9 @@ describe('siteConfig', () => {
       const photoService = siteConfig.services.find(service => service.id === 'photography');
       expect(photoService).toBeDefined();
       expect(photoService?.name).toBe('Photography');
-      expect(photoService?.description).toBe('Professional photography that captures moments and creates impact.');
+      expect(photoService?.description).toBe(
+        'Professional photography that captures moments and creates impact.'
+      );
       expect(photoService?.icon).toBe('CameraIcon');
     });
 
@@ -87,7 +95,9 @@ describe('siteConfig', () => {
       const threeDService = siteConfig.services.find(service => service.id === '3d');
       expect(threeDService).toBeDefined();
       expect(threeDService?.name).toBe('3D Visualization');
-      expect(threeDService?.description).toBe('Stunning 3D models and visualizations that bring ideas to life.');
+      expect(threeDService?.description).toBe(
+        'Stunning 3D models and visualizations that bring ideas to life.'
+      );
       expect(threeDService?.icon).toBe('CubeIcon');
     });
 
@@ -95,7 +105,9 @@ describe('siteConfig', () => {
       const sceneService = siteConfig.services.find(service => service.id === 'scenes');
       expect(sceneService).toBeDefined();
       expect(sceneService?.name).toBe('Scene Creation');
-      expect(sceneService?.description).toBe('Immersive environments and scenes for any creative project.');
+      expect(sceneService?.description).toBe(
+        'Immersive environments and scenes for any creative project.'
+      );
       expect(sceneService?.icon).toBe('BuildingOfficeIcon');
     });
 
@@ -214,7 +226,7 @@ describe('siteConfig', () => {
         Object.entries(obj).forEach(([key, value]) => {
           const currentPath = path ? `${path}.${key}` : key;
           expect(value).not.toBeUndefined();
-          
+
           if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
             checkForUndefined(value as Record<string, unknown>, currentPath);
           }

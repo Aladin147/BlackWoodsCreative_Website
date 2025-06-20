@@ -13,8 +13,10 @@ export function useCSRFProtection() {
     const getCSRFToken = async () => {
       try {
         // First try to get from meta tag (if set by server)
-        const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        
+        const metaToken = document
+          .querySelector('meta[name="csrf-token"]')
+          ?.getAttribute('content');
+
         if (metaToken) {
           setCSRFToken(metaToken);
           setIsLoading(false);
@@ -97,16 +99,14 @@ export function withCSRFProtection<T extends object>(
     if (isLoading) {
       return (
         <div className="flex items-center justify-center p-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-bw-accent-gold"></div>
+          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-bw-accent-gold" />
         </div>
       );
     }
 
     if (!csrfToken) {
       return (
-        <div className="text-red-500 p-4">
-          Security token unavailable. Please refresh the page.
-        </div>
+        <div className="p-4 text-red-500">Security token unavailable. Please refresh the page.</div>
       );
     }
 

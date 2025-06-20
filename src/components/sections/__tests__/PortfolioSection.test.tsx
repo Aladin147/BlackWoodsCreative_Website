@@ -1,40 +1,76 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
+
 import { PortfolioSection } from '../PortfolioSection';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
-    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => (
+      <section {...props}>{children}</section>
+    ),
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => (
+      <button {...props}>{children}</button>
+    ),
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
-  HoverMagnify: ({ children }: { children: React.ReactNode }) => <div data-testid="hover-magnify">{children}</div>,
-  MagneticField: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-field">{children}</div>,
-  ScrollReveal: ({ children, className, ...props }: { children: React.ReactNode; className?: string; [key: string]: unknown }) => (
-    <div className={className} data-testid="scroll-reveal" {...props}>{children}</div>
+  HoverMagnify: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="hover-magnify">{children}</div>
   ),
-  ParallaxText: ({ children, speed, ...props }: { children: React.ReactNode; speed?: number; [key: string]: unknown }) => (
-    <div data-testid="parallax-text" data-speed={speed} {...props}>{children}</div>
+  MagneticField: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="magnetic-field">{children}</div>
   ),
-  AdvancedPortfolioFilter: ({ items, categories, onItemClick, className, ...props }: {
+  ScrollReveal: ({
+    children,
+    className,
+    ...props
+  }: {
+    children: React.ReactNode;
+    className?: string;
+    [key: string]: unknown;
+  }) => (
+    <div className={className} data-testid="scroll-reveal" {...props}>
+      {children}
+    </div>
+  ),
+  ParallaxText: ({
+    children,
+    speed,
+    ...props
+  }: {
+    children: React.ReactNode;
+    speed?: number;
+    [key: string]: unknown;
+  }) => (
+    <div data-testid="parallax-text" data-speed={speed} {...props}>
+      {children}
+    </div>
+  ),
+  AdvancedPortfolioFilter: ({
+    items,
+    categories,
+    onItemClick,
+    className,
+    ...props
+  }: {
     items: Array<{ id: string; title: string; category: string; [key: string]: unknown }>;
     categories: string[];
     onItemClick?: (item: unknown) => void;
     className?: string;
-    [key: string]: unknown
+    [key: string]: unknown;
   }) => {
     const [activeCategory, setActiveCategory] = React.useState('All');
     const allCategories = ['All', ...(categories || [])];
 
-    const filteredItems = activeCategory === 'All'
-      ? items
-      : items?.filter((item: { category: string }) => item.category === activeCategory);
+    const filteredItems =
+      activeCategory === 'All'
+        ? items
+        : items?.filter((item: { category: string }) => item.category === activeCategory);
 
     return (
       <div className={className} data-testid="advanced-portfolio-filter" {...props}>
@@ -58,19 +94,21 @@ jest.mock('@/components/interactive', () => ({
           data-testid="portfolio-grid"
           role="region"
           aria-label={`Portfolio projects filtered by ${activeCategory}`}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
         >
-          {filteredItems?.map((item: { id: string; title: string; category: string }, index: number) => (
-            <div
-              key={item.id || index}
-              data-testid="portfolio-item"
-              onClick={() => onItemClick?.(item)}
-              data-cursor="portfolio"
-            >
-              <h3>{item.title}</h3>
-              <p>{item.category}</p>
-            </div>
-          ))}
+          {filteredItems?.map(
+            (item: { id: string; title: string; category: string }, index: number) => (
+              <div
+                key={item.id || index}
+                data-testid="portfolio-item"
+                onClick={() => onItemClick?.(item)}
+                data-cursor="portfolio"
+              >
+                <h3>{item.title}</h3>
+                <p>{item.category}</p>
+              </div>
+            )
+          )}
         </div>
       </div>
     );
@@ -130,7 +168,11 @@ jest.mock('@/lib/data/portfolio', () => ({
 
 // Mock PortfolioCard component
 jest.mock('@/components/ui/PortfolioCard', () => ({
-  PortfolioCard: ({ project }: { project: { id: string; title: string; description: string; category: string } }) => (
+  PortfolioCard: ({
+    project,
+  }: {
+    project: { id: string; title: string; description: string; category: string };
+  }) => (
     <div data-testid="portfolio-card" data-project-id={project.id}>
       <h3>{project.title}</h3>
       <p>{project.description}</p>
@@ -163,7 +205,9 @@ describe('PortfolioSection', () => {
     it('renders portfolio description', () => {
       render(<PortfolioSection />);
 
-      expect(screen.getByText(/Explore our diverse range of creative projects/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Explore our diverse range of creative projects/)
+      ).toBeInTheDocument();
       expect(screen.getByText(/visual storytelling and premium craftsmanship/)).toBeInTheDocument();
     });
 
@@ -179,9 +223,15 @@ describe('PortfolioSection', () => {
 
       expect(screen.getByRole('button', { name: /Filter portfolio by All/ })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Filter portfolio by Film/ })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Filter portfolio by Photography/ })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Filter portfolio by 3D Visualization/ })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Filter portfolio by Scene Creation/ })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Filter portfolio by Photography/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Filter portfolio by 3D Visualization/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Filter portfolio by Scene Creation/ })
+      ).toBeInTheDocument();
     });
 
     it('has "All" category selected by default', () => {
@@ -295,14 +345,18 @@ describe('PortfolioSection', () => {
       render(<PortfolioSection />);
 
       // Initially shows "All"
-      expect(screen.getByRole('region', { name: /Portfolio projects filtered by All/ })).toBeInTheDocument();
+      expect(
+        screen.getByRole('region', { name: /Portfolio projects filtered by All/ })
+      ).toBeInTheDocument();
 
       // Change to Film category
       const filmButton = screen.getByRole('button', { name: /Filter portfolio by Film/ });
       fireEvent.click(filmButton);
 
       await waitFor(() => {
-        expect(screen.getByRole('region', { name: /Portfolio projects filtered by Film/ })).toBeInTheDocument();
+        expect(
+          screen.getByRole('region', { name: /Portfolio projects filtered by Film/ })
+        ).toBeInTheDocument();
       });
     });
   });
@@ -379,9 +433,9 @@ describe('PortfolioSection', () => {
     it('filter buttons have proper accessibility attributes', () => {
       render(<PortfolioSection />);
 
-      const filterButtons = screen.getAllByRole('button').filter(button => 
-        button.getAttribute('aria-label')?.includes('Filter portfolio by')
-      );
+      const filterButtons = screen
+        .getAllByRole('button')
+        .filter(button => button.getAttribute('aria-label')?.includes('Filter portfolio by'));
 
       filterButtons.forEach(button => {
         expect(button).toHaveAttribute('aria-pressed');

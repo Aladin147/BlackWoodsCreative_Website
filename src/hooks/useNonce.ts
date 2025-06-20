@@ -16,7 +16,10 @@ export function useNonce(): string | null {
     }
 
     // Fallback: try to get from a global variable if set
-    if (typeof window !== 'undefined' && (window as unknown as { __CSP_NONCE__?: string }).__CSP_NONCE__) {
+    if (
+      typeof window !== 'undefined' &&
+      (window as unknown as { __CSP_NONCE__?: string }).__CSP_NONCE__
+    ) {
       setNonce((window as unknown as { __CSP_NONCE__?: string }).__CSP_NONCE__ || null);
       return;
     }
@@ -51,11 +54,11 @@ export function useSecureStyle(styles: React.CSSProperties): React.CSSProperties
 export function createSecureScript(content: string, nonce?: string): HTMLScriptElement {
   const script = document.createElement('script');
   script.textContent = content;
-  
+
   if (nonce) {
     script.setAttribute('nonce', nonce);
   }
-  
+
   return script;
 }
 
@@ -66,10 +69,10 @@ export function createSecureScript(content: string, nonce?: string): HTMLScriptE
 export function createSecureStyle(content: string, nonce?: string): HTMLStyleElement {
   const style = document.createElement('style');
   style.textContent = content;
-  
+
   if (nonce) {
     style.setAttribute('nonce', nonce);
   }
-  
+
   return style;
 }

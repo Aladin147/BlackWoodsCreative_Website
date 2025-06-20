@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useCallback, useEffect, useState, useMemo } from 'react';
+
 import { useDeviceAdaptation } from './useDeviceAdaptation';
 
 interface AudioConfig {
@@ -31,7 +32,7 @@ const defaultConfig: AudioConfig = {
   enabled: true,
   respectUserPreferences: true,
   fadeInDuration: 500,
-  fadeOutDuration: 300
+  fadeOutDuration: 300,
 };
 
 // Predefined sound effects for common interactions
@@ -41,33 +42,33 @@ const defaultSoundEffects: SoundEffect[] = [
     id: 'hover',
     url: '/audio/hover.mp3',
     volume: 0.2,
-    preload: false // Disabled preload to prevent 404 errors
+    preload: false, // Disabled preload to prevent 404 errors
   },
   {
     id: 'click',
     url: '/audio/click.mp3',
     volume: 0.3,
-    preload: false // Disabled preload to prevent 404 errors
+    preload: false, // Disabled preload to prevent 404 errors
   },
   {
     id: 'magnetic',
     url: '/audio/magnetic.mp3',
     volume: 0.15,
-    preload: false // Disabled preload to prevent 404 errors
+    preload: false, // Disabled preload to prevent 404 errors
   },
   {
     id: 'transition',
     url: '/audio/transition.mp3',
     volume: 0.25,
-    preload: false // Disabled preload to prevent 404 errors
+    preload: false, // Disabled preload to prevent 404 errors
   },
   {
     id: 'ambient',
     url: '/audio/ambient.mp3',
     volume: 0.1,
     loop: true,
-    preload: false // Disabled preload to prevent 404 errors
-  }
+    preload: false, // Disabled preload to prevent 404 errors
+  },
 ];
 
 export function useAudioSystem(config: Partial<AudioConfig> = {}) {
@@ -76,7 +77,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
     context: null,
     isSupported: false,
     isEnabled: false,
-    masterVolume: finalConfig.volume
+    masterVolume: finalConfig.volume,
   });
 
   const audioBuffersRef = useRef<Map<string, AudioBuffer>>(new Map());
@@ -117,7 +118,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
         context,
         isSupported: true,
         isEnabled: finalConfig.enabled,
-        masterVolume: finalConfig.volume
+        masterVolume: finalConfig.volume,
       });
 
       // Resume context on user interaction (required by browsers)
@@ -129,7 +130,6 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
 
       document.addEventListener('click', resumeContext, { once: true });
       document.addEventListener('touchstart', resumeContext, { once: true });
-
     } catch (error) {
       console.warn('Failed to initialize audio context:', error);
       setAudioState(prev => ({ ...prev, isSupported: false }));
@@ -137,141 +137,152 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
   }, [finalConfig]);
 
   // Load audio buffer with graceful error handling
-  const loadAudioBuffer = useCallback(async (soundEffect: SoundEffect): Promise<AudioBuffer | null> => {
-    if (!audioState.context || !audioState.isSupported) return null;
+  const loadAudioBuffer = useCallback(
+    async (soundEffect: SoundEffect): Promise<AudioBuffer | null> => {
+      if (!audioState.context || !audioState.isSupported) return null;
 
-    try {
-      const response = await fetch(soundEffect.url);
-      if (!response.ok) {
-        // Gracefully handle missing audio files
-        console.info(`Audio file not found: ${soundEffect.url} - continuing without audio`);
+      try {
+        const response = await fetch(soundEffect.url);
+        if (!response.ok) {
+          // Gracefully handle missing audio files
+          console.info(`Audio file not found: ${soundEffect.url} - continuing without audio`);
+          return null;
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioState.context.decodeAudioData(arrayBuffer);
+
+        audioBuffersRef.current.set(soundEffect.id, audioBuffer);
+        return audioBuffer;
+      } catch {
+        // Gracefully handle audio loading errors
+        console.info(`Audio system: ${soundEffect.url} not available - continuing without audio`);
         return null;
       }
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await audioState.context.decodeAudioData(arrayBuffer);
-
-      audioBuffersRef.current.set(soundEffect.id, audioBuffer);
-      return audioBuffer;
-    } catch {
-      // Gracefully handle audio loading errors
-      console.info(`Audio system: ${soundEffect.url} not available - continuing without audio`);
-      return null;
-    }
-  }, [audioState.context, audioState.isSupported]);
+    },
+    [audioState.context, audioState.isSupported]
+  );
 
   // Preload sound effects
-  const preloadSounds = useCallback(async (soundEffects: SoundEffect[] = defaultSoundEffects) => {
-    if (!audioState.isSupported || !audioState.isEnabled) return;
+  const preloadSounds = useCallback(
+    async (soundEffects: SoundEffect[] = defaultSoundEffects) => {
+      if (!audioState.isSupported || !audioState.isEnabled) return;
 
-    const preloadPromises = soundEffects
-      .filter(effect => effect.preload)
-      .map(effect => loadAudioBuffer(effect));
+      const preloadPromises = soundEffects
+        .filter(effect => effect.preload)
+        .map(effect => loadAudioBuffer(effect));
 
-    await Promise.allSettled(preloadPromises);
-  }, [audioState.isSupported, audioState.isEnabled, loadAudioBuffer]);
+      await Promise.allSettled(preloadPromises);
+    },
+    [audioState.isSupported, audioState.isEnabled, loadAudioBuffer]
+  );
 
   // Play sound effect
-  const playSound = useCallback(async (
-    soundId: string, 
-    options: { 
-      volume?: number; 
-      loop?: boolean; 
-      fadeIn?: boolean;
-      delay?: number;
-    } = {}
-  ) => {
-    if (!audioState.context || !audioState.isEnabled || !gainNodeRef.current) return;
+  const playSound = useCallback(
+    async (
+      soundId: string,
+      options: {
+        volume?: number;
+        loop?: boolean;
+        fadeIn?: boolean;
+        delay?: number;
+      } = {}
+    ) => {
+      if (!audioState.context || !audioState.isEnabled || !gainNodeRef.current) return;
 
-    // Don't play sounds on mobile to preserve battery
-    if (deviceInfo.isMobile) return;
+      // Don't play sounds on mobile to preserve battery
+      if (deviceInfo.isMobile) return;
 
-    let audioBuffer = audioBuffersRef.current.get(soundId);
-    
-    // Load buffer if not cached
-    if (!audioBuffer) {
-      const soundEffect = defaultSoundEffects.find(effect => effect.id === soundId);
-      if (soundEffect) {
-        const loadedBuffer = await loadAudioBuffer(soundEffect);
-        if (loadedBuffer) {
-          audioBuffer = loadedBuffer;
+      let audioBuffer = audioBuffersRef.current.get(soundId);
+
+      // Load buffer if not cached
+      if (!audioBuffer) {
+        const soundEffect = defaultSoundEffects.find(effect => effect.id === soundId);
+        if (soundEffect) {
+          const loadedBuffer = await loadAudioBuffer(soundEffect);
+          if (loadedBuffer) {
+            audioBuffer = loadedBuffer;
+          }
         }
       }
-    }
 
-    if (!audioBuffer) return;
+      if (!audioBuffer) return;
 
-    try {
-      // Stop existing sound if playing
-      const existingSource = activeSourcesRef.current.get(soundId);
-      if (existingSource) {
-        existingSource.stop();
-        activeSourcesRef.current.delete(soundId);
+      try {
+        // Stop existing sound if playing
+        const existingSource = activeSourcesRef.current.get(soundId);
+        if (existingSource) {
+          existingSource.stop();
+          activeSourcesRef.current.delete(soundId);
+        }
+
+        // Create new source
+        const source = audioState.context.createBufferSource();
+        const gainNode = audioState.context.createGain();
+
+        source.buffer = audioBuffer;
+        source.loop = options.loop || false;
+
+        // Set up audio graph
+        source.connect(gainNode);
+        gainNode.connect(gainNodeRef.current);
+
+        // Set volume
+        const soundEffect = defaultSoundEffects.find(effect => effect.id === soundId);
+        const baseVolume = options.volume ?? soundEffect?.volume ?? 0.5;
+        const finalVolume = baseVolume * audioState.masterVolume;
+
+        if (options.fadeIn) {
+          gainNode.gain.setValueAtTime(0, audioState.context.currentTime);
+          gainNode.gain.linearRampToValueAtTime(
+            finalVolume,
+            audioState.context.currentTime + finalConfig.fadeInDuration / 1000
+          );
+        } else {
+          gainNode.gain.value = finalVolume;
+        }
+
+        // Start playback
+        const startTime = audioState.context.currentTime + (options.delay || 0) / 1000;
+        source.start(startTime);
+
+        activeSourcesRef.current.set(soundId, source);
+
+        // Clean up when finished
+        source.onended = () => {
+          activeSourcesRef.current.delete(soundId);
+        };
+      } catch (error) {
+        console.warn(`Failed to play sound: ${soundId}`, error);
       }
-
-      // Create new source
-      const source = audioState.context.createBufferSource();
-      const gainNode = audioState.context.createGain();
-      
-      source.buffer = audioBuffer;
-      source.loop = options.loop || false;
-      
-      // Set up audio graph
-      source.connect(gainNode);
-      gainNode.connect(gainNodeRef.current);
-      
-      // Set volume
-      const soundEffect = defaultSoundEffects.find(effect => effect.id === soundId);
-      const baseVolume = options.volume ?? soundEffect?.volume ?? 0.5;
-      const finalVolume = baseVolume * audioState.masterVolume;
-      
-      if (options.fadeIn) {
-        gainNode.gain.setValueAtTime(0, audioState.context.currentTime);
-        gainNode.gain.linearRampToValueAtTime(
-          finalVolume, 
-          audioState.context.currentTime + finalConfig.fadeInDuration / 1000
-        );
-      } else {
-        gainNode.gain.value = finalVolume;
-      }
-
-      // Start playback
-      const startTime = audioState.context.currentTime + (options.delay || 0) / 1000;
-      source.start(startTime);
-      
-      activeSourcesRef.current.set(soundId, source);
-
-      // Clean up when finished
-      source.onended = () => {
-        activeSourcesRef.current.delete(soundId);
-      };
-
-    } catch (error) {
-      console.warn(`Failed to play sound: ${soundId}`, error);
-    }
-  }, [audioState, deviceInfo.isMobile, loadAudioBuffer, finalConfig.fadeInDuration]);
+    },
+    [audioState, deviceInfo.isMobile, loadAudioBuffer, finalConfig.fadeInDuration]
+  );
 
   // Stop sound effect
-  const stopSound = useCallback((soundId: string, fadeOut: boolean = true) => {
-    const source = activeSourcesRef.current.get(soundId);
-    if (!source || !audioState.context) return;
+  const stopSound = useCallback(
+    (soundId: string, fadeOut = true) => {
+      const source = activeSourcesRef.current.get(soundId);
+      if (!source || !audioState.context) return;
 
-    if (fadeOut && gainNodeRef.current) {
-      const gainNode = audioState.context.createGain();
-      gainNode.gain.setValueAtTime(gainNode.gain.value, audioState.context.currentTime);
-      gainNode.gain.linearRampToValueAtTime(
-        0, 
-        audioState.context.currentTime + finalConfig.fadeOutDuration / 1000
-      );
-      
-      setTimeout(() => {
+      if (fadeOut && gainNodeRef.current) {
+        const gainNode = audioState.context.createGain();
+        gainNode.gain.setValueAtTime(gainNode.gain.value, audioState.context.currentTime);
+        gainNode.gain.linearRampToValueAtTime(
+          0,
+          audioState.context.currentTime + finalConfig.fadeOutDuration / 1000
+        );
+
+        setTimeout(() => {
+          source.stop();
+          activeSourcesRef.current.delete(soundId);
+        }, finalConfig.fadeOutDuration);
+      } else {
         source.stop();
         activeSourcesRef.current.delete(soundId);
-      }, finalConfig.fadeOutDuration);
-    } else {
-      source.stop();
-      activeSourcesRef.current.delete(soundId);
-    }
-  }, [audioState.context, finalConfig.fadeOutDuration]);
+      }
+    },
+    [audioState.context, finalConfig.fadeOutDuration]
+  );
 
   // Set master volume
   const setMasterVolume = useCallback((volume: number) => {
@@ -305,7 +316,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
     setMasterVolume,
     toggleAudio,
     preloadSounds,
-    isReady: audioState.isSupported && audioState.isEnabled
+    isReady: audioState.isSupported && audioState.isEnabled,
   };
 }
 
@@ -334,7 +345,7 @@ export function useUISounds() {
     playClickSound,
     playMagneticSound,
     playTransitionSound,
-    isReady
+    isReady,
   };
 }
 

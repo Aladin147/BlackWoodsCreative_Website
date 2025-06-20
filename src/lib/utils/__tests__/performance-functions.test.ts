@@ -1,4 +1,21 @@
 // Type definitions for browser APIs
+import { render } from '@testing-library/react';
+import React from 'react';
+
+import {
+  measurePerformance,
+  trackScrollPerformance,
+  optimizeImages,
+  debounce,
+  throttle,
+  withPerformanceMonitoring,
+  createLazyComponent,
+  monitorMemoryUsage,
+  monitorFPS,
+  analyzeBundleSize,
+  checkPerformanceBudget,
+} from '../performance';
+
 interface MemoryInfo {
   usedJSHeapSize: number;
   totalJSHeapSize: number;
@@ -26,7 +43,7 @@ const mockPerformance = {
 };
 
 // Mock RAF
-const mockRAF = jest.fn((cb) => {
+const mockRAF = jest.fn(cb => {
   setTimeout(cb, 16);
   return 1;
 });
@@ -51,23 +68,6 @@ Object.defineProperty(global, 'cancelAnimationFrame', {
   writable: true,
   configurable: true,
 });
-
-import React from 'react';
-import { render } from '@testing-library/react';
-
-import {
-  measurePerformance,
-  trackScrollPerformance,
-  optimizeImages,
-  debounce,
-  throttle,
-  withPerformanceMonitoring,
-  createLazyComponent,
-  monitorMemoryUsage,
-  monitorFPS,
-  analyzeBundleSize,
-  checkPerformanceBudget,
-} from '../performance';
 
 // Mock window properties
 Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
@@ -156,11 +156,9 @@ describe('Performance Functions', () => {
       const callback = jest.fn();
       const cleanup = trackScrollPerformance(callback);
 
-      expect(window.addEventListener).toHaveBeenCalledWith(
-        'scroll',
-        expect.any(Function),
-        { passive: true }
-      );
+      expect(window.addEventListener).toHaveBeenCalledWith('scroll', expect.any(Function), {
+        passive: true,
+      });
 
       cleanup();
       expect(window.removeEventListener).toHaveBeenCalled();
@@ -206,7 +204,7 @@ describe('Performance Functions', () => {
 
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({
-          direction: 'down'
+          direction: 'down',
         })
       );
 
@@ -219,7 +217,7 @@ describe('Performance Functions', () => {
 
       expect(callback).toHaveBeenCalledWith(
         expect.objectContaining({
-          direction: 'up'
+          direction: 'up',
         })
       );
     });
@@ -266,10 +264,13 @@ describe('Performance Functions', () => {
 
       expect(result).toBe('invalid-url');
       // The function should handle invalid URLs gracefully and return the original URL
-      expect(consoleSpy).toHaveBeenCalledWith('Failed to optimize image URL:', expect.objectContaining({
-        name: 'TypeError',
-        message: expect.stringContaining('Invalid URL')
-      }));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to optimize image URL:',
+        expect.objectContaining({
+          name: 'TypeError',
+          message: expect.stringContaining('Invalid URL'),
+        })
+      );
       consoleSpy.mockRestore();
     });
 
@@ -397,7 +398,7 @@ describe('Performance Functions', () => {
       const TestComponent = ({ text }: { text: string }) => React.createElement('div', {}, text);
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'TestComponent');
 
-      const { unmount } = render(React.createElement(MonitoredComponent, { text: "test" }));
+      const { unmount } = render(React.createElement(MonitoredComponent, { text: 'test' }));
 
       // Simulate slow render
       jest.advanceTimersByTime(20);
@@ -405,9 +406,7 @@ describe('Performance Functions', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       unmount();
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('TestComponent render took')
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('TestComponent render took'));
 
       consoleSpy.mockRestore();
     });
@@ -490,7 +489,7 @@ describe('Performance Functions', () => {
       expect(result).toEqual({
         used: 1024 * 1024,
         total: 4 * 1024 * 1024,
-        percentage: 25
+        percentage: 25,
       });
     });
 
@@ -570,8 +569,8 @@ describe('Performance Functions', () => {
         modules: [
           { name: 'react', size: 100 * 1024 },
           { name: 'framer-motion', size: 200 * 1024 },
-          { name: 'app', size: 724 * 1024 }
-        ]
+          { name: 'app', size: 724 * 1024 },
+        ],
       });
     });
 
@@ -602,7 +601,7 @@ describe('Performance Functions', () => {
         maxBundleSize: 2 * 1024 * 1024, // 2MB
         maxRenderTime: 100,
         maxMemoryUsage: 50, // 50%
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -616,7 +615,7 @@ describe('Performance Functions', () => {
         maxBundleSize: 500 * 1024, // 500KB (smaller than actual 1MB)
         maxRenderTime: 100,
         maxMemoryUsage: 50,
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -639,7 +638,7 @@ describe('Performance Functions', () => {
         maxBundleSize: 2 * 1024 * 1024,
         maxRenderTime: 100,
         maxMemoryUsage: 20, // 20% (smaller than actual 25%)
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -662,7 +661,7 @@ describe('Performance Functions', () => {
         maxBundleSize: 100 * 1024, // Very small
         maxRenderTime: 1,
         maxMemoryUsage: 10, // Very small
-        minFPS: 120 // Very high
+        minFPS: 120, // Very high
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -682,7 +681,7 @@ describe('Performance Functions', () => {
         maxBundleSize: 2 * 1024 * 1024,
         maxRenderTime: 100,
         maxMemoryUsage: 50,
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -700,14 +699,14 @@ describe('Performance Functions', () => {
         maxBundleSize: 10 * 1024 * 1024, // 10MB
         maxRenderTime: 1000,
         maxMemoryUsage: 90,
-        minFPS: 10
+        minFPS: 10,
       };
 
       const result = await checkPerformanceBudget(budget);
 
       expect(result).toEqual({
         passed: true,
-        violations: []
+        violations: [],
       });
     });
 
@@ -716,7 +715,7 @@ describe('Performance Functions', () => {
         maxBundleSize: 100, // Very small
         maxRenderTime: 1,
         maxMemoryUsage: 1,
-        minFPS: 1000
+        minFPS: 1000,
       };
 
       const result = await checkPerformanceBudget(budget);

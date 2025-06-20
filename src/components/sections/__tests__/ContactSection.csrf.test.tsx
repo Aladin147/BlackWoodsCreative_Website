@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
+
 import { ContactSection } from '../ContactSection';
 
 // Mock the CSRF protection hook
@@ -29,11 +30,11 @@ jest.mock('@/components/interactive', () => ({
 
 // Mock utilities
 jest.mock('@/lib/utils/sanitize', () => ({
-  sanitizeFormData: jest.fn((data) => data),
+  sanitizeFormData: jest.fn(data => data),
 }));
 
 jest.mock('@/lib/utils', () => ({
-  validateEmail: jest.fn((email) => email.includes('@')),
+  validateEmail: jest.fn(email => email.includes('@')),
 }));
 
 describe('ContactSection CSRF Protection', () => {
@@ -80,7 +81,9 @@ describe('ContactSection CSRF Protection', () => {
     render(<ContactSection />);
 
     expect(screen.getByText('Security Error')).toBeInTheDocument();
-    expect(screen.getByText('Unable to initialize secure form. Please refresh the page.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Unable to initialize secure form. Please refresh the page.')
+    ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /refresh page/i })).toBeInTheDocument();
   });
 

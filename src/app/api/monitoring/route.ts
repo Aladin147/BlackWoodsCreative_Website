@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRequestLogger } from '@/lib/utils/request-logger';
+
 import { getPerformanceMonitor } from '@/lib/utils/performance-monitor';
+import { getRequestLogger } from '@/lib/utils/request-logger';
 import { verifyCSRFToken } from '@/lib/utils/security';
 
 export const runtime = 'nodejs';
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const type = url.searchParams.get('type') || 'metrics';
     const limit = parseInt(url.searchParams.get('limit') || '50', 10);
-    const format = url.searchParams.get('format') as 'json' | 'csv' || 'json';
+    const format = (url.searchParams.get('format') as 'json' | 'csv') || 'json';
 
     const requestLogger = getRequestLogger();
     const performanceMonitor = getPerformanceMonitor();
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
       case 'metrics':
         const requestMetrics = requestLogger.getMetrics();
         const performanceMetrics = performanceMonitor.getMetrics();
-        
+
         return NextResponse.json({
           timestamp: new Date().toISOString(),
           requests: requestMetrics,
@@ -29,12 +30,12 @@ export async function GET(request: NextRequest) {
             memory: process.memoryUsage(),
             nodeVersion: process.version,
             platform: process.platform,
-          }
+          },
         });
 
       case 'logs':
         const logs = requestLogger.getRecentLogs(limit);
-        
+
         if (format === 'csv') {
           const csvData = requestLogger.exportLogs('csv');
           return new NextResponse(csvData, {
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
             },
           });
         }
-        
+
         return NextResponse.json({
           logs,
           total: logs.length,
@@ -69,26 +70,31 @@ export async function GET(request: NextRequest) {
 
       case 'health':
         const metrics = requestLogger.getMetrics();
-        const isHealthy = 
-          metrics.totalRequests > 0 ? 
-          (metrics.successfulRequests / metrics.totalRequests) > 0.95 : true;
-        
+        const isHealthy =
+          metrics.totalRequests > 0
+            ? metrics.successfulRequests / metrics.totalRequests > 0.95
+            : true;
+
         return NextResponse.json({
           status: isHealthy ? 'healthy' : 'degraded',
           timestamp: new Date().toISOString(),
           checks: {
             responseTime: metrics.averageResponseTime < 1000,
-            errorRate: metrics.totalRequests > 0 ? 
-              (metrics.failedRequests / metrics.totalRequests) < 0.05 : true,
+            errorRate:
+              metrics.totalRequests > 0
+                ? metrics.failedRequests / metrics.totalRequests < 0.05
+                : true,
             securityEvents: metrics.securityEvents < 10,
           },
           metrics: {
             totalRequests: metrics.totalRequests,
-            successRate: metrics.totalRequests > 0 ? 
-              (metrics.successfulRequests / metrics.totalRequests) * 100 : 100,
+            successRate:
+              metrics.totalRequests > 0
+                ? (metrics.successfulRequests / metrics.totalRequests) * 100
+                : 100,
             averageResponseTime: metrics.averageResponseTime,
             securityEvents: metrics.securityEvents,
-          }
+          },
         });
 
       default:
@@ -99,24 +105,18 @@ export async function GET(request: NextRequest) {
     }
   } catch (error) {
     console.error('Monitoring API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     // Verify CSRF token for state-changing operations
-    const csrfToken = request.headers.get('x-csrf-token') || 
-                     request.cookies.get('csrf-token')?.value;
-    
+    const csrfToken =
+      request.headers.get('x-csrf-token') || request.cookies.get('csrf-token')?.value;
+
     if (!csrfToken || !verifyCSRFToken(csrfToken, csrfToken)) {
-      return NextResponse.json(
-        { error: 'Invalid CSRF token' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -134,9 +134,9 @@ export async function POST(request: NextRequest) {
         });
 
       case 'export-logs':
-        const format = body.format as 'json' | 'csv' || 'json';
+        const format = (body.format as 'json' | 'csv') || 'json';
         const exportData = requestLogger.exportLogs(format);
-        
+
         return new NextResponse(exportData, {
           headers: {
             'Content-Type': format === 'csv' ? 'text/csv' : 'application/json',
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
         // Allow logging custom monitoring events
         const { event, data } = body;
         console.log(`📊 Custom monitoring event: ${event}`, data);
-        
+
         return NextResponse.json({
           success: true,
           message: 'Custom event logged',
@@ -163,10 +163,7 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Monitoring API POST error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

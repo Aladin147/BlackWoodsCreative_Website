@@ -7,7 +7,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'cinematic-brand-film',
     title: 'Cinematic Brand Film',
-    description: 'A compelling brand story that showcases the essence of luxury craftsmanship through cinematic storytelling.',
+    description:
+      'A compelling brand story that showcases the essence of luxury craftsmanship through cinematic storytelling.',
     category: 'Film',
     type: 'video',
     image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=600&fit=crop',
@@ -22,7 +23,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'architectural-visualization',
     title: 'Modern Architecture Visualization',
-    description: 'Photorealistic 3D visualization of a contemporary residential complex showcasing innovative design.',
+    description:
+      'Photorealistic 3D visualization of a contemporary residential complex showcasing innovative design.',
     category: '3D Visualization',
     type: 'image',
     image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
@@ -36,7 +38,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'product-photography',
     title: 'Premium Product Photography',
-    description: 'High-end product photography series featuring luxury watches with dramatic lighting and composition.',
+    description:
+      'High-end product photography series featuring luxury watches with dramatic lighting and composition.',
     category: 'Photography',
     type: 'image',
     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop',
@@ -49,7 +52,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'immersive-scene',
     title: 'Immersive Forest Scene',
-    description: 'A mystical forest environment created for virtual reality experience with dynamic lighting and atmosphere.',
+    description:
+      'A mystical forest environment created for virtual reality experience with dynamic lighting and atmosphere.',
     category: 'Scene Creation',
     type: 'image',
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop',
@@ -62,7 +66,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'corporate-documentary',
     title: 'Corporate Documentary',
-    description: 'Documentary-style film capturing the innovation and culture of a leading technology company.',
+    description:
+      'Documentary-style film capturing the innovation and culture of a leading technology company.',
     category: 'Film',
     type: 'video',
     image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop',
@@ -76,7 +81,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'fashion-editorial',
     title: 'Fashion Editorial Series',
-    description: 'Avant-garde fashion photography series exploring the intersection of technology and haute couture.',
+    description:
+      'Avant-garde fashion photography series exploring the intersection of technology and haute couture.',
     category: 'Photography',
     type: 'image',
     image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&h=600&fit=crop',
@@ -89,7 +95,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'automotive-visualization',
     title: 'Automotive Visualization',
-    description: 'Stunning 3D visualization of a concept car showcasing aerodynamic design and premium materials.',
+    description:
+      'Stunning 3D visualization of a concept car showcasing aerodynamic design and premium materials.',
     category: '3D Visualization',
     type: 'image',
     image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=600&fit=crop',
@@ -103,7 +110,8 @@ export const portfolioData: PortfolioProject[] = [
   {
     id: 'urban-environment',
     title: 'Cyberpunk Urban Environment',
-    description: 'Futuristic cityscape with neon lighting and atmospheric effects for gaming and entertainment.',
+    description:
+      'Futuristic cityscape with neon lighting and atmospheric effects for gaming and entertainment.',
     category: 'Scene Creation',
     type: 'image',
     image: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&h=600&fit=crop',

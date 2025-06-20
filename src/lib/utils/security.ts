@@ -57,7 +57,7 @@ export interface CSPConfig {
 
 export function buildCSP(config: CSPConfig = {}): string {
   const { nonce, isDevelopment = false } = config;
-  
+
   // Base CSP directives
   const directives: Record<string, string[]> = {
     'default-src': ["'self'"],
@@ -87,10 +87,7 @@ export function buildCSP(config: CSPConfig = {}): string {
       'https://www.googletagmanager.com',
       'https://www.google-analytics.com',
     ],
-    'font-src': [
-      "'self'",
-      'https://fonts.gstatic.com',
-    ],
+    'font-src': ["'self'", 'https://fonts.gstatic.com'],
     'connect-src': [
       "'self'",
       'https://api.resend.com',
@@ -141,22 +138,22 @@ export function getSecurityHeaders(nonce?: string): Record<string, string> {
   return {
     // Content Security Policy
     'Content-Security-Policy': buildCSP({ nonce: secureNonce, isDevelopment }),
-    
+
     // Prevent MIME type sniffing
     'X-Content-Type-Options': 'nosniff',
-    
+
     // Prevent clickjacking
     'X-Frame-Options': 'DENY',
-    
+
     // XSS Protection (legacy but still useful)
     'X-XSS-Protection': '1; mode=block',
-    
+
     // Referrer Policy
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    
+
     // HSTS (HTTP Strict Transport Security)
     'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-    
+
     // Permissions Policy (formerly Feature Policy)
     'Permissions-Policy': [
       'camera=()',
@@ -166,7 +163,7 @@ export function getSecurityHeaders(nonce?: string): Record<string, string> {
       'payment=()',
       'usb=()',
     ].join(', '),
-    
+
     // Cross-Origin Policies
     'Cross-Origin-Embedder-Policy': 'require-corp',
     'Cross-Origin-Opener-Policy': 'same-origin',
@@ -190,7 +187,7 @@ export const rateLimitConfigs: Record<string, RateLimitConfig> = {
     skipSuccessfulRequests: false,
     skipFailedRequests: false,
   },
-  
+
   // Contact form specific (more restrictive)
   contact: {
     windowMs: 10 * 60 * 1000, // 10 minutes
@@ -198,7 +195,7 @@ export const rateLimitConfigs: Record<string, RateLimitConfig> = {
     skipSuccessfulRequests: false,
     skipFailedRequests: false,
   },
-  
+
   // Authentication endpoints (very restrictive)
   auth: {
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -238,7 +235,8 @@ export function sanitizeEmail(email: string): string {
   }
 
   // Validate email format (more strict)
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
   return emailRegex.test(sanitized) ? sanitized : '';
 }
@@ -261,7 +259,7 @@ export interface SecurityIssue {
 export function auditSecurity(request?: NextRequest): SecurityAuditResult {
   const issues: SecurityIssue[] = [];
   const recommendations: string[] = [];
-  
+
   // Check if HTTPS is being used
   if (request && !request.url.startsWith('https://') && process.env.NODE_ENV === 'production') {
     issues.push({
@@ -271,7 +269,7 @@ export function auditSecurity(request?: NextRequest): SecurityAuditResult {
       fix: 'Ensure all requests use HTTPS in production',
     });
   }
-  
+
   // Check for security headers
   const requiredHeaders = [
     'Content-Security-Policy',
@@ -279,7 +277,7 @@ export function auditSecurity(request?: NextRequest): SecurityAuditResult {
     'X-Frame-Options',
     'Strict-Transport-Security',
   ];
-  
+
   if (request) {
     requiredHeaders.forEach(header => {
       if (!request.headers.get(header)) {
@@ -292,15 +290,18 @@ export function auditSecurity(request?: NextRequest): SecurityAuditResult {
       }
     });
   }
-  
+
   // Calculate security score
   const criticalIssues = issues.filter(i => i.severity === 'critical').length;
   const highIssues = issues.filter(i => i.severity === 'high').length;
   const mediumIssues = issues.filter(i => i.severity === 'medium').length;
   const lowIssues = issues.filter(i => i.severity === 'low').length;
-  
-  const score = Math.max(0, 100 - (criticalIssues * 25 + highIssues * 15 + mediumIssues * 10 + lowIssues * 5));
-  
+
+  const score = Math.max(
+    0,
+    100 - (criticalIssues * 25 + highIssues * 15 + mediumIssues * 10 + lowIssues * 5)
+  );
+
   // Generate recommendations
   if (criticalIssues > 0) {
     recommendations.push('Address critical security issues immediately');
@@ -312,7 +313,7 @@ export function auditSecurity(request?: NextRequest): SecurityAuditResult {
     recommendations.push('Implement comprehensive security headers');
     recommendations.push('Review and tighten Content Security Policy');
   }
-  
+
   return {
     passed: criticalIssues === 0 && highIssues === 0,
     score,
@@ -324,11 +325,11 @@ export function auditSecurity(request?: NextRequest): SecurityAuditResult {
 // Middleware helper for applying security headers
 export function withSecurityHeaders(response: NextResponse, nonce?: string): NextResponse {
   const headers = getSecurityHeaders(nonce);
-  
+
   Object.entries(headers).forEach(([key, value]) => {
     response.headers.set(key, value);
   });
-  
+
   return response;
 }
 
@@ -338,10 +339,10 @@ export function withCSRFProtection(request: NextRequest, response: NextResponse)
   if (['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
     return response;
   }
-  
+
   const csrfToken = request.headers.get('x-csrf-token');
   const sessionToken = request.cookies.get('csrf-token')?.value;
-  
+
   if (!csrfToken || !sessionToken || !verifyCSRFToken(csrfToken, sessionToken)) {
     return new NextResponse('CSRF token validation failed', {
       status: 403,
@@ -350,7 +351,7 @@ export function withCSRFProtection(request: NextRequest, response: NextResponse)
       },
     });
   }
-  
+
   return response;
 }
 
@@ -367,7 +368,7 @@ export function logSecurityEvent(event: {
     level: 'security',
     ...event,
   };
-  
+
   // In production, this would send to a security monitoring service
   console.warn('🔒 Security Event:', JSON.stringify(logEntry, null, 2));
 }

@@ -1,31 +1,76 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+
 import { HeroSection } from '../HeroSection';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => (
+      <section {...props}>{children}</section>
+    ),
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
     h1: ({ children, ...props }: React.ComponentProps<'h1'>) => <h1 {...props}>{children}</h1>,
     p: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
-    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => (
+      <button {...props}>{children}</button>
+    ),
   },
 }));
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
-  CinematicParallax: ({ children }: { children: React.ReactNode }) => <div data-testid="cinematic-parallax">{children}</div>,
-  FloatingElement: ({ children }: { children: React.ReactNode }) => <div data-testid="floating-element">{children}</div>,
-  TextReveal: ({ children, text, ...props }: { children?: React.ReactNode; text?: string; [key: string]: unknown }) => <div data-testid="text-reveal" {...props}>{text || children}</div>,
-  PulseGlow: ({ children }: { children: React.ReactNode }) => <div data-testid="pulse-glow">{children}</div>,
-  MorphingButton: ({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: unknown }) => <button data-testid="morphing-button" onClick={onClick} {...props}>{children}</button>,
-  MagneticCursor: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-cursor">{children}</div>,
-  MagneticField: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-field">{children}</div>,
-  ParallaxContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="parallax-container">{children}</div>,
-  ParallaxText: ({ children }: { children: React.ReactNode }) => <div data-testid="parallax-text">{children}</div>,
-  AtmosphericLayer: ({ className }: { className?: string }) => <div className={className} data-testid="atmospheric-layer" />,
+  CinematicParallax: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="cinematic-parallax">{children}</div>
+  ),
+  FloatingElement: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="floating-element">{children}</div>
+  ),
+  TextReveal: ({
+    children,
+    text,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    text?: string;
+    [key: string]: unknown;
+  }) => (
+    <div data-testid="text-reveal" {...props}>
+      {text || children}
+    </div>
+  ),
+  PulseGlow: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="pulse-glow">{children}</div>
+  ),
+  MorphingButton: ({
+    children,
+    onClick,
+    ...props
+  }: {
+    children: React.ReactNode;
+    onClick?: () => void;
+    [key: string]: unknown;
+  }) => (
+    <button data-testid="morphing-button" onClick={onClick} {...props}>
+      {children}
+    </button>
+  ),
+  MagneticCursor: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="magnetic-cursor">{children}</div>
+  ),
+  MagneticField: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="magnetic-field">{children}</div>
+  ),
+  ParallaxContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="parallax-container">{children}</div>
+  ),
+  ParallaxText: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="parallax-text">{children}</div>
+  ),
+  AtmosphericLayer: ({ className }: { className?: string }) => (
+    <div className={className} data-testid="atmospheric-layer" />
+  ),
 }));
 
 // Mock Heroicons
@@ -354,8 +399,12 @@ describe('HeroSection', () => {
     it('provides meaningful button text', () => {
       render(<HeroSection />);
 
-      expect(screen.getByRole('button', { name: /View our portfolio and previous work/ })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Start your project - Contact us to begin/ })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /View our portfolio and previous work/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /Start your project - Contact us to begin/ })
+      ).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Scroll to explore/ })).toBeInTheDocument();
     });
 
@@ -373,7 +422,9 @@ describe('HeroSection', () => {
       render(<HeroSection />);
 
       expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
-      expect(screen.getByText('Crafting Visual Stories That Captivate and Convert')).toBeInTheDocument();
+      expect(
+        screen.getByText('Crafting Visual Stories That Captivate and Convert')
+      ).toBeInTheDocument();
     });
 
     it('displays correct call-to-action text', () => {

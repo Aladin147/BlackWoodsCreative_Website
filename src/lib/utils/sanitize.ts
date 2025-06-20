@@ -23,7 +23,7 @@ export function sanitizeFormData<T extends Record<string, unknown>>(formData: T)
 
   for (const key in sanitized) {
     if (typeof sanitized[key] === 'string') {
-      sanitized[key] = sanitizeInput(sanitized[key] as string);
+      sanitized[key] = sanitizeInput(sanitized[key]);
     }
   }
 

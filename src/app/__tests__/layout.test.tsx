@@ -1,6 +1,18 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
+
 import RootLayout, { metadata } from '../layout';
+
+// Mock Next.js headers function
+jest.mock('next/headers', () => ({
+  headers: jest.fn(() => ({
+    get: jest.fn((name: string) => {
+      if (name === 'x-nonce') return 'test-nonce-123';
+      if (name === 'x-csrf-token') return 'test-csrf-token-456';
+      return null;
+    }),
+  })),
+}));
 
 // Mock Next.js dynamic imports
 jest.mock('next/dynamic', () => {
@@ -64,10 +76,13 @@ jest.mock('next/font/google', () => ({
 const MockRootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" data-testid="html-element">
-      <body className="bg-bw-bg-primary text-bw-text-primary font-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" data-testid="body-element">
+      <body
+        className="bg-bw-bg-primary font-primary text-bw-text-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+        data-testid="body-element"
+      >
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-bw-accent-gold focus:text-bw-bg-primary focus:rounded-md focus:font-medium"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-bw-accent-gold focus:px-4 focus:py-2 focus:font-medium focus:text-bw-bg-primary"
         >
           Skip to main content
         </a>

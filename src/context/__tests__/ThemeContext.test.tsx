@@ -1,11 +1,11 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 import '@testing-library/jest-dom';
+
+import { ThemeProvider, useTheme } from '../ThemeContext';
 
 // Unmock ThemeContext for this test file to test the actual implementation
 jest.unmock('@/context/ThemeContext');
-
-import { ThemeProvider, useTheme } from '../ThemeContext';
 
 // Test component that uses the theme context
 function TestComponent() {
@@ -117,5 +117,4 @@ describe('ThemeContext', () => {
       expect(themeValue).toBe('deep-forest-haze');
     });
   });
-
 });

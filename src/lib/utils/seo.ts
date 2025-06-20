@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+
 import { siteConfig } from '@/lib/constants/siteConfig';
 
 interface SEOProps {
@@ -83,10 +84,7 @@ export function generateStructuredData() {
       telephone: siteConfig.links.phone,
       contactType: 'customer service',
     },
-    sameAs: [
-      siteConfig.links.instagram,
-      siteConfig.links.linkedin,
-    ],
+    sameAs: [siteConfig.links.instagram, siteConfig.links.linkedin],
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'US',
@@ -106,19 +104,22 @@ export function generateStructuredData() {
   };
 }
 
-export function generatePortfolioStructuredData(projects: Array<{
-  title: string;
-  description: string;
-  image: string;
-  year?: number;
-  category: string;
-  tags?: string[];
-}>) {
+export function generatePortfolioStructuredData(
+  projects: Array<{
+    title: string;
+    description: string;
+    image: string;
+    year?: number;
+    category: string;
+    tags?: string[];
+  }>
+) {
   return {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
     name: 'BlackWoods Creative Portfolio',
-    description: 'Professional portfolio showcasing filmmaking, photography, and 3D visualization work',
+    description:
+      'Professional portfolio showcasing filmmaking, photography, and 3D visualization work',
     creator: {
       '@type': 'Organization',
       name: siteConfig.name,

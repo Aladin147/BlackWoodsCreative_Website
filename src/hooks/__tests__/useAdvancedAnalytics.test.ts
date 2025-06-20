@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+
 import { useAdvancedAnalytics, useComponentAnalytics } from '../useAdvancedAnalytics';
 
 // Mock useDeviceAdaptation
@@ -37,13 +38,17 @@ const mockPerformanceObserver = {
   callback: null as any,
 };
 
-global.PerformanceObserver = jest.fn().mockImplementation((callback) => {
+global.PerformanceObserver = jest.fn().mockImplementation(callback => {
   mockPerformanceObserver.callback = callback;
   return mockPerformanceObserver;
 }) as any;
 
 // Add the required supportedEntryTypes property
-(global.PerformanceObserver as any).supportedEntryTypes = ['largest-contentful-paint', 'first-input', 'layout-shift'];
+(global.PerformanceObserver as any).supportedEntryTypes = [
+  'largest-contentful-paint',
+  'first-input',
+  'layout-shift',
+];
 
 // Mock window and document properties globally
 Object.defineProperty(window, 'location', {
@@ -304,9 +309,7 @@ describe('useAdvancedAnalytics', () => {
   });
 
   it('respects tracking configuration', () => {
-    const { result } = renderHook(() => 
-      useAdvancedAnalytics({ enableTracking: false })
-    );
+    const { result } = renderHook(() => useAdvancedAnalytics({ enableTracking: false }));
 
     act(() => {
       result.current.trackEvent({
@@ -321,9 +324,7 @@ describe('useAdvancedAnalytics', () => {
   });
 
   it('respects heatmap configuration', () => {
-    const { result } = renderHook(() => 
-      useAdvancedAnalytics({ enableHeatmap: false })
-    );
+    const { result } = renderHook(() => useAdvancedAnalytics({ enableHeatmap: false }));
 
     act(() => {
       result.current.trackInteraction({
@@ -338,9 +339,7 @@ describe('useAdvancedAnalytics', () => {
   });
 
   it('respects performance tracking configuration', () => {
-    const { result } = renderHook(() => 
-      useAdvancedAnalytics({ enablePerformanceTracking: false })
-    );
+    const { result } = renderHook(() => useAdvancedAnalytics({ enablePerformanceTracking: false }));
 
     act(() => {
       result.current.trackPerformance({
@@ -370,7 +369,9 @@ describe('useAdvancedAnalytics', () => {
   it('handles scroll tracking', () => {
     const { unmount } = renderHook(() => useAdvancedAnalytics());
 
-    expect(mockAddEventListener).toHaveBeenCalledWith('scroll', expect.any(Function), { passive: true });
+    expect(mockAddEventListener).toHaveBeenCalledWith('scroll', expect.any(Function), {
+      passive: true,
+    });
     expect(mockAddEventListener).toHaveBeenCalledWith('beforeunload', expect.any(Function));
 
     unmount();
@@ -384,7 +385,7 @@ describe('useAdvancedAnalytics', () => {
 
     expect(global.PerformanceObserver).toHaveBeenCalledWith(expect.any(Function));
     expect(mockPerformanceObserver.observe).toHaveBeenCalledWith({
-      entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift']
+      entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'],
     });
   });
 });

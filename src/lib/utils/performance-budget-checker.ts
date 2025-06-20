@@ -1,12 +1,12 @@
 // Performance budget checker with comprehensive monitoring and reporting
-import { 
-  PerformanceBudget, 
-  BudgetViolation, 
+import {
+  PerformanceBudget,
+  BudgetViolation,
   ViolationSeverity,
   getPerformanceBudget,
   calculateViolationSeverity,
   formatBytes,
-  formatMilliseconds
+  formatMilliseconds,
 } from '../config/performance-budgets';
 
 export interface BudgetCheckResult {
@@ -96,39 +96,154 @@ class PerformanceBudgetChecker {
 
   private checkBundleBudgets(bundles: NonNullable<PerformanceData['bundles']>) {
     this.checkMetric('main', bundles.main, this.budget.bundles.main, 'bundles', 'Main bundle size');
-    this.checkMetric('vendor', bundles.vendor, this.budget.bundles.vendor, 'bundles', 'Vendor bundle size');
-    this.checkMetric('total', bundles.total, this.budget.bundles.total, 'bundles', 'Total bundle size');
-    this.checkMetric('gzipped', bundles.gzipped, this.budget.bundles.gzipped, 'bundles', 'Gzipped bundle size');
+    this.checkMetric(
+      'vendor',
+      bundles.vendor,
+      this.budget.bundles.vendor,
+      'bundles',
+      'Vendor bundle size'
+    );
+    this.checkMetric(
+      'total',
+      bundles.total,
+      this.budget.bundles.total,
+      'bundles',
+      'Total bundle size'
+    );
+    this.checkMetric(
+      'gzipped',
+      bundles.gzipped,
+      this.budget.bundles.gzipped,
+      'bundles',
+      'Gzipped bundle size'
+    );
   }
 
   private checkCoreWebVitalsBudgets(vitals: NonNullable<PerformanceData['coreWebVitals']>) {
-    if (vitals.lcp) this.checkMetric('lcp', vitals.lcp, this.budget.coreWebVitals.lcp, 'coreWebVitals', 'Largest Contentful Paint');
-    if (vitals.fid) this.checkMetric('fid', vitals.fid, this.budget.coreWebVitals.fid, 'coreWebVitals', 'First Input Delay');
-    if (vitals.cls) this.checkMetric('cls', vitals.cls, this.budget.coreWebVitals.cls, 'coreWebVitals', 'Cumulative Layout Shift');
-    if (vitals.fcp) this.checkMetric('fcp', vitals.fcp, this.budget.coreWebVitals.fcp, 'coreWebVitals', 'First Contentful Paint');
-    if (vitals.ttfb) this.checkMetric('ttfb', vitals.ttfb, this.budget.coreWebVitals.ttfb, 'coreWebVitals', 'Time to First Byte');
-    if (vitals.inp) this.checkMetric('inp', vitals.inp, this.budget.coreWebVitals.inp, 'coreWebVitals', 'Interaction to Next Paint');
+    if (vitals.lcp)
+      this.checkMetric(
+        'lcp',
+        vitals.lcp,
+        this.budget.coreWebVitals.lcp,
+        'coreWebVitals',
+        'Largest Contentful Paint'
+      );
+    if (vitals.fid)
+      this.checkMetric(
+        'fid',
+        vitals.fid,
+        this.budget.coreWebVitals.fid,
+        'coreWebVitals',
+        'First Input Delay'
+      );
+    if (vitals.cls)
+      this.checkMetric(
+        'cls',
+        vitals.cls,
+        this.budget.coreWebVitals.cls,
+        'coreWebVitals',
+        'Cumulative Layout Shift'
+      );
+    if (vitals.fcp)
+      this.checkMetric(
+        'fcp',
+        vitals.fcp,
+        this.budget.coreWebVitals.fcp,
+        'coreWebVitals',
+        'First Contentful Paint'
+      );
+    if (vitals.ttfb)
+      this.checkMetric(
+        'ttfb',
+        vitals.ttfb,
+        this.budget.coreWebVitals.ttfb,
+        'coreWebVitals',
+        'Time to First Byte'
+      );
+    if (vitals.inp)
+      this.checkMetric(
+        'inp',
+        vitals.inp,
+        this.budget.coreWebVitals.inp,
+        'coreWebVitals',
+        'Interaction to Next Paint'
+      );
   }
 
   private checkResourceBudgets(resources: NonNullable<PerformanceData['resources']>) {
-    this.checkMetric('requests', resources.requests, this.budget.resources.maxRequests, 'resources', 'Number of requests');
-    this.checkMetric('imageSize', resources.imageSize, this.budget.resources.maxImageSize, 'resources', 'Image size');
-    this.checkMetric('fontSize', resources.fontSize, this.budget.resources.maxFontSize, 'resources', 'Font size');
-    this.checkMetric('cssSize', resources.cssSize, this.budget.resources.maxCSSSize, 'resources', 'CSS size');
-    this.checkMetric('jsSize', resources.jsSize, this.budget.resources.maxJSSize, 'resources', 'JavaScript size');
+    this.checkMetric(
+      'requests',
+      resources.requests,
+      this.budget.resources.maxRequests,
+      'resources',
+      'Number of requests'
+    );
+    this.checkMetric(
+      'imageSize',
+      resources.imageSize,
+      this.budget.resources.maxImageSize,
+      'resources',
+      'Image size'
+    );
+    this.checkMetric(
+      'fontSize',
+      resources.fontSize,
+      this.budget.resources.maxFontSize,
+      'resources',
+      'Font size'
+    );
+    this.checkMetric(
+      'cssSize',
+      resources.cssSize,
+      this.budget.resources.maxCSSSize,
+      'resources',
+      'CSS size'
+    );
+    this.checkMetric(
+      'jsSize',
+      resources.jsSize,
+      this.budget.resources.maxJSSize,
+      'resources',
+      'JavaScript size'
+    );
   }
 
   private checkPerformanceBudgets(performance: NonNullable<PerformanceData['performance']>) {
-    this.checkMetric('renderTime', performance.renderTime, this.budget.performance.maxRenderTime, 'performance', 'Render time');
-    this.checkMetric('memoryUsage', performance.memoryUsage, this.budget.performance.maxMemoryUsage, 'performance', 'Memory usage');
-    this.checkMetric('domNodes', performance.domNodes, this.budget.performance.maxDOMNodes, 'performance', 'DOM nodes');
-    this.checkMetric('eventListeners', performance.eventListeners, this.budget.performance.maxEventListeners, 'performance', 'Event listeners');
-    
+    this.checkMetric(
+      'renderTime',
+      performance.renderTime,
+      this.budget.performance.maxRenderTime,
+      'performance',
+      'Render time'
+    );
+    this.checkMetric(
+      'memoryUsage',
+      performance.memoryUsage,
+      this.budget.performance.maxMemoryUsage,
+      'performance',
+      'Memory usage'
+    );
+    this.checkMetric(
+      'domNodes',
+      performance.domNodes,
+      this.budget.performance.maxDOMNodes,
+      'performance',
+      'DOM nodes'
+    );
+    this.checkMetric(
+      'eventListeners',
+      performance.eventListeners,
+      this.budget.performance.maxEventListeners,
+      'performance',
+      'Event listeners'
+    );
+
     // FPS is a minimum, so check differently
     if (performance.fps < this.budget.performance.minFPS) {
-      const percentage = ((this.budget.performance.minFPS - performance.fps) / this.budget.performance.minFPS) * 100;
+      const percentage =
+        ((this.budget.performance.minFPS - performance.fps) / this.budget.performance.minFPS) * 100;
       const severity = calculateViolationSeverity(this.budget.performance.minFPS, performance.fps);
-      
+
       this.violations.push({
         metric: 'fps',
         actual: performance.fps,
@@ -142,22 +257,40 @@ class PerformanceBudgetChecker {
   }
 
   private checkNetworkBudgets(network: NonNullable<PerformanceData['network']>) {
-    this.checkMetric('latency', network.latency, this.budget.network.maxLatency, 'network', 'Network latency');
-    this.checkMetric('bandwidth', network.bandwidth, this.budget.network.maxBandwidth, 'network', 'Bandwidth usage');
-    this.checkMetric('concurrentRequests', network.concurrentRequests, this.budget.network.maxConcurrentRequests, 'network', 'Concurrent requests');
+    this.checkMetric(
+      'latency',
+      network.latency,
+      this.budget.network.maxLatency,
+      'network',
+      'Network latency'
+    );
+    this.checkMetric(
+      'bandwidth',
+      network.bandwidth,
+      this.budget.network.maxBandwidth,
+      'network',
+      'Bandwidth usage'
+    );
+    this.checkMetric(
+      'concurrentRequests',
+      network.concurrentRequests,
+      this.budget.network.maxConcurrentRequests,
+      'network',
+      'Concurrent requests'
+    );
   }
 
   private checkMetric(
-    metric: string, 
-    actual: number, 
-    budget: number, 
-    category: keyof PerformanceBudget, 
+    metric: string,
+    actual: number,
+    budget: number,
+    category: keyof PerformanceBudget,
     description: string
   ) {
     if (actual > budget) {
       const percentage = ((actual - budget) / budget) * 100;
       const severity = calculateViolationSeverity(actual, budget);
-      
+
       this.violations.push({
         metric,
         actual,
@@ -174,7 +307,15 @@ class PerformanceBudgetChecker {
     // Format based on metric type
     if (metric.includes('Size') || metric.includes('bundle') || metric === 'bandwidth') {
       return formatBytes(value);
-    } else if (metric.includes('Time') || metric === 'lcp' || metric === 'fid' || metric === 'fcp' || metric === 'ttfb' || metric === 'inp' || metric === 'latency') {
+    } else if (
+      metric.includes('Time') ||
+      metric === 'lcp' ||
+      metric === 'fid' ||
+      metric === 'fcp' ||
+      metric === 'ttfb' ||
+      metric === 'inp' ||
+      metric === 'latency'
+    ) {
       return formatMilliseconds(value);
     } else if (metric === 'memoryUsage') {
       return `${value.toFixed(1)}%`;
@@ -270,7 +411,7 @@ class PerformanceBudgetChecker {
 
   private groupViolationsByCategory() {
     const grouped: Partial<Record<keyof PerformanceBudget, BudgetViolation[]>> = {};
-    
+
     this.violations.forEach(violation => {
       if (!grouped[violation.category]) {
         grouped[violation.category] = [];
@@ -285,7 +426,9 @@ class PerformanceBudgetChecker {
 // Export singleton instance
 let budgetChecker: PerformanceBudgetChecker | null = null;
 
-export function getPerformanceBudgetChecker(customBudget?: PerformanceBudget): PerformanceBudgetChecker {
+export function getPerformanceBudgetChecker(
+  customBudget?: PerformanceBudget
+): PerformanceBudgetChecker {
   if (!budgetChecker || customBudget) {
     budgetChecker = new PerformanceBudgetChecker(customBudget);
   }
@@ -359,7 +502,8 @@ export function collectPerformanceData(): PerformanceData {
 
   // Memory usage if available
   if ('memory' in performance) {
-    const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
+    const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } })
+      .memory;
     data.performance.memoryUsage = (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100;
   }
 

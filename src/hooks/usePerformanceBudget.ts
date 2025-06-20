@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BudgetCheckResult, PerformanceData } from '@/lib/utils/performance-budget-checker';
+
 import { PerformanceBudget } from '@/lib/config/performance-budgets';
+import { BudgetCheckResult, PerformanceData } from '@/lib/utils/performance-budget-checker';
 
 export interface PerformanceBudgetState {
   result: BudgetCheckResult | null;
@@ -23,7 +24,7 @@ const defaultConfig: PerformanceBudgetConfig = {
 
 export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = {}) {
   const finalConfig = { ...defaultConfig, ...config };
-  
+
   const [state, setState] = useState<PerformanceBudgetState>({
     result: null,
     isLoading: false,
@@ -39,7 +40,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
       if (customData) {
         console.log('Using custom performance data:', customData);
       }
-      
+
       const response = await fetch('/api/performance-budget?action=check', {
         method: 'GET',
         headers: {
@@ -52,7 +53,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
       }
 
       const result = await response.json();
-      
+
       setState({
         result,
         isLoading: false,
@@ -62,7 +63,8 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
 
       return result;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to check performance budgets';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to check performance budgets';
       setState(prev => ({
         ...prev,
         isLoading: false,
@@ -72,105 +74,114 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     }
   }, []);
 
-  const checkCustomBudgets = useCallback(async (
-    performanceData: PerformanceData,
-    customBudget: PerformanceBudget
-  ) => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+  const checkCustomBudgets = useCallback(
+    async (performanceData: PerformanceData, customBudget: PerformanceBudget) => {
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
 
-    try {
-      // Get CSRF token
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      
-      const response = await fetch('/api/performance-budget', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken || '',
-        },
-        body: JSON.stringify({
-          action: 'check-custom',
-          data: { performanceData, customBudget },
-        }),
-      });
+      try {
+        // Get CSRF token
+        const csrfToken = document
+          .querySelector('meta[name="csrf-token"]')
+          ?.getAttribute('content');
 
-      if (!response.ok) {
-        throw new Error(`Failed to check custom budgets: ${response.statusText}`);
+        const response = await fetch('/api/performance-budget', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken || '',
+          },
+          body: JSON.stringify({
+            action: 'check-custom',
+            data: { performanceData, customBudget },
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to check custom budgets: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+
+        setState({
+          result,
+          isLoading: false,
+          error: null,
+          lastChecked: new Date().toISOString(),
+        });
+
+        return result;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to check custom performance budgets';
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: errorMessage,
+        }));
+        throw error;
       }
+    },
+    []
+  );
 
-      const result = await response.json();
-      
-      setState({
-        result,
-        isLoading: false,
-        error: null,
-        lastChecked: new Date().toISOString(),
-      });
+  const getBudgetConfig = useCallback(
+    async (environment?: string) => {
+      try {
+        const env = environment || finalConfig.environment;
+        const response = await fetch(`/api/performance-budget?action=config&env=${env}`);
 
-      return result;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to check custom performance budgets';
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: errorMessage,
-      }));
-      throw error;
-    }
-  }, []);
+        if (!response.ok) {
+          throw new Error(`Failed to get budget config: ${response.statusText}`);
+        }
 
-  const getBudgetConfig = useCallback(async (environment?: string) => {
-    try {
-      const env = environment || finalConfig.environment;
-      const response = await fetch(`/api/performance-budget?action=config&env=${env}`);
-      
-      if (!response.ok) {
-        throw new Error(`Failed to get budget config: ${response.statusText}`);
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to get budget configuration:', error);
+        throw error;
       }
+    },
+    [finalConfig.environment]
+  );
 
-      return await response.json();
-    } catch (error) {
-      console.error('Failed to get budget configuration:', error);
-      throw error;
-    }
-  }, [finalConfig.environment]);
+  const generateReport = useCallback(
+    async (format: 'json' | 'csv' = 'json', includeRecommendations = true) => {
+      try {
+        const response = await fetch(
+          `/api/performance-budget?action=report&format=${format}&recommendations=${includeRecommendations}`
+        );
 
-  const generateReport = useCallback(async (format: 'json' | 'csv' = 'json', includeRecommendations = true) => {
-    try {
-      const response = await fetch(
-        `/api/performance-budget?action=report&format=${format}&recommendations=${includeRecommendations}`
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Failed to generate report: ${response.statusText}`);
+        if (!response.ok) {
+          throw new Error(`Failed to generate report: ${response.statusText}`);
+        }
+
+        if (format === 'csv') {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `performance-budget-report-${Date.now()}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          return { success: true, message: 'CSV report downloaded' };
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to generate performance report:', error);
+        throw error;
       }
-
-      if (format === 'csv') {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `performance-budget-report-${Date.now()}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        return { success: true, message: 'CSV report downloaded' };
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Failed to generate performance report:', error);
-      throw error;
-    }
-  }, []);
+    },
+    []
+  );
 
   const getHistory = useCallback(async (limit = 10, days = 7) => {
     try {
       const response = await fetch(
         `/api/performance-budget?action=history&limit=${limit}&days=${days}`
       );
-      
+
       if (!response.ok) {
         throw new Error(`Failed to get budget history: ${response.statusText}`);
       }
@@ -186,7 +197,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     try {
       // Get CSRF token
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      
+
       const response = await fetch('/api/performance-budget', {
         method: 'POST',
         headers: {
@@ -238,7 +249,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     // Listen for long tasks (if supported)
     if ('PerformanceObserver' in window) {
       try {
-        const observer = new PerformanceObserver((list) => {
+        const observer = new PerformanceObserver(list => {
           const entries = list.getEntries();
           const hasLongTasks = entries.some(entry => entry.duration > 50);
 
@@ -286,9 +297,10 @@ export function useComponentPerformanceBudget(componentName: string) {
       setRenderTime(duration);
 
       // Check budgets if render time is concerning
-      if (duration > 16) { // More than one frame at 60fps
+      if (duration > 16) {
+        // More than one frame at 60fps
         console.warn(`${componentName} render took ${duration.toFixed(2)}ms`);
-        
+
         // Trigger budget check with component-specific data
         const componentData: PerformanceData = {
           performance: {
@@ -299,7 +311,7 @@ export function useComponentPerformanceBudget(componentName: string) {
             eventListeners: 0,
           },
         };
-        
+
         checkBudgets(componentData).catch(console.error);
       }
     };

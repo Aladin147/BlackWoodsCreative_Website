@@ -1,5 +1,6 @@
-import sitemap from '../sitemap';
 import { siteConfig } from '@/lib/constants/siteConfig';
+
+import sitemap from '../sitemap';
 
 // Mock the siteConfig
 jest.mock('@/lib/constants/siteConfig', () => ({
@@ -155,7 +156,7 @@ describe('sitemap', () => {
     const result2 = sitemap();
 
     expect(result1.length).toBe(result2.length);
-    
+
     result1.forEach((entry, index) => {
       expect(entry.url).toBe(result2[index].url);
       expect(entry.priority).toBe(result2[index].priority);
@@ -177,7 +178,7 @@ describe('sitemap', () => {
     const result = sitemap();
 
     const sectionEntries = result.filter(entry => entry.url.includes('#'));
-    
+
     expect(sectionEntries).toHaveLength(3);
     expect(sectionEntries.some(entry => entry.url.includes('#portfolio'))).toBe(true);
     expect(sectionEntries.some(entry => entry.url.includes('#about'))).toBe(true);

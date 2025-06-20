@@ -49,20 +49,20 @@ export function useAnimationConfig() {
       slow: prefersReducedMotion ? 0.01 : 0.6,
       cinematic: prefersReducedMotion ? 0.01 : 0.8,
     },
-    
+
     // Scale effects
     scale: {
       hover: prefersReducedMotion ? 1 : 1.02,
       tap: prefersReducedMotion ? 1 : 0.98,
       magnify: prefersReducedMotion ? 1 : 1.05,
     },
-    
+
     // Transform effects
     transform: {
       lift: prefersReducedMotion ? 0 : -2,
       float: prefersReducedMotion ? 0 : 10,
     },
-    
+
     // Animation variants
     variants: {
       hidden: {
@@ -74,7 +74,7 @@ export function useAnimationConfig() {
         y: 0,
       },
     },
-    
+
     // Disable complex animations
     disableAnimations: prefersReducedMotion,
   };

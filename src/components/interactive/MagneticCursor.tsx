@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 interface CursorState {
   x: number;
@@ -35,7 +35,7 @@ export function MagneticCursor() {
     const handleMouseMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
-      
+
       setCursorState(prev => ({
         ...prev,
         x: e.clientX,
@@ -88,7 +88,7 @@ export function MagneticCursor() {
     );
 
     document.addEventListener('mousemove', handleMouseMove);
-    
+
     interactiveElements.forEach(element => {
       element.addEventListener('mouseenter', handleMouseEnter as EventListener);
       element.addEventListener('mouseleave', handleMouseLeave);
@@ -130,11 +130,11 @@ export function MagneticCursor() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
-    
+
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -147,7 +147,7 @@ export function MagneticCursor() {
       <motion.div
         ref={cursorRef}
         data-testid="magnetic-cursor"
-        className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
+        className="pointer-events-none fixed left-0 top-0 z-[9999] mix-blend-difference"
         style={{
           x: smoothX,
           y: smoothY,
@@ -162,12 +162,12 @@ export function MagneticCursor() {
           <motion.div
             className={`absolute inset-0 rounded-full border-2 transition-all duration-300 ${
               cursorState.hoverType === 'button'
-                ? 'border-bw-accent-gold w-12 h-12'
+                ? 'h-12 w-12 border-bw-accent-gold'
                 : cursorState.hoverType === 'portfolio'
-                ? 'border-bw-accent-gold w-16 h-16'
-                : cursorState.hoverType === 'link'
-                ? 'border-bw-text-primary w-10 h-10'
-                : 'border-bw-text-primary w-8 h-8'
+                  ? 'h-16 w-16 border-bw-accent-gold'
+                  : cursorState.hoverType === 'link'
+                    ? 'h-10 w-10 border-bw-text-primary'
+                    : 'h-8 w-8 border-bw-text-primary'
             }`}
             animate={{
               rotate: cursorState.isHovering ? 180 : 0,
@@ -178,12 +178,12 @@ export function MagneticCursor() {
 
           {/* Inner Dot */}
           <motion.div
-            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ${
+            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ${
               cursorState.hoverType === 'button'
-                ? 'bg-bw-accent-gold w-2 h-2'
+                ? 'h-2 w-2 bg-bw-accent-gold'
                 : cursorState.hoverType === 'portfolio'
-                ? 'bg-bw-accent-gold w-3 h-3'
-                : 'bg-bw-text-primary w-1 h-1'
+                  ? 'h-3 w-3 bg-bw-accent-gold'
+                  : 'h-1 w-1 bg-bw-text-primary'
             }`}
             animate={{
               scale: cursorState.isHovering ? 0 : 1,
@@ -194,7 +194,7 @@ export function MagneticCursor() {
           {/* Hover Text */}
           {cursorState.isHovering && (
             <motion.div
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-4 text-xs text-bw-white bg-bw-black/80 px-2 py-1 rounded whitespace-nowrap"
+              className="absolute left-1/2 top-full mt-4 -translate-x-1/2 whitespace-nowrap rounded bg-bw-black/80 px-2 py-1 text-xs text-bw-white"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -225,7 +225,7 @@ function CursorTrail({ x, y }: CursorTrailProps) {
 
   useEffect(() => {
     const newPoint = { x, y, id: Date.now() };
-    
+
     setTrail(prev => {
       const newTrail = [newPoint, ...prev.slice(0, 8)]; // Keep last 8 points
       return newTrail;
@@ -237,15 +237,15 @@ function CursorTrail({ x, y }: CursorTrailProps) {
       {trail.map((point, index) => (
         <motion.div
           key={point.id}
-          className="fixed top-0 left-0 pointer-events-none z-[9998] w-2 h-2 bg-bw-gold/30 rounded-full"
+          className="pointer-events-none fixed left-0 top-0 z-[9998] h-2 w-2 rounded-full bg-bw-gold/30"
           style={{
             x: point.x - 4,
             y: point.y - 4,
           }}
           initial={{ opacity: 0.8, scale: 1 }}
           animate={{
-            opacity: 0.8 - (index * 0.1),
-            scale: 1 - (index * 0.1),
+            opacity: 0.8 - index * 0.1,
+            scale: 1 - index * 0.1,
           }}
           transition={{ duration: 0.3 }}
         />

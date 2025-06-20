@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { renderHook, waitFor } from '@testing-library/react';
+
 import { useCSRFProtection } from '../useCSRFProtection';
 
 // Mock fetch
@@ -16,7 +17,7 @@ describe('useCSRFProtection', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFetch.mockClear();
-    
+
     // Clear any existing meta tags
     const existingMeta = document.querySelector('meta[name="csrf-token"]');
     if (existingMeta) {
@@ -144,9 +145,9 @@ describe('useCSRFProtection', () => {
       // Token should be null since no meta tag and no API response
       expect(result.current.csrfToken).toBeNull();
 
-      await expect(
-        result.current.makeProtectedRequest('/api/test')
-      ).rejects.toThrow('CSRF token not available');
+      await expect(result.current.makeProtectedRequest('/api/test')).rejects.toThrow(
+        'CSRF token not available'
+      );
     });
 
     it('preserves existing headers in protected requests', async () => {
@@ -169,13 +170,13 @@ describe('useCSRFProtection', () => {
         method: 'POST',
         headers: {
           'Custom-Header': 'custom-value',
-          'Authorization': 'Bearer token',
+          Authorization: 'Bearer token',
         },
       });
 
       const callArgs = mockFetch.mock.calls[0];
       const headers = callArgs[1].headers;
-      
+
       expect(headers.get('X-CSRF-Token')).toBe('test-token-abc');
       expect(headers.get('Content-Type')).toBe('application/json');
       expect(headers.get('Custom-Header')).toBe('custom-value');
@@ -212,9 +213,7 @@ describe('useCSRFProtection', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(() => result.current.getProtectedHeaders()).toThrow(
-        'CSRF token not available'
-      );
+      expect(() => result.current.getProtectedHeaders()).toThrow('CSRF token not available');
     });
   });
 

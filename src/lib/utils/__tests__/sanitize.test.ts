@@ -4,134 +4,138 @@ describe('sanitizeInput', () => {
   it('sanitizes basic HTML characters', () => {
     const input = '<script>alert("xss")</script>';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;');
   });
 
   it('sanitizes ampersand characters', () => {
     const input = 'Company & Associates';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('Company &amp; Associates');
   });
 
   it('sanitizes less than and greater than characters', () => {
     const input = '5 < 10 > 3';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('5 &lt; 10 &gt; 3');
   });
 
   it('sanitizes double quotes', () => {
     const input = 'He said "Hello World"';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('He said &quot;Hello World&quot;');
   });
 
   it('sanitizes single quotes', () => {
     const input = "It's a beautiful day";
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('It&#x27;s a beautiful day');
   });
 
   it('sanitizes forward slashes', () => {
     const input = 'https://example.com/path';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('https:&#x2F;&#x2F;example.com&#x2F;path');
   });
 
   it('sanitizes complex XSS attempts', () => {
     const input = '<img src="x" onerror="alert(\'XSS\')">';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('&lt;img src=&quot;x&quot; onerror=&quot;alert(&#x27;XSS&#x27;)&quot;&gt;');
   });
 
   it('sanitizes JavaScript injection attempts', () => {
     const input = 'javascript:alert("XSS")';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('javascript:alert(&quot;XSS&quot;)');
   });
 
   it('sanitizes SQL injection attempts', () => {
     const input = "'; DROP TABLE users; --";
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('&#x27;; DROP TABLE users; --');
   });
 
   it('handles empty strings', () => {
     const input = '';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('');
   });
 
   it('handles strings with no dangerous characters', () => {
     const input = 'This is a safe string with numbers 123 and letters ABC';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('This is a safe string with numbers 123 and letters ABC');
   });
 
   it('handles strings with only whitespace', () => {
     const input = '   \n\t  ';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('   \n\t  ');
   });
 
   it('handles unicode characters', () => {
     const input = 'Hello 世界 🌍';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('Hello 世界 🌍');
   });
 
   it('sanitizes multiple dangerous characters in sequence', () => {
     const input = '<>&"\'//';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('&lt;&gt;&amp;&quot;&#x27;&#x2F;&#x2F;');
   });
 
   it('handles very long strings', () => {
     const input = '<script>'.repeat(1000);
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('&lt;script&gt;'.repeat(1000));
   });
 
   it('preserves line breaks and tabs', () => {
     const input = 'Line 1\nLine 2\tTabbed';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('Line 1\nLine 2\tTabbed');
   });
 
   it('sanitizes nested HTML tags', () => {
     const input = '<div><span>Content</span></div>';
     const result = sanitizeInput(input);
-    
+
     expect(result).toBe('&lt;div&gt;&lt;span&gt;Content&lt;&#x2F;span&gt;&lt;&#x2F;div&gt;');
   });
 
   it('sanitizes HTML attributes', () => {
     const input = '<a href="javascript:alert(1)" onclick="alert(2)">Link</a>';
     const result = sanitizeInput(input);
-    
-    expect(result).toBe('&lt;a href=&quot;javascript:alert(1)&quot; onclick=&quot;alert(2)&quot;&gt;Link&lt;&#x2F;a&gt;');
+
+    expect(result).toBe(
+      '&lt;a href=&quot;javascript:alert(1)&quot; onclick=&quot;alert(2)&quot;&gt;Link&lt;&#x2F;a&gt;'
+    );
   });
 
   it('handles mixed content safely', () => {
     const input = 'Normal text <script>alert("xss")</script> & more text';
     const result = sanitizeInput(input);
-    
-    expect(result).toBe('Normal text &lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt; &amp; more text');
+
+    expect(result).toBe(
+      'Normal text &lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt; &amp; more text'
+    );
   });
 });
 

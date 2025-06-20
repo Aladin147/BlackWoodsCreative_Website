@@ -5,6 +5,7 @@ A portfolio website built with Next.js 14, featuring advanced animations, WebGL 
 ## 🏗️ Architecture Overview
 
 ### Tech Stack
+
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS with custom theme system
@@ -12,14 +13,15 @@ A portfolio website built with Next.js 14, featuring advanced animations, WebGL 
 - **Testing**: Jest + Testing Library + Playwright
 - **Performance**: Built-in optimization + custom monitoring
 
-
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm/yarn/pnpm
 
 ### Installation
+
 ```bash
 # Clone repository
 git clone <repository-url>
@@ -33,6 +35,7 @@ npm run dev
 ```
 
 ### Available Scripts
+
 ```bash
 npm run dev          # Development server (localhost:3000)
 npm run build        # Production build
@@ -79,12 +82,14 @@ src/
 ## 🎨 Theme System
 
 ### Deep Forest Haze Theme
+
 - **Primary Colors**: Dark forest greens with gold accents
 - **Typography**: Playfair Display (headings) + Inter (body)
 - **Animations**: Enhanced aurora visibility, sophisticated parallax
 - **Responsive**: Mobile-first with device-specific adaptations
 
 ### Theme Configuration
+
 ```typescript
 // Tailwind config with custom theme
 const theme = {
@@ -93,12 +98,12 @@ const theme = {
     'bw-accent-gold': '#d4af37',
     'bw-forest': '#1a2f1a',
     // ... full color palette
-  }
-}
+  },
+};
 ```
 
-
 ### Running Tests
+
 ```bash
 # Full test suite with coverage
 npm run test:coverage
@@ -110,9 +115,8 @@ npm run test:watch
 npm test -- ContactSection.test.tsx
 ```
 
-
-
 ### Monitoring
+
 ```typescript
 // Performance monitoring hooks
 const { metrics } = useAnimationPerformance();
@@ -122,12 +126,14 @@ const { deviceInfo } = useDeviceAdaptation();
 ## 🔧 Development Workflow
 
 ### Code Quality
+
 - **TypeScript**: Strict mode with comprehensive type safety
 - **ESLint**: Custom rules for React/Next.js best practices
 - **Prettier**: Consistent code formatting
 - **Husky**: Pre-commit hooks for quality gates
 
 ### Git Workflow
+
 ```bash
 # Feature development
 git checkout -b feature/new-feature
@@ -146,6 +152,7 @@ git merge feature/new-feature
 ## 🚀 Deployment
 
 ### Production Build
+
 ```bash
 # Create optimized build
 npm run build
@@ -155,6 +162,7 @@ npm run start
 ```
 
 ### Environment Variables
+
 ```env
 # Required for production
 NEXT_PUBLIC_SITE_URL=https://blackwoodscreative.com
@@ -162,6 +170,7 @@ NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
 ```
 
 ### Deployment Checklist
+
 - [ ] All tests passing
 - [ ] Build successful
 - [ ] Performance audit completed
@@ -170,6 +179,7 @@ NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
 - [ ] Security headers configured
 
 ## 📜 License
+
 ---
 
 **BlackWoods Creative** - Professional portfolio website showcasing cinema, photography, and 3D artistry with cutting-edge web technologies.

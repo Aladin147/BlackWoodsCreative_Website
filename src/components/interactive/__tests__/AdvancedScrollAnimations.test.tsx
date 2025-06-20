@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
+
 import {
   ScrollReveal,
   ParallaxText,
@@ -7,7 +8,7 @@ import {
   CountUp,
   StaggeredGrid,
   MorphingShape,
-  ScrollTriggeredCounter
+  ScrollTriggeredCounter,
 } from '../AdvancedScrollAnimations';
 
 // Mock framer-motion
@@ -17,15 +18,15 @@ jest.mock('framer-motion', () => ({
     span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
   },
   useScroll: jest.fn(() => ({
-    scrollYProgress: { get: () => 0.5 }
+    scrollYProgress: { get: () => 0.5 },
   })),
   useTransform: jest.fn((_value, _input, output) => ({ get: () => output[1] })),
-  useSpring: jest.fn((value) => value),
+  useSpring: jest.fn(value => value),
   useInView: jest.fn(() => true),
 }));
 
 // Mock requestAnimationFrame and cancelAnimationFrame
-global.requestAnimationFrame = jest.fn((callback) => {
+global.requestAnimationFrame = jest.fn(callback => {
   setTimeout(callback, 16);
   return 1;
 });
@@ -58,14 +59,14 @@ describe('ScrollReveal', () => {
 
   it('handles different directions correctly', () => {
     const directions = ['up', 'down', 'left', 'right'] as const;
-    
+
     directions.forEach(direction => {
       const { unmount } = render(
         <ScrollReveal direction={direction}>
           <div>Test {direction}</div>
         </ScrollReveal>
       );
-      
+
       expect(screen.getByText(`Test ${direction}`)).toBeInTheDocument();
       unmount();
     });
@@ -128,14 +129,14 @@ describe('ParallaxText', () => {
 describe('ScrollProgressBar', () => {
   it('renders progress bar with default styles', () => {
     const { container } = render(<ScrollProgressBar />);
-    
+
     const progressBar = container.firstChild;
     expect(progressBar).toHaveClass('fixed top-0 left-0 right-0 h-1 bg-bw-accent-gold');
   });
 
   it('applies custom className', () => {
     const { container } = render(<ScrollProgressBar className="custom-progress" />);
-    
+
     expect(container.firstChild).toHaveClass('custom-progress');
   });
 });
@@ -151,38 +152,38 @@ describe('CountUp', () => {
 
   it('renders initial count of 0', () => {
     render(<CountUp end={100} />);
-    
+
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
   it('includes prefix and suffix', () => {
     render(<CountUp end={100} prefix="$" suffix="K" />);
-    
+
     expect(screen.getByText('$0K')).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
     const { container } = render(<CountUp end={100} className="count-custom" />);
-    
+
     expect(container.firstChild).toHaveClass('count-custom');
   });
 
   it('handles zero end value', () => {
     render(<CountUp end={0} />);
-    
+
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
   it('handles large numbers with locale formatting', () => {
     render(<CountUp end={1000000} />);
-    
+
     // Should format with commas
     expect(screen.getByText('0')).toBeInTheDocument(); // Initial state
   });
 
   it('respects duration and delay props', () => {
     render(<CountUp end={100} duration={1} delay={0.5} />);
-    
+
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 });
@@ -224,7 +225,7 @@ describe('StaggeredGrid', () => {
 
   it('handles empty children gracefully', () => {
     const { container } = render(<StaggeredGrid>{null}</StaggeredGrid>);
-    
+
     expect(container.firstChild).toBeInTheDocument();
   });
 
@@ -242,22 +243,20 @@ describe('StaggeredGrid', () => {
 describe('MorphingShape', () => {
   it('renders with default props', () => {
     const { container } = render(<MorphingShape />);
-    
+
     const shape = container.firstChild;
     expect(shape).toHaveClass('absolute rounded-full blur-3xl');
   });
 
   it('applies custom className and color', () => {
-    const { container } = render(
-      <MorphingShape className="shape-custom" color="accent-blue" />
-    );
+    const { container } = render(<MorphingShape className="shape-custom" color="accent-blue" />);
 
     expect(container.firstChild).toHaveClass('shape-custom');
   });
 
   it('uses default color when not specified', () => {
     const { container } = render(<MorphingShape />);
-    
+
     expect(container.firstChild).toBeInTheDocument();
   });
 });
@@ -266,7 +265,7 @@ describe('ScrollTriggeredCounter', () => {
   const mockCounters = [
     { label: 'Projects', value: 50, suffix: '+' },
     { label: 'Clients', value: 100, prefix: '$', suffix: 'K' },
-    { label: 'Years', value: 5 }
+    { label: 'Years', value: 5 },
   ];
 
   it('renders all counters', () => {
@@ -287,7 +286,7 @@ describe('ScrollTriggeredCounter', () => {
 
   it('handles empty counters array', () => {
     const { container } = render(<ScrollTriggeredCounter counters={[]} />);
-    
+
     expect(container.firstChild).toBeInTheDocument();
   });
 
@@ -302,9 +301,9 @@ describe('ScrollTriggeredCounter', () => {
 
   it('handles counters without prefix/suffix', () => {
     const simpleCounters = [{ label: 'Simple', value: 10 }];
-    
+
     render(<ScrollTriggeredCounter counters={simpleCounters} />);
-    
+
     expect(screen.getByText('Simple')).toBeInTheDocument();
   });
 });

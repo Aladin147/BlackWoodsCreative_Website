@@ -14,10 +14,10 @@ class BundleAnalyzer {
     this.buildDir = path.join(process.cwd(), '.next');
     this.analyzeDir = path.join(this.buildDir, 'analyze');
     this.thresholds = {
-      SMALL: 50 * 1024,    // 50KB
-      MEDIUM: 200 * 1024,  // 200KB
-      LARGE: 500 * 1024,   // 500KB
-      HUGE: 1024 * 1024,   // 1MB
+      SMALL: 50 * 1024, // 50KB
+      MEDIUM: 200 * 1024, // 200KB
+      LARGE: 500 * 1024, // 500KB
+      HUGE: 1024 * 1024, // 1MB
     };
   }
 
@@ -32,16 +32,15 @@ class BundleAnalyzer {
 
       // Parse build output
       const buildStats = this.parseBuildOutput();
-      
+
       // Generate recommendations
       const recommendations = this.generateRecommendations(buildStats);
-      
+
       // Create report
       this.generateReport(buildStats, recommendations);
-      
+
       console.log('\n✅ Bundle analysis complete!');
       console.log(`📊 Report saved to: ${path.join(this.analyzeDir, 'bundle-report.json')}`);
-      
     } catch (error) {
       console.error('❌ Bundle analysis failed:', error.message);
       process.exit(1);
@@ -51,20 +50,20 @@ class BundleAnalyzer {
   // Parse Next.js build output
   parseBuildOutput() {
     const buildOutputPath = path.join(this.buildDir, 'build-manifest.json');
-    
+
     if (!fs.existsSync(buildOutputPath)) {
       throw new Error('Build manifest not found. Run build first.');
     }
 
     const manifest = JSON.parse(fs.readFileSync(buildOutputPath, 'utf8'));
-    
+
     // Extract bundle information
     const stats = {
       pages: {},
       chunks: {},
       totalSize: 0,
       gzippedSize: 0,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     // Analyze pages
@@ -73,7 +72,7 @@ class BundleAnalyzer {
       stats.pages[page] = {
         files,
         size: pageSize,
-        sizeFormatted: this.formatBytes(pageSize)
+        sizeFormatted: this.formatBytes(pageSize),
       };
       stats.totalSize += pageSize;
     });
@@ -87,7 +86,7 @@ class BundleAnalyzer {
   // Calculate page size from file list
   calculatePageSize(files) {
     let totalSize = 0;
-    
+
     files.forEach(file => {
       const filePath = path.join(this.buildDir, 'static', file);
       if (fs.existsSync(filePath)) {
@@ -108,13 +107,13 @@ class BundleAnalyzer {
       recommendations.push({
         type: 'critical',
         message: 'Total bundle size exceeds 1MB - implement aggressive code splitting',
-        impact: 'high'
+        impact: 'high',
       });
     } else if (stats.totalSize > this.thresholds.LARGE) {
       recommendations.push({
         type: 'warning',
         message: 'Bundle size is large - consider additional optimizations',
-        impact: 'medium'
+        impact: 'medium',
       });
     }
 
@@ -124,7 +123,7 @@ class BundleAnalyzer {
         recommendations.push({
           type: 'warning',
           message: `Page "${page}" is large (${data.sizeFormatted}) - consider lazy loading`,
-          impact: 'medium'
+          impact: 'medium',
         });
       }
     });
@@ -135,7 +134,7 @@ class BundleAnalyzer {
       recommendations.push({
         type: 'info',
         message: 'Compression ratio could be improved - check for duplicate code',
-        impact: 'low'
+        impact: 'low',
       });
     }
 
@@ -144,7 +143,7 @@ class BundleAnalyzer {
       recommendations.push({
         type: 'success',
         message: 'Bundle size is well optimized',
-        impact: 'none'
+        impact: 'none',
       });
     }
 
@@ -152,13 +151,13 @@ class BundleAnalyzer {
     recommendations.push({
       type: 'info',
       message: 'Consider implementing preloading for critical components',
-      impact: 'low'
+      impact: 'low',
     });
 
     recommendations.push({
       type: 'info',
       message: 'Use dynamic imports for non-critical features',
-      impact: 'medium'
+      impact: 'medium',
     });
 
     return recommendations;
@@ -174,7 +173,7 @@ class BundleAnalyzer {
         gzippedSize: stats.gzippedSize,
         gzippedSizeFormatted: this.formatBytes(stats.gzippedSize),
         compressionRatio: `${((stats.gzippedSize / stats.totalSize) * 100).toFixed(1)}%`,
-        pageCount: Object.keys(stats.pages).length
+        pageCount: Object.keys(stats.pages).length,
       },
       pages: stats.pages,
       recommendations: recommendations,
@@ -182,7 +181,7 @@ class BundleAnalyzer {
         small: this.formatBytes(this.thresholds.SMALL),
         medium: this.formatBytes(this.thresholds.MEDIUM),
         large: this.formatBytes(this.thresholds.LARGE),
-        huge: this.formatBytes(this.thresholds.HUGE)
+        huge: this.formatBytes(this.thresholds.HUGE),
       },
       optimizationTips: [
         'Use dynamic imports for components that are not immediately visible',
@@ -191,8 +190,8 @@ class BundleAnalyzer {
         'Use Next.js Image component for optimized image loading',
         'Enable gzip/brotli compression on your server',
         'Remove unused dependencies and dead code',
-        'Use tree shaking to eliminate unused exports'
-      ]
+        'Use tree shaking to eliminate unused exports',
+      ],
     };
 
     // Save report
@@ -214,7 +213,9 @@ class BundleAnalyzer {
     console.log('\n📊 Bundle Analysis Summary');
     console.log('═'.repeat(50));
     console.log(`Total Size: ${report.analysis.totalSizeFormatted}`);
-    console.log(`Gzipped: ${report.analysis.gzippedSizeFormatted} (${report.analysis.compressionRatio})`);
+    console.log(
+      `Gzipped: ${report.analysis.gzippedSizeFormatted} (${report.analysis.compressionRatio})`
+    );
     console.log(`Pages: ${report.analysis.pageCount}`);
 
     console.log('\n📄 Page Sizes:');
@@ -225,12 +226,13 @@ class BundleAnalyzer {
 
     console.log('\n💡 Recommendations:');
     report.recommendations.forEach(rec => {
-      const icon = {
-        critical: '🔴',
-        warning: '🟡',
-        info: '🔵',
-        success: '🟢'
-      }[rec.type] || '📝';
+      const icon =
+        {
+          critical: '🔴',
+          warning: '🟡',
+          info: '🔵',
+          success: '🟢',
+        }[rec.type] || '📝';
       console.log(`  ${icon} ${rec.message}`);
     });
 
@@ -243,11 +245,11 @@ class BundleAnalyzer {
   // Format bytes to human readable
   formatBytes(bytes) {
     if (bytes === 0) return '0 Bytes';
-    
+
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 }

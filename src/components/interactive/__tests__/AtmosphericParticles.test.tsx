@@ -1,8 +1,9 @@
 /**
  * @jest-environment jsdom
  */
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import { AtmosphericParticles } from '../AtmosphericParticles';
 
 // Mock requestAnimationFrame and cancelAnimationFrame

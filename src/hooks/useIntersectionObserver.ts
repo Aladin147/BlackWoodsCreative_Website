@@ -63,33 +63,29 @@ export function useIntersectionObserver(
 }
 
 // Hook for multiple elements
-export function useIntersectionObserverMultiple(
-  options: UseIntersectionObserverOptions = {}
-) {
-  const {
-    threshold = 0.1,
-    root = null,
-    rootMargin = '0px',
-    freezeOnceVisible = false,
-  } = options;
+export function useIntersectionObserverMultiple(options: UseIntersectionObserverOptions = {}) {
+  const { threshold = 0.1, root = null, rootMargin = '0px', freezeOnceVisible = false } = options;
 
   const [entries, setEntries] = useState<Map<Element, IntersectionObserverEntry>>(new Map());
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const observe = (element: Element) => {
     if (!observerRef.current) {
-      observerRef.current = new IntersectionObserver((observedEntries) => {
-        setEntries(prev => {
-          const newEntries = new Map(prev);
-          observedEntries.forEach(entry => {
-            if (freezeOnceVisible && prev.get(entry.target)?.isIntersecting) {
-              return; // Keep frozen state
-            }
-            newEntries.set(entry.target, entry);
+      observerRef.current = new IntersectionObserver(
+        observedEntries => {
+          setEntries(prev => {
+            const newEntries = new Map(prev);
+            observedEntries.forEach(entry => {
+              if (freezeOnceVisible && prev.get(entry.target)?.isIntersecting) {
+                return; // Keep frozen state
+              }
+              newEntries.set(entry.target, entry);
+            });
+            return newEntries;
           });
-          return newEntries;
-        });
-      }, { threshold, root, rootMargin });
+        },
+        { threshold, root, rootMargin }
+      );
     }
 
     observerRef.current.observe(element);

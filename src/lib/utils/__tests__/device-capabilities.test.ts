@@ -1,7 +1,12 @@
 /**
  * @jest-environment node
  */
-import { deviceCapabilityDetector, getDeviceCapabilities, getOptimizationProfile } from '../device-capabilities';
+import {
+  DeviceCapabilityDetector,
+  deviceCapabilityDetector,
+  getDeviceCapabilities,
+  getOptimizationProfile,
+} from '../device-capabilities';
 
 // Mock browser APIs
 const mockNavigator = {
@@ -120,6 +125,9 @@ describe('Device Capabilities Detection', () => {
 
   describe('getDeviceCapabilities', () => {
     it('detects high-performance desktop capabilities', async () => {
+      // Mock fast CPU benchmark for high performance
+      mockPerformance.now.mockReturnValueOnce(0).mockReturnValueOnce(5); // Fast benchmark (5ms)
+
       const capabilities = await getDeviceCapabilities();
 
       expect(capabilities).toBeDefined();
@@ -199,23 +207,96 @@ describe('Device Capabilities Detection', () => {
     });
 
     it('returns server-side defaults when window is undefined', async () => {
-      // Mock server-side environment
-      const originalWindow = global.window;
-      delete (global as any).window;
+      // Create a fresh instance to avoid singleton issues
+      const freshDetector = new DeviceCapabilityDetector();
 
-      const capabilities = await getDeviceCapabilities();
+      // Store original values
+      const originalWindow = global.window;
+      const originalNavigator = global.navigator;
+      const originalDocument = global.document;
+
+      // Completely remove browser globals to simulate server environment
+      delete (global as any).window;
+      delete (global as any).navigator;
+      delete (global as any).document;
+
+      const capabilities = await freshDetector.detectCapabilities();
 
       expect(capabilities.cpu.cores).toBe(4);
       expect(capabilities.gpu.webglSupported).toBe(false);
       expect(capabilities.performance.overall).toBe('medium');
 
-      // Restore window
+      // Restore all globals
       (global as any).window = originalWindow;
+      (global as any).navigator = originalNavigator;
+      (global as any).document = originalDocument;
+
+      // Reset main singleton to clear any state
+      (deviceCapabilityDetector as any).capabilities = null;
+      (deviceCapabilityDetector as any).profile = null;
     });
   });
 
   describe('getOptimizationProfile', () => {
     it('generates high-performance profile for capable devices', async () => {
+      // Mock high-performance device
+      Object.defineProperty(global, 'navigator', {
+        value: {
+          ...mockNavigator,
+          hardwareConcurrency: 8, // High CPU cores
+          deviceMemory: 8 // High memory
+        },
+        writable: true,
+      });
+
+      // Mock high-performance GPU with proper WebGL context
+      const mockHighPerfDocument = {
+        createElement: jest.fn((tagName: string) => {
+          if (tagName === 'canvas') {
+            return {
+              getContext: jest.fn((type: string) => {
+                if (type === 'webgl' || type === 'experimental-webgl') {
+                  return {
+                    getParameter: jest.fn((param: any) => {
+                      if (param === 0x1F00) return 'NVIDIA Corporation'; // VENDOR
+                      if (param === 0x1F01) return 'NVIDIA GeForce RTX 3080'; // RENDERER
+                      if (param === 0x0D33) return 8192; // MAX_TEXTURE_SIZE
+                      return 'NVIDIA GeForce RTX 3080'; // Default for any other parameter
+                    }),
+                    getExtension: jest.fn((extensionName: string) => {
+                      if (extensionName === 'WEBGL_debug_renderer_info') {
+                        return {
+                          UNMASKED_VENDOR_WEBGL: 0x1F00,
+                          UNMASKED_RENDERER_WEBGL: 0x1F01,
+                        };
+                      }
+                      return {};
+                    }),
+                    MAX_TEXTURE_SIZE: 0x0D33,
+                  };
+                }
+                if (type === 'webgl2') {
+                  return {}; // WebGL2 supported
+                }
+                return null;
+              }),
+            };
+          }
+          return { style: {}, animate: jest.fn() };
+        }),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      };
+
+      Object.defineProperty(global, 'document', {
+        value: mockHighPerfDocument,
+        writable: true,
+      });
+
+      // Reset singleton to force re-detection
+      (deviceCapabilityDetector as any).capabilities = null;
+      (deviceCapabilityDetector as any).profile = null;
+
       const profile = await getOptimizationProfile();
 
       expect(profile).toBeDefined();
@@ -227,6 +308,12 @@ describe('Device Capabilities Detection', () => {
       expect(profile.rendering.webgl).toBe(true);
       expect(profile.rendering.particleCount).toBe(100);
       expect(profile.rendering.textureQuality).toBe('high');
+
+      // Restore original document
+      Object.defineProperty(global, 'document', {
+        value: mockDocument,
+        writable: true,
+      });
     });
 
     it('generates reduced profile for low-performance devices', async () => {
@@ -235,6 +322,28 @@ describe('Device Capabilities Detection', () => {
         value: { ...mockNavigator, hardwareConcurrency: 2, deviceMemory: 2 },
         writable: true,
       });
+
+      // Mock low-performance GPU (no WebGL support)
+      const mockLowPerfDocument = {
+        createElement: jest.fn((tagName: string) => {
+          if (tagName === 'canvas') {
+            return {
+              getContext: jest.fn(() => null), // No WebGL support
+            };
+          }
+          return { style: {}, animate: jest.fn() };
+        }),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      };
+
+      Object.defineProperty(global, 'document', {
+        value: mockLowPerfDocument,
+        writable: true,
+      });
+
+      // Mock slow CPU benchmark
+      mockPerformance.now.mockReturnValueOnce(0).mockReturnValueOnce(100); // Slow benchmark
 
       // Reset singleton to force re-detection
       (deviceCapabilityDetector as any).capabilities = null;
@@ -248,6 +357,12 @@ describe('Device Capabilities Detection', () => {
       expect(profile.animations.particles).toBe(false);
       expect(profile.rendering.webgl).toBe(false);
       expect(profile.rendering.particleCount).toBe(20);
+
+      // Restore original document
+      Object.defineProperty(global, 'document', {
+        value: mockDocument,
+        writable: true,
+      });
     });
 
     it('respects reduced motion preferences', async () => {

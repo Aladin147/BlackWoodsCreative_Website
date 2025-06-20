@@ -59,8 +59,9 @@ describe('Section Components Barrel Export', () => {
   });
 
   it('can destructure individual components', () => {
-    const { HeroSection, PortfolioSection, VisionSection, AboutSection, ContactSection } = SectionComponents;
-    
+    const { HeroSection, PortfolioSection, VisionSection, AboutSection, ContactSection } =
+      SectionComponents;
+
     expect(HeroSection).toBeDefined();
     expect(PortfolioSection).toBeDefined();
     expect(VisionSection).toBeDefined();
@@ -111,7 +112,7 @@ describe('Section Components Barrel Export', () => {
     ];
 
     const actualExports = Object.keys(SectionComponents);
-    
+
     actualExports.forEach(exportName => {
       expect(expectedExports).toContain(exportName);
     });
@@ -129,7 +130,7 @@ describe('Section Components Barrel Export', () => {
   it('provides clean barrel export functionality', () => {
     // Test that the barrel export works as intended for clean imports
     const components = SectionComponents;
-    
+
     expect(components).toBeDefined();
     expect(typeof components).toBe('object');
     expect(Object.keys(components).length).toBeGreaterThan(0);
@@ -167,7 +168,7 @@ describe('Section Components Barrel Export', () => {
   it('exports section-specific components', () => {
     // Verify that these are indeed section components
     const sectionComponentNames = Object.keys(SectionComponents);
-    
+
     // These should be typical section component names
     expect(sectionComponentNames).toContain('HeroSection');
     expect(sectionComponentNames).toContain('PortfolioSection');
@@ -181,7 +182,7 @@ describe('Section Components Barrel Export', () => {
     const { HeroSection } = SectionComponents;
     const PortfolioSection = SectionComponents.PortfolioSection;
     const VisionComponent = SectionComponents.VisionSection;
-    
+
     expect(HeroSection).toBe(SectionComponents.HeroSection);
     expect(PortfolioSection).toBe(SectionComponents.PortfolioSection);
     expect(VisionComponent).toBe(SectionComponents.VisionSection);
@@ -228,22 +229,22 @@ describe('Section Components Barrel Export', () => {
       const { HeroSection } = SectionComponents;
       return HeroSection;
     }).not.toThrow();
-    
+
     expect(() => {
       const { PortfolioSection } = SectionComponents;
       return PortfolioSection;
     }).not.toThrow();
-    
+
     expect(() => {
       const { VisionSection } = SectionComponents;
       return VisionSection;
     }).not.toThrow();
-    
+
     expect(() => {
       const { AboutSection } = SectionComponents;
       return AboutSection;
     }).not.toThrow();
-    
+
     expect(() => {
       const { ContactSection } = SectionComponents;
       return ContactSection;
@@ -253,7 +254,7 @@ describe('Section Components Barrel Export', () => {
   it('covers all main website sections', () => {
     // Ensure we have all the main sections of the website
     const sectionNames = Object.keys(SectionComponents);
-    
+
     // Should include key website sections
     expect(sectionNames).toContain('HeroSection'); // Landing/hero area
     expect(sectionNames).toContain('AboutSection'); // About information

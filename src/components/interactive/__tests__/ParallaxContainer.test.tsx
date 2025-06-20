@@ -1,10 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+
 import {
   ParallaxLayer,
   ParallaxContainer,
   CinematicParallax,
   MagneticField,
-  DepthOfField
+  DepthOfField,
 } from '../ParallaxContainer';
 
 // Mock framer-motion
@@ -20,18 +21,31 @@ interface MockTransformFunction {
 
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, style, ...props }: React.ComponentProps<'div'> & { style?: React.CSSProperties }) => (
-      <div {...props} style={style}>{children}</div>
+    div: ({
+      children,
+      style,
+      ...props
+    }: React.ComponentProps<'div'> & { style?: React.CSSProperties }) => (
+      <div {...props} style={style}>
+        {children}
+      </div>
     ),
   },
   useScroll: () => ({
-    scrollYProgress: { on: jest.fn(), get: () => 0 }
+    scrollYProgress: { on: jest.fn(), get: () => 0 },
   }),
-  useTransform: (motionValue: MockMotionValue | MockTransformFunction, _input?: number[], output?: (number | string)[]): MockMotionValue => {
+  useTransform: (
+    motionValue: MockMotionValue | MockTransformFunction,
+    _input?: number[],
+    output?: (number | string)[]
+  ): MockMotionValue => {
     if (typeof motionValue === 'function') {
       return { on: jest.fn(), get: () => motionValue(0) };
     }
-    return { on: jest.fn(), get: () => output ? (typeof output[0] === 'number' ? output[0] : 0) : 0 };
+    return {
+      on: jest.fn(),
+      get: () => (output ? (typeof output[0] === 'number' ? output[0] : 0) : 0),
+    };
   },
   useSpring: (): MockMotionValue => ({
     on: jest.fn(),
@@ -184,12 +198,7 @@ describe('ParallaxLayer', () => {
 
     it('handles multiple effects combined', () => {
       render(
-        <ParallaxLayer
-          scale={[0.9, 1.1]}
-          opacity={[0.8, 1]}
-          rotate={[-5, 5]}
-          blur={[0, 2]}
-        >
+        <ParallaxLayer scale={[0.9, 1.1]} opacity={[0.8, 1]} rotate={[-5, 5]} blur={[0, 2]}>
           <div data-testid="content">Content</div>
         </ParallaxLayer>
       );
@@ -321,7 +330,9 @@ describe('CinematicParallax', () => {
       </CinematicParallax>
     );
 
-    const floatingElements = container.querySelectorAll('.rounded-full.blur-2xl, .rounded-full.blur-3xl');
+    const floatingElements = container.querySelectorAll(
+      '.rounded-full.blur-2xl, .rounded-full.blur-3xl'
+    );
     expect(floatingElements.length).toBeGreaterThan(0);
   });
 });

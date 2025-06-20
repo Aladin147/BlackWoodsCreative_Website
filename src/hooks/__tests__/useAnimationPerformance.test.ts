@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+
 import { useAnimationPerformance } from '../useAnimationPerformance';
 
 // Mock performance API
@@ -142,9 +143,7 @@ describe('useAnimationPerformance', () => {
       });
 
       // Simulate slow frame rate
-      mockPerformance.now
-        .mockReturnValueOnce(0)
-        .mockReturnValueOnce(100); // 100ms frame = 10 FPS
+      mockPerformance.now.mockReturnValueOnce(0).mockReturnValueOnce(100); // 100ms frame = 10 FPS
 
       triggerRAF();
 
@@ -195,9 +194,7 @@ describe('useAnimationPerformance', () => {
       });
 
       // Simulate good frame rate
-      mockPerformance.now
-        .mockReturnValueOnce(0)
-        .mockReturnValueOnce(16.67);
+      mockPerformance.now.mockReturnValueOnce(0).mockReturnValueOnce(16.67);
 
       triggerRAF();
 
@@ -283,7 +280,7 @@ describe('useAnimationPerformance', () => {
         targetFPS: 30,
         maxFrameTime: 33.33,
         enableLogging: true,
-        sampleSize: 30
+        sampleSize: 30,
       };
 
       const { result } = renderHook(() => useAnimationPerformance(customConfig));

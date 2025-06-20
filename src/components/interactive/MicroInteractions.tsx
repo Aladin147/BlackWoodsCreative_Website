@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect, ReactNode } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useState, useRef, useEffect, ReactNode } from 'react';
+
 import { useAnimationConfig } from '@/hooks/useReducedMotion';
 
 interface HoverMagnifyProps {
@@ -36,14 +37,26 @@ export function TiltCard({ children, maxTilt = 8, className = '' }: TiltCardProp
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [
-    animationConfig.disableAnimations ? 0 : maxTilt,
-    animationConfig.disableAnimations ? 0 : -maxTilt
-  ]));
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [
-    animationConfig.disableAnimations ? 0 : -maxTilt,
-    animationConfig.disableAnimations ? 0 : maxTilt
-  ]));
+  const rotateX = useSpring(
+    useTransform(
+      y,
+      [-0.5, 0.5],
+      [
+        animationConfig.disableAnimations ? 0 : maxTilt,
+        animationConfig.disableAnimations ? 0 : -maxTilt,
+      ]
+    )
+  );
+  const rotateY = useSpring(
+    useTransform(
+      x,
+      [-0.5, 0.5],
+      [
+        animationConfig.disableAnimations ? 0 : -maxTilt,
+        animationConfig.disableAnimations ? 0 : maxTilt,
+      ]
+    )
+  );
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current || animationConfig.disableAnimations) return;
@@ -95,17 +108,21 @@ export function FloatingElement({
   children,
   amplitude = 10,
   frequency = 2,
-  className = ''
+  className = '',
 }: FloatingElementProps) {
   const animationConfig = useAnimationConfig();
 
   return (
     <motion.div
       className={className}
-      animate={animationConfig.disableAnimations ? {} : {
-        y: [-amplitude, amplitude, -amplitude],
-        rotate: [-1, 1, -1],
-      }}
+      animate={
+        animationConfig.disableAnimations
+          ? {}
+          : {
+              y: [-amplitude, amplitude, -amplitude],
+              rotate: [-1, 1, -1],
+            }
+      }
       transition={{
         duration: frequency,
         repeat: animationConfig.disableAnimations ? 0 : Infinity,
@@ -129,20 +146,24 @@ export function PulseGlow({
   children,
   intensity = 0.3,
   duration = 2,
-  className = ''
+  className = '',
 }: PulseGlowProps) {
   const animationConfig = useAnimationConfig();
 
   return (
     <motion.div
       className={className}
-      animate={animationConfig.disableAnimations ? {} : {
-        boxShadow: [
-          `0 0 20px rgba(195, 163, 88, ${intensity})`,
-          `0 0 40px rgba(195, 163, 88, ${intensity * 2})`,
-          `0 0 20px rgba(195, 163, 88, ${intensity})`,
-        ],
-      }}
+      animate={
+        animationConfig.disableAnimations
+          ? {}
+          : {
+              boxShadow: [
+                `0 0 20px rgba(195, 163, 88, ${intensity})`,
+                `0 0 40px rgba(195, 163, 88, ${intensity * 2})`,
+                `0 0 20px rgba(195, 163, 88, ${intensity})`,
+              ],
+            }
+      }
       transition={{
         duration,
         repeat: animationConfig.disableAnimations ? 0 : Infinity,
@@ -169,7 +190,7 @@ export function MorphingButton({
   className = '',
   onClick,
   'aria-label': ariaLabel,
-  title
+  title,
 }: MorphingButtonProps) {
   const animationConfig = useAnimationConfig();
   const [isHovered, setIsHovered] = useState(false);
@@ -186,7 +207,7 @@ export function MorphingButton({
       title={title}
     >
       <motion.div
-        animate={{ y: animationConfig.disableAnimations ? 0 : (isHovered ? -40 : 0) }}
+        animate={{ y: animationConfig.disableAnimations ? 0 : isHovered ? -40 : 0 }}
         transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         {children}
@@ -195,7 +216,7 @@ export function MorphingButton({
       {hoverChildren && (
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
-          animate={{ y: animationConfig.disableAnimations ? 40 : (isHovered ? 0 : 40) }}
+          animate={{ y: animationConfig.disableAnimations ? 40 : isHovered ? 0 : 40 }}
           transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           {hoverChildren}
@@ -211,7 +232,11 @@ interface RippleEffectProps {
   color?: string;
 }
 
-export function RippleEffect({ children, className = '', color = 'rgba(212, 175, 55, 0.3)' }: RippleEffectProps) {
+export function RippleEffect({
+  children,
+  className = '',
+  color = 'rgba(212, 175, 55, 0.3)',
+}: RippleEffectProps) {
   const [ripples, setRipples] = useState<Array<{ x: number; y: number; id: number }>>([]);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -229,16 +254,13 @@ export function RippleEffect({ children, className = '', color = 'rgba(212, 175,
   };
 
   return (
-    <div
-      className={`relative overflow-hidden ${className}`}
-      onClick={handleClick}
-    >
+    <div className={`relative overflow-hidden ${className}`} onClick={handleClick}>
       {children}
 
       {ripples.map(ripple => (
         <motion.div
           key={ripple.id}
-          className="absolute rounded-full pointer-events-none"
+          className="pointer-events-none absolute rounded-full"
           style={{
             left: ripple.x,
             top: ripple.y,
@@ -276,7 +298,7 @@ export function StaggeredReveal({ children, delay = 0.1, className = '' }: Stagg
           transition={{
             duration: 0.6,
             delay: index * delay,
-            ease: [0.25, 0.46, 0.45, 0.94]
+            ease: [0.25, 0.46, 0.45, 0.94],
           }}
         >
           {child}
@@ -298,7 +320,7 @@ export function TextReveal({ text, className = '', delay = 0.05 }: TextRevealPro
   return (
     <div className={className}>
       {words.map((word, wordIndex) => (
-        <span key={wordIndex} className="inline-block mr-2">
+        <span key={wordIndex} className="mr-2 inline-block">
           {word.split('').map((char, charIndex) => (
             <motion.span
               key={charIndex}
@@ -337,14 +359,14 @@ export function GlitchText({ text, className = '', intensity = 0.5 }: GlitchText
         textShadow: [
           '0 0 0 transparent',
           `${glitchOffset}px 0 0 #ff0000, -${glitchOffset}px 0 0 #00ffff`,
-          '0 0 0 transparent'
-        ]
+          '0 0 0 transparent',
+        ],
       }}
       transition={{
         duration: 0.2,
         repeat: Infinity,
         repeatDelay: 2,
-        ease: 'easeInOut'
+        ease: 'easeInOut',
       }}
     >
       {text}
@@ -381,7 +403,7 @@ export function TypewriterText({ text, className = '', speed = 50 }: TypewriterT
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.8, repeat: Infinity }}
-        className="inline-block w-0.5 h-5 bg-current ml-1"
+        className="ml-1 inline-block h-5 w-0.5 bg-current"
       />
     </span>
   );

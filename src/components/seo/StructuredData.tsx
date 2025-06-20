@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+
 import { siteConfig } from '@/lib/constants/siteConfig';
 
 interface StructuredDataProps {

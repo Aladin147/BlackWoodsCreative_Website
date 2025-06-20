@@ -1,24 +1,44 @@
 import { render, screen } from '@testing-library/react';
+
 import { AboutSection } from '../AboutSection';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => (
+      <section {...props}>{children}</section>
+    ),
   },
 }));
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
-  ScrollReveal: ({ children, className }: any) => <div className={className} data-testid="scroll-reveal">{children}</div>,
-  StaggeredGrid: ({ children, className }: any) => <div className={className} data-testid="staggered-grid">{children}</div>,
+  ScrollReveal: ({ children, className }: any) => (
+    <div className={className} data-testid="scroll-reveal">
+      {children}
+    </div>
+  ),
+  StaggeredGrid: ({ children, className }: any) => (
+    <div className={className} data-testid="staggered-grid">
+      {children}
+    </div>
+  ),
   MagneticField: ({ children }: any) => <div data-testid="magnetic-field">{children}</div>,
   AtmosphericLayer: ({ type, intensity, color }: any) => (
-    <div data-testid="atmospheric-layer" data-type={type} data-intensity={intensity} data-color={color} />
+    <div
+      data-testid="atmospheric-layer"
+      data-type={type}
+      data-intensity={intensity}
+      data-color={color}
+    />
   ),
   ParallaxText: ({ children }: any) => <div data-testid="parallax-text">{children}</div>,
-  CountUp: ({ end }: any) => <span data-testid="count-up" data-end={end}>{end}</span>,
+  CountUp: ({ end }: any) => (
+    <span data-testid="count-up" data-end={end}>
+      {end}
+    </span>
+  ),
 }));
 
 // Mock Heroicons
@@ -27,7 +47,9 @@ jest.mock('@heroicons/react/24/outline', () => ({
   CameraIcon: ({ className }: any) => <div className={className} data-testid="camera-icon" />,
   CubeIcon: ({ className }: any) => <div className={className} data-testid="cube-icon" />,
   SparklesIcon: ({ className }: any) => <div className={className} data-testid="sparkles-icon" />,
-  CheckBadgeIcon: ({ className }: any) => <div className={className} data-testid="check-badge-icon" />,
+  CheckBadgeIcon: ({ className }: any) => (
+    <div className={className} data-testid="check-badge-icon" />
+  ),
   TrophyIcon: ({ className }: any) => <div className={className} data-testid="trophy-icon" />,
 }));
 
@@ -79,7 +101,9 @@ describe('AboutSection', () => {
       render(<AboutSection />);
 
       expect(screen.getByText(/Cinematic storytelling that captures emotion/)).toBeInTheDocument();
-      expect(screen.getByText(/Professional photography services from product shoots/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Professional photography services from product shoots/)
+      ).toBeInTheDocument();
       expect(screen.getByText(/Photorealistic 3D renders and animations/)).toBeInTheDocument();
       expect(screen.getByText(/Immersive environments and scenes for VR/)).toBeInTheDocument();
     });
@@ -88,7 +112,9 @@ describe('AboutSection', () => {
       render(<AboutSection />);
 
       // Check that service cards have the proper structure for icons
-      const serviceCards = screen.getAllByText(/Filmmaking|Photography|3D Visualization|Scene Creation/);
+      const serviceCards = screen.getAllByText(
+        /Filmmaking|Photography|3D Visualization|Scene Creation/
+      );
       expect(serviceCards).toHaveLength(4);
     });
   });
@@ -98,7 +124,7 @@ describe('AboutSection', () => {
       render(<AboutSection />);
 
       expect(screen.getByText('Story')).toBeInTheDocument();
-      
+
       // Check for "Our Story" heading specifically
       const storyHeading = screen.getByRole('heading', { name: /Our Story/ });
       expect(storyHeading).toBeInTheDocument();
@@ -109,7 +135,9 @@ describe('AboutSection', () => {
 
       expect(screen.getByText(/Founded with a passion for visual excellence/)).toBeInTheDocument();
       expect(screen.getByText(/Our team combines technical expertise/)).toBeInTheDocument();
-      expect(screen.getByText(/We believe in the power of visual storytelling/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/We believe in the power of visual storytelling/)
+      ).toBeInTheDocument();
     });
 
     it('renders studio image placeholder', () => {
@@ -124,7 +152,7 @@ describe('AboutSection', () => {
       render(<AboutSection />);
 
       expect(screen.getByText('Achievements')).toBeInTheDocument();
-      
+
       // Check for "Our Achievements" heading specifically
       const achievementsHeading = screen.getByRole('heading', { name: /Our Achievements/ });
       expect(achievementsHeading).toBeInTheDocument();
@@ -287,7 +315,9 @@ describe('AboutSection', () => {
 
       // Services grid should be responsive
       const section = document.querySelector('#about');
-      const servicesGrid = section?.querySelector('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4');
+      const servicesGrid = section?.querySelector(
+        '.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4'
+      );
       expect(servicesGrid).toBeInTheDocument();
     });
 

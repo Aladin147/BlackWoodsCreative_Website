@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
 import {
   EnvelopeIcon,
   PhoneIcon,
@@ -10,10 +8,12 @@ import {
   CameraIcon,
   BriefcaseIcon,
   FilmIcon,
-  PaintBrushIcon
+  PaintBrushIcon,
 } from '@heroicons/react/24/outline';
-import { MagneticField, ScrollReveal } from '@/components/interactive';
+import { motion } from 'framer-motion';
+import React from 'react';
 
+import { MagneticField, ScrollReveal } from '@/components/interactive';
 
 interface FooterProps {
   className?: string;
@@ -49,12 +49,7 @@ const quickLinks = [
   { name: 'Services', href: '#portfolio' },
 ];
 
-const services = [
-  'Brand Films',
-  'Product Photography',
-  '3D Visualization',
-  'Scene Creation',
-];
+const services = ['Brand Films', 'Product Photography', '3D Visualization', 'Scene Creation'];
 
 export function Footer({ className }: FooterProps) {
   const handleScrollToTop = () => {
@@ -79,37 +74,39 @@ export function Footer({ className }: FooterProps) {
   };
 
   return (
-    <footer className={`bg-bw-bg-primary border-t border-bw-border-subtle ${className}`}>
+    <footer className={`border-t border-bw-border-subtle bg-bw-bg-primary ${className}`}>
       <div className="mx-auto max-w-7xl px-4 py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Company Info with Magnetic Effects */}
           <ScrollReveal direction="up" distance={40} delay={0.1}>
             <MagneticField strength={0.1} distance={150}>
               <div className="lg:col-span-1">
-            <h3 className="text-display-md font-display text-bw-text-primary mb-4">
-              BlackWoods Creative
-            </h3>
-            <p className="text-body-xl text-bw-text-secondary mb-6">
-              Premium visual storytelling through filmmaking, photography, and 3D visualization.
-              Creating compelling narratives that captivate and convert.
-            </p>
+                <h3 className="mb-4 font-display text-display-md text-bw-text-primary">
+                  BlackWoods Creative
+                </h3>
+                <p className="mb-6 text-body-xl text-bw-text-secondary">
+                  Premium visual storytelling through filmmaking, photography, and 3D visualization.
+                  Creating compelling narratives that captivate and convert.
+                </p>
 
-            {/* Contact Info */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 text-bw-text-secondary">
-                <EnvelopeIcon className="h-5 w-5 text-bw-accent-gold" />
-                <span className="text-sm">hello@blackwoodscreative.com</span>
-              </div>
-              <div className="flex items-center gap-3 text-bw-text-secondary">
-                <PhoneIcon className="h-5 w-5 text-bw-accent-gold" />
-                <span className="text-sm">+1 (555) 123-4567</span>
-              </div>
-              <div className="flex items-center gap-3 text-bw-text-secondary">
-                <MapPinIcon className="h-5 w-5 text-bw-accent-gold" />
-                <span className="text-sm">MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco</span>
-              </div>
-            </div>
+                {/* Contact Info */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-bw-text-secondary">
+                    <EnvelopeIcon className="h-5 w-5 text-bw-accent-gold" />
+                    <span className="text-sm">hello@blackwoodscreative.com</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-bw-text-secondary">
+                    <PhoneIcon className="h-5 w-5 text-bw-accent-gold" />
+                    <span className="text-sm">+1 (555) 123-4567</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-bw-text-secondary">
+                    <MapPinIcon className="h-5 w-5 text-bw-accent-gold" />
+                    <span className="text-sm">
+                      MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco
+                    </span>
+                  </div>
+                </div>
               </div>
             </MagneticField>
           </ScrollReveal>
@@ -117,14 +114,14 @@ export function Footer({ className }: FooterProps) {
           {/* Quick Links with Magnetic Effects */}
           <ScrollReveal direction="up" distance={40} delay={0.2}>
             <div>
-              <h4 className="font-semibold text-bw-text-primary mb-4">Quick Links</h4>
+              <h4 className="mb-4 font-semibold text-bw-text-primary">Quick Links</h4>
               <ul className="space-y-3">
-                {quickLinks.map((link) => (
+                {quickLinks.map(link => (
                   <motion.li key={link.name}>
                     <MagneticField strength={0.1} distance={80}>
                       <motion.button
                         onClick={() => handleNavClick(link.href)}
-                        className="text-bw-text-secondary hover:text-bw-accent-gold transition-colors duration-300 text-sm cursor-pointer"
+                        className="cursor-pointer text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-accent-gold"
                         whileHover={{ x: 5 }}
                         transition={{ duration: 0.2 }}
                         data-cursor="link"
@@ -141,12 +138,12 @@ export function Footer({ className }: FooterProps) {
           {/* Services with Enhanced Styling */}
           <ScrollReveal direction="up" distance={40} delay={0.3}>
             <div>
-              <h4 className="font-semibold text-bw-text-primary mb-4">Services</h4>
+              <h4 className="mb-4 font-semibold text-bw-text-primary">Services</h4>
               <ul className="space-y-3">
-                {services.map((service) => (
+                {services.map(service => (
                   <motion.li
                     key={service}
-                    className="text-bw-text-secondary text-sm hover:text-bw-accent-gold transition-colors duration-300 cursor-default"
+                    className="cursor-default text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-accent-gold"
                     whileHover={{ x: 3 }}
                     transition={{ duration: 0.2 }}
                   >
@@ -160,16 +157,16 @@ export function Footer({ className }: FooterProps) {
           {/* Social Links with Magnetic Effects */}
           <ScrollReveal direction="up" distance={40} delay={0.4}>
             <div>
-              <h4 className="font-semibold text-bw-text-primary mb-4">Follow Us</h4>
+              <h4 className="mb-4 font-semibold text-bw-text-primary">Follow Us</h4>
               <div className="flex flex-wrap gap-4">
-                {socialLinks.map((social) => (
+                {socialLinks.map(social => (
                   <MagneticField key={social.name} strength={0.3} distance={100}>
                     <motion.a
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Follow us on ${social.name} (opens in new tab)`}
-                      className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-border-subtle text-bw-text-secondary hover:bg-bw-accent-gold hover:text-bw-bg-primary focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 transition-all duration-300 cursor-pointer"
+                      className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-bw-border-subtle text-bw-text-secondary transition-all duration-300 hover:bg-bw-accent-gold hover:text-bw-bg-primary focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       title={social.name}
@@ -183,7 +180,10 @@ export function Footer({ className }: FooterProps) {
 
               {/* Newsletter Signup with Magnetic Effects */}
               <div className="mt-6">
-                <label htmlFor="newsletter-email" className="text-bw-text-secondary text-sm mb-3 block">
+                <label
+                  htmlFor="newsletter-email"
+                  className="mb-3 block text-sm text-bw-text-secondary"
+                >
                   Stay updated with our latest work
                 </label>
                 <div className="flex gap-2">
@@ -193,14 +193,14 @@ export function Footer({ className }: FooterProps) {
                       type="email"
                       placeholder="Your email"
                       aria-label="Email address for newsletter subscription"
-                      className="flex-1 px-3 py-2 bg-bw-border-subtle border border-bw-border-subtle rounded-md text-bw-text-primary text-sm focus:outline-none focus:border-bw-accent-gold focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 transition-all duration-300"
+                      className="flex-1 rounded-md border border-bw-border-subtle bg-bw-border-subtle px-3 py-2 text-sm text-bw-text-primary transition-all duration-300 focus:border-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
                     />
                   </MagneticField>
                   <MagneticField strength={0.2} distance={80}>
                     <motion.button
                       type="submit"
                       aria-label="Subscribe to newsletter"
-                      className="px-4 py-2 bg-bw-accent-gold text-bw-bg-primary rounded-md text-sm font-medium hover:bg-bw-accent-gold/80 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 transition-all duration-300 cursor-pointer"
+                      className="cursor-pointer rounded-md bg-bw-accent-gold px-4 py-2 text-sm font-medium text-bw-bg-primary transition-all duration-300 hover:bg-bw-accent-gold/80 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       data-cursor="button"
@@ -216,8 +216,8 @@ export function Footer({ className }: FooterProps) {
 
         {/* Bottom Bar with Magnetic Effects */}
         <ScrollReveal direction="up" distance={30} delay={0.5}>
-          <div className="border-t border-bw-border-subtle pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-bw-text-secondary text-sm">
+          <div className="flex flex-col items-center justify-between gap-4 border-t border-bw-border-subtle pt-8 md:flex-row">
+            <div className="text-sm text-bw-text-secondary">
               © {new Date().getFullYear()} BlackWoods Creative. All rights reserved.
             </div>
 
@@ -225,7 +225,7 @@ export function Footer({ className }: FooterProps) {
               <MagneticField strength={0.1} distance={60}>
                 <button
                   onClick={() => handleNavClick('#')}
-                  className="text-bw-text-secondary hover:text-bw-text-primary text-sm transition-colors duration-300 cursor-pointer"
+                  className="cursor-pointer text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-text-primary"
                   data-cursor="link"
                 >
                   Privacy Policy
@@ -234,7 +234,7 @@ export function Footer({ className }: FooterProps) {
               <MagneticField strength={0.1} distance={60}>
                 <button
                   onClick={() => handleNavClick('#')}
-                  className="text-bw-text-secondary hover:text-bw-text-primary text-sm transition-colors duration-300 cursor-pointer"
+                  className="cursor-pointer text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-text-primary"
                   data-cursor="link"
                 >
                   Terms of Service
@@ -246,7 +246,7 @@ export function Footer({ className }: FooterProps) {
                 <motion.button
                   onClick={handleScrollToTop}
                   aria-label="Scroll back to top of page"
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-bw-border-subtle text-bw-text-secondary hover:bg-bw-accent-gold hover:text-bw-bg-primary focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 transition-all duration-300 cursor-pointer"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-bw-border-subtle text-bw-text-secondary transition-all duration-300 hover:bg-bw-accent-gold hover:text-bw-bg-primary focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   title="Back to top"

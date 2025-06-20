@@ -42,7 +42,8 @@ export function useScrollProgress(options: ScrollProgressOptions = {}): ScrollPr
     const progress = maxScrollValue > 0 ? (currentScrollY / maxScrollValue) * 100 : 0;
 
     // Determine scroll direction
-    const direction = currentScrollY > lastScrollY ? 'down' : currentScrollY < lastScrollY ? 'up' : null;
+    const direction =
+      currentScrollY > lastScrollY ? 'down' : currentScrollY < lastScrollY ? 'up' : null;
 
     setScrollY(currentScrollY);
     setMaxScroll(maxScrollValue);
@@ -101,12 +102,19 @@ export function useScrollProgress(options: ScrollProgressOptions = {}): ScrollPr
 }
 
 // Hook for scroll-based animations with easing
-export function useScrollAnimation(options: ScrollProgressOptions & {
-  startProgress?: number;
-  endProgress?: number;
-  easing?: (t: number) => number;
-} = {}) {
-  const { startProgress = 0, endProgress = 100, easing = (t: number) => t, ...scrollOptions } = options;
+export function useScrollAnimation(
+  options: ScrollProgressOptions & {
+    startProgress?: number;
+    endProgress?: number;
+    easing?: (t: number) => number;
+  } = {}
+) {
+  const {
+    startProgress = 0,
+    endProgress = 100,
+    easing = (t: number) => t,
+    ...scrollOptions
+  } = options;
   const { scrollProgress } = useScrollProgress(scrollOptions);
 
   const [animationProgress, setAnimationProgress] = useState(0);
@@ -131,13 +139,21 @@ export function useScrollAnimation(options: ScrollProgressOptions & {
 }
 
 // Hook for scroll-triggered effects
-export function useScrollTrigger(options: ScrollProgressOptions & {
-  triggerPoint?: number;
-  triggerOnce?: boolean;
-  onTrigger?: () => void;
-  onUntrigger?: () => void;
-} = {}) {
-  const { triggerPoint = 50, triggerOnce = false, onTrigger, onUntrigger, ...scrollOptions } = options;
+export function useScrollTrigger(
+  options: ScrollProgressOptions & {
+    triggerPoint?: number;
+    triggerOnce?: boolean;
+    onTrigger?: () => void;
+    onUntrigger?: () => void;
+  } = {}
+) {
+  const {
+    triggerPoint = 50,
+    triggerOnce = false,
+    onTrigger,
+    onUntrigger,
+    ...scrollOptions
+  } = options;
   const { scrollProgress } = useScrollProgress(scrollOptions);
 
   const [isTriggered, setIsTriggered] = useState(false);
@@ -154,7 +170,15 @@ export function useScrollTrigger(options: ScrollProgressOptions & {
       setIsTriggered(false);
       onUntrigger?.();
     }
-  }, [scrollProgress, triggerPoint, isTriggered, triggerOnce, hasTriggeredOnce, onTrigger, onUntrigger]);
+  }, [
+    scrollProgress,
+    triggerPoint,
+    isTriggered,
+    triggerOnce,
+    hasTriggeredOnce,
+    onTrigger,
+    onUntrigger,
+  ]);
 
   return {
     scrollProgress,
@@ -164,10 +188,12 @@ export function useScrollTrigger(options: ScrollProgressOptions & {
 }
 
 // Hook for parallax effects based on scroll
-export function useParallaxScroll(options: ScrollProgressOptions & {
-  speed?: number;
-  direction?: 'up' | 'down';
-} = {}) {
+export function useParallaxScroll(
+  options: ScrollProgressOptions & {
+    speed?: number;
+    direction?: 'up' | 'down';
+  } = {}
+) {
   const { speed = 0.5, direction = 'up', ...scrollOptions } = options;
   const { scrollY } = useScrollProgress(scrollOptions);
 
@@ -186,9 +212,11 @@ export function useParallaxScroll(options: ScrollProgressOptions & {
 }
 
 // Hook for scroll-based progress indicators
-export function useScrollProgressIndicator(options: ScrollProgressOptions & {
-  sections?: string[];
-} = {}) {
+export function useScrollProgressIndicator(
+  options: ScrollProgressOptions & {
+    sections?: string[];
+  } = {}
+) {
   const { sections = [], ...scrollOptions } = options;
   const { scrollProgress } = useScrollProgress(scrollOptions);
 
@@ -209,7 +237,7 @@ export function useScrollProgressIndicator(options: ScrollProgressOptions & {
     sections.forEach((section, index) => {
       const sectionStart = index * sectionSize;
       const sectionEnd = (index + 1) * sectionSize;
-      
+
       if (scrollProgress >= sectionStart && scrollProgress <= sectionEnd) {
         progress[section] = ((scrollProgress - sectionStart) / sectionSize) * 100;
       } else if (scrollProgress > sectionEnd) {

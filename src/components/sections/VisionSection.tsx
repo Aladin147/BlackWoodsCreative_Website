@@ -1,12 +1,13 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
+
 import {
   TextReveal,
   MagneticField,
   ScrollReveal,
-  WebGLEnhancedBackground
+  WebGLEnhancedBackground,
 } from '@/components/interactive';
 
 interface VisionSectionProps {
@@ -19,8 +20,10 @@ const visionStoryData = [
     id: 'vision',
     title: 'Our Vision',
     subtitle: 'Visual Storytelling',
-    content: 'We believe in the power of visual storytelling to transform brands and captivate audiences. Every frame tells a story, every moment captures emotion.',
-    backgroundImage: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=1080&fit=crop&q=80',
+    content:
+      'We believe in the power of visual storytelling to transform brands and captivate audiences. Every frame tells a story, every moment captures emotion.',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=1080&fit=crop&q=80',
     parallaxSpeed: 0.6,
     effects: {
       scale: [0.85, 1, 1, 1.15] as [number, number, number, number],
@@ -29,14 +32,16 @@ const visionStoryData = [
       rotate: [0, 0] as [number, number],
     },
     color: 'from-bw-aurora-teal/30 to-bw-aurora-green/20',
-    accent: 'text-bw-accent-gold'
+    accent: 'text-bw-accent-gold',
   },
   {
     id: 'craft',
     title: 'Our Craft',
     subtitle: 'Meticulous Excellence',
-    content: 'From concept to completion, we meticulously craft each project with attention to detail that sets us apart. Our expertise spans multiple disciplines.',
-    backgroundImage: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&h=1080&fit=crop&q=80',
+    content:
+      'From concept to completion, we meticulously craft each project with attention to detail that sets us apart. Our expertise spans multiple disciplines.',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&h=1080&fit=crop&q=80',
     parallaxSpeed: 0.8,
     effects: {
       scale: [1.1, 1, 1, 0.9] as [number, number, number, number],
@@ -45,14 +50,16 @@ const visionStoryData = [
       rotate: [-1, 1] as [number, number],
     },
     color: 'from-bw-aurora-green/30 to-bw-aurora-bright/20',
-    accent: 'text-bw-accent-gold'
+    accent: 'text-bw-accent-gold',
   },
   {
     id: 'impact',
     title: 'Our Impact',
     subtitle: 'Results That Matter',
-    content: 'We create visual experiences that not only look stunning but drive real results. Our work speaks for itself through the success of our clients.',
-    backgroundImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&h=1080&fit=crop&q=80',
+    content:
+      'We create visual experiences that not only look stunning but drive real results. Our work speaks for itself through the success of our clients.',
+    backgroundImage:
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&h=1080&fit=crop&q=80',
     parallaxSpeed: 0.4,
     effects: {
       scale: [0.75, 1, 1, 1.25] as [number, number, number, number],
@@ -61,13 +68,9 @@ const visionStoryData = [
       rotate: [0, 0] as [number, number],
     },
     color: 'from-bw-aurora-bright/30 to-bw-aurora-teal/20',
-    accent: 'text-bw-accent-gold'
-  }
+    accent: 'text-bw-accent-gold',
+  },
 ];
-
-
-
-
 
 // Enhanced Cinematic Finale Section
 function CinematicFinale() {
@@ -92,7 +95,7 @@ function CinematicFinale() {
           transformOrigin: 'center center',
         }}
       >
-        <div className="w-full h-full bg-bw-bg-primary" />
+        <div className="h-full w-full bg-bw-bg-primary" />
       </motion.div>
 
       {/* Enhanced Atmospheric Layers */}
@@ -100,26 +103,26 @@ function CinematicFinale() {
         className="absolute inset-0 z-10"
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, -50]) }}
       >
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-bw-aurora-teal/20 rounded-full blur-3xl" />
+        <div className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-bw-aurora-teal/20 blur-3xl" />
       </motion.div>
 
       <motion.div
         className="absolute inset-0 z-10"
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, 100]) }}
       >
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-bw-aurora-green/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-bw-aurora-green/15 blur-3xl" />
       </motion.div>
 
       <motion.div
         className="absolute inset-0 z-10"
         style={{ x: useTransform(scrollYProgress, [0, 1], [0, -80]) }}
       >
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-bw-aurora-bright/15 rounded-full blur-2xl" />
+        <div className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-bw-aurora-bright/15 blur-2xl" />
       </motion.div>
 
       {/* Enhanced Content with Magnetic Effects */}
       <motion.div
-        className="relative z-20 h-full flex items-center justify-center text-center px-6"
+        className="relative z-20 flex h-full items-center justify-center px-6 text-center"
         style={{ y: contentY, opacity: contentOpacity }}
       >
         <MagneticField strength={0.1} distance={250}>
@@ -127,7 +130,7 @@ function CinematicFinale() {
             <ScrollReveal direction="up" distance={60} delay={0.2}>
               <TextReveal
                 text="Experience the Difference"
-                className="text-display-xl font-display text-bw-accent-gold mb-8 cursor-pointer"
+                className="mb-8 cursor-pointer font-display text-display-xl text-bw-accent-gold"
                 delay={0.05}
               />
             </ScrollReveal>
@@ -139,8 +142,9 @@ function CinematicFinale() {
                 transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                 viewport={{ once: true }}
               >
-                Our commitment to excellence and innovation creates immersive experiences that engage your audience
-                and leave lasting impressions. Every project is carefully crafted for maximum impact.
+                Our commitment to excellence and innovation creates immersive experiences that
+                engage your audience and leave lasting impressions. Every project is carefully
+                crafted for maximum impact.
               </motion.p>
             </ScrollReveal>
           </div>
@@ -153,7 +157,11 @@ function CinematicFinale() {
 // Main Vision Section Component
 export function VisionSection({ className }: VisionSectionProps) {
   return (
-    <WebGLEnhancedBackground effectType="aurora" intensity={0.3} className={`relative ${className}`}>
+    <WebGLEnhancedBackground
+      effectType="aurora"
+      intensity={0.3}
+      className={`relative ${className}`}
+    >
       <section className="relative bg-bw-bg-primary/80">
         {/* Simplified Scroll-Based Storytelling */}
         <div className="relative min-h-[300vh]">
@@ -184,7 +192,7 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
   });
 
   useEffect(() => {
-    const unsubscribe = smoothProgress.on('change', (latest) => {
+    const unsubscribe = smoothProgress.on('change', latest => {
       const sectionIndex = Math.floor(latest * sections.length);
       const clampedIndex = Math.max(0, Math.min(sections.length - 1, sectionIndex));
       setActiveSection(clampedIndex);
@@ -197,7 +205,7 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
     <div ref={containerRef} className="relative">
       {/* Progress Indicator */}
       <motion.div
-        className="fixed left-8 top-1/2 transform -translate-y-1/2 z-50 hidden lg:flex lg:flex-col lg:items-center"
+        className="fixed left-8 top-1/2 z-50 hidden -translate-y-1/2 transform lg:flex lg:flex-col lg:items-center"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 1 }}
@@ -206,7 +214,7 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
           {sections.map((section, index) => (
             <motion.div
               key={section.id}
-              className={`w-1 h-12 rounded-full transition-all duration-500 cursor-pointer ${
+              className={`h-12 w-1 cursor-pointer rounded-full transition-all duration-500 ${
                 index === activeSection
                   ? 'bg-bw-accent-gold shadow-[0_0_20px_rgba(195,163,88,0.6)]'
                   : 'bg-bw-border-subtle hover:bg-bw-accent-gold/30'
@@ -238,7 +246,7 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
 
 // Simplified story section
 interface SimpleStorySectionProps {
-  section: typeof visionStoryData[0];
+  section: (typeof visionStoryData)[0];
   index: number;
   isActive: boolean;
   scrollProgress: MotionValue<number>;
@@ -257,11 +265,7 @@ function SimpleStorySection({
   const sectionStart = index / totalSections;
   const sectionEnd = (index + 1) / totalSections;
 
-  const sectionProgress = useTransform(
-    scrollProgress,
-    [sectionStart, sectionEnd],
-    [0, 1]
-  );
+  const sectionProgress = useTransform(scrollProgress, [sectionStart, sectionEnd], [0, 1]);
 
   const y = useTransform(
     scrollProgress,
@@ -269,27 +273,19 @@ function SimpleStorySection({
     [0, -100 * (section.parallaxSpeed || 1)]
   );
 
-  const scale = useTransform(
-    sectionProgress,
-    [0, 0.5, 1],
-    [0.95, 1, 1.05]
-  );
+  const scale = useTransform(sectionProgress, [0, 0.5, 1], [0.95, 1, 1.05]);
 
-  const opacity = useTransform(
-    sectionProgress,
-    [0, 0.2, 0.8, 1],
-    [0, 1, 1, 0]
-  );
+  const opacity = useTransform(sectionProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   // Pre-calculate transforms to avoid conditional hooks
-  const backgroundOpacity = useTransform(opacity, (value) => value * 0.7);
-  const sectionNumberOpacity = useTransform(opacity, (value) => value * 0.3);
+  const backgroundOpacity = useTransform(opacity, value => value * 0.7);
+  const sectionNumberOpacity = useTransform(opacity, value => value * 0.3);
 
   return (
     <motion.div
       ref={sectionRef}
       id={section.id}
-      className="relative h-screen flex items-center justify-center overflow-hidden"
+      className="relative flex h-screen items-center justify-center overflow-hidden"
       style={{ y }}
     >
       {/* Background */}
@@ -302,7 +298,7 @@ function SimpleStorySection({
           }}
         >
           <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            className="h-full w-full bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${section.backgroundImage})`,
             }}
@@ -312,12 +308,9 @@ function SimpleStorySection({
       )}
 
       {/* Content */}
-      <motion.div
-        className="relative z-20 text-center px-6 max-w-4xl"
-        style={{ opacity }}
-      >
+      <motion.div className="relative z-20 max-w-4xl px-6 text-center" style={{ opacity }}>
         <motion.div
-          className={`text-sm font-medium tracking-wider uppercase mb-4 ${section.accent}`}
+          className={`mb-4 text-sm font-medium uppercase tracking-wider ${section.accent}`}
           initial={{ opacity: 0, y: 20 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -328,7 +321,7 @@ function SimpleStorySection({
         <motion.div className="mb-8">
           <TextReveal
             text={section.title}
-            className="text-display-xl font-display text-bw-accent-gold drop-shadow-2xl"
+            className="font-display text-display-xl text-bw-accent-gold drop-shadow-2xl"
             delay={isActive ? 0.05 : 0}
           />
         </motion.div>
@@ -345,7 +338,7 @@ function SimpleStorySection({
 
       {/* Section Number */}
       <motion.div
-        className="absolute bottom-8 right-8 text-bw-accent-gold/30 font-display text-6xl font-bold"
+        className="absolute bottom-8 right-8 font-display text-6xl font-bold text-bw-accent-gold/30"
         style={{ opacity: sectionNumberOpacity }}
       >
         {String(index + 1).padStart(2, '0')}

@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect, useState } from 'react';
+
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 import { OptimizationProfile } from '@/lib/utils/device-capabilities';
 
@@ -24,7 +25,7 @@ export function ProgressiveEnhancement({
   fallback = null,
   feature,
   minPerformance = 'low',
-  className = ''
+  className = '',
 }: ProgressiveEnhancementProps) {
   const { deviceInfo } = useDeviceAdaptation();
   const [shouldRender, setShouldRender] = useState(false);
@@ -40,12 +41,12 @@ export function ProgressiveEnhancement({
       }
 
       const { capabilities, optimizationProfile } = deviceInfo;
-      
+
       // Check performance requirements
       const performanceLevels = { low: 0, medium: 1, high: 2 };
       const requiredLevel = performanceLevels[minPerformance];
       const deviceLevel = performanceLevels[capabilities.performance.overall];
-      
+
       if (deviceLevel < requiredLevel) {
         setShouldRender(false);
         setIsLoading(false);
@@ -53,7 +54,11 @@ export function ProgressiveEnhancement({
       }
 
       // Check feature-specific support
-      const featureSupported = checkAdvancedFeatureSupport(feature, capabilities, optimizationProfile);
+      const featureSupported = checkAdvancedFeatureSupport(
+        feature,
+        capabilities,
+        optimizationProfile
+      );
       setShouldRender(featureSupported);
       setIsLoading(false);
     };
@@ -64,7 +69,7 @@ export function ProgressiveEnhancement({
   if (isLoading) {
     return (
       <div className={`progressive-enhancement-loading ${className}`}>
-        {fallback || <div className="animate-pulse bg-gray-200 rounded h-4 w-full" />}
+        {fallback || <div className="h-4 w-full animate-pulse rounded bg-gray-200" />}
       </div>
     );
   }
@@ -85,7 +90,10 @@ function ConditionalRender({ condition, children, fallback }: ConditionalRenderP
 }
 
 // Feature support detection functions
-function getBasicFeatureSupport(feature: string, deviceInfo: { isMobile: boolean; hasHover: boolean; prefersReducedMotion: boolean }): boolean {
+function getBasicFeatureSupport(
+  feature: string,
+  deviceInfo: { isMobile: boolean; hasHover: boolean; prefersReducedMotion: boolean }
+): boolean {
   switch (feature) {
     case 'webgl':
       return !deviceInfo.isMobile && deviceInfo.hasHover;
@@ -121,14 +129,22 @@ function checkAdvancedFeatureSupport(
     case 'magnetic':
       return profile.animations.magnetic;
     case 'complex-animations':
-      return profile.animations.complexity === 'enhanced' || profile.animations.complexity === 'full';
+      return (
+        profile.animations.complexity === 'enhanced' || profile.animations.complexity === 'full'
+      );
     default:
       return true;
   }
 }
 
 // Specialized progressive enhancement components
-export function WebGLEnhancement({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+export function WebGLEnhancement({
+  children,
+  fallback,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+}) {
   return (
     <ProgressiveEnhancement feature="webgl" minPerformance="medium" fallback={fallback}>
       {children}
@@ -136,7 +152,13 @@ export function WebGLEnhancement({ children, fallback }: { children: ReactNode; 
   );
 }
 
-export function AnimationEnhancement({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+export function AnimationEnhancement({
+  children,
+  fallback,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+}) {
   return (
     <ProgressiveEnhancement feature="animations" fallback={fallback}>
       {children}
@@ -144,7 +166,13 @@ export function AnimationEnhancement({ children, fallback }: { children: ReactNo
   );
 }
 
-export function ParticleEnhancement({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+export function ParticleEnhancement({
+  children,
+  fallback,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+}) {
   return (
     <ProgressiveEnhancement feature="particles" minPerformance="medium" fallback={fallback}>
       {children}
@@ -152,7 +180,13 @@ export function ParticleEnhancement({ children, fallback }: { children: ReactNod
   );
 }
 
-export function ParallaxEnhancement({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+export function ParallaxEnhancement({
+  children,
+  fallback,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+}) {
   return (
     <ProgressiveEnhancement feature="parallax" fallback={fallback}>
       {children}
@@ -160,7 +194,13 @@ export function ParallaxEnhancement({ children, fallback }: { children: ReactNod
   );
 }
 
-export function MagneticEnhancement({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+export function MagneticEnhancement({
+  children,
+  fallback,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+}) {
   return (
     <ProgressiveEnhancement feature="magnetic" fallback={fallback}>
       {children}
@@ -168,9 +208,19 @@ export function MagneticEnhancement({ children, fallback }: { children: ReactNod
   );
 }
 
-export function ComplexAnimationEnhancement({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
+export function ComplexAnimationEnhancement({
+  children,
+  fallback,
+}: {
+  children: ReactNode;
+  fallback?: ReactNode;
+}) {
   return (
-    <ProgressiveEnhancement feature="complex-animations" minPerformance="medium" fallback={fallback}>
+    <ProgressiveEnhancement
+      feature="complex-animations"
+      minPerformance="medium"
+      fallback={fallback}
+    >
       {children}
     </ProgressiveEnhancement>
   );
@@ -186,7 +236,14 @@ interface AdaptiveImageProps {
   priority?: boolean;
 }
 
-export function AdaptiveImage({ src, alt, className, width, height, priority }: AdaptiveImageProps) {
+export function AdaptiveImage({
+  src,
+  alt,
+  className,
+  width,
+  height,
+  priority,
+}: AdaptiveImageProps) {
   const { deviceInfo } = useDeviceAdaptation();
   const [imageSrc, setImageSrc] = useState(src);
 
@@ -197,7 +254,7 @@ export function AdaptiveImage({ src, alt, className, width, height, priority }: 
     }
 
     const { loading } = deviceInfo.optimizationProfile;
-    
+
     // Adjust image quality based on device capabilities
     if (loading.imageQuality === 'low') {
       // Add quality parameter for low-quality images
@@ -238,7 +295,14 @@ interface AdaptiveVideoProps {
   loop?: boolean;
 }
 
-export function AdaptiveVideo({ src, poster, className, autoPlay, muted, loop }: AdaptiveVideoProps) {
+export function AdaptiveVideo({
+  src,
+  poster,
+  className,
+  autoPlay,
+  muted,
+  loop,
+}: AdaptiveVideoProps) {
   const { deviceInfo } = useDeviceAdaptation();
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
 
@@ -249,7 +313,7 @@ export function AdaptiveVideo({ src, poster, className, autoPlay, muted, loop }:
     }
 
     const { network, preferences } = deviceInfo.capabilities;
-    
+
     // Disable autoplay on slow connections or when data saving is preferred
     if (network.saveData || network.effectiveType === '2g' || network.effectiveType === '3g') {
       setShouldAutoPlay(false);
@@ -283,10 +347,12 @@ export function DeviceCapabilityDebugger() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black/80 text-white p-4 rounded-lg text-xs max-w-sm z-50">
-      <h3 className="font-bold mb-2">Device Capabilities</h3>
+    <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-lg bg-black/80 p-4 text-xs text-white">
+      <h3 className="mb-2 font-bold">Device Capabilities</h3>
       <div className="space-y-1">
-        <div>Type: {deviceInfo.isMobile ? 'Mobile' : deviceInfo.isTablet ? 'Tablet' : 'Desktop'}</div>
+        <div>
+          Type: {deviceInfo.isMobile ? 'Mobile' : deviceInfo.isTablet ? 'Tablet' : 'Desktop'}
+        </div>
         <div>Screen: {deviceInfo.screenSize}</div>
         <div>Performance: {deviceInfo.capabilities?.performance.overall || 'Unknown'}</div>
         <div>WebGL: {deviceInfo.capabilities?.features.webgl ? 'Yes' : 'No'}</div>

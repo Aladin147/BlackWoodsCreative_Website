@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useEffect, useState, useMemo, ReactNode } from 'react';
 import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
-import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
+import { useRef, useEffect, useState, useMemo, ReactNode } from 'react';
+
 import { useAnimationPerformance } from '@/hooks/useAnimationPerformance';
+import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 
 interface ParallaxLayer {
   id: string;
@@ -34,7 +35,7 @@ export function ComplexParallaxSystem({
   height = '200vh',
   className = '',
   enableDepthOfField = true,
-  storyTriggers = []
+  storyTriggers = [],
 }: ComplexParallaxSystemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [triggeredStories, setTriggeredStories] = useState<Set<string>>(new Set());
@@ -43,14 +44,14 @@ export function ComplexParallaxSystem({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'end start']
+    offset: ['start end', 'end start'],
   });
 
   // Smooth spring physics for parallax
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 60,
     damping: 40,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
 
   // Create all transforms at the component level to avoid hook violations
@@ -59,7 +60,7 @@ export function ComplexParallaxSystem({
   const staticOpacityTransform = useTransform(smoothProgress, [0, 1], [1, 1]);
   const staticScaleTransform = useTransform(smoothProgress, [0, 1], [1, 1]);
   const staticBlurTransform = useTransform(smoothProgress, [0, 1], [0, 0]);
-  const staticBlurFilter = useTransform(staticBlurTransform, (value) => `blur(${value}px)`);
+  const staticBlurFilter = useTransform(staticBlurTransform, value => `blur(${value}px)`);
 
   // Pre-compute y transforms for each layer to avoid hook violations in render
   // Create transforms for common speed values to avoid calling hooks in loops
@@ -78,15 +79,27 @@ export function ComplexParallaxSystem({
       return veryFastTransform;
     };
 
-    return layers.map((layer) => ({
+    return layers.map(layer => ({
       ...layer,
       opacity: enableDepthOfField ? baseOpacityTransform : staticOpacityTransform,
       scale: staticScaleTransform,
       blur: staticBlurTransform,
       blurFilter: staticBlurFilter,
-      y: getTransformForSpeed(layer.speed)
+      y: getTransformForSpeed(layer.speed),
     }));
-  }, [layers, enableDepthOfField, baseOpacityTransform, staticOpacityTransform, staticScaleTransform, staticBlurTransform, staticBlurFilter, slowTransform, mediumTransform, fastTransform, veryFastTransform]);
+  }, [
+    layers,
+    enableDepthOfField,
+    baseOpacityTransform,
+    staticOpacityTransform,
+    staticScaleTransform,
+    staticBlurTransform,
+    staticBlurFilter,
+    slowTransform,
+    mediumTransform,
+    fastTransform,
+    veryFastTransform,
+  ]);
 
   // Story trigger system with performance monitoring
   useEffect(() => {
@@ -94,8 +107,8 @@ export function ComplexParallaxSystem({
 
     registerAnimation(); // Register this parallax system
 
-    const unsubscribe = smoothProgress.on('change', (progress) => {
-      storyTriggers.forEach((trigger) => {
+    const unsubscribe = smoothProgress.on('change', progress => {
+      storyTriggers.forEach(trigger => {
         if (
           progress >= trigger.position &&
           progress <= trigger.position + 0.1 &&
@@ -111,13 +124,20 @@ export function ComplexParallaxSystem({
       unsubscribe();
       unregisterAnimation(); // Unregister on cleanup
     };
-  }, [smoothProgress, storyTriggers, triggeredStories, shouldEnableFeature, registerAnimation, unregisterAnimation]);
+  }, [
+    smoothProgress,
+    storyTriggers,
+    triggeredStories,
+    shouldEnableFeature,
+    registerAnimation,
+    unregisterAnimation,
+  ]);
 
   if (!shouldEnableFeature('enableParallax')) {
     // Fallback for devices that don't support parallax
     return (
       <div className={`relative ${className}`} style={{ height }}>
-        {layers.map((layer) => (
+        {layers.map(layer => (
           <div key={layer.id} className={`absolute inset-0 ${layer.className || ''}`}>
             {layer.children}
           </div>
@@ -127,33 +147,29 @@ export function ComplexParallaxSystem({
   }
 
   return (
-    <div 
-      ref={containerRef}
-      className={`relative overflow-hidden ${className}`}
-      style={{ height }}
-    >
-      {enhancedLayers.map((layer) => (
+    <div ref={containerRef} className={`relative overflow-hidden ${className}`} style={{ height }}>
+      {enhancedLayers.map(layer => (
         <motion.div
           key={layer.id}
-          className={`absolute inset-0 parallax-element animate-optimized ${layer.className || ''}`}
+          className={`parallax-element animate-optimized absolute inset-0 ${layer.className || ''}`}
           style={{
             y: layer.y,
             opacity: layer.opacity,
             scale: layer.scale,
             filter: layer.blurFilter,
-            zIndex: Math.round((1 - layer.depth) * 100)
+            zIndex: Math.round((1 - layer.depth) * 100),
           }}
         >
           {layer.children}
         </motion.div>
       ))}
-      
+
       {/* Scroll progress indicator for development */}
       {process.env.NODE_ENV === 'development' && (
         <motion.div
-          className="fixed top-20 right-4 w-2 h-32 bg-bw-border-subtle rounded-full z-50"
+          className="fixed right-4 top-20 z-50 h-32 w-2 rounded-full bg-bw-border-subtle"
           style={{
-            scaleY: smoothProgress
+            scaleY: smoothProgress,
           }}
         />
       )}
@@ -167,7 +183,7 @@ export function CinematicParallaxScene({
   subtitle,
   backgroundLayers,
   foregroundElements,
-  className = ''
+  className = '',
 }: {
   title: string;
   subtitle?: string;
@@ -184,19 +200,19 @@ export function CinematicParallaxScene({
       speed: 0.2 + index * 0.1,
       depth: 0.8 + index * 0.1,
       children: layer,
-      className: 'opacity-60'
+      className: 'opacity-60',
     })),
-    
+
     // Content layer (medium speed)
     {
       id: 'content',
       speed: 0.5,
       depth: 0.5,
       children: (
-        <div className="flex items-center justify-center h-full">
-          <div className="text-center max-w-4xl px-6">
+        <div className="flex h-full items-center justify-center">
+          <div className="max-w-4xl px-6 text-center">
             <motion.h2
-              className="text-display-lg font-bold text-bw-text-primary mb-6"
+              className="mb-6 text-display-lg font-bold text-bw-text-primary"
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -217,35 +233,35 @@ export function CinematicParallaxScene({
             )}
           </div>
         </div>
-      )
+      ),
     },
-    
+
     // Foreground elements (fastest)
     ...(foregroundElements?.map((element, index) => ({
       id: `fg-${index}`,
       speed: 0.8 + index * 0.1,
       depth: 0.1 + index * 0.05,
       children: element,
-      className: 'pointer-events-none'
-    })) || [])
+      className: 'pointer-events-none',
+    })) || []),
   ];
 
   const storyTriggers = [
     {
       position: 0.2,
       action: () => {}, // Story chapter 1 trigger
-      id: 'chapter-1'
+      id: 'chapter-1',
     },
     {
       position: 0.5,
       action: () => {}, // Story climax trigger
-      id: 'climax'
+      id: 'climax',
     },
     {
       position: 0.8,
       action: () => {}, // Story conclusion trigger
-      id: 'conclusion'
-    }
+      id: 'conclusion',
+    },
   ];
 
   return (
@@ -262,7 +278,7 @@ export function CinematicParallaxScene({
 // Multi-scene parallax storytelling
 export function ParallaxStorySequence({
   scenes,
-  className = ''
+  className = '',
 }: {
   scenes: {
     id: string;
@@ -295,7 +311,7 @@ export function AtmosphericLayer({
   type,
   intensity = 0.5,
   color = 'bw-aurora-teal',
-  className = ''
+  className = '',
 }: {
   type: 'mist' | 'particles' | 'gradient' | 'orbs';
   intensity?: number;
@@ -312,50 +328,52 @@ export function AtmosphericLayer({
             className={`absolute inset-0 bg-gradient-to-t from-${color}/20 via-transparent to-${color}/10`}
             animate={{
               opacity: [intensity * 0.5, intensity, intensity * 0.7],
-              scale: [1, 1.1, 1]
+              scale: [1, 1.1, 1],
             }}
             transition={{
               duration: 8,
               repeat: Infinity,
-              ease: 'easeInOut'
+              ease: 'easeInOut',
             }}
           />
         </div>
       );
-      
+
     case 'particles':
       return (
         <div className={baseClasses}>
           {Array.from({ length: Math.round(80 * intensity) }).map((_, i) => (
             <motion.div
               key={i}
-              className={`absolute w-1 h-1 bg-${color} rounded-full opacity-60`}
+              className={`absolute h-1 w-1 bg-${color} rounded-full opacity-60`}
               style={{
                 left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`
+                top: `${Math.random() * 100}%`,
               }}
               animate={{
                 y: [0, -100, 0],
-                opacity: [0, intensity, 0]
+                opacity: [0, intensity, 0],
               }}
               transition={{
                 duration: 10 + Math.random() * 10,
                 repeat: Infinity,
                 delay: Math.random() * 5,
-                ease: 'linear'
+                ease: 'linear',
               }}
             />
           ))}
         </div>
       );
-      
+
     case 'gradient':
       return (
         <div className={baseClasses}>
-          <div className={`absolute inset-0 bg-gradient-radial from-${color}/${Math.round(intensity * 30)} via-transparent to-transparent`} />
+          <div
+            className={`absolute inset-0 bg-gradient-radial from-${color}/${Math.round(intensity * 30)} via-transparent to-transparent`}
+          />
         </div>
       );
-      
+
     case 'orbs':
       return (
         <div className={baseClasses}>
@@ -368,24 +386,24 @@ export function AtmosphericLayer({
                 height: `${100 + Math.random() * 200}px`,
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                opacity: intensity * 0.3
+                opacity: intensity * 0.3,
               }}
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [intensity * 0.2, intensity * 0.4, intensity * 0.2],
                 x: [0, Math.random() * 50 - 25, 0],
-                y: [0, Math.random() * 50 - 25, 0]
+                y: [0, Math.random() * 50 - 25, 0],
               }}
               transition={{
                 duration: 15 + Math.random() * 10,
                 repeat: Infinity,
-                ease: 'easeInOut'
+                ease: 'easeInOut',
               }}
             />
           ))}
         </div>
       );
-      
+
     default:
       return null;
   }

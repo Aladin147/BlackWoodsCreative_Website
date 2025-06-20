@@ -98,7 +98,7 @@ export interface OptimizationProfile {
   };
 }
 
-class DeviceCapabilityDetector {
+export class DeviceCapabilityDetector {
   private static instance: DeviceCapabilityDetector;
   private capabilities: DeviceCapabilities | null = null;
   private profile: OptimizationProfile | null = null;
@@ -115,8 +115,9 @@ class DeviceCapabilityDetector {
       return this.capabilities;
     }
 
-    if (typeof window === 'undefined') {
-      return this.getServerSideDefaults();
+    if (typeof window === 'undefined' || typeof navigator === 'undefined' || typeof document === 'undefined') {
+      this.capabilities = this.getServerSideDefaults();
+      return this.capabilities;
     }
 
     const capabilities: DeviceCapabilities = {
@@ -126,7 +127,12 @@ class DeviceCapabilityDetector {
       network: this.detectNetwork(),
       display: this.detectDisplay(),
       features: this.detectFeatures(),
-      performance: { overall: 'medium', graphics: 'medium', computation: 'medium', memory: 'medium' },
+      performance: {
+        overall: 'medium',
+        graphics: 'medium',
+        computation: 'medium',
+        memory: 'medium',
+      },
       preferences: this.detectPreferences(),
     };
 
@@ -168,7 +174,9 @@ class DeviceCapabilityDetector {
 
   private async detectGPU() {
     const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl') as WebGLRenderingContext | null;
+    const gl =
+      canvas.getContext('webgl') ||
+      (canvas.getContext('experimental-webgl') as WebGLRenderingContext | null);
     const gl2 = canvas.getContext('webgl2');
 
     if (!gl) {
@@ -192,11 +200,15 @@ class DeviceCapabilityDetector {
 
     // Estimate GPU performance based on renderer
     let gpuPerformance: 'low' | 'medium' | 'high' = 'medium';
-    const rendererStr = renderer.toLowerCase();
+    const rendererStr = (renderer || 'unknown').toLowerCase();
 
     if (rendererStr.includes('intel') && rendererStr.includes('hd')) {
       gpuPerformance = 'low';
-    } else if (rendererStr.includes('nvidia') || rendererStr.includes('amd') || rendererStr.includes('radeon')) {
+    } else if (
+      rendererStr.includes('nvidia') ||
+      rendererStr.includes('amd') ||
+      rendererStr.includes('radeon')
+    ) {
       gpuPerformance = 'high';
     }
 
@@ -213,7 +225,7 @@ class DeviceCapabilityDetector {
   private detectMemory() {
     const nav = navigator as Navigator & { deviceMemory?: number };
     const perf = performance as Performance & { memory?: { jsHeapSizeLimit: number } };
-    
+
     const deviceMemory = nav.deviceMemory || 4; // Default to 4GB
     const jsHeapSizeLimit = perf.memory?.jsHeapSizeLimit || 2147483648; // 2GB default
 
@@ -333,13 +345,49 @@ class DeviceCapabilityDetector {
   private getServerSideDefaults(): DeviceCapabilities {
     return {
       cpu: { cores: 4, architecture: 'unknown', performance: 'medium' },
-      gpu: { vendor: 'unknown', renderer: 'unknown', webglSupported: false, webgl2Supported: false, maxTextureSize: 0, performance: 'medium' },
+      gpu: {
+        vendor: 'unknown',
+        renderer: 'unknown',
+        webglSupported: false,
+        webgl2Supported: false,
+        maxTextureSize: 0,
+        performance: 'medium',
+      },
       memory: { deviceMemory: 4, jsHeapSizeLimit: 2147483648, performance: 'medium' },
       network: { effectiveType: '4g', downlink: 10, rtt: 100, saveData: false },
-      display: { width: 1920, height: 1080, pixelRatio: 1, colorDepth: 24, refreshRate: 60, hdr: false },
-      features: { webgl: false, webgl2: false, webassembly: false, serviceWorker: false, intersectionObserver: false, resizeObserver: false, performanceObserver: false, webAnimations: false, cssCustomProperties: false, cssGrid: false, cssFlexbox: false },
-      performance: { overall: 'medium', graphics: 'medium', computation: 'medium', memory: 'medium' },
-      preferences: { reducedMotion: false, reducedData: false, highContrast: false, darkMode: false },
+      display: {
+        width: 1920,
+        height: 1080,
+        pixelRatio: 1,
+        colorDepth: 24,
+        refreshRate: 60,
+        hdr: false,
+      },
+      features: {
+        webgl: false,
+        webgl2: false,
+        webassembly: false,
+        serviceWorker: false,
+        intersectionObserver: false,
+        resizeObserver: false,
+        performanceObserver: false,
+        webAnimations: false,
+        cssCustomProperties: false,
+        cssGrid: false,
+        cssFlexbox: false,
+      },
+      performance: {
+        overall: 'medium',
+        graphics: 'medium',
+        computation: 'medium',
+        memory: 'medium',
+      },
+      preferences: {
+        reducedMotion: false,
+        reducedData: false,
+        highContrast: false,
+        darkMode: false,
+      },
     };
   }
 
@@ -361,7 +409,7 @@ class DeviceCapabilityDetector {
 
   private getAnimationSettings(capabilities: DeviceCapabilities) {
     const { performance, preferences } = capabilities;
-    
+
     if (preferences.reducedMotion) {
       return {
         enabled: false,
@@ -413,12 +461,16 @@ class DeviceCapabilityDetector {
     const { gpu, performance } = capabilities;
 
     const shadowQuality: 'none' | 'low' | 'medium' | 'high' =
-      performance.graphics === 'high' ? 'high' :
-      performance.graphics === 'medium' ? 'medium' : 'none';
+      performance.graphics === 'high'
+        ? 'high'
+        : performance.graphics === 'medium'
+          ? 'medium'
+          : 'none';
 
     return {
       webgl: gpu.webglSupported && performance.graphics !== 'low',
-      particleCount: performance.overall === 'high' ? 100 : performance.overall === 'medium' ? 50 : 20,
+      particleCount:
+        performance.overall === 'high' ? 100 : performance.overall === 'medium' ? 50 : 20,
       textureQuality: performance.graphics,
       shadowQuality,
       antialiasing: performance.graphics === 'high',
@@ -428,9 +480,11 @@ class DeviceCapabilityDetector {
   private getLoadingSettings(capabilities: DeviceCapabilities) {
     const { network, memory } = capabilities;
 
-    const imageQuality: 'low' | 'medium' | 'high' =
-      network.saveData ? 'low' :
-      memory.performance === 'high' ? 'high' : 'medium';
+    const imageQuality: 'low' | 'medium' | 'high' = network.saveData
+      ? 'low'
+      : memory.performance === 'high'
+        ? 'high'
+        : 'medium';
 
     return {
       imageQuality,

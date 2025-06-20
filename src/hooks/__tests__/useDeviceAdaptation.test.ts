@@ -1,5 +1,16 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
+
 import { useDeviceAdaptation } from '../useDeviceAdaptation';
+import { getOptimizationProfile, getDeviceCapabilities } from '@/lib/utils/device-capabilities';
+
+// Mock the device capabilities module
+jest.mock('@/lib/utils/device-capabilities', () => ({
+  getOptimizationProfile: jest.fn(),
+  getDeviceCapabilities: jest.fn(),
+}));
+
+const mockGetOptimizationProfile = getOptimizationProfile as jest.MockedFunction<typeof getOptimizationProfile>;
+const mockGetDeviceCapabilities = getDeviceCapabilities as jest.MockedFunction<typeof getDeviceCapabilities>;
 
 // Mock window.matchMedia
 const mockMatchMedia = (matches: boolean) => {
@@ -19,7 +30,10 @@ const mockMatchMedia = (matches: boolean) => {
 };
 
 // Mock window.navigator
-const mockNavigator = (userAgent: string, connection?: { effectiveType?: string; downlink?: number }) => {
+const mockNavigator = (
+  userAgent: string,
+  connection?: { effectiveType?: string; downlink?: number }
+) => {
   Object.defineProperty(window, 'navigator', {
     writable: true,
     value: {
@@ -46,17 +60,33 @@ const mockScreen = (width: number, height: number) => {
 describe('useDeviceAdaptation', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Set up default device capabilities mocks (will be overridden in specific tests)
+    mockGetOptimizationProfile.mockResolvedValue(undefined); // No optimization profile by default
+    mockGetDeviceCapabilities.mockResolvedValue({
+      cpu: { cores: 4, performance: 'medium' },
+      gpu: { webglSupported: false, performance: 'low' },
+      memory: { total: 4, available: 3 },
+      performance: { overall: 'medium' },
+    });
+
     // Reset to default desktop setup
     mockMatchMedia(false);
     mockNavigator('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
     mockScreen(1920, 1080);
-    Object.defineProperty(window, 'innerWidth', { writable: true, value: 1920 });
-    Object.defineProperty(window, 'innerHeight', { writable: true, value: 1080 });
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1920 });
+    Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1080 });
+    Object.defineProperty(window, 'devicePixelRatio', { writable: true, configurable: true, value: 1 });
   });
 
   describe('Device Detection', () => {
-    it('detects desktop device correctly', () => {
+    it('detects desktop device correctly', async () => {
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      // Wait for the useEffect to run and update the device info
+      await waitFor(() => {
+        expect(result.current.deviceInfo.screenSize).toBe('2xl');
+      });
 
       expect(result.current.deviceInfo.isMobile).toBe(false);
       expect(result.current.deviceInfo.isTablet).toBe(false);
@@ -64,12 +94,18 @@ describe('useDeviceAdaptation', () => {
       expect(result.current.deviceInfo.screenSize).toBe('2xl');
     });
 
-    it('detects mobile device correctly', () => {
+    it('detects mobile device correctly', async () => {
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 375 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      // Wait for the useEffect to run and update the device info
+      await waitFor(() => {
+        expect(result.current.deviceInfo.isMobile).toBe(true);
+      });
 
       expect(result.current.deviceInfo.isMobile).toBe(true);
       expect(result.current.deviceInfo.isTablet).toBe(false);
@@ -77,15 +113,21 @@ describe('useDeviceAdaptation', () => {
       expect(result.current.deviceInfo.screenSize).toBe('sm');
     });
 
-    it('detects tablet device correctly', () => {
+    it('detects tablet device correctly', async () => {
       // Use a generic tablet user agent that doesn't match mobile patterns
-      mockNavigator('Mozilla/5.0 (compatible; Tablet; rv:14.0)');
+      mockNavigator('Mozilla/5.0 (compatible; Tablet; rv:14.0)', undefined);
       mockScreen(768, 1024);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 768 });
-      Object.defineProperty(window, 'ontouchstart', { value: true });
-      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 768 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1024 });
+      Object.defineProperty(window, 'ontouchstart', { value: true, configurable: true });
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, writable: true, configurable: true });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      // Wait for the useEffect to run and update the device info
+      await waitFor(() => {
+        expect(result.current.deviceInfo.isTablet).toBe(true);
+      });
 
       // Generic tablet should be detected as tablet
       expect(result.current.deviceInfo.isMobile).toBe(false);
@@ -96,30 +138,45 @@ describe('useDeviceAdaptation', () => {
   });
 
   describe('Screen Size Detection', () => {
-    it('detects large screen correctly', () => {
+    it('detects large screen correctly', async () => {
       mockScreen(1920, 1080);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 1920 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1920 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1080 });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.deviceInfo.screenSize).toBe('2xl');
+      });
 
       expect(result.current.deviceInfo.screenSize).toBe('2xl');
       expect(result.current.deviceInfo.pixelRatio).toBe(1);
     });
 
-    it('detects small screen correctly', () => {
+    it('detects small screen correctly', async () => {
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 375 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.deviceInfo.screenSize).toBe('sm');
+      });
 
       expect(result.current.deviceInfo.screenSize).toBe('sm');
     });
 
-    it('detects medium screen correctly', () => {
+    it('detects medium screen correctly', async () => {
       mockScreen(768, 1024);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 768 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 768 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1024 });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.deviceInfo.screenSize).toBe('md');
+      });
 
       expect(result.current.deviceInfo.screenSize).toBe('md');
     });
@@ -136,47 +193,66 @@ describe('useDeviceAdaptation', () => {
       expect(result.current.deviceInfo.orientation).toBe('landscape');
     });
 
-    it('detects portrait orientation', () => {
+    it('detects portrait orientation', async () => {
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.deviceInfo.orientation).toBe('portrait');
+      });
 
       expect(result.current.deviceInfo.orientation).toBe('portrait');
     });
 
-    it('detects touch capability', () => {
-      Object.defineProperty(window, 'ontouchstart', { value: true });
-      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5 });
+    it('detects touch capability', async () => {
+      Object.defineProperty(window, 'ontouchstart', { value: true, configurable: true });
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, writable: true, configurable: true });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.deviceInfo.isTouchDevice).toBe(true);
+      });
 
       expect(result.current.deviceInfo.isTouchDevice).toBe(true);
     });
   });
 
   describe('Adaptive Configuration', () => {
-    it('returns mobile config for mobile devices', () => {
+    it('returns mobile config for mobile devices', async () => {
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 375 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.adaptiveConfig.magneticStrength).toBe(0.1);
+      });
 
       expect(result.current.adaptiveConfig.magneticStrength).toBe(0.1);
       expect(result.current.adaptiveConfig.enableParallax).toBe(false);
       expect(result.current.adaptiveConfig.enableComplexAnimations).toBe(false);
     });
 
-    it('returns tablet config for tablet devices', () => {
+    it('returns tablet config for tablet devices', async () => {
       // Use a generic tablet user agent that doesn't match mobile patterns
       mockNavigator('Mozilla/5.0 (compatible; Tablet; rv:14.0)');
       mockScreen(768, 1024);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 768 });
-      Object.defineProperty(window, 'ontouchstart', { value: true });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 768 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1024 });
+      Object.defineProperty(window, 'ontouchstart', { value: true, configurable: true });
+      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, writable: true, configurable: true });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.adaptiveConfig.magneticStrength).toBe(0.15);
+      });
 
       // Generic tablet should get tablet config
       expect(result.current.adaptiveConfig.magneticStrength).toBe(0.15);
@@ -192,10 +268,14 @@ describe('useDeviceAdaptation', () => {
       expect(result.current.adaptiveConfig.enableComplexAnimations).toBe(true);
     });
 
-    it('handles reduced motion preference', () => {
+    it('handles reduced motion preference', async () => {
       mockMatchMedia(true); // prefers-reduced-motion: reduce
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.adaptiveConfig.enableParallax).toBe(false);
+      });
 
       expect(result.current.adaptiveConfig.enableParallax).toBe(false);
       expect(result.current.adaptiveConfig.enableComplexAnimations).toBe(false);
@@ -211,12 +291,17 @@ describe('useDeviceAdaptation', () => {
       expect(result.current.shouldEnableFeature('enableMagnetic')).toBe(true);
     });
 
-    it('disables features for mobile devices', () => {
+    it('disables features for mobile devices', async () => {
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 375 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      await waitFor(() => {
+        expect(result.current.shouldEnableFeature('enableParallax')).toBe(false);
+      });
 
       expect(result.current.shouldEnableFeature('enableParallax')).toBe(false);
       expect(result.current.shouldEnableFeature('enableComplexAnimations')).toBe(false);
@@ -232,12 +317,12 @@ describe('useDeviceAdaptation', () => {
   });
 
   describe('Resize Handling', () => {
-    it('updates screen size on window resize', () => {
+    it('updates screen size on window resize', async () => {
       // Set up desktop environment first
       mockNavigator('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
       mockScreen(1280, 720);
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 1280 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, value: 720 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1280 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 720 });
 
       // Ensure no touch support for desktop
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -245,20 +330,30 @@ describe('useDeviceAdaptation', () => {
       Object.defineProperty(navigator, 'maxTouchPoints', {
         value: 0,
         writable: true,
-        configurable: true
+        configurable: true,
       });
 
       const { result } = renderHook(() => useDeviceAdaptation());
+
+      // Wait for initial detection
+      await waitFor(() => {
+        expect(result.current.deviceInfo.screenSize).toBe('xl');
+      });
 
       // Initial state should have large screen
       expect(result.current.deviceInfo.screenSize).toBe('xl');
 
       // Simulate resize to mobile
-      Object.defineProperty(window, 'innerWidth', { writable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
 
       act(() => {
         window.dispatchEvent(new Event('resize'));
+      });
+
+      // Wait for resize detection
+      await waitFor(() => {
+        expect(result.current.deviceInfo.screenSize).toBe('sm');
       });
 
       // Should update screen size to small
@@ -274,7 +369,7 @@ describe('useDeviceAdaptation', () => {
 
       expect(() => {
         renderHook(() => useDeviceAdaptation());
-      }).toThrow(); // This will throw because the hook uses navigator.userAgent
+      }).not.toThrow(); // Hook should handle missing navigator gracefully now
 
       global.navigator = originalNavigator;
     });

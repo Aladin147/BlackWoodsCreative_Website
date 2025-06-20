@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+
 import {
   useScrollProgress,
   useScrollAnimation,
@@ -9,8 +10,8 @@ import {
 } from '../useScrollProgress';
 
 // Mock requestAnimationFrame and cancelAnimationFrame
-global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
-global.cancelAnimationFrame = jest.fn((id) => clearTimeout(id));
+global.requestAnimationFrame = jest.fn(cb => setTimeout(cb, 16));
+global.cancelAnimationFrame = jest.fn(id => clearTimeout(id));
 
 // Mock window scroll properties
 Object.defineProperty(window, 'pageYOffset', {
@@ -265,11 +266,9 @@ describe('useScrollProgress', () => {
 
     renderHook(() => useScrollProgress());
 
-    expect(addEventListenerSpy).toHaveBeenCalledWith(
-      'scroll',
-      expect.any(Function),
-      { passive: true }
-    );
+    expect(addEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function), {
+      passive: true,
+    });
 
     addEventListenerSpy.mockRestore();
   });
@@ -366,18 +365,14 @@ describe('useScrollAnimation', () => {
   });
 
   it('returns animation progress based on scroll range', () => {
-    const { result } = renderHook(() =>
-      useScrollAnimation({ startProgress: 20, endProgress: 80 })
-    );
+    const { result } = renderHook(() => useScrollAnimation({ startProgress: 20, endProgress: 80 }));
 
     expect(result.current.animationProgress).toBe(0);
     expect(result.current.isActive).toBe(false);
   });
 
   it('calculates animation progress within range', () => {
-    const { result } = renderHook(() =>
-      useScrollAnimation({ startProgress: 0, endProgress: 100 })
-    );
+    const { result } = renderHook(() => useScrollAnimation({ startProgress: 0, endProgress: 100 }));
 
     act(() => {
       window.pageYOffset = 500; // 50% scroll
@@ -404,9 +399,7 @@ describe('useScrollAnimation', () => {
 
   it('handles custom element', () => {
     const element = document.createElement('div');
-    const { result } = renderHook(() =>
-      useScrollAnimation({ element })
-    );
+    const { result } = renderHook(() => useScrollAnimation({ element }));
 
     expect(result.current.animationProgress).toBe(0);
   });
@@ -436,9 +429,7 @@ describe('useScrollTrigger', () => {
 
   it('triggers at specified scroll point', () => {
     const onTrigger = jest.fn();
-    const { result } = renderHook(() =>
-      useScrollTrigger({ triggerPoint: 50, onTrigger })
-    );
+    const { result } = renderHook(() => useScrollTrigger({ triggerPoint: 50, onTrigger }));
 
     expect(result.current.isTriggered).toBe(false);
 
@@ -543,9 +534,7 @@ describe('useParallaxScroll', () => {
   });
 
   it('handles down direction', () => {
-    const { result } = renderHook(() =>
-      useParallaxScroll({ speed: 0.5, direction: 'down' })
-    );
+    const { result } = renderHook(() => useParallaxScroll({ speed: 0.5, direction: 'down' }));
 
     act(() => {
       window.pageYOffset = 100;
@@ -589,9 +578,7 @@ describe('useScrollProgressIndicator', () => {
 
   it('tracks progress through sections', () => {
     const sections = ['intro', 'about', 'portfolio', 'contact'];
-    const { result } = renderHook(() =>
-      useScrollProgressIndicator({ sections })
-    );
+    const { result } = renderHook(() => useScrollProgressIndicator({ sections }));
 
     expect(result.current.activeSection).toBe('intro');
     expect(result.current.sectionProgress.intro).toBe(0);
@@ -599,9 +586,7 @@ describe('useScrollProgressIndicator', () => {
 
   it('updates active section based on scroll', () => {
     const sections = ['intro', 'about', 'portfolio', 'contact'];
-    const { result } = renderHook(() =>
-      useScrollProgressIndicator({ sections })
-    );
+    const { result } = renderHook(() => useScrollProgressIndicator({ sections }));
 
     // Scroll to 30% (should be in second section)
     act(() => {
@@ -622,9 +607,7 @@ describe('useScrollProgressIndicator', () => {
 
   it('calculates section progress correctly', () => {
     const sections = ['section1', 'section2'];
-    const { result } = renderHook(() =>
-      useScrollProgressIndicator({ sections })
-    );
+    const { result } = renderHook(() => useScrollProgressIndicator({ sections }));
 
     // Scroll to 75% (should be in second section at 50% progress)
     act(() => {
@@ -651,7 +634,7 @@ describe('useScrollPerformance', () => {
     });
 
     // Mock requestAnimationFrame
-    global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
+    global.requestAnimationFrame = jest.fn(cb => setTimeout(cb, 16));
     global.cancelAnimationFrame = jest.fn();
   });
 

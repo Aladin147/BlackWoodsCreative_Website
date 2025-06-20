@@ -26,7 +26,7 @@ describe('Security Utilities', () => {
   describe('generateNonce', () => {
     it('generates a valid base64 nonce', () => {
       const nonce = generateNonce();
-      
+
       expect(typeof nonce).toBe('string');
       expect(nonce.length).toBeGreaterThan(0);
       expect(Buffer.from(nonce, 'base64').toString('base64')).toBe(nonce);
@@ -35,14 +35,14 @@ describe('Security Utilities', () => {
     it('generates unique nonces', () => {
       const nonce1 = generateNonce();
       const nonce2 = generateNonce();
-      
+
       expect(nonce1).not.toBe(nonce2);
     });
 
     it('generates nonces of consistent length', () => {
       const nonces = Array.from({ length: 10 }, () => generateNonce());
       const lengths = nonces.map(n => n.length);
-      
+
       expect(new Set(lengths).size).toBe(1); // All same length
     });
   });
@@ -50,7 +50,7 @@ describe('Security Utilities', () => {
   describe('generateCSRFToken', () => {
     it('generates a valid hex CSRF token', () => {
       const token = generateCSRFToken();
-      
+
       expect(typeof token).toBe('string');
       expect(token.length).toBe(64); // 32 bytes = 64 hex chars
       expect(/^[a-f0-9]+$/.test(token)).toBe(true);
@@ -59,7 +59,7 @@ describe('Security Utilities', () => {
     it('generates unique CSRF tokens', () => {
       const token1 = generateCSRFToken();
       const token2 = generateCSRFToken();
-      
+
       expect(token1).not.toBe(token2);
     });
   });
@@ -67,20 +67,20 @@ describe('Security Utilities', () => {
   describe('verifyCSRFToken', () => {
     it('verifies matching tokens', () => {
       const token = generateCSRFToken();
-      
+
       expect(verifyCSRFToken(token, token)).toBe(true);
     });
 
     it('rejects non-matching tokens', () => {
       const token1 = generateCSRFToken();
       const token2 = generateCSRFToken();
-      
+
       expect(verifyCSRFToken(token1, token2)).toBe(false);
     });
 
     it('rejects empty tokens', () => {
       const token = generateCSRFToken();
-      
+
       expect(verifyCSRFToken('', token)).toBe(false);
       expect(verifyCSRFToken(token, '')).toBe(false);
       expect(verifyCSRFToken('', '')).toBe(false);
@@ -89,7 +89,7 @@ describe('Security Utilities', () => {
     it('handles invalid hex tokens gracefully', () => {
       const validToken = generateCSRFToken();
       const invalidToken = 'invalid-hex-token';
-      
+
       expect(() => verifyCSRFToken(validToken, invalidToken)).not.toThrow();
       expect(verifyCSRFToken(validToken, invalidToken)).toBe(false);
     });
@@ -98,7 +98,7 @@ describe('Security Utilities', () => {
   describe('buildCSP', () => {
     it('builds basic CSP without nonce', () => {
       const csp = buildCSP();
-      
+
       expect(csp).toContain("default-src 'self'");
       expect(csp).toContain("object-src 'none'");
       expect(csp).toContain('block-all-mixed-content');
@@ -108,13 +108,13 @@ describe('Security Utilities', () => {
     it('includes nonce in script-src when provided', () => {
       const nonce = 'test-nonce-123';
       const csp = buildCSP({ nonce });
-      
+
       expect(csp).toContain(`'nonce-${nonce}'`);
     });
 
     it('includes unsafe-eval in development mode', () => {
       const csp = buildCSP({ isDevelopment: true });
-      
+
       expect(csp).toContain("'unsafe-eval'");
     });
 
@@ -142,14 +142,14 @@ describe('Security Utilities', () => {
 
     it('includes development-specific connect-src in dev mode', () => {
       const csp = buildCSP({ isDevelopment: true });
-      
+
       expect(csp).toContain('ws://localhost:*');
       expect(csp).toContain('wss://localhost:*');
     });
 
     it('excludes development connect-src in production', () => {
       const csp = buildCSP({ isDevelopment: false });
-      
+
       expect(csp).not.toContain('ws://localhost:*');
       expect(csp).not.toContain('wss://localhost:*');
     });
@@ -158,7 +158,7 @@ describe('Security Utilities', () => {
   describe('getSecurityHeaders', () => {
     it('returns comprehensive security headers', () => {
       const headers = getSecurityHeaders();
-      
+
       expect(headers).toHaveProperty('Content-Security-Policy');
       expect(headers).toHaveProperty('X-Content-Type-Options', 'nosniff');
       expect(headers).toHaveProperty('X-Frame-Options', 'DENY');
@@ -171,13 +171,13 @@ describe('Security Utilities', () => {
     it('includes nonce in CSP when provided', () => {
       const nonce = 'test-nonce-456';
       const headers = getSecurityHeaders(nonce);
-      
+
       expect(headers['Content-Security-Policy']).toContain(`'nonce-${nonce}'`);
     });
 
     it('includes HSTS header with proper configuration', () => {
       const headers = getSecurityHeaders();
-      
+
       expect(headers['Strict-Transport-Security']).toContain('max-age=63072000');
       expect(headers['Strict-Transport-Security']).toContain('includeSubDomains');
       expect(headers['Strict-Transport-Security']).toContain('preload');
@@ -188,14 +188,14 @@ describe('Security Utilities', () => {
     it('removes HTML tags', () => {
       const input = '<script>alert("xss")</script>Hello';
       const sanitized = sanitizeInput(input);
-      
+
       expect(sanitized).toBe('alert("xss")Hello');
     });
 
     it('removes javascript: protocol', () => {
       const input = 'javascript:alert("xss")';
       const sanitized = sanitizeInput(input);
-      
+
       expect(sanitized).toBe('alert("xss")');
     });
 
@@ -209,14 +209,14 @@ describe('Security Utilities', () => {
     it('trims whitespace', () => {
       const input = '  Hello World  ';
       const sanitized = sanitizeInput(input);
-      
+
       expect(sanitized).toBe('Hello World');
     });
 
     it('limits input length', () => {
       const input = 'a'.repeat(2000);
       const sanitized = sanitizeInput(input);
-      
+
       expect(sanitized.length).toBe(1000);
     });
 
@@ -231,7 +231,7 @@ describe('Security Utilities', () => {
     it('sanitizes valid email addresses', () => {
       const email = '  TEST@EXAMPLE.COM  ';
       const sanitized = sanitizeEmail(email);
-      
+
       expect(sanitized).toBe('test@example.com');
     });
 
@@ -261,7 +261,7 @@ describe('Security Utilities', () => {
   describe('auditSecurity', () => {
     it('returns audit results with score', () => {
       const audit = auditSecurity();
-      
+
       expect(audit).toHaveProperty('passed');
       expect(audit).toHaveProperty('score');
       expect(audit).toHaveProperty('issues');
@@ -284,8 +284,8 @@ describe('Security Utilities', () => {
 
       const audit = auditSecurity(mockRequest);
 
-      const httpsIssue = audit.issues.find(issue =>
-        issue.category === 'transport' && issue.description.includes('HTTPS')
+      const httpsIssue = audit.issues.find(
+        issue => issue.category === 'transport' && issue.description.includes('HTTPS')
       );
       expect(httpsIssue).toBeDefined();
       expect(httpsIssue?.severity).toBe('high');
@@ -301,9 +301,9 @@ describe('Security Utilities', () => {
         url: 'https://example.com/test',
         headers: new Map(),
       } as any;
-      
+
       const audit = auditSecurity(mockRequest);
-      
+
       // Should have medium severity issues for missing headers
       const mediumIssues = audit.issues.filter(issue => issue.severity === 'medium');
       expect(mediumIssues.length).toBeGreaterThan(0);
@@ -333,9 +333,9 @@ describe('Security Utilities', () => {
         type: 'rate_limit' as const,
         ip: '192.168.1.1',
       };
-      
+
       logSecurityEvent(event);
-      
+
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         '🔒 Security Event:',
         expect.stringContaining('"timestamp"')
@@ -346,7 +346,7 @@ describe('Security Utilities', () => {
       const event = {
         type: 'suspicious_activity' as const,
       };
-      
+
       expect(() => logSecurityEvent(event)).not.toThrow();
       expect(consoleWarnSpy).toHaveBeenCalled();
     });

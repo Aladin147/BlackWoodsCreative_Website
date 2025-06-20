@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -56,7 +56,8 @@ function DefaultErrorFallback({ error, resetError }: { error?: Error; resetError
       <div className="mb-6 text-6xl">⚠️</div>
       <h2 className="mb-4 text-display-md text-bw-white">Something went wrong</h2>
       <p className="mb-6 max-w-md text-body-xl text-bw-light-gray">
-        We encountered an unexpected error. Please try refreshing the page or contact us if the problem persists.
+        We encountered an unexpected error. Please try refreshing the page or contact us if the
+        problem persists.
       </p>
       {process.env.NODE_ENV === 'development' && error && (
         <details className="mb-6 max-w-lg">

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { generateCSRFToken } from '@/lib/utils/security';
 
 // Use Node.js runtime for crypto operations
@@ -13,7 +14,7 @@ export async function GET() {
   try {
     // Generate a new CSRF token
     const token = generateCSRFToken();
-    
+
     // Create response with token
     const response = NextResponse.json({
       token,
@@ -32,7 +33,7 @@ export async function GET() {
     return response;
   } catch (error) {
     console.error('Error generating CSRF token:', error);
-    
+
     return NextResponse.json(
       {
         success: false,
@@ -48,7 +49,7 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Allow': 'GET, OPTIONS',
+      Allow: 'GET, OPTIONS',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },

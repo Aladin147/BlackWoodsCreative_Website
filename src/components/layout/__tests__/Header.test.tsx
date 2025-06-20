@@ -1,15 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Header } from '../Header';
+
 import { ThemeProvider } from '@/context/ThemeContext';
+import { scrollToElement } from '@/lib/utils';
+
+import { Header } from '../Header';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    header: ({ children, ...props }: React.ComponentProps<'header'>) => <header {...props}>{children}</header>,
+    header: ({ children, ...props }: React.ComponentProps<'header'>) => (
+      <header {...props}>{children}</header>
+    ),
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
-    span: ({ children, ...props }: React.ComponentProps<'span'>) => <span {...props}>{children}</span>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => (
+      <button {...props}>{children}</button>
+    ),
+    span: ({ children, ...props }: React.ComponentProps<'span'>) => (
+      <span {...props}>{children}</span>
+    ),
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
@@ -18,7 +27,7 @@ jest.mock('framer-motion', () => ({
 jest.mock('@/lib/utils', () => ({
   ...jest.requireActual('@/lib/utils'),
   scrollToElement: jest.fn(),
-  throttle: jest.fn((fn) => fn), // Return the function as-is for testing
+  throttle: jest.fn(fn => fn), // Return the function as-is for testing
   cn: jest.fn((...classes) => classes.filter(Boolean).join(' ')),
 }));
 
@@ -33,8 +42,6 @@ jest.mock('@/lib/constants/siteConfig', () => ({
     ],
   },
 }));
-
-import { scrollToElement } from '@/lib/utils';
 const mockScrollToElement = scrollToElement as jest.MockedFunction<typeof scrollToElement>;
 
 // Helper function to render Header with ThemeProvider
@@ -141,7 +148,9 @@ describe('Header', () => {
     renderHeader();
 
     // Verify the scroll event handler is attached
-    expect(window.addEventListener).toHaveBeenCalledWith('scroll', expect.any(Function), { passive: true });
+    expect(window.addEventListener).toHaveBeenCalledWith('scroll', expect.any(Function), {
+      passive: true,
+    });
   });
 
   it('handles keyboard navigation', async () => {
@@ -156,7 +165,7 @@ describe('Header', () => {
   });
 
   it('applies custom className', () => {
-    renderHeader({ className: "custom-header" });
+    renderHeader({ className: 'custom-header' });
     const header = screen.getByRole('banner');
     expect(header).toHaveClass('custom-header');
   });

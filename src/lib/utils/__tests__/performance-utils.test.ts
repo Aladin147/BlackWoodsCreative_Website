@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   measurePerformance,
   trackScrollPerformance,
@@ -11,7 +13,6 @@ import {
   analyzeBundleSize,
   checkPerformanceBudget,
 } from '../performance';
-import React from 'react';
 
 // Mock performance API
 const mockPerformance = {
@@ -39,12 +40,12 @@ Object.defineProperty(window, 'performance', {
 });
 
 // Mock requestAnimationFrame
-global.requestAnimationFrame = jest.fn((cb) => {
+global.requestAnimationFrame = jest.fn(cb => {
   setTimeout(cb, 16);
   return 1;
 }) as jest.Mock;
 
-global.cancelAnimationFrame = jest.fn() as jest.Mock;
+global.cancelAnimationFrame = jest.fn();
 
 // Mock console methods
 const consoleSpy = {
@@ -82,92 +83,106 @@ describe('Performance Utils', () => {
       // Mock window properties
       Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
       Object.defineProperty(window, 'innerHeight', { value: 800, writable: true });
-      Object.defineProperty(document.documentElement, 'scrollHeight', { value: 2000, writable: true });
+      Object.defineProperty(document.documentElement, 'scrollHeight', {
+        value: 2000,
+        writable: true,
+      });
     });
 
     it('tracks scroll metrics correctly', () => {
       const callback = jest.fn();
       const cleanup = trackScrollPerformance(callback);
-      
+
       // Simulate scroll
       window.scrollY = 100;
       window.dispatchEvent(new Event('scroll'));
-      
+
       // Fast forward to trigger requestAnimationFrame
       jest.advanceTimersByTime(16);
-      
-      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
-        scrollY: 100,
-        scrollPercent: expect.any(Number),
-        direction: expect.any(String),
-        velocity: expect.any(Number)
-      }));
-      
+
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          scrollY: 100,
+          scrollPercent: expect.any(Number),
+          direction: expect.any(String),
+          velocity: expect.any(Number),
+        })
+      );
+
       cleanup();
     });
 
     it('calculates scroll direction correctly', () => {
       const callback = jest.fn();
       const cleanup = trackScrollPerformance(callback);
-      
+
       // Scroll down
       window.scrollY = 100;
       window.dispatchEvent(new Event('scroll'));
       jest.advanceTimersByTime(16);
-      
+
       // Scroll up
       window.scrollY = 50;
       window.dispatchEvent(new Event('scroll'));
       jest.advanceTimersByTime(16);
-      
-      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
-        direction: 'up'
-      }));
-      
+
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          direction: 'up',
+        })
+      );
+
       cleanup();
     });
 
     it('handles zero scroll height', () => {
-      Object.defineProperty(document.documentElement, 'scrollHeight', { value: 800, writable: true });
-      
+      Object.defineProperty(document.documentElement, 'scrollHeight', {
+        value: 800,
+        writable: true,
+      });
+
       const callback = jest.fn();
       const cleanup = trackScrollPerformance(callback);
-      
+
       window.scrollY = 100;
       window.dispatchEvent(new Event('scroll'));
       jest.advanceTimersByTime(16);
-      
-      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
-        scrollPercent: 0
-      }));
-      
+
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          scrollPercent: 0,
+        })
+      );
+
       cleanup();
     });
 
     it('uses custom throttle time', () => {
       const callback = jest.fn();
       const cleanup = trackScrollPerformance(callback, 50);
-      
+
       window.scrollY = 100;
       window.dispatchEvent(new Event('scroll'));
-      
+
       cleanup();
     });
 
     it('calculates velocity correctly', () => {
       mockPerformance.now.mockReturnValueOnce(1000).mockReturnValueOnce(1016);
-      
+
       const callback = jest.fn();
       const cleanup = trackScrollPerformance(callback);
-      
+
       window.scrollY = 100;
       window.dispatchEvent(new Event('scroll'));
       jest.advanceTimersByTime(16);
-      
-      expect(callback).toHaveBeenCalledWith(expect.objectContaining({
-        velocity: expect.any(Number)
-      }));
-      
+
+      expect(callback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          velocity: expect.any(Number),
+        })
+      );
+
       cleanup();
     });
 
@@ -195,11 +210,11 @@ describe('Performance Utils', () => {
         width: 800,
         height: 600,
         quality: 90,
-        format: 'webp' as const
+        format: 'webp' as const,
       };
-      
+
       const result = optimizeImages(url, options);
-      
+
       expect(result).toContain('w=800');
       expect(result).toContain('h=600');
       expect(result).toContain('q=90');
@@ -209,14 +224,14 @@ describe('Performance Utils', () => {
     it('uses default quality when not specified', () => {
       const url = 'https://example.com/image.jpg';
       const result = optimizeImages(url);
-      
+
       expect(result).toContain('q=85');
     });
 
     it('handles width only', () => {
       const url = 'https://example.com/image.jpg';
       const result = optimizeImages(url, { width: 400 });
-      
+
       expect(result).toContain('w=400');
       expect(result).not.toContain('h=');
     });
@@ -224,7 +239,7 @@ describe('Performance Utils', () => {
     it('handles height only', () => {
       const url = 'https://example.com/image.jpg';
       const result = optimizeImages(url, { height: 300 });
-      
+
       expect(result).toContain('h=300');
       expect(result).not.toContain('w=');
     });
@@ -232,7 +247,7 @@ describe('Performance Utils', () => {
     it('skips format when auto', () => {
       const url = 'https://example.com/image.jpg';
       const result = optimizeImages(url, { format: 'auto' });
-      
+
       expect(result).not.toContain('f=auto');
     });
 
@@ -244,7 +259,7 @@ describe('Performance Utils', () => {
       expect(consoleSpy.warn).toHaveBeenCalledWith(
         'Failed to optimize image URL:',
         expect.objectContaining({
-          message: expect.stringContaining('Invalid URL')
+          message: expect.stringContaining('Invalid URL'),
         })
       );
     });
@@ -252,18 +267,18 @@ describe('Performance Utils', () => {
     it('preserves existing query parameters', () => {
       const url = 'https://example.com/image.jpg?existing=param';
       const result = optimizeImages(url, { width: 800 });
-      
+
       expect(result).toContain('existing=param');
       expect(result).toContain('w=800');
     });
 
     it('handles different image formats', () => {
       const formats = ['webp', 'jpg', 'png'] as const;
-      
+
       formats.forEach(format => {
         const url = 'https://example.com/image.jpg';
         const result = optimizeImages(url, { format });
-        
+
         expect(result).toContain(`f=${format}`);
       });
     });
@@ -273,39 +288,39 @@ describe('Performance Utils', () => {
     it('debounces function calls', () => {
       const fn = jest.fn();
       const debouncedFn = debounce(fn, 100);
-      
+
       debouncedFn();
       debouncedFn();
       debouncedFn();
-      
+
       expect(fn).not.toHaveBeenCalled();
-      
+
       jest.advanceTimersByTime(100);
-      
+
       expect(fn).toHaveBeenCalledTimes(1);
     });
 
     it('passes arguments correctly', () => {
       const fn = jest.fn();
       const debouncedFn = debounce(fn, 100);
-      
+
       debouncedFn('arg1', 'arg2');
       jest.advanceTimersByTime(100);
-      
+
       expect(fn).toHaveBeenCalledWith('arg1', 'arg2');
     });
 
     it('cancels previous timeout on new calls', () => {
       const fn = jest.fn();
       const debouncedFn = debounce(fn, 100);
-      
+
       debouncedFn();
       jest.advanceTimersByTime(50);
       debouncedFn();
       jest.advanceTimersByTime(50);
-      
+
       expect(fn).not.toHaveBeenCalled();
-      
+
       jest.advanceTimersByTime(50);
       expect(fn).toHaveBeenCalledTimes(1);
     });
@@ -315,15 +330,15 @@ describe('Performance Utils', () => {
     it('throttles function calls', () => {
       const fn = jest.fn();
       const throttledFn = throttle(fn, 100);
-      
+
       throttledFn();
       throttledFn();
       throttledFn();
-      
+
       expect(fn).toHaveBeenCalledTimes(1);
-      
+
       jest.advanceTimersByTime(100);
-      
+
       throttledFn();
       expect(fn).toHaveBeenCalledTimes(2);
     });
@@ -331,23 +346,23 @@ describe('Performance Utils', () => {
     it('passes arguments correctly', () => {
       const fn = jest.fn();
       const throttledFn = throttle(fn, 100);
-      
+
       throttledFn('arg1', 'arg2');
-      
+
       expect(fn).toHaveBeenCalledWith('arg1', 'arg2');
     });
 
     it('prevents calls during throttle period', () => {
       const fn = jest.fn();
       const throttledFn = throttle(fn, 100);
-      
+
       throttledFn();
       expect(fn).toHaveBeenCalledTimes(1);
-      
+
       throttledFn();
       throttledFn();
       expect(fn).toHaveBeenCalledTimes(1);
-      
+
       jest.advanceTimersByTime(100);
       throttledFn();
       expect(fn).toHaveBeenCalledTimes(2);
@@ -356,7 +371,8 @@ describe('Performance Utils', () => {
 
   describe('withPerformanceMonitoring', () => {
     it('wraps component with performance monitoring', () => {
-      const TestComponent = (props: { name: string }) => React.createElement('div', null, props.name);
+      const TestComponent = (props: { name: string }) =>
+        React.createElement('div', null, props.name);
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'TestComponent');
 
       expect(typeof MonitoredComponent).toBe('function');
@@ -380,7 +396,15 @@ describe('Performance Utils', () => {
 
       const LazyComponent = createLazyComponent(importFn);
 
-      expect(React.isValidElement(React.createElement(React.Suspense, { fallback: 'Loading...' }, React.createElement(LazyComponent)))).toBe(true);
+      expect(
+        React.isValidElement(
+          React.createElement(
+            React.Suspense,
+            { fallback: 'Loading...' },
+            React.createElement(LazyComponent)
+          )
+        )
+      ).toBe(true);
     });
 
     it('handles import errors', async () => {
@@ -401,7 +425,7 @@ describe('Performance Utils', () => {
           usedJSHeapSize: 1024 * 1024,
           totalJSHeapSize: 4 * 1024 * 1024,
         },
-        configurable: true
+        configurable: true,
       });
 
       const result = monitorMemoryUsage();
@@ -409,7 +433,7 @@ describe('Performance Utils', () => {
       expect(result).toEqual({
         used: 1024 * 1024,
         total: 4 * 1024 * 1024,
-        percentage: 25
+        percentage: 25,
       });
     });
 
@@ -471,8 +495,8 @@ describe('Performance Utils', () => {
         modules: [
           { name: 'react', size: 100 * 1024 },
           { name: 'framer-motion', size: 200 * 1024 },
-          { name: 'app', size: 724 * 1024 }
-        ]
+          { name: 'app', size: 724 * 1024 },
+        ],
       });
     });
 
@@ -492,7 +516,7 @@ describe('Performance Utils', () => {
         maxBundleSize: 2 * 1024 * 1024, // 2MB
         maxRenderTime: 50,
         maxMemoryUsage: 50,
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -506,7 +530,7 @@ describe('Performance Utils', () => {
         maxBundleSize: 512 * 1024, // 512KB (smaller than mock 1MB)
         maxRenderTime: 50,
         maxMemoryUsage: 50,
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -522,14 +546,14 @@ describe('Performance Utils', () => {
           usedJSHeapSize: 1024 * 1024,
           totalJSHeapSize: 4 * 1024 * 1024,
         },
-        configurable: true
+        configurable: true,
       });
 
       const budget = {
         maxBundleSize: 2 * 1024 * 1024,
         maxRenderTime: 50,
         maxMemoryUsage: 20, // Lower than mock 25%
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -545,14 +569,14 @@ describe('Performance Utils', () => {
           usedJSHeapSize: 1024 * 1024,
           totalJSHeapSize: 4 * 1024 * 1024,
         },
-        configurable: true
+        configurable: true,
       });
 
       const budget = {
         maxBundleSize: 512 * 1024, // Too small
         maxRenderTime: 50,
         maxMemoryUsage: 20, // Too small
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);
@@ -571,7 +595,7 @@ describe('Performance Utils', () => {
         maxBundleSize: 2 * 1024 * 1024,
         maxRenderTime: 50,
         maxMemoryUsage: 50,
-        minFPS: 30
+        minFPS: 30,
       };
 
       const result = await checkPerformanceBudget(budget);

@@ -12,29 +12,29 @@ module.exports = {
         // BlackWoods Creative - Deep Forest Haze Theme
         bw: {
           // Core Background Colors
-          'bg-primary': '#101211',      // Near Black with green tint
-          'text-primary': '#E8E8E3',    // Off-White, warm and soft
-          'text-secondary': '#A8A8A3',  // Muted secondary text
-          'accent-gold': '#C3A358',     // Muted Gold, rich ochre
+          'bg-primary': '#101211', // Near Black with green tint
+          'text-primary': '#E8E8E3', // Off-White, warm and soft
+          'text-secondary': '#A8A8A3', // Muted secondary text
+          'accent-gold': '#C3A358', // Muted Gold, rich ochre
 
           // Aurora Colors for Background Animation - ENHANCED VISIBILITY
-          'aurora-teal': '#0F3530',     // Enhanced Dark Teal - more visible
-          'aurora-green': '#1E4A38',    // Enhanced Forest Green - more visible
-          'aurora-bright': '#2E6B5E',   // Enhanced Brighter accent - more visible
+          'aurora-teal': '#0F3530', // Enhanced Dark Teal - more visible
+          'aurora-green': '#1E4A38', // Enhanced Forest Green - more visible
+          'aurora-bright': '#2E6B5E', // Enhanced Brighter accent - more visible
 
           // Utility Colors
-          'border-subtle': '#2A2E2C',   // Low-contrast borders
+          'border-subtle': '#2A2E2C', // Low-contrast borders
 
           // Legacy colors for gradual migration
-          black: '#101211',             // Updated to match bg-primary
+          black: '#101211', // Updated to match bg-primary
           charcoal: '#0f0f0f',
           'dark-gray': '#1a1a1a',
           'medium-gray': '#2a2a2a',
           'light-gray': '#6a6a6a',
-          white: '#E8E8E3',             // Updated to match text-primary
+          white: '#E8E8E3', // Updated to match text-primary
           silver: '#b8b8b8',
           platinum: '#f0f0f0',
-          gold: '#C3A358',              // Fixed to match accent-gold
+          gold: '#C3A358', // Fixed to match accent-gold
           red: '#cc3333',
 
           // Enhanced atmospheric colors
@@ -66,7 +66,7 @@ module.exports = {
         // p (Body Text) - Inter, 1rem, 400 weight, line-height 1.6
         'body-text': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
         // small (Captions, Meta info) - Inter, 0.875rem, 400 weight
-        'caption': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
+        caption: ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
 
         // Current implementation classes (keep for compatibility)
         'display-xl': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],

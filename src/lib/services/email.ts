@@ -40,7 +40,7 @@ export async function sendContactEmail(formData: ContactFormData): Promise<Email
 
     // Create email content
     const subject = `New Contact Form Submission from ${formData.name}`;
-    
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -78,26 +78,38 @@ export async function sendContactEmail(formData: ContactFormData): Promise<Email
                 <div class="value">${formData.email}</div>
               </div>
               
-              ${formData.company ? `
+              ${
+                formData.company
+                  ? `
                 <div class="field">
                   <span class="label">Company:</span>
                   <div class="value">${formData.company}</div>
                 </div>
-              ` : ''}
+              `
+                  : ''
+              }
               
-              ${formData.projectType ? `
+              ${
+                formData.projectType
+                  ? `
                 <div class="field">
                   <span class="label">Project Type:</span>
                   <div class="value">${formData.projectType}</div>
                 </div>
-              ` : ''}
+              `
+                  : ''
+              }
               
-              ${formData.budget ? `
+              ${
+                formData.budget
+                  ? `
                 <div class="field">
                   <span class="label">Budget:</span>
                   <div class="value">${formData.budget}</div>
                 </div>
-              ` : ''}
+              `
+                  : ''
+              }
               
               <div class="field">
                 <span class="label">Message:</span>
@@ -154,7 +166,6 @@ This email was sent from the BlackWoods Creative contact form.
       success: true,
       messageId: result.data?.id,
     };
-
   } catch (error) {
     console.error('Email service error:', error);
     return {
@@ -263,7 +274,6 @@ This is an automated response. Please do not reply to this email.
       success: true,
       messageId: result.data?.id,
     };
-
   } catch (error) {
     console.error('Auto-reply service error:', error);
     return {

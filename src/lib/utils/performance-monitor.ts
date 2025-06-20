@@ -34,7 +34,7 @@ class PerformanceMonitor {
     // Observe Core Web Vitals
     if ('PerformanceObserver' in window) {
       // LCP Observer
-      const lcpObserver = new PerformanceObserver((list) => {
+      const lcpObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1] as PerformanceEntry & { startTime: number };
         this.metrics.lcp = lastEntry.startTime;
@@ -43,11 +43,13 @@ class PerformanceMonitor {
       this.observers.push(lcpObserver);
 
       // FID Observer
-      const fidObserver = new PerformanceObserver((list) => {
+      const fidObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
           if (entry.entryType === 'first-input') {
-            this.metrics.fid = (entry as PerformanceEntry & { processingStart: number; startTime: number }).processingStart - entry.startTime;
+            this.metrics.fid =
+              (entry as PerformanceEntry & { processingStart: number; startTime: number })
+                .processingStart - entry.startTime;
           }
         });
       });
@@ -55,11 +57,14 @@ class PerformanceMonitor {
       this.observers.push(fidObserver);
 
       // CLS Observer
-      const clsObserver = new PerformanceObserver((list) => {
+      const clsObserver = new PerformanceObserver(list => {
         let clsValue = 0;
         const entries = list.getEntries();
-        entries.forEach((entry) => {
-          if (entry.entryType === 'layout-shift' && !(entry as PerformanceEntry & { hadRecentInput: boolean }).hadRecentInput) {
+        entries.forEach(entry => {
+          if (
+            entry.entryType === 'layout-shift' &&
+            !(entry as PerformanceEntry & { hadRecentInput: boolean }).hadRecentInput
+          ) {
             clsValue += (entry as PerformanceEntry & { value: number }).value;
           }
         });
@@ -91,7 +96,7 @@ class PerformanceMonitor {
   trackBundleLoad(chunkName: string, startTime: number) {
     const loadTime = performance.now() - startTime;
     console.log(`Bundle chunk "${chunkName}" loaded in ${loadTime.toFixed(2)}ms`);
-    
+
     // Update bundle metrics
     this.bundleMetrics.loadTime = (this.bundleMetrics.loadTime || 0) + loadTime;
     this.bundleMetrics.chunkCount = (this.bundleMetrics.chunkCount || 0) + 1;
@@ -116,8 +121,8 @@ class PerformanceMonitor {
     // Performance budget thresholds
     const budgets = {
       lcp: 2500, // 2.5s
-      fid: 100,  // 100ms
-      cls: 0.1,  // 0.1
+      fid: 100, // 100ms
+      cls: 0.1, // 0.1
       fcp: 1800, // 1.8s
       ttfb: 600, // 600ms
     };
@@ -185,11 +190,11 @@ export function getPerformanceMonitor(): PerformanceMonitor {
 // Utility function to track component load times
 export function trackComponentLoad(componentName: string) {
   const startTime = performance.now();
-  
+
   return () => {
     const loadTime = performance.now() - startTime;
     console.log(`Component "${componentName}" rendered in ${loadTime.toFixed(2)}ms`);
-    
+
     // Track in performance monitor
     const monitor = getPerformanceMonitor();
     monitor.trackBundleLoad(componentName, startTime);
@@ -198,8 +203,8 @@ export function trackComponentLoad(componentName: string) {
 
 // Hook for React components to track render performance
 export function usePerformanceTracking(componentName: string) {
-  const trackEnd = React.useMemo(() =>
-    typeof window !== 'undefined' ? trackComponentLoad(componentName) : () => {},
+  const trackEnd = React.useMemo(
+    () => (typeof window !== 'undefined' ? trackComponentLoad(componentName) : () => {}),
     [componentName]
   );
 

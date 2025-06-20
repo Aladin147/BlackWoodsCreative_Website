@@ -1,8 +1,9 @@
 'use client';
 
+import { PlayIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { PlayIcon, EyeIcon } from '@heroicons/react/24/outline';
+
 import type { PortfolioProject } from '@/lib/types/portfolio';
 
 interface PortfolioCardProps {
@@ -19,7 +20,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
 
   return (
     <motion.div
-      className={`card-elevated group relative overflow-hidden transition-all duration-500 cursor-pointer ${className}`}
+      className={`card-elevated group relative cursor-pointer overflow-hidden transition-all duration-500 ${className}`}
       whileHover={{
         y: -12,
         scale: 1.03,
@@ -30,15 +31,19 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
       transition={{
         duration: 0.4,
         ease: [0.25, 0.46, 0.45, 0.94],
-        type: "spring",
+        type: 'spring',
         stiffness: 300,
-        damping: 20
+        damping: 20,
       }}
       data-testid={testId}
       data-cursor="portfolio"
     >
       {/* Project Image */}
-      <div className="relative aspect-[4/3] overflow-hidden" role="img" aria-label={`Project: ${project.title}`}>
+      <div
+        className="relative aspect-[4/3] overflow-hidden"
+        role="img"
+        aria-label={`Project: ${project.title}`}
+      >
         <Image
           src={project.image}
           alt={project.title}
@@ -59,12 +64,12 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
             whileHover={{ scale: 1 }}
             transition={{ duration: 0.2 }}
           >
-          <button
-            onClick={handleViewProject}
-            className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-accent-gold/90 text-bw-bg-primary shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-accent-gold"
-            aria-label={`View ${project.title} project details`}
-          >
-              <PlayIcon className="h-8 w-8 ml-1" data-testid="play-icon" />
+            <button
+              onClick={handleViewProject}
+              className="flex h-16 w-16 items-center justify-center rounded-full bg-bw-accent-gold/90 text-bw-bg-primary shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-bw-accent-gold"
+              aria-label={`View ${project.title} project details`}
+            >
+              <PlayIcon className="ml-1 h-8 w-8" data-testid="play-icon" />
             </button>
           </motion.div>
         )}
@@ -87,7 +92,7 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
         )}
 
         {/* Deep Forest Haze Category Badge */}
-        <div className="absolute top-4 left-4">
+        <div className="absolute left-4 top-4">
           <span className="rounded-full bg-bw-bg-primary/70 px-3 py-1 text-sm font-medium text-bw-accent-gold backdrop-blur-sm">
             {project.category}
           </span>
@@ -97,13 +102,13 @@ export function PortfolioCard({ project, className, 'data-testid': testId }: Por
       {/* Project Info */}
       <div className="p-6 text-center">
         <h3
-          className="mb-2 text-display-md group-hover:text-bw-accent-gold transition-colors duration-300"
+          className="mb-2 text-display-md transition-colors duration-300 group-hover:text-bw-accent-gold"
           id={`project-title-${project.id}`}
         >
           {project.title}
         </h3>
         <p
-          className="mb-4 text-body-xl line-clamp-2"
+          className="mb-4 line-clamp-2 text-body-xl"
           aria-describedby={`project-title-${project.id}`}
         >
           {project.description}

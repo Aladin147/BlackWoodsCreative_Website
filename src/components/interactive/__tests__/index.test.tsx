@@ -1,5 +1,5 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 
 // Import components from the index to test proper exports
 import * as InteractiveComponents from '../index';
@@ -18,13 +18,23 @@ const {
 } = InteractiveComponents;
 
 // Temporary mock for ScrollStoryTeller until import issue is resolved
-const ScrollStoryTeller = InteractiveComponents.ScrollStoryTeller || (() => <div data-testid="scroll-story-teller">Mock ScrollStoryTeller</div>);
+const ScrollStoryTeller =
+  InteractiveComponents.ScrollStoryTeller ||
+  (() => <div data-testid="scroll-story-teller">Mock ScrollStoryTeller</div>);
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: React.ComponentProps<'div'>) => <div data-testid="motion-div" {...props}>{children}</div>,
-    span: ({ children, ...props }: React.ComponentProps<'span'>) => <span data-testid="motion-span" {...props}>{children}</span>,
+    div: ({ children, ...props }: React.ComponentProps<'div'>) => (
+      <div data-testid="motion-div" {...props}>
+        {children}
+      </div>
+    ),
+    span: ({ children, ...props }: React.ComponentProps<'span'>) => (
+      <span data-testid="motion-span" {...props}>
+        {children}
+      </span>
+    ),
   },
   useScroll: () => ({ scrollYProgress: { on: jest.fn(), get: () => 0 } }),
   useTransform: () => 0,
@@ -38,7 +48,7 @@ const mockIntersectionObserver = jest.fn();
 mockIntersectionObserver.mockReturnValue({
   observe: () => null,
   unobserve: () => null,
-  disconnect: () => null
+  disconnect: () => null,
 });
 window.IntersectionObserver = mockIntersectionObserver;
 
@@ -284,12 +294,22 @@ describe('Interactive Components', () => {
   it('all components handle unmounting gracefully', () => {
     const components = [
       <TextReveal key="1" text="Test" />,
-      <ParallaxContainer key="2"><div>Test</div></ParallaxContainer>,
-      <ParallaxLayer key="3"><div>Test</div></ParallaxLayer>,
+      <ParallaxContainer key="2">
+        <div>Test</div>
+      </ParallaxContainer>,
+      <ParallaxLayer key="3">
+        <div>Test</div>
+      </ParallaxLayer>,
       <MagneticCursor key="4" />,
-      <HoverMagnify key="5"><div>Test</div></HoverMagnify>,
-      <FloatingElement key="6"><div>Test</div></FloatingElement>,
-      <PulseGlow key="7"><div>Test</div></PulseGlow>,
+      <HoverMagnify key="5">
+        <div>Test</div>
+      </HoverMagnify>,
+      <FloatingElement key="6">
+        <div>Test</div>
+      </FloatingElement>,
+      <PulseGlow key="7">
+        <div>Test</div>
+      </PulseGlow>,
       <GlitchText key="8" text="Test" />,
       <TypewriterText key="9" text="Test" />,
     ];

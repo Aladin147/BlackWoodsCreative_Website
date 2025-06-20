@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 
 interface Particle {
@@ -75,7 +76,7 @@ export function AtmosphericParticles({ count = 60, className = '' }: Atmospheric
     // Create particle elements - AUTHENTIC THEME GUIDE SPECIFICATION with adaptive performance
     const useGPUAcceleration = deviceInfo.capabilities?.performance.graphics !== 'low';
 
-    particlesRef.current.forEach((particle) => {
+    particlesRef.current.forEach(particle => {
       const element = document.createElement('div');
       element.className = 'absolute rounded-full pointer-events-none';
 
@@ -109,8 +110,8 @@ export function AtmosphericParticles({ count = 60, className = '' }: Atmospheric
     // Animation loop
     const animate = () => {
       const rect = container.getBoundingClientRect();
-      
-      particlesRef.current.forEach((particle) => {
+
+      particlesRef.current.forEach(particle => {
         // Update position
         particle.x += particle.vx;
         particle.y += particle.vy;
@@ -141,7 +142,9 @@ export function AtmosphericParticles({ count = 60, className = '' }: Atmospheric
         }
 
         // Update DOM element with GPU acceleration
-        const element = container.querySelector(`[data-particle-id="${particle.id}"]`) as HTMLElement;
+        const element = container.querySelector(
+          `[data-particle-id="${particle.id}"]`
+        ) as HTMLElement;
         if (element) {
           element.style.transform = `translate3d(${particle.x}px, ${particle.y}px, 0)`;
           element.style.opacity = particle.opacity.toString();
@@ -161,12 +164,17 @@ export function AtmosphericParticles({ count = 60, className = '' }: Atmospheric
       // Remove particle elements
       container.querySelectorAll('[data-particle-id]').forEach(el => el.remove());
     };
-  }, [count, getAdaptiveParticleCount, shouldEnableParticles, deviceInfo.capabilities?.performance.graphics]);
+  }, [
+    count,
+    getAdaptiveParticleCount,
+    shouldEnableParticles,
+    deviceInfo.capabilities?.performance.graphics,
+  ]);
 
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 pointer-events-none z-10 ${className}`}
+      className={`pointer-events-none fixed inset-0 z-10 ${className}`}
       style={{ mixBlendMode: 'screen' }}
     />
   );

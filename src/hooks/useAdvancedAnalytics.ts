@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useCallback, useRef } from 'react';
+
 import { useDeviceAdaptation } from './useDeviceAdaptation';
 
 interface AnalyticsEvent {
@@ -48,13 +49,13 @@ const defaultConfig: AnalyticsConfig = {
   enableUserJourney: true,
   batchSize: 10,
   flushInterval: 30000, // 30 seconds
-  respectPrivacy: true
+  respectPrivacy: true,
 };
 
 export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   const finalConfig = { ...defaultConfig, ...config };
   const { deviceInfo } = useDeviceAdaptation();
-  
+
   const sessionIdRef = useRef<string>('');
   const userIdRef = useRef<string>('');
   const eventsQueueRef = useRef<AnalyticsEvent[]>([]);
@@ -70,7 +71,7 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   // Generate or retrieve user ID
   const getUserId = useCallback(() => {
     if (!finalConfig.respectPrivacy) return '';
-    
+
     let userId = localStorage.getItem('bw_user_id');
     if (!userId) {
       userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -98,8 +99,8 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
       metadata: {
         referrer: document.referrer,
         userAgent: navigator.userAgent,
-        deviceInfo
-      }
+        deviceInfo,
+      },
     };
 
     eventsQueueRef.current.push(pageViewEvent);
@@ -147,7 +148,6 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(analyticsData)
       // });
-
     } catch (error) {
       console.warn('Failed to send analytics data:', error);
 
@@ -159,49 +159,56 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   }, []);
 
   // Track custom event
-  const trackEvent = useCallback((eventData: Omit<AnalyticsEvent, 'timestamp' | 'sessionId' | 'userId'>) => {
-    if (!finalConfig.enableTracking) return;
+  const trackEvent = useCallback(
+    (eventData: Omit<AnalyticsEvent, 'timestamp' | 'sessionId' | 'userId'>) => {
+      if (!finalConfig.enableTracking) return;
 
-    const event: AnalyticsEvent = {
-      ...eventData,
-      timestamp: Date.now(),
-      sessionId: sessionIdRef.current,
-      userId: userIdRef.current
-    };
+      const event: AnalyticsEvent = {
+        ...eventData,
+        timestamp: Date.now(),
+        sessionId: sessionIdRef.current,
+        userId: userIdRef.current,
+      };
 
-    eventsQueueRef.current.push(event);
+      eventsQueueRef.current.push(event);
 
-    // Auto-flush if batch size reached
-    if (eventsQueueRef.current.length >= finalConfig.batchSize) {
-      flushEvents();
-    }
-  }, [finalConfig.enableTracking, finalConfig.batchSize, flushEvents]);
+      // Auto-flush if batch size reached
+      if (eventsQueueRef.current.length >= finalConfig.batchSize) {
+        flushEvents();
+      }
+    },
+    [finalConfig.enableTracking, finalConfig.batchSize, flushEvents]
+  );
 
   // Track user interaction
-  const trackInteraction = useCallback((interaction: Omit<UserInteraction, 'timestamp'>) => {
-    if (!finalConfig.enableHeatmap) return;
+  const trackInteraction = useCallback(
+    (interaction: Omit<UserInteraction, 'timestamp'>) => {
+      if (!finalConfig.enableHeatmap) return;
 
-    const fullInteraction: UserInteraction = {
-      ...interaction,
-      timestamp: Date.now()
-    };
+      const fullInteraction: UserInteraction = {
+        ...interaction,
+        timestamp: Date.now(),
+      };
 
-    interactionsQueueRef.current.push(fullInteraction);
-  }, [finalConfig.enableHeatmap]);
+      interactionsQueueRef.current.push(fullInteraction);
+    },
+    [finalConfig.enableHeatmap]
+  );
 
   // Track performance metric
-  const trackPerformance = useCallback((metric: Omit<PerformanceMetric, 'timestamp'>) => {
-    if (!finalConfig.enablePerformanceTracking) return;
+  const trackPerformance = useCallback(
+    (metric: Omit<PerformanceMetric, 'timestamp'>) => {
+      if (!finalConfig.enablePerformanceTracking) return;
 
-    const fullMetric: PerformanceMetric = {
-      ...metric,
-      timestamp: Date.now()
-    };
+      const fullMetric: PerformanceMetric = {
+        ...metric,
+        timestamp: Date.now(),
+      };
 
-    performanceQueueRef.current.push(fullMetric);
-  }, [finalConfig.enablePerformanceTracking]);
-
-
+      performanceQueueRef.current.push(fullMetric);
+    },
+    [finalConfig.enablePerformanceTracking]
+  );
 
   // Track scroll behavior
   const trackScrollBehavior = useCallback(() => {
@@ -212,7 +219,7 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const newDirection = currentScrollY > lastScrollY ? 'down' : 'up';
-      
+
       if (newDirection !== scrollDirection) {
         // Direction changed, track the previous scroll session
         trackInteraction({
@@ -222,14 +229,14 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
           duration: Date.now() - scrollStartTime,
           metadata: {
             direction: scrollDirection,
-            distance: Math.abs(currentScrollY - lastScrollY)
-          }
+            distance: Math.abs(currentScrollY - lastScrollY),
+          },
         });
-        
+
         scrollStartTime = Date.now();
         scrollDirection = newDirection;
       }
-      
+
       lastScrollY = currentScrollY;
     };
 
@@ -238,77 +245,86 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   }, [trackInteraction]);
 
   // Track magnetic field interactions
-  const trackMagneticInteraction = useCallback((elementId: string, strength: number, distance: number) => {
-    trackInteraction({
-      type: 'magnetic',
-      element: elementId,
-      position: { x: 0, y: 0 }, // Would be filled by actual mouse position
-      metadata: {
-        strength,
-        distance,
-        deviceType: deviceInfo.isMobile ? 'mobile' : 'desktop'
-      }
-    });
+  const trackMagneticInteraction = useCallback(
+    (elementId: string, strength: number, distance: number) => {
+      trackInteraction({
+        type: 'magnetic',
+        element: elementId,
+        position: { x: 0, y: 0 }, // Would be filled by actual mouse position
+        metadata: {
+          strength,
+          distance,
+          deviceType: deviceInfo.isMobile ? 'mobile' : 'desktop',
+        },
+      });
 
-    trackEvent({
-      event: 'magnetic_interaction',
-      category: 'engagement',
-      action: 'magnetic_field',
-      label: elementId,
-      value: strength,
-      metadata: { distance, deviceType: deviceInfo.isMobile ? 'mobile' : 'desktop' }
-    });
-  }, [trackInteraction, trackEvent, deviceInfo]);
+      trackEvent({
+        event: 'magnetic_interaction',
+        category: 'engagement',
+        action: 'magnetic_field',
+        label: elementId,
+        value: strength,
+        metadata: { distance, deviceType: deviceInfo.isMobile ? 'mobile' : 'desktop' },
+      });
+    },
+    [trackInteraction, trackEvent, deviceInfo]
+  );
 
   // Track form interactions
-  const trackFormInteraction = useCallback((formId: string, fieldId: string, action: 'focus' | 'blur' | 'change' | 'submit') => {
-    trackInteraction({
-      type: 'form',
-      element: `${formId}.${fieldId}`,
-      position: { x: 0, y: 0 },
-      metadata: { action, formId, fieldId }
-    });
+  const trackFormInteraction = useCallback(
+    (formId: string, fieldId: string, action: 'focus' | 'blur' | 'change' | 'submit') => {
+      trackInteraction({
+        type: 'form',
+        element: `${formId}.${fieldId}`,
+        position: { x: 0, y: 0 },
+        metadata: { action, formId, fieldId },
+      });
 
-    trackEvent({
-      event: 'form_interaction',
-      category: 'engagement',
-      action,
-      label: `${formId}.${fieldId}`
-    });
-  }, [trackInteraction, trackEvent]);
+      trackEvent({
+        event: 'form_interaction',
+        category: 'engagement',
+        action,
+        label: `${formId}.${fieldId}`,
+      });
+    },
+    [trackInteraction, trackEvent]
+  );
 
   // Track navigation events
-  const trackNavigation = useCallback((from: string, to: string, method: 'click' | 'scroll' | 'keyboard') => {
-    trackEvent({
-      event: 'navigation',
-      category: 'navigation',
-      action: method,
-      label: `${from} -> ${to}`,
-      metadata: { from, to, method }
-    });
-  }, [trackEvent]);
+  const trackNavigation = useCallback(
+    (from: string, to: string, method: 'click' | 'scroll' | 'keyboard') => {
+      trackEvent({
+        event: 'navigation',
+        category: 'navigation',
+        action: method,
+        label: `${from} -> ${to}`,
+        metadata: { from, to, method },
+      });
+    },
+    [trackEvent]
+  );
 
   // Track performance metrics
   const trackPagePerformance = useCallback(() => {
     if (typeof window === 'undefined') return;
 
     // Core Web Vitals
-    const observer = new PerformanceObserver((list) => {
+    const observer = new PerformanceObserver(list => {
       for (const entry of list.getEntries()) {
         if (entry.entryType === 'largest-contentful-paint') {
           trackPerformance({
             metric: 'LCP',
             value: entry.startTime,
-            context: { url: window.location.pathname }
+            context: { url: window.location.pathname },
           });
         }
-        
+
         if (entry.entryType === 'first-input') {
           const fidEntry = entry as PerformanceEventTiming;
           trackPerformance({
             metric: 'FID',
             value: fidEntry.processingStart - entry.startTime,
-            context: { url: window.location.pathname }
+            context: { url: window.location.pathname },
           });
         }
 
@@ -318,7 +334,7 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
             trackPerformance({
               metric: 'CLS',
               value: clsEntry.value,
-              context: { url: window.location.pathname }
+              context: { url: window.location.pathname },
             });
           }
         }
@@ -333,23 +349,23 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   // Initialize analytics on mount
   useEffect(() => {
     initializeAnalytics();
-    
+
     // Set up periodic flush (skip in test environment)
     if (typeof setInterval !== 'undefined') {
       flushTimerRef.current = setInterval(flushEvents, finalConfig.flushInterval);
     }
-    
+
     // Set up scroll tracking
     const cleanupScroll = trackScrollBehavior();
-    
+
     // Set up performance tracking
     const cleanupPerformance = trackPagePerformance();
-    
+
     // Flush on page unload
     const handleBeforeUnload = () => {
       flushEvents();
     };
-    
+
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
@@ -363,7 +379,13 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
       }
       flushEvents(); // Final flush
     };
-  }, [initializeAnalytics, finalConfig.flushInterval, flushEvents, trackScrollBehavior, trackPagePerformance]);
+  }, [
+    initializeAnalytics,
+    finalConfig.flushInterval,
+    flushEvents,
+    trackScrollBehavior,
+    trackPagePerformance,
+  ]);
 
   return {
     trackEvent,
@@ -374,7 +396,7 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
     trackNavigation,
     flushEvents,
     sessionId: sessionIdRef.current,
-    userId: userIdRef.current
+    userId: userIdRef.current,
   };
 }
 
@@ -382,15 +404,18 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
 export function useComponentAnalytics(componentName: string) {
   const analytics = useAdvancedAnalytics();
 
-  const trackComponentEvent = useCallback((action: string, label?: string, value?: number) => {
-    analytics.trackEvent({
-      event: 'component_interaction',
-      category: 'components',
-      action: `${componentName}.${action}`,
-      label,
-      value
-    });
-  }, [analytics, componentName]);
+  const trackComponentEvent = useCallback(
+    (action: string, label?: string, value?: number) => {
+      analytics.trackEvent({
+        event: 'component_interaction',
+        category: 'components',
+        action: `${componentName}.${action}`,
+        label,
+        value,
+      });
+    },
+    [analytics, componentName]
+  );
 
   const trackComponentMount = useCallback(() => {
     trackComponentEvent('mount');
@@ -407,6 +432,6 @@ export function useComponentAnalytics(componentName: string) {
 
   return {
     ...analytics,
-    trackComponentEvent
+    trackComponentEvent,
   };
 }

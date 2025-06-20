@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { RequestLogger, getRequestLogger } from '../request-logger';
 
 // Mock NextRequest
-function createMockRequest(options: {
-  method?: string;
-  url?: string;
-  headers?: Record<string, string>;
-  ip?: string;
-} = {}): NextRequest {
+function createMockRequest(
+  options: {
+    method?: string;
+    url?: string;
+    headers?: Record<string, string>;
+    ip?: string;
+  } = {}
+): NextRequest {
   const {
     method = 'GET',
     url = 'https://example.com/test',
     headers = {},
-    ip = '127.0.0.1'
+    ip = '127.0.0.1',
   } = options;
 
   const request = {
@@ -33,7 +36,7 @@ function createMockResponse(status = 200): NextResponse {
   const response = {
     status,
     headers: {
-      get: (name: string) => name === 'content-length' ? '1024' : null,
+      get: (name: string) => (name === 'content-length' ? '1024' : null),
     },
   } as unknown as NextResponse;
 
@@ -101,8 +104,8 @@ describe('RequestLogger', () => {
     it('filters sensitive headers', () => {
       const request = createMockRequest({
         headers: {
-          'authorization': 'Bearer secret-token',
-          'cookie': 'session=secret',
+          authorization: 'Bearer secret-token',
+          cookie: 'session=secret',
           'content-type': 'application/json',
           'user-agent': 'Test Browser',
         },

@@ -29,7 +29,7 @@ const nextConfig = {
       '@heroicons/react',
       'react-dom',
       'clsx',
-      'tailwind-merge'
+      'tailwind-merge',
     ],
     // Optimize server components
     serverComponentsExternalPackages: ['sharp'],

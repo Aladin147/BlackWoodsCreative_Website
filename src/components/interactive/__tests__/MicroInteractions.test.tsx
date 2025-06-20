@@ -1,6 +1,7 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+
 import {
   HoverMagnify,
   TiltCard,
@@ -16,8 +17,12 @@ import {
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: React.ComponentProps<'button'>) => <button {...props}>{children}</button>,
-    span: ({ children, ...props }: React.ComponentProps<'span'>) => <span {...props}>{children}</span>,
+    button: ({ children, ...props }: React.ComponentProps<'button'>) => (
+      <button {...props}>{children}</button>
+    ),
+    span: ({ children, ...props }: React.ComponentProps<'span'>) => (
+      <span {...props}>{children}</span>
+    ),
   },
   useMotionValue: () => ({
     set: jest.fn(),
@@ -252,10 +257,7 @@ describe('MicroInteractions', () => {
     });
 
     it('accepts custom delay', () => {
-      const children = [
-        <div key="1">Delayed Item 1</div>,
-        <div key="2">Delayed Item 2</div>,
-      ];
+      const children = [<div key="1">Delayed Item 1</div>, <div key="2">Delayed Item 2</div>];
 
       render(<StaggeredReveal delay={0.2}>{children}</StaggeredReveal>);
 
@@ -269,19 +271,21 @@ describe('MicroInteractions', () => {
       render(<TextReveal text="Hello World" />);
 
       // Text is split into individual characters, so we need to check for the container
-      expect(screen.getByText((_content, element) => {
-        return element?.textContent === 'Hello';
-      })).toBeInTheDocument();
+      expect(
+        screen.getByText((_content, element) => {
+          return element?.textContent === 'Hello';
+        })
+      ).toBeInTheDocument();
 
-      expect(screen.getByText((_content, element) => {
-        return element?.textContent === 'World';
-      })).toBeInTheDocument();
+      expect(
+        screen.getByText((_content, element) => {
+          return element?.textContent === 'World';
+        })
+      ).toBeInTheDocument();
     });
 
     it('applies custom className', () => {
-      const { container } = render(
-        <TextReveal text="Styled Text" className="custom-text" />
-      );
+      const { container } = render(<TextReveal text="Styled Text" className="custom-text" />);
 
       expect(container.firstChild).toHaveClass('custom-text');
     });
@@ -289,25 +293,33 @@ describe('MicroInteractions', () => {
     it('accepts custom delay', () => {
       render(<TextReveal text="Slow Reveal" delay={0.1} />);
 
-      expect(screen.getByText((_content, element) => {
-        return element?.textContent === 'Slow';
-      })).toBeInTheDocument();
+      expect(
+        screen.getByText((_content, element) => {
+          return element?.textContent === 'Slow';
+        })
+      ).toBeInTheDocument();
 
-      expect(screen.getByText((_content, element) => {
-        return element?.textContent === 'Reveal';
-      })).toBeInTheDocument();
+      expect(
+        screen.getByText((_content, element) => {
+          return element?.textContent === 'Reveal';
+        })
+      ).toBeInTheDocument();
     });
 
     it('handles special characters', () => {
       render(<TextReveal text="Hello, World!" />);
 
-      expect(screen.getByText((_content, element) => {
-        return element?.textContent === 'Hello,';
-      })).toBeInTheDocument();
+      expect(
+        screen.getByText((_content, element) => {
+          return element?.textContent === 'Hello,';
+        })
+      ).toBeInTheDocument();
 
-      expect(screen.getByText((_content, element) => {
-        return element?.textContent === 'World!';
-      })).toBeInTheDocument();
+      expect(
+        screen.getByText((_content, element) => {
+          return element?.textContent === 'World!';
+        })
+      ).toBeInTheDocument();
     });
 
     it('handles empty text', () => {

@@ -1,26 +1,33 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+import { getRequestLogger } from './lib/utils/request-logger';
 import {
   generateNonce,
   generateCSRFToken,
   withSecurityHeaders,
   logSecurityEvent,
-  rateLimitConfigs
+  rateLimitConfigs,
 } from './lib/utils/security';
-import { getRequestLogger } from './lib/utils/request-logger';
 
 // Initialize rate limiters for different endpoints
 const rateLimiters = {
   api: new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(rateLimitConfigs.api.maxRequests, `${rateLimitConfigs.api.windowMs / 1000} s`),
+    limiter: Ratelimit.slidingWindow(
+      rateLimitConfigs.api.maxRequests,
+      `${rateLimitConfigs.api.windowMs / 1000} s`
+    ),
     prefix: '@upstash/ratelimit:api',
   }),
   contact: new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(rateLimitConfigs.contact.maxRequests, `${rateLimitConfigs.contact.windowMs / 1000} s`),
+    limiter: Ratelimit.slidingWindow(
+      rateLimitConfigs.contact.maxRequests,
+      `${rateLimitConfigs.contact.windowMs / 1000} s`
+    ),
     prefix: '@upstash/ratelimit:contact',
   }),
 };

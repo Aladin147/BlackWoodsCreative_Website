@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+import { sendContactEmail, sendAutoReplyEmail } from '@/lib/services';
 import { validateContactForm } from '@/lib/utils';
 import { sanitizeFormData } from '@/lib/utils/sanitize';
-import { sendContactEmail, sendAutoReplyEmail } from '@/lib/services';
 import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
 
 // Use Node.js runtime for crypto operations
@@ -78,7 +79,6 @@ async function sendEmail(formData: ContactFormData): Promise<boolean> {
 
     console.log('📧 Contact email sent successfully');
     return true;
-
   } catch (error) {
     console.error('Email sending error:', error);
     return false;
@@ -152,7 +152,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
     }
 
     // Sanitize input data
-    const sanitizedData = sanitizeFormData(body as unknown as Record<string, unknown>) as unknown as ContactFormData;
+    const sanitizedData = sanitizeFormData(
+      body as unknown as Record<string, unknown>
+    ) as unknown as ContactFormData;
 
     // Validate form data
     const validation = validateContactForm({
@@ -173,7 +175,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
     }
 
     // Additional validation for optional fields
-    if (sanitizedData.company && typeof sanitizedData.company === 'string' && sanitizedData.company.length > 100) {
+    if (
+      sanitizedData.company &&
+      typeof sanitizedData.company === 'string' &&
+      sanitizedData.company.length > 100
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -197,7 +203,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
 
     // Send email
     const emailSent = await sendEmail(sanitizedData);
-    
+
     if (!emailSent) {
       console.error('Failed to send contact form email');
       return NextResponse.json(
@@ -213,14 +219,13 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
     return NextResponse.json(
       {
         success: true,
-        message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
+        message: "Thank you for your message! We'll get back to you within 24 hours.",
       },
       { status: 200 }
     );
-
   } catch (error) {
     console.error('Contact form submission error:', error);
-    
+
     return NextResponse.json(
       {
         success: false,
@@ -233,22 +238,13 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
 
 // Handle unsupported methods
 export async function GET(): Promise<NextResponse> {
-  return NextResponse.json(
-    { success: false, message: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({ success: false, message: 'Method not allowed' }, { status: 405 });
 }
 
 export async function PUT(): Promise<NextResponse> {
-  return NextResponse.json(
-    { success: false, message: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({ success: false, message: 'Method not allowed' }, { status: 405 });
 }
 
 export async function DELETE(): Promise<NextResponse> {
-  return NextResponse.json(
-    { success: false, message: 'Method not allowed' },
-    { status: 405 }
-  );
+  return NextResponse.json({ success: false, message: 'Method not allowed' }, { status: 405 });
 }

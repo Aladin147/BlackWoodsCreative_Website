@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useEffect, ReactNode } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef, useEffect, ReactNode } from 'react';
 
 interface ParallaxLayerProps {
   children: ReactNode;
@@ -12,7 +12,30 @@ interface ParallaxLayerProps {
   rotate?: [number, number];
   blur?: [number, number];
   className?: string;
-  offset?: ["start start" | "start center" | "start end" | "center start" | "center center" | "center end" | "end start" | "end center" | "end end", "start start" | "start center" | "start end" | "center start" | "center center" | "center end" | "end start" | "end center" | "end end"];
+  offset?: [
+    (
+      | 'start start'
+      | 'start center'
+      | 'start end'
+      | 'center start'
+      | 'center center'
+      | 'center end'
+      | 'end start'
+      | 'end center'
+      | 'end end'
+    ),
+    (
+      | 'start start'
+      | 'start center'
+      | 'start end'
+      | 'center start'
+      | 'center center'
+      | 'center end'
+      | 'end start'
+      | 'end center'
+      | 'end end'
+    ),
+  ];
 }
 
 export function ParallaxLayer({
@@ -60,8 +83,8 @@ export function ParallaxLayer({
   const [startPos, endPos] = getMovementRange();
 
   // Create transforms based on direction and effects
-  const yRange = (direction === 'up' || direction === 'down') ? [startPos, endPos] : [0, 0];
-  const xRange = (direction === 'left' || direction === 'right') ? [startPos, endPos] : [0, 0];
+  const yRange = direction === 'up' || direction === 'down' ? [startPos, endPos] : [0, 0];
+  const xRange = direction === 'left' || direction === 'right' ? [startPos, endPos] : [0, 0];
 
   const y = useTransform(smoothProgress, [0, 1], yRange);
   const x = useTransform(smoothProgress, [0, 1], xRange);
@@ -70,9 +93,8 @@ export function ParallaxLayer({
   const rotateTransform = useTransform(smoothProgress, [0, 1], rotate || [0, 0]);
   const blurTransform = useTransform(smoothProgress, [0, 1], blur || [0, 0]);
 
-  const filterTransform = useTransform(
-    blurTransform,
-    (value) => blur ? `blur(${value}px)` : 'none'
+  const filterTransform = useTransform(blurTransform, value =>
+    blur ? `blur(${value}px)` : 'none'
   );
 
   return (
@@ -99,11 +121,7 @@ interface ParallaxContainerProps {
 }
 
 export function ParallaxContainer({ children, className = '' }: ParallaxContainerProps) {
-  return (
-    <div className={`relative overflow-hidden ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`relative overflow-hidden ${className}`}>{children}</div>;
 }
 
 // Advanced parallax effects for specific use cases
@@ -129,21 +147,21 @@ export function CinematicParallax({ children, className = '' }: ParallaxContaine
           transformOrigin: 'center center',
         }}
       >
-        <div className="w-full h-full bg-gradient-to-br from-bw-black via-bw-charcoal to-bw-dark-gray" />
+        <div className="h-full w-full bg-gradient-to-br from-bw-black via-bw-charcoal to-bw-dark-gray" />
       </motion.div>
 
       {/* Floating Elements */}
       <ParallaxLayer speed={0.3} direction="up" className="absolute inset-0 z-10">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-bw-gold/10 rounded-full blur-2xl" />
+        <div className="absolute left-1/4 top-1/4 h-32 w-32 rounded-full bg-bw-gold/10 blur-2xl" />
       </ParallaxLayer>
 
       <ParallaxLayer speed={0.7} direction="down" className="absolute inset-0 z-10">
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-bw-pearl/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-bw-pearl/5 blur-3xl" />
       </ParallaxLayer>
 
       {/* Foreground Content */}
       <motion.div
-        className="relative z-20 h-full flex items-center justify-center"
+        className="relative z-20 flex h-full items-center justify-center"
         style={{ y: foregroundY }}
       >
         {children}
@@ -157,7 +175,7 @@ export function MagneticField({
   children,
   strength = 0.3,
   distance = 150,
-  disabled = false
+  disabled = false,
 }: {
   children: ReactNode;
   strength?: number;
@@ -306,7 +324,7 @@ export function MagneticField({
 export function DepthOfField({
   children,
   focusDistance = 0.5,
-  className = ''
+  className = '',
 }: {
   children: ReactNode;
   focusDistance?: number;
@@ -320,12 +338,12 @@ export function DepthOfField({
   });
 
   // Calculate blur based on distance from focus point
-  const blur = useTransform(scrollYProgress, (value) => {
+  const blur = useTransform(scrollYProgress, value => {
     const distance = Math.abs(value - focusDistance);
     return distance * 10; // Max blur of 10px
   });
 
-  const opacity = useTransform(scrollYProgress, (value) => {
+  const opacity = useTransform(scrollYProgress, value => {
     const distance = Math.abs(value - focusDistance);
     return Math.max(0.3, 1 - distance * 2); // Min opacity of 0.3
   });
@@ -335,7 +353,7 @@ export function DepthOfField({
       ref={ref}
       className={className}
       style={{
-        filter: useTransform(blur, (value) => `blur(${value}px)`),
+        filter: useTransform(blur, value => `blur(${value}px)`),
         opacity,
       }}
     >

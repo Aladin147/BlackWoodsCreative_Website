@@ -6,10 +6,7 @@
 import React from 'react';
 
 // Performance measurement utility
-export async function measurePerformance<T>(
-  name: string,
-  fn: () => T | Promise<T>
-): Promise<T> {
+export async function measurePerformance<T>(name: string, fn: () => T | Promise<T>): Promise<T> {
   const startMark = `${name}-start`;
   const endMark = `${name}-end`;
 
@@ -52,17 +49,19 @@ interface ScrollMetrics {
 
 export function trackScrollPerformance(
   callback: (metrics: ScrollMetrics) => void,
-  throttleMs: number = 16 // ~60fps
+  throttleMs = 16 // ~60fps
 ): () => void {
   let lastScrollY = window.scrollY;
-  let lastTimestamp = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+  let lastTimestamp =
+    typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
   let ticking = false;
 
   const handleScroll = () => {
     if (!ticking) {
       requestAnimationFrame(() => {
         const currentScrollY = window.scrollY;
-        const currentTimestamp = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+        const currentTimestamp =
+          typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
         const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPercent = scrollHeight > 0 ? (currentScrollY / scrollHeight) * 100 : 0;
@@ -77,7 +76,7 @@ export function trackScrollPerformance(
           scrollY: currentScrollY,
           scrollPercent: Math.min(100, Math.max(0, scrollPercent)),
           direction,
-          velocity
+          velocity,
         });
 
         lastScrollY = currentScrollY;
@@ -104,10 +103,7 @@ interface ImageOptimizationOptions {
   format?: 'webp' | 'jpg' | 'png' | 'auto';
 }
 
-export function optimizeImages(
-  url: string,
-  options: ImageOptimizationOptions = {}
-): string {
+export function optimizeImages(url: string, options: ImageOptimizationOptions = {}): string {
   const { width, height, quality = 85, format = 'auto' } = options;
 
   try {
@@ -152,7 +148,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
     if (!inThrottle) {
       func(...args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }
@@ -164,13 +160,16 @@ export function withPerformanceMonitoring<P extends object>(
 ) {
   return function PerformanceMonitoredComponent(props: P) {
     React.useEffect(() => {
-      const startTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+      const startTime =
+        typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
       return () => {
-        const endTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+        const endTime =
+          typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
         const renderTime = endTime - startTime;
 
-        if (renderTime > 16) { // More than one frame at 60fps
+        if (renderTime > 16) {
+          // More than one frame at 60fps
           console.warn(`${componentName} render took ${renderTime.toFixed(2)}ms`);
         }
       };
@@ -185,11 +184,13 @@ export function createLazyComponent<T extends React.ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>
 ) {
   return React.lazy(async () => {
-    const start = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+    const start =
+      typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
     try {
       const componentModule = await importFn();
-      const end = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+      const end =
+        typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
       console.log(`Lazy component loaded in ${(end - start).toFixed(2)}ms`);
       return componentModule;
@@ -207,11 +208,12 @@ export function monitorMemoryUsage(): {
   percentage: number;
 } | null {
   if ('memory' in performance) {
-    const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
+    const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } })
+      .memory;
     return {
       used: memory.usedJSHeapSize,
       total: memory.totalJSHeapSize,
-      percentage: (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100
+      percentage: (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100,
     };
   }
   return null;
@@ -220,12 +222,14 @@ export function monitorMemoryUsage(): {
 // FPS monitoring
 export function monitorFPS(callback: (fps: number) => void): () => void {
   let frames = 0;
-  let lastTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+  let lastTime =
+    typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
   let animationId: number;
 
   function tick() {
     frames++;
-    const currentTime = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+    const currentTime =
+      typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
     if (currentTime >= lastTime + 1000) {
       const fps = Math.round((frames * 1000) / (currentTime - lastTime));
@@ -251,7 +255,7 @@ export function analyzeBundleSize(): Promise<{
   gzippedSize: number;
   modules: Array<{ name: string; size: number }>;
 }> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     // This would integrate with webpack-bundle-analyzer in a real implementation
     // For now, return mock data
     resolve({
@@ -260,8 +264,8 @@ export function analyzeBundleSize(): Promise<{
       modules: [
         { name: 'react', size: 100 * 1024 },
         { name: 'framer-motion', size: 200 * 1024 },
-        { name: 'app', size: 724 * 1024 }
-      ]
+        { name: 'app', size: 724 * 1024 },
+      ],
     });
   });
 }
@@ -274,13 +278,11 @@ interface PerformanceBudget {
   minFPS: number;
 }
 
-export function checkPerformanceBudget(
-  budget: PerformanceBudget
-): Promise<{
+export function checkPerformanceBudget(budget: PerformanceBudget): Promise<{
   passed: boolean;
   violations: string[];
 }> {
-  return new Promise(async (resolve) => {
+  return new Promise(async resolve => {
     const violations: string[] = [];
 
     // Check bundle size
@@ -292,14 +294,14 @@ export function checkPerformanceBudget(
     // Check memory usage
     const memoryInfo = monitorMemoryUsage();
     if (memoryInfo && memoryInfo.percentage > budget.maxMemoryUsage) {
-      violations.push(`Memory usage ${memoryInfo.percentage}% exceeds budget ${budget.maxMemoryUsage}%`);
+      violations.push(
+        `Memory usage ${memoryInfo.percentage}% exceeds budget ${budget.maxMemoryUsage}%`
+      );
     }
 
     resolve({
       passed: violations.length === 0,
-      violations
+      violations,
     });
   });
 }
-
-

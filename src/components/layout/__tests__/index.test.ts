@@ -17,11 +17,7 @@ describe('Layout Components Barrel Export', () => {
   });
 
   it('exports all expected components', () => {
-    const expectedExports = [
-      'Header',
-      'ScrollProgress',
-      'Footer',
-    ];
+    const expectedExports = ['Header', 'ScrollProgress', 'Footer'];
 
     expectedExports.forEach(exportName => {
       expect(LayoutComponents).toHaveProperty(exportName);
@@ -48,7 +44,7 @@ describe('Layout Components Barrel Export', () => {
 
   it('can destructure individual components', () => {
     const { Header, ScrollProgress, Footer } = LayoutComponents;
-    
+
     expect(Header).toBeDefined();
     expect(ScrollProgress).toBeDefined();
     expect(Footer).toBeDefined();
@@ -82,14 +78,10 @@ describe('Layout Components Barrel Export', () => {
   });
 
   it('does not export any unexpected properties', () => {
-    const expectedExports = [
-      'Header',
-      'ScrollProgress',
-      'Footer',
-    ];
+    const expectedExports = ['Header', 'ScrollProgress', 'Footer'];
 
     const actualExports = Object.keys(LayoutComponents);
-    
+
     actualExports.forEach(exportName => {
       expect(expectedExports).toContain(exportName);
     });
@@ -105,7 +97,7 @@ describe('Layout Components Barrel Export', () => {
   it('provides clean barrel export functionality', () => {
     // Test that the barrel export works as intended for clean imports
     const components = LayoutComponents;
-    
+
     expect(components).toBeDefined();
     expect(typeof components).toBe('object');
     expect(Object.keys(components).length).toBeGreaterThan(0);
@@ -141,7 +133,7 @@ describe('Layout Components Barrel Export', () => {
   it('exports layout-specific components', () => {
     // Verify that these are indeed layout components
     const layoutComponentNames = Object.keys(LayoutComponents);
-    
+
     // These should be typical layout component names
     expect(layoutComponentNames).toContain('Header');
     expect(layoutComponentNames).toContain('Footer');
@@ -153,7 +145,7 @@ describe('Layout Components Barrel Export', () => {
     const { Header } = LayoutComponents;
     const ScrollProgress = LayoutComponents.ScrollProgress;
     const FooterComponent = LayoutComponents.Footer;
-    
+
     expect(Header).toBe(LayoutComponents.Header);
     expect(ScrollProgress).toBe(LayoutComponents.ScrollProgress);
     expect(FooterComponent).toBe(LayoutComponents.Footer);
@@ -194,12 +186,12 @@ describe('Layout Components Barrel Export', () => {
       const { Header } = LayoutComponents;
       return Header;
     }).not.toThrow();
-    
+
     expect(() => {
       const { ScrollProgress } = LayoutComponents;
       return ScrollProgress;
     }).not.toThrow();
-    
+
     expect(() => {
       const { Footer } = LayoutComponents;
       return Footer;

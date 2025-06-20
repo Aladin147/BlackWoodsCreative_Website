@@ -1,36 +1,58 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+
 import { VisionSection } from '../VisionSection';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => (
+      <section {...props}>{children}</section>
+    ),
     p: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
   },
   useScroll: () => ({
-    scrollYProgress: { on: jest.fn(), get: () => 0 }
+    scrollYProgress: { on: jest.fn(), get: () => 0 },
   }),
-  useTransform: (_value: unknown, _input: number[], output: (number | string)[]) => ({ on: jest.fn(), get: () => output[0] }),
+  useTransform: (_value: unknown, _input: number[], output: (number | string)[]) => ({
+    on: jest.fn(),
+    get: () => output[0],
+  }),
   useSpring: () => ({ on: jest.fn(() => jest.fn()), get: () => 0 }),
 }));
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
   TextReveal: ({ text, className }: { text: string; className?: string }) => (
-    <div className={className} data-testid="text-reveal">{text}</div>
+    <div className={className} data-testid="text-reveal">
+      {text}
+    </div>
   ),
   ParallaxLayer: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div className={className} data-testid="parallax-layer">{children}</div>
+    <div className={className} data-testid="parallax-layer">
+      {children}
+    </div>
   ),
   MagneticField: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div className={className} data-testid="magnetic-field">{children}</div>
+    <div className={className} data-testid="magnetic-field">
+      {children}
+    </div>
   ),
   ScrollReveal: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div className={className} data-testid="scroll-reveal">{children}</div>
+    <div className={className} data-testid="scroll-reveal">
+      {children}
+    </div>
   ),
-  WebGLEnhancedBackground: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div className={className} data-testid="webgl-enhanced-background">{children}</div>
+  WebGLEnhancedBackground: ({
+    children,
+    className,
+  }: {
+    children: React.ReactNode;
+    className?: string;
+  }) => (
+    <div className={className} data-testid="webgl-enhanced-background">
+      {children}
+    </div>
   ),
 }));
 
@@ -89,9 +111,15 @@ describe('VisionSection', () => {
     it('displays section content descriptions', () => {
       render(<VisionSection />);
 
-      expect(screen.getByText(/We believe in the power of visual storytelling/)).toBeInTheDocument();
-      expect(screen.getByText(/From concept to completion, we meticulously craft/)).toBeInTheDocument();
-      expect(screen.getByText(/We create visual experiences that not only look stunning/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/We believe in the power of visual storytelling/)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/From concept to completion, we meticulously craft/)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/We create visual experiences that not only look stunning/)
+      ).toBeInTheDocument();
     });
 
     it('renders section numbers', () => {
@@ -117,10 +145,10 @@ describe('VisionSection', () => {
       render(<VisionSection />);
 
       const progressIndicators = document.querySelectorAll('.w-1.h-12.rounded-full');
-      
+
       // Click first indicator
       fireEvent.click(progressIndicators[0]);
-      
+
       // Should not throw error
       expect(progressIndicators[0]).toBeInTheDocument();
     });
@@ -147,7 +175,7 @@ describe('VisionSection', () => {
       // Should have the finale content
       const finaleText = screen.getByText('Experience the Difference');
       expect(finaleText).toBeInTheDocument();
-      
+
       const finaleDescription = screen.getByText(/Our commitment to excellence and innovation/);
       expect(finaleDescription).toBeInTheDocument();
     });
@@ -156,7 +184,9 @@ describe('VisionSection', () => {
       render(<VisionSection />);
 
       // Check for aurora effect layers in the finale section
-      const auroraLayers = document.querySelectorAll('.bg-bw-aurora-teal\\/20, .bg-bw-aurora-green\\/15, .bg-bw-aurora-bright\\/15');
+      const auroraLayers = document.querySelectorAll(
+        '.bg-bw-aurora-teal\\/20, .bg-bw-aurora-green\\/15, .bg-bw-aurora-bright\\/15'
+      );
       expect(auroraLayers.length).toBeGreaterThan(0);
     });
   });
@@ -182,10 +212,10 @@ describe('VisionSection', () => {
       render(<VisionSection />);
 
       const progressIndicators = document.querySelectorAll('.w-1.h-12.rounded-full');
-      
+
       // Click first indicator
       fireEvent.click(progressIndicators[0]);
-      
+
       expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth' });
     });
   });
@@ -267,7 +297,9 @@ describe('VisionSection', () => {
 
       expect(screen.getByText('Our Vision')).toBeInTheDocument();
       expect(screen.getByText('Visual Storytelling')).toBeInTheDocument();
-      expect(screen.getByText(/We believe in the power of visual storytelling/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/We believe in the power of visual storytelling/)
+      ).toBeInTheDocument();
     });
 
     it('displays correct craft story content', () => {

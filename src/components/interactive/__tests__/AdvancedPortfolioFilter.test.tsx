@@ -1,6 +1,7 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+
 import { AdvancedPortfolioFilter } from '../AdvancedPortfolioFilter';
 
 // Mock framer-motion
@@ -189,7 +190,12 @@ describe('AdvancedPortfolioFilter', () => {
 
     // Items should be sorted alphabetically by title
     const projectTitles = screen.getAllByText(/Project/).map(el => el.textContent);
-    expect(projectTitles).toEqual(['Project Alpha', 'Project Beta', 'Project Delta', 'Project Gamma']);
+    expect(projectTitles).toEqual([
+      'Project Alpha',
+      'Project Beta',
+      'Project Delta',
+      'Project Gamma',
+    ]);
   });
 
   it('sorts items by category', async () => {
@@ -221,16 +227,16 @@ describe('AdvancedPortfolioFilter', () => {
 
     // Click the Featured sort button (not the featured badges)
     const sortButtons = screen.getAllByText('Featured');
-    const featuredSortButton = sortButtons.find(button =>
-      button.tagName === 'BUTTON' && button.getAttribute('data-cursor') === 'button'
+    const featuredSortButton = sortButtons.find(
+      button => button.tagName === 'BUTTON' && button.getAttribute('data-cursor') === 'button'
     );
 
     await user.click(featuredSortButton!);
 
     // Featured items should come first - check for featured badges
-    const featuredBadges = screen.getAllByText('Featured').filter(el =>
-      el.className.includes('absolute top-3 right-3')
-    );
+    const featuredBadges = screen
+      .getAllByText('Featured')
+      .filter(el => el.className.includes('absolute right-3 top-3'));
     expect(featuredBadges).toHaveLength(2); // Project Alpha and Gamma are featured
   });
 
@@ -304,7 +310,9 @@ describe('AdvancedPortfolioFilter', () => {
       />
     );
 
-    const projectAlpha = screen.getByLabelText('View Project Alpha project in Photography category');
+    const projectAlpha = screen.getByLabelText(
+      'View Project Alpha project in Photography category'
+    );
     projectAlpha.focus();
     await user.keyboard('{Enter}');
 
@@ -321,7 +329,9 @@ describe('AdvancedPortfolioFilter', () => {
       />
     );
 
-    const projectAlpha = screen.getByLabelText('View Project Alpha project in Photography category');
+    const projectAlpha = screen.getByLabelText(
+      'View Project Alpha project in Photography category'
+    );
     projectAlpha.focus();
     await user.keyboard(' ');
 
@@ -338,9 +348,9 @@ describe('AdvancedPortfolioFilter', () => {
     );
 
     // Filter to only get the featured badges (not the sort button)
-    const featuredBadges = screen.getAllByText('Featured').filter(el =>
-      el.className.includes('absolute top-3 right-3')
-    );
+    const featuredBadges = screen
+      .getAllByText('Featured')
+      .filter(el => el.className.includes('absolute right-3 top-3'));
     expect(featuredBadges).toHaveLength(2);
   });
 
@@ -383,13 +393,13 @@ describe('AdvancedPortfolioFilter', () => {
     );
 
     const allButton = screen.getByText('All');
-    
+
     // All should be active by default
     expect(allButton).toHaveAttribute('aria-pressed', 'true');
-    
+
     // Click All again
     await user.click(allButton);
-    
+
     // Should still be active and show all items
     expect(allButton).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByText('4 projects found')).toBeInTheDocument();

@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import React from 'react';
+
 import { LoadingSpinner, LoadingSkeleton, PortfolioCardSkeleton } from '../LoadingSpinner';
 
 // Mock framer-motion
@@ -110,16 +111,19 @@ describe('LoadingSpinner', () => {
 
     const spinner = document.querySelector('.rounded-full.border-2');
     expect(spinner).toHaveAttribute('data-animate', JSON.stringify({ rotate: 360 }));
-    expect(spinner).toHaveAttribute('data-transition', JSON.stringify({
-      duration: 1,
-      repeat: Infinity,
-      ease: 'linear',
-    }));
+    expect(spinner).toHaveAttribute(
+      'data-transition',
+      JSON.stringify({
+        duration: 1,
+        repeat: Infinity,
+        ease: 'linear',
+      })
+    );
   });
 
   it('does not render text when not provided', () => {
     render(<LoadingSpinner />);
-    
+
     const text = screen.queryByText(/./);
     expect(text).not.toBeInTheDocument();
   });
@@ -127,7 +131,7 @@ describe('LoadingSpinner', () => {
   it('renders text when provided', () => {
     const testText = 'Loading...';
     render(<LoadingSpinner text={testText} />);
-    
+
     const text = screen.getByText(testText);
     expect(text).toBeInTheDocument();
   });
@@ -135,7 +139,7 @@ describe('LoadingSpinner', () => {
   it('applies correct text styling', () => {
     const testText = 'Loading...';
     render(<LoadingSpinner text={testText} />);
-    
+
     const text = screen.getByText(testText);
     expect(text).toHaveClass('text-sm');
     expect(text).toHaveClass('text-bw-text-primary');
@@ -145,7 +149,7 @@ describe('LoadingSpinner', () => {
   it('has correct text animation properties', () => {
     const testText = 'Loading...';
     render(<LoadingSpinner text={testText} />);
-    
+
     const text = screen.getByText(testText);
     expect(text).toHaveAttribute('data-initial', JSON.stringify({ opacity: 0 }));
     expect(text).toHaveAttribute('data-animate', JSON.stringify({ opacity: 1 }));
@@ -205,14 +209,20 @@ describe('LoadingSkeleton', () => {
     render(<LoadingSkeleton />);
 
     const skeleton = document.querySelector('.rounded-lg.bg-bw-border-subtle');
-    expect(skeleton).toHaveAttribute('data-animate', JSON.stringify({
-      opacity: [0.5, 1, 0.5],
-    }));
-    expect(skeleton).toHaveAttribute('data-transition', JSON.stringify({
-      duration: 1.5,
-      repeat: Infinity,
-      ease: 'easeInOut',
-    }));
+    expect(skeleton).toHaveAttribute(
+      'data-animate',
+      JSON.stringify({
+        opacity: [0.5, 1, 0.5],
+      })
+    );
+    expect(skeleton).toHaveAttribute(
+      'data-transition',
+      JSON.stringify({
+        duration: 1.5,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      })
+    );
   });
 
   it('works without className prop', () => {

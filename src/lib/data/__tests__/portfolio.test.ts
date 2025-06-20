@@ -1,5 +1,6 @@
-import { portfolioData } from '../portfolio';
 import type { PortfolioProject } from '@/lib/types/portfolio';
+
+import { portfolioData } from '../portfolio';
 
 describe('portfolioData', () => {
   it('is an array', () => {
@@ -11,7 +12,7 @@ describe('portfolioData', () => {
   });
 
   it('has all required properties for each project', () => {
-    portfolioData.forEach((project) => {
+    portfolioData.forEach(project => {
       expect(project).toHaveProperty('id');
       expect(project).toHaveProperty('title');
       expect(project).toHaveProperty('description');
@@ -234,10 +235,13 @@ describe('portfolioData', () => {
     });
 
     it('has balanced distribution', () => {
-      const categoryCount = portfolioData.reduce((acc, project) => {
-        acc[project.category] = (acc[project.category] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const categoryCount = portfolioData.reduce(
+        (acc, project) => {
+          acc[project.category] = (acc[project.category] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
       Object.values(categoryCount).forEach(count => {
         expect(count).toBeGreaterThan(0);
@@ -250,7 +254,7 @@ describe('portfolioData', () => {
     it('handles dimensions property correctly', () => {
       const projectsWithDimensions = portfolioData.filter(p => p.dimensions);
       expect(projectsWithDimensions.length).toBeGreaterThan(0);
-      
+
       projectsWithDimensions.forEach(project => {
         expect(typeof project.dimensions).toBe('string');
         expect(project.dimensions?.trim()).toBeTruthy();

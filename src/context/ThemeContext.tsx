@@ -20,11 +20,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.classList.remove('light', 'dark');
   }, []);
 
-  return (
-    <ThemeContext.Provider value={{ theme: THEME }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme: THEME }}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

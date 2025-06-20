@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+
 import {
   useIntersectionObserver,
   useIntersectionObserverMultiple,
@@ -15,7 +16,7 @@ const mockUnobserve = jest.fn();
 const mockDisconnect = jest.fn();
 
 beforeAll(() => {
-  global.IntersectionObserver = jest.fn().mockImplementation((callback) => {
+  global.IntersectionObserver = jest.fn().mockImplementation(callback => {
     mockIntersectionObserver.mockImplementation(callback);
     return {
       observe: mockObserve,
@@ -33,7 +34,7 @@ Object.defineProperty(global, 'performance', {
 });
 
 // Mock requestAnimationFrame
-global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 16));
+global.requestAnimationFrame = jest.fn(cb => setTimeout(cb, 16));
 global.cancelAnimationFrame = jest.fn();
 
 describe('useIntersectionObserver', () => {
@@ -104,18 +105,14 @@ describe('useIntersectionObserver', () => {
   });
 
   it('should handle triggerOnce option', () => {
-    const { result } = renderHook(() =>
-      useIntersectionObserver({ triggerOnce: true })
-    );
+    const { result } = renderHook(() => useIntersectionObserver({ triggerOnce: true }));
 
     expect(result.current[0]).toBeDefined();
     expect(result.current[1]).toBeNull();
   });
 
   it('should handle freezeOnceVisible option', () => {
-    const { result } = renderHook(() =>
-      useIntersectionObserver({ freezeOnceVisible: true })
-    );
+    const { result } = renderHook(() => useIntersectionObserver({ freezeOnceVisible: true }));
 
     expect(result.current[0]).toBeDefined();
     expect(result.current[1]).toBeNull();
@@ -132,18 +129,14 @@ describe('useIntersectionObserver', () => {
 
   it('should handle root element option', () => {
     const rootElement = document.createElement('div');
-    const { result } = renderHook(() =>
-      useIntersectionObserver({ root: rootElement })
-    );
+    const { result } = renderHook(() => useIntersectionObserver({ root: rootElement }));
 
     expect(result.current[0]).toBeDefined();
     expect(result.current[1]).toBeNull();
   });
 
   it('should handle custom rootMargin', () => {
-    const { result } = renderHook(() =>
-      useIntersectionObserver({ rootMargin: '20px 10px' })
-    );
+    const { result } = renderHook(() => useIntersectionObserver({ rootMargin: '20px 10px' }));
 
     expect(result.current[0]).toBeDefined();
     expect(result.current[1]).toBeNull();
@@ -328,17 +321,13 @@ describe('useScrollAnimation', () => {
   });
 
   it('should handle animation delay', () => {
-    const { result } = renderHook(() =>
-      useScrollAnimation({ animationDelay: 100 })
-    );
+    const { result } = renderHook(() => useScrollAnimation({ animationDelay: 100 }));
 
     expect(result.current.shouldAnimate).toBe(false);
   });
 
   it('should handle custom intersection options', () => {
-    const { result } = renderHook(() =>
-      useScrollAnimation({ threshold: 0.5 })
-    );
+    const { result } = renderHook(() => useScrollAnimation({ threshold: 0.5 }));
 
     expect(result.current.ref).toBeDefined();
   });
@@ -362,9 +351,7 @@ describe('useLazyLoad', () => {
   });
 
   it('should handle custom options', () => {
-    const { result } = renderHook(() =>
-      useLazyLoad({ threshold: 0.2, rootMargin: '100px' })
-    );
+    const { result } = renderHook(() => useLazyLoad({ threshold: 0.2, rootMargin: '100px' }));
 
     expect(result.current.ref).toBeDefined();
     expect(result.current.isLoaded).toBe(false);
@@ -398,9 +385,7 @@ describe('useViewportEffect', () => {
 
   it('should handle custom intersection options', () => {
     const mockCallback = jest.fn();
-    const { result } = renderHook(() =>
-      useViewportEffect(mockCallback, { threshold: 0.5 })
-    );
+    const { result } = renderHook(() => useViewportEffect(mockCallback, { threshold: 0.5 }));
 
     expect(result.current).toBeDefined();
   });
@@ -439,10 +424,9 @@ describe('useViewportEffect', () => {
     const mockCallback1 = jest.fn();
     const mockCallback2 = jest.fn();
 
-    const { result, rerender } = renderHook(
-      ({ callback }) => useViewportEffect(callback),
-      { initialProps: { callback: mockCallback1 } }
-    );
+    const { result, rerender } = renderHook(({ callback }) => useViewportEffect(callback), {
+      initialProps: { callback: mockCallback1 },
+    });
 
     expect(result.current).toBeDefined();
 

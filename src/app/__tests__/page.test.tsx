@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+
 import HomePage from '../page';
 
 // Mock the dynamic imports
@@ -22,7 +23,7 @@ jest.mock('@/components/layout', () => ({
 jest.mock('next/dynamic', () => {
   return (importFunc: () => Promise<any>, options?: any) => {
     const Component = React.lazy(importFunc);
-    
+
     // Return a component that handles the loading state
     return React.forwardRef<any, any>((props, ref) => {
       return (
@@ -81,14 +82,10 @@ describe('HomePage', () => {
   it('handles dynamic loading states', () => {
     // Test the loading components directly
     const HeroLoading = () => (
-      <div className="h-screen bg-bw-bg-primary flex items-center justify-center">
+      <div className="flex h-screen items-center justify-center bg-bw-bg-primary">
         <div className="text-center">
-          <div className="text-display-xl mb-4">
-            BlackWoods Creative
-          </div>
-          <div className="text-body-xl">
-            Loading...
-          </div>
+          <div className="mb-4 text-display-xl">BlackWoods Creative</div>
+          <div className="text-body-xl">Loading...</div>
         </div>
       </div>
     );
@@ -105,11 +102,9 @@ describe('HomePage', () => {
     );
 
     const VisionLoading = () => (
-      <div className="relative bg-bw-bg-primary min-h-screen flex items-center justify-center">
+      <div className="relative flex min-h-screen items-center justify-center bg-bw-bg-primary">
         <div className="text-center">
-          <div className="text-display-xl mb-4">
-            Experience the Difference
-          </div>
+          <div className="mb-4 text-display-xl">Experience the Difference</div>
           <div className="text-body-xl">Loading vision...</div>
         </div>
       </div>

@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { PortfolioCard } from '../PortfolioCard';
+
 import type { PortfolioProject } from '@/lib/data/portfolio';
+
+import { PortfolioCard } from '../PortfolioCard';
 
 const mockProject: PortfolioProject = {
   id: 'test-project',
@@ -192,7 +194,8 @@ describe('PortfolioCard', () => {
   it('truncates long descriptions appropriately', () => {
     const longDescriptionProject = {
       ...mockProject,
-      description: 'This is a very long description that should be truncated appropriately to maintain good visual hierarchy and prevent the card from becoming too tall while still providing enough information to the user about the project content and scope.',
+      description:
+        'This is a very long description that should be truncated appropriately to maintain good visual hierarchy and prevent the card from becoming too tall while still providing enough information to the user about the project content and scope.',
     };
 
     render(<PortfolioCard project={longDescriptionProject} />);

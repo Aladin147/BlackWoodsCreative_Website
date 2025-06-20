@@ -70,7 +70,7 @@ describe('Portfolio Types', () => {
         'Scene Creation',
       ];
 
-      categories.forEach((category) => {
+      categories.forEach(category => {
         const project: PortfolioProject = {
           id: `project-${category}`,
           title: `${category} Project`,
@@ -87,7 +87,7 @@ describe('Portfolio Types', () => {
     it('should support all valid type values', () => {
       const types: PortfolioProject['type'][] = ['image', 'video'];
 
-      types.forEach((type) => {
+      types.forEach(type => {
         const project: PortfolioProject = {
           id: `project-${type}`,
           title: `${type} Project`,
@@ -275,7 +275,7 @@ describe('Portfolio Types', () => {
       ];
 
       expect(categories).toHaveLength(4);
-      categories.forEach((category) => {
+      categories.forEach(category => {
         expect(typeof category.id).toBe('string');
         expect(typeof category.name).toBe('string');
         expect(typeof category.description).toBe('string');

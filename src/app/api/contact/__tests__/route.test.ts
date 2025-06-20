@@ -2,6 +2,12 @@
  * @jest-environment node
  */
 import { NextRequest } from 'next/server';
+
+import { sendContactEmail, sendAutoReplyEmail } from '@/lib/services';
+import { validateContactForm } from '@/lib/utils';
+import { sanitizeFormData } from '@/lib/utils/sanitize';
+import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
+
 import { POST, GET } from '../route';
 
 // Mock the utilities
@@ -10,7 +16,7 @@ jest.mock('@/lib/utils', () => ({
 }));
 
 jest.mock('@/lib/utils/sanitize', () => ({
-  sanitizeFormData: jest.fn((data) => data),
+  sanitizeFormData: jest.fn(data => data),
 }));
 
 jest.mock('@/lib/services', () => ({
@@ -23,13 +29,10 @@ jest.mock('@/lib/utils/security', () => ({
   logSecurityEvent: jest.fn(),
 }));
 
-import { validateContactForm } from '@/lib/utils';
-import { sanitizeFormData } from '@/lib/utils/sanitize';
-import { sendContactEmail, sendAutoReplyEmail } from '@/lib/services';
-import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
-
 // Type the mocked functions
-const mockValidateContactForm = validateContactForm as jest.MockedFunction<typeof validateContactForm>;
+const mockValidateContactForm = validateContactForm as jest.MockedFunction<
+  typeof validateContactForm
+>;
 const mockSendContactEmail = sendContactEmail as jest.MockedFunction<typeof sendContactEmail>;
 const mockSendAutoReplyEmail = sendAutoReplyEmail as jest.MockedFunction<typeof sendAutoReplyEmail>;
 const mockVerifyCSRFToken = verifyCSRFToken as jest.MockedFunction<typeof verifyCSRFToken>;
@@ -258,7 +261,8 @@ describe('/api/contact', () => {
       const dataWithXSS = {
         ...validFormData,
         name: '<script>alert("xss")</script>',
-        message: '<img src="x" onerror="alert(1)"> This is a long enough message to pass validation.',
+        message:
+          '<img src="x" onerror="alert(1)"> This is a long enough message to pass validation.',
       };
 
       // Use a unique IP to avoid rate limiting

@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPerformanceBudgetChecker, PerformanceData } from '@/lib/utils/performance-budget-checker';
+
 import { PerformanceBudget } from '@/lib/config/performance-budgets';
+import {
+  getPerformanceBudgetChecker,
+  PerformanceData,
+} from '@/lib/utils/performance-budget-checker';
 import { getPerformanceMonitor } from '@/lib/utils/performance-monitor';
 import { verifyCSRFToken } from '@/lib/utils/security';
 
@@ -15,16 +19,16 @@ export async function GET(request: NextRequest) {
     switch (action) {
       case 'check':
         return await handleBudgetCheck();
-      
+
       case 'config':
         return await handleGetConfig(environment);
-      
+
       case 'report':
         return await handleGenerateReport();
-      
+
       case 'history':
         return await handleGetHistory(request);
-      
+
       default:
         return NextResponse.json(
           { error: 'Invalid action. Use: check, config, report, or history' },
@@ -33,24 +37,18 @@ export async function GET(request: NextRequest) {
     }
   } catch (error) {
     console.error('Performance budget API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     // Verify CSRF token for state-changing operations
-    const csrfToken = request.headers.get('x-csrf-token') || 
-                     request.cookies.get('csrf-token')?.value;
-    
+    const csrfToken =
+      request.headers.get('x-csrf-token') || request.cookies.get('csrf-token')?.value;
+
     if (!csrfToken || !verifyCSRFToken(csrfToken, csrfToken)) {
-      return NextResponse.json(
-        { error: 'Invalid CSRF token' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -59,13 +57,13 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'check-custom':
         return await handleCustomBudgetCheck(data);
-      
+
       case 'update-config':
         return await handleUpdateConfig(data);
-      
+
       case 'save-report':
         return await handleSaveReport(data);
-      
+
       default:
         return NextResponse.json(
           { error: 'Invalid action. Use: check-custom, update-config, or save-report' },
@@ -74,10 +72,7 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Performance budget POST error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -86,14 +81,14 @@ async function handleBudgetCheck() {
     // Get current performance data
     const performanceMonitor = getPerformanceMonitor();
     const currentMetrics = performanceMonitor.getMetrics();
-    
+
     // Simulate bundle analysis (in real implementation, this would analyze actual bundles)
     const performanceData: PerformanceData = {
       bundles: {
-        main: 450 * 1024,      // 450KB main bundle
-        vendor: 750 * 1024,    // 750KB vendor bundle
+        main: 450 * 1024, // 450KB main bundle
+        vendor: 750 * 1024, // 750KB vendor bundle
         total: 1.2 * 1024 * 1024, // 1.2MB total
-        gzipped: 350 * 1024,   // 350KB gzipped
+        gzipped: 350 * 1024, // 350KB gzipped
       },
       coreWebVitals: {
         lcp: currentMetrics.lcp || 2200,
@@ -135,10 +130,7 @@ async function handleBudgetCheck() {
     });
   } catch (error) {
     console.error('Budget check error:', error);
-    return NextResponse.json(
-      { error: 'Failed to check performance budgets' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to check performance budgets' }, { status: 500 });
   }
 }
 
@@ -165,10 +157,7 @@ async function handleGetConfig(environment: string) {
     });
   } catch (error) {
     console.error('Get config error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get budget configuration' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get budget configuration' }, { status: 500 });
   }
 }
 
@@ -191,10 +180,7 @@ async function handleGenerateReport() {
     return NextResponse.json(report);
   } catch (error) {
     console.error('Generate report error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate performance report' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate performance report' }, { status: 500 });
   }
 }
 
@@ -223,14 +209,14 @@ async function handleGetHistory(request: NextRequest) {
     });
   } catch (error) {
     console.error('Get history error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get budget check history' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get budget check history' }, { status: 500 });
   }
 }
 
-async function handleCustomBudgetCheck(data: { performanceData: PerformanceData; customBudget?: PerformanceBudget }) {
+async function handleCustomBudgetCheck(data: {
+  performanceData: PerformanceData;
+  customBudget?: PerformanceBudget;
+}) {
   try {
     const { performanceData, customBudget } = data;
 
@@ -256,12 +242,9 @@ async function handleUpdateConfig(data: { budget: unknown; environment: string }
     // In a real implementation, this would update stored configuration
     // For now, just validate the configuration
     const { budget, environment } = data;
-    
+
     if (!budget || !environment) {
-      return NextResponse.json(
-        { error: 'Budget and environment are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Budget and environment are required' }, { status: 400 });
     }
 
     return NextResponse.json({
@@ -271,10 +254,7 @@ async function handleUpdateConfig(data: { budget: unknown; environment: string }
     });
   } catch (error) {
     console.error('Update config error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update budget configuration' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update budget configuration' }, { status: 500 });
   }
 }
 
@@ -282,7 +262,7 @@ async function handleSaveReport(data: { report: unknown; tags: string[] }) {
   try {
     // In a real implementation, this would save to database
     console.log('Saving report:', data.report, 'with tags:', data.tags);
-    
+
     return NextResponse.json({
       success: true,
       reportId: `report-${Date.now()}`,
@@ -291,10 +271,7 @@ async function handleSaveReport(data: { report: unknown; tags: string[] }) {
     });
   } catch (error) {
     console.error('Save report error:', error);
-    return NextResponse.json(
-      { error: 'Failed to save performance report' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to save performance report' }, { status: 500 });
   }
 }
 

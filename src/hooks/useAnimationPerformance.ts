@@ -21,7 +21,7 @@ const defaultConfig: AnimationPerformanceConfig = {
   targetFPS: 60,
   maxFrameTime: 16.67, // 60fps = 16.67ms per frame
   enableLogging: false,
-  sampleSize: 60 // Sample over 1 second at 60fps
+  sampleSize: 60, // Sample over 1 second at 60fps
 };
 
 export function useAnimationPerformance(config: Partial<AnimationPerformanceConfig> = {}) {
@@ -31,7 +31,7 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
     frameTime: 16.67,
     memoryUsage: 0,
     animationCount: 0,
-    isOptimal: true
+    isOptimal: true,
   });
 
   const frameTimesRef = useRef<number[]>([]);
@@ -54,25 +54,27 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
 
     // Calculate metrics every few frames
     if (frameTimesRef.current.length >= 10) {
-      const avgFrameTime = frameTimesRef.current.reduce((a, b) => a + b, 0) / frameTimesRef.current.length;
+      const avgFrameTime =
+        frameTimesRef.current.reduce((a, b) => a + b, 0) / frameTimesRef.current.length;
       const fps = Math.round(1000 / avgFrameTime);
 
       // Get memory usage if available
       const performanceWithMemory = performance as Performance & {
-        memory?: { usedJSHeapSize: number }
+        memory?: { usedJSHeapSize: number };
       };
       const memoryUsage = performanceWithMemory.memory
         ? Math.round(performanceWithMemory.memory.usedJSHeapSize / 1024 / 1024)
         : 0;
 
-      const isOptimal = fps >= finalConfig.targetFPS * 0.9 && avgFrameTime <= finalConfig.maxFrameTime * 1.1;
+      const isOptimal =
+        fps >= finalConfig.targetFPS * 0.9 && avgFrameTime <= finalConfig.maxFrameTime * 1.1;
 
       const newMetrics: PerformanceMetrics = {
         fps,
         frameTime: Math.round(avgFrameTime * 100) / 100,
         memoryUsage,
         animationCount: animationCountRef.current,
-        isOptimal
+        isOptimal,
       };
 
       setMetrics(newMetrics);
@@ -83,7 +85,12 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
     }
 
     animationFrameRef.current = requestAnimationFrame(measureFrame);
-  }, [finalConfig.sampleSize, finalConfig.targetFPS, finalConfig.maxFrameTime, finalConfig.enableLogging]);
+  }, [
+    finalConfig.sampleSize,
+    finalConfig.targetFPS,
+    finalConfig.maxFrameTime,
+    finalConfig.enableLogging,
+  ]);
 
   const registerAnimation = () => {
     animationCountRef.current++;
@@ -95,19 +102,19 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
 
   const getOptimizationSuggestions = (): string[] => {
     const suggestions: string[] = [];
-    
+
     if (metrics.fps < finalConfig.targetFPS * 0.8) {
       suggestions.push('Consider reducing animation complexity or frequency');
     }
-    
+
     if (metrics.frameTime > finalConfig.maxFrameTime * 1.5) {
       suggestions.push('Frame time is high - consider using transform3d for GPU acceleration');
     }
-    
+
     if (metrics.animationCount > 20) {
       suggestions.push('High animation count - consider animation pooling or virtualization');
     }
-    
+
     if (metrics.memoryUsage > 100) {
       suggestions.push('High memory usage - check for animation memory leaks');
     }
@@ -130,14 +137,14 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
     registerAnimation,
     unregisterAnimation,
     getOptimizationSuggestions,
-    isMonitoring: !!animationFrameRef.current
+    isMonitoring: !!animationFrameRef.current,
   };
 }
 
 // Hook for individual animation components to register themselves
 export function useAnimationRegistration() {
   const performanceContext = useAnimationPerformance();
-  
+
   useEffect(() => {
     performanceContext.registerAnimation();
 

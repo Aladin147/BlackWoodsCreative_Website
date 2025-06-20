@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { act } from '@testing-library/react';
+
 import {
   getContrastRatio,
   meetsContrastRequirement,
@@ -126,7 +127,10 @@ describe('accessibility utilities', () => {
     });
 
     it('validates brand color combinations', () => {
-      const result = meetsContrastRequirement(colorPalette['bw-text-primary'], colorPalette['bw-bg-primary']);
+      const result = meetsContrastRequirement(
+        colorPalette['bw-text-primary'],
+        colorPalette['bw-bg-primary']
+      );
       expect(result).toBe(true);
     });
   });
@@ -159,16 +163,22 @@ describe('accessibility utilities', () => {
 
       it('adds event listeners to container', () => {
         FocusManager.trapFocus(mockContainer);
-        expect(mockContainer.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+        expect(mockContainer.addEventListener).toHaveBeenCalledWith(
+          'keydown',
+          expect.any(Function)
+        );
         expect(mockContainer.addEventListener).toHaveBeenCalledTimes(2);
       });
 
       it('returns cleanup function', () => {
         const cleanup = FocusManager.trapFocus(mockContainer);
         expect(typeof cleanup).toBe('function');
-        
+
         cleanup();
-        expect(mockContainer.removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+        expect(mockContainer.removeEventListener).toHaveBeenCalledWith(
+          'keydown',
+          expect.any(Function)
+        );
         expect(mockContainer.removeEventListener).toHaveBeenCalledTimes(2);
       });
 
@@ -227,16 +237,16 @@ describe('accessibility utilities', () => {
       const originalWindow = global.window;
       // @ts-ignore
       delete global.window;
-      
+
       const result = prefersReducedMotion();
       expect(result).toBe(false);
-      
+
       global.window = originalWindow;
     });
 
     it('returns true when user prefers reduced motion', () => {
       mockMatchMedia.mockReturnValue({ matches: true });
-      
+
       const result = prefersReducedMotion();
       expect(result).toBe(true);
       expect(mockMatchMedia).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
@@ -244,7 +254,7 @@ describe('accessibility utilities', () => {
 
     it('returns false when user does not prefer reduced motion', () => {
       mockMatchMedia.mockReturnValue({ matches: false });
-      
+
       const result = prefersReducedMotion();
       expect(result).toBe(false);
     });
@@ -264,10 +274,10 @@ describe('accessibility utilities', () => {
       const originalWindow = global.window;
       // @ts-ignore
       delete global.window;
-      
+
       announceToScreenReader('test message');
       expect(mockCreateElement).not.toHaveBeenCalled();
-      
+
       global.window = originalWindow;
     });
 
@@ -378,11 +388,17 @@ describe('accessibility utilities', () => {
           preventDefault: jest.fn(),
         } as any;
 
-        handleKeyboardNavigation(mockEvent, undefined, undefined, undefined, mockCallbacks.onArrowKeys);
+        handleKeyboardNavigation(
+          mockEvent,
+          undefined,
+          undefined,
+          undefined,
+          mockCallbacks.onArrowKeys
+        );
 
         expect(mockCallbacks.onArrowKeys).toHaveBeenCalledWith(expectedDirections[index]);
         expect(mockEvent.preventDefault).toHaveBeenCalled();
-        
+
         mockCallbacks.onArrowKeys.mockClear();
       });
     });
@@ -429,7 +445,7 @@ describe('accessibility utilities', () => {
       expect(result).toEqual({
         passed: true,
         violations: [],
-        warnings: []
+        warnings: [],
       });
 
       global.window = originalWindow;
@@ -442,7 +458,7 @@ describe('accessibility utilities', () => {
         { alt: '', getAttribute: jest.fn().mockReturnValue('true') }, // aria-hidden
       ];
 
-      mockQuerySelectorAll.mockImplementation((selector) => {
+      mockQuerySelectorAll.mockImplementation(selector => {
         if (selector === 'img') return mockImages;
         return [];
       });
@@ -462,7 +478,7 @@ describe('accessibility utilities', () => {
         { tagName: 'H3' },
       ];
 
-      mockQuerySelectorAll.mockImplementation((selector) => {
+      mockQuerySelectorAll.mockImplementation(selector => {
         if (selector === 'h1, h2, h3, h4, h5, h6') return mockHeadings;
         return [];
       });
@@ -481,7 +497,7 @@ describe('accessibility utilities', () => {
         { tagName: 'H2' },
       ];
 
-      mockQuerySelectorAll.mockImplementation((selector) => {
+      mockQuerySelectorAll.mockImplementation(selector => {
         if (selector === 'h1, h2, h3, h4, h5, h6') return mockHeadings;
         return [];
       });
@@ -496,27 +512,27 @@ describe('accessibility utilities', () => {
       const mockInputs = [
         {
           id: 'input1',
-          getAttribute: jest.fn().mockImplementation((attr) => {
+          getAttribute: jest.fn().mockImplementation(attr => {
             if (attr === 'aria-label') return null;
             if (attr === 'aria-labelledby') return null;
             return null;
-          })
+          }),
         },
         {
           id: 'input2',
-          getAttribute: jest.fn().mockImplementation((attr) => {
+          getAttribute: jest.fn().mockImplementation(attr => {
             if (attr === 'aria-label') return 'Input label';
             return null;
-          })
+          }),
         },
       ];
 
-      mockQuerySelectorAll.mockImplementation((selector) => {
+      mockQuerySelectorAll.mockImplementation(selector => {
         if (selector === 'input, textarea, select') return mockInputs;
         return [];
       });
 
-      mockQuerySelector.mockImplementation((selector) => {
+      mockQuerySelector.mockImplementation(selector => {
         if (selector === 'label[for="input1"]') return null;
         if (selector === 'label[for="input2"]') return document.createElement('label');
         return null;
@@ -529,12 +545,9 @@ describe('accessibility utilities', () => {
     });
 
     it('detects missing focus indicators', () => {
-      const mockElements = [
-        { tagName: 'BUTTON' },
-        { tagName: 'A' },
-      ];
+      const mockElements = [{ tagName: 'BUTTON' }, { tagName: 'A' }];
 
-      mockQuerySelectorAll.mockImplementation((selector) => {
+      mockQuerySelectorAll.mockImplementation(selector => {
         if (selector.includes('button, [href]')) return mockElements;
         return [];
       });
@@ -558,7 +571,7 @@ describe('accessibility utilities', () => {
     it('passes when elements have proper focus indicators', () => {
       const mockElements = [{ tagName: 'BUTTON' }];
 
-      mockQuerySelectorAll.mockImplementation((selector) => {
+      mockQuerySelectorAll.mockImplementation(selector => {
         if (selector.includes('button, [href]')) return mockElements;
         return [];
       });
@@ -579,11 +592,9 @@ describe('accessibility utilities', () => {
     });
 
     it('returns passed false when violations exist', () => {
-      const mockImages = [
-        { alt: '', getAttribute: jest.fn().mockReturnValue(null) },
-      ];
+      const mockImages = [{ alt: '', getAttribute: jest.fn().mockReturnValue(null) }];
 
-      mockQuerySelectorAll.mockImplementation((selector) => {
+      mockQuerySelectorAll.mockImplementation(selector => {
         if (selector === 'img') return mockImages;
         return [];
       });

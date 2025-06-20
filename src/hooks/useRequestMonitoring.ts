@@ -172,7 +172,7 @@ export function useRequestMonitoring() {
 
       // Get CSRF token
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      
+
       const response = await fetch('/api/monitoring', {
         method: 'POST',
         headers: {
@@ -203,7 +203,7 @@ export function useRequestMonitoring() {
 
       // Get CSRF token
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      
+
       const response = await fetch('/api/monitoring', {
         method: 'POST',
         headers: {
@@ -238,17 +238,17 @@ export function useRequestMonitoring() {
     try {
       // Get CSRF token
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      
+
       const response = await fetch('/api/monitoring', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrfToken || '',
         },
-        body: JSON.stringify({ 
-          action: 'log-custom-event', 
-          event, 
-          data 
+        body: JSON.stringify({
+          action: 'log-custom-event',
+          event,
+          data,
         }),
       });
 

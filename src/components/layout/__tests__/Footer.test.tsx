@@ -3,6 +3,7 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { Footer } from '../Footer';
 
 // Mock window.scrollTo
@@ -96,7 +97,9 @@ describe('Footer', () => {
       render(<Footer />);
 
       const currentYear = new Date().getFullYear();
-      expect(screen.getByText(`© ${currentYear} BlackWoods Creative. All rights reserved.`)).toBeInTheDocument();
+      expect(
+        screen.getByText(`© ${currentYear} BlackWoods Creative. All rights reserved.`)
+      ).toBeInTheDocument();
       expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
       expect(screen.getByText('Terms of Service')).toBeInTheDocument();
     });
@@ -179,7 +182,10 @@ describe('Footer', () => {
       const linkedinLink = screen.getByTitle('LinkedIn');
       await user.click(linkedinLink);
 
-      expect(linkedinLink).toHaveAttribute('href', 'https://linkedin.com/company/blackwoodscreative');
+      expect(linkedinLink).toHaveAttribute(
+        'href',
+        'https://linkedin.com/company/blackwoodscreative'
+      );
       expect(linkedinLink).toHaveAttribute('target', '_blank');
       expect(linkedinLink).toHaveAttribute('rel', 'noopener noreferrer');
     });

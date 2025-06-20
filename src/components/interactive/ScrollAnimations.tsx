@@ -21,8 +21,8 @@ export function ScrollFadeIn({ children, className = '', delay = 0 }: ScrollAnim
     element.style.transition = `opacity 0.8s ease-out ${delay}ms, transform 0.6s ease-out ${delay}ms`;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             // Visible state per theme guide
             const htmlElement = entry.target as HTMLElement;
@@ -33,7 +33,7 @@ export function ScrollFadeIn({ children, className = '', delay = 0 }: ScrollAnim
       },
       {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        rootMargin: '0px 0px -50px 0px',
       }
     );
 
@@ -55,10 +55,10 @@ interface StaggeredAnimationProps {
   staggerDelay?: number;
 }
 
-export function StaggeredScrollFadeIn({ 
-  children, 
-  className = '', 
-  staggerDelay = 100 
+export function StaggeredScrollFadeIn({
+  children,
+  className = '',
+  staggerDelay = 100,
 }: StaggeredAnimationProps) {
   return (
     <div className={className}>
@@ -98,14 +98,14 @@ export function SectionScrollAnimation({ children, className = '', id }: Section
     });
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             const elements = entry.target.querySelectorAll(
               '.card, .btn-primary, .btn-secondary, h1, h2, h3, p, img'
             );
-            
-            elements.forEach((element) => {
+
+            elements.forEach(element => {
               const htmlElement = element as HTMLElement;
               htmlElement.style.opacity = '1';
               htmlElement.style.transform = 'translateY(0)';
@@ -115,7 +115,7 @@ export function SectionScrollAnimation({ children, className = '', id }: Section
       },
       {
         threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
+        rootMargin: '0px 0px -100px 0px',
       }
     );
 

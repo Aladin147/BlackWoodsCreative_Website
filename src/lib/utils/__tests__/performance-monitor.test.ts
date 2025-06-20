@@ -1,9 +1,9 @@
 // Removed unused imports
-import { 
-  PerformanceMonitor, 
-  getPerformanceMonitor, 
-  trackComponentLoad, 
-  usePerformanceTracking 
+import {
+  PerformanceMonitor,
+  getPerformanceMonitor,
+  trackComponentLoad,
+  usePerformanceTracking,
 } from '../performance-monitor';
 
 // Mock performance API
@@ -31,13 +31,17 @@ Object.defineProperty(global, 'performance', {
 });
 
 // Mock PerformanceObserver
-global.PerformanceObserver = jest.fn().mockImplementation((callback) => {
+global.PerformanceObserver = jest.fn().mockImplementation(callback => {
   mockPerformanceObserver.callback = callback;
   return mockPerformanceObserver;
 }) as any;
 
 // Add the required supportedEntryTypes property
-(global.PerformanceObserver as any).supportedEntryTypes = ['largest-contentful-paint', 'first-input', 'layout-shift'];
+(global.PerformanceObserver as any).supportedEntryTypes = [
+  'largest-contentful-paint',
+  'first-input',
+  'layout-shift',
+];
 
 // Mock window
 Object.defineProperty(global, 'window', {
@@ -64,7 +68,7 @@ describe('PerformanceMonitor', () => {
     });
 
     it('measures initial metrics on construction', () => {
-      mockGetEntriesByType.mockImplementation((type) => {
+      mockGetEntriesByType.mockImplementation(type => {
         if (type === 'paint') {
           return [{ name: 'first-contentful-paint', startTime: 500 }];
         }
@@ -89,9 +93,7 @@ describe('PerformanceMonitor', () => {
 
       monitor.trackBundleLoad('test-chunk', 1000);
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Bundle chunk "test-chunk" loaded in 500.00ms'
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Bundle chunk "test-chunk" loaded in 500.00ms');
 
       const metrics = monitor.getMetrics();
       expect(metrics.loadTime).toBe(500);
@@ -100,10 +102,10 @@ describe('PerformanceMonitor', () => {
 
     it('accumulates multiple bundle loads', () => {
       const monitor = new PerformanceMonitor();
-      
+
       mockPerformanceNow.mockReturnValue(1200);
       monitor.trackBundleLoad('chunk-1', 1000);
-      
+
       mockPerformanceNow.mockReturnValue(1800);
       monitor.trackBundleLoad('chunk-2', 1500);
 
@@ -116,12 +118,12 @@ describe('PerformanceMonitor', () => {
   describe('getMetrics', () => {
     it('returns combined performance and bundle metrics', () => {
       const monitor = new PerformanceMonitor();
-      
+
       // Simulate some metrics
       monitor.trackBundleLoad('test', 1000);
-      
+
       const metrics = monitor.getMetrics();
-      
+
       expect(typeof metrics).toBe('object');
       expect(metrics.chunkCount).toBe(1);
     });
@@ -130,9 +132,9 @@ describe('PerformanceMonitor', () => {
   describe('checkPerformanceBudgets', () => {
     it('passes when all metrics are within budget', () => {
       // Create monitor for setup
-      
+
       // Mock good metrics
-      mockGetEntriesByType.mockImplementation((type) => {
+      mockGetEntriesByType.mockImplementation(type => {
         if (type === 'paint') {
           return [{ name: 'first-contentful-paint', startTime: 1000 }]; // Under 1800ms budget
         }
@@ -151,9 +153,9 @@ describe('PerformanceMonitor', () => {
 
     it('fails when metrics exceed budget', () => {
       // Create monitor for setup
-      
+
       // Mock bad metrics
-      mockGetEntriesByType.mockImplementation((type) => {
+      mockGetEntriesByType.mockImplementation(type => {
         if (type === 'paint') {
           return [{ name: 'first-contentful-paint', startTime: 3000 }]; // Over 1800ms budget
         }
@@ -192,9 +194,9 @@ describe('PerformanceMonitor', () => {
 
     it('shows budget violations when present', () => {
       // Create monitor for setup
-      
+
       // Mock bad metrics
-      mockGetEntriesByType.mockImplementation((type) => {
+      mockGetEntriesByType.mockImplementation(type => {
         if (type === 'paint') {
           return [{ name: 'first-contentful-paint', startTime: 3000 }];
         }
@@ -212,7 +214,7 @@ describe('PerformanceMonitor', () => {
   describe('disconnect', () => {
     it('disconnects all observers', () => {
       const monitor = new PerformanceMonitor();
-      
+
       monitor.disconnect();
 
       expect(mockPerformanceObserver.disconnect).toHaveBeenCalledTimes(3);
@@ -222,59 +224,61 @@ describe('PerformanceMonitor', () => {
   describe('observer callbacks', () => {
     it('handles LCP entries correctly', () => {
       const monitor = new PerformanceMonitor();
-      
+
       // Get the LCP observer callback
       const lcpCallback = (global.PerformanceObserver as any).mock.calls[0][0];
-      
+
       // Simulate LCP entry
       const mockList = {
-        getEntries: () => [{ startTime: 2000 }]
+        getEntries: () => [{ startTime: 2000 }],
       };
-      
+
       lcpCallback(mockList);
-      
+
       const metrics = monitor.getMetrics();
       expect(metrics.lcp).toBe(2000);
     });
 
     it('handles FID entries correctly', () => {
       const monitor = new PerformanceMonitor();
-      
+
       // Get the FID observer callback
       const fidCallback = (global.PerformanceObserver as any).mock.calls[1][0];
-      
+
       // Simulate FID entry
       const mockList = {
-        getEntries: () => [{
-          entryType: 'first-input',
-          startTime: 100,
-          processingStart: 150
-        }]
+        getEntries: () => [
+          {
+            entryType: 'first-input',
+            startTime: 100,
+            processingStart: 150,
+          },
+        ],
       };
-      
+
       fidCallback(mockList);
-      
+
       const metrics = monitor.getMetrics();
       expect(metrics.fid).toBe(50); // processingStart - startTime
     });
 
     it('handles CLS entries correctly', () => {
       const monitor = new PerformanceMonitor();
-      
+
       // Get the CLS observer callback
       const clsCallback = (global.PerformanceObserver as any).mock.calls[2][0];
-      
+
       // Simulate CLS entries
       const mockList = {
         getEntries: () => [
           { entryType: 'layout-shift', hadRecentInput: false, value: 0.05 },
           { entryType: 'layout-shift', hadRecentInput: false, value: 0.03 },
           { entryType: 'layout-shift', hadRecentInput: true, value: 0.1 }, // Should be ignored
-        ]
+        ],
       };
-      
+
       clsCallback(mockList);
-      
+
       const metrics = monitor.getMetrics();
       expect(metrics.cls).toBe(0.08); // 0.05 + 0.03, ignoring the one with recent input
     });
@@ -298,9 +302,7 @@ describe('trackComponentLoad', () => {
     const trackEnd = trackComponentLoad('TestComponent');
     trackEnd();
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Component "TestComponent" rendered in 250.00ms'
-    );
+    expect(consoleSpy).toHaveBeenCalledWith('Component "TestComponent" rendered in 250.00ms');
   });
 
   it('integrates with performance monitor', () => {
@@ -311,7 +313,7 @@ describe('trackComponentLoad', () => {
 
     const monitor = getPerformanceMonitor();
     const metrics = monitor.getMetrics();
-    
+
     // Should have tracked the component as a bundle load
     expect(metrics.chunkCount).toBeGreaterThan(0);
   });

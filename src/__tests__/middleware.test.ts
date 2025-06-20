@@ -1,4 +1,9 @@
 // Mock Upstash Redis and Ratelimit
+// Import the mocked modules
+import type { NextRequest } from 'next/server';
+
+import { middleware } from '../middleware';
+
 jest.mock('@upstash/redis', () => ({
   Redis: {
     fromEnv: jest.fn(() => ({
@@ -53,10 +58,6 @@ jest.mock('next/server', () => ({
   },
 }));
 
-// Import the mocked modules
-import { middleware } from '../middleware';
-import type { NextRequest } from 'next/server';
-
 describe('Middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -75,9 +76,7 @@ describe('Middleware', () => {
         url: 'https://example.com/about',
         nextUrl: { pathname: '/about' },
         ip: '192.168.1.1',
-        headers: new Map([
-          ['user-agent', 'test-agent'],
-        ]),
+        headers: new Map([['user-agent', 'test-agent']]),
       } as unknown as NextRequest;
 
       const response = await middleware(request);
@@ -102,9 +101,7 @@ describe('Middleware', () => {
         url: 'https://example.com/about',
         nextUrl: { pathname: '/about' },
         ip: '192.168.1.1',
-        headers: new Map([
-          ['user-agent', 'test-agent'],
-        ]),
+        headers: new Map([['user-agent', 'test-agent']]),
       } as unknown as NextRequest;
 
       const response = await middleware(request);
@@ -120,9 +117,7 @@ describe('Middleware', () => {
         url: 'https://example.com/test',
         nextUrl: { pathname: '/test' },
         ip: '192.168.1.1',
-        headers: new Map([
-          ['user-agent', 'test-agent'],
-        ]),
+        headers: new Map([['user-agent', 'test-agent']]),
       } as unknown as NextRequest;
 
       const response = await middleware(request);
@@ -138,9 +133,7 @@ describe('Middleware', () => {
         url: 'https://example.com/contact',
         nextUrl: { pathname: '/contact' },
         ip: '192.168.1.1',
-        headers: new Map([
-          ['user-agent', 'test-agent'],
-        ]),
+        headers: new Map([['user-agent', 'test-agent']]),
       } as unknown as NextRequest;
 
       const response = await middleware(request);

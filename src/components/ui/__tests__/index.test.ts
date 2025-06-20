@@ -60,7 +60,7 @@ describe('UI Components Barrel Export', () => {
 
   it('can destructure individual components', () => {
     const { PortfolioCard, ErrorBoundary, LoadingSpinner } = UIComponents;
-    
+
     expect(PortfolioCard).toBeDefined();
     expect(ErrorBoundary).toBeDefined();
     expect(LoadingSpinner).toBeDefined();
@@ -108,7 +108,7 @@ describe('UI Components Barrel Export', () => {
     ];
 
     const actualExports = Object.keys(UIComponents);
-    
+
     actualExports.forEach(exportName => {
       expect(expectedExports).toContain(exportName);
     });
@@ -126,7 +126,7 @@ describe('UI Components Barrel Export', () => {
   it('provides clean barrel export functionality', () => {
     // Test that the barrel export works as intended for clean imports
     const components = UIComponents;
-    
+
     expect(components).toBeDefined();
     expect(typeof components).toBe('object');
     expect(Object.keys(components).length).toBeGreaterThan(0);

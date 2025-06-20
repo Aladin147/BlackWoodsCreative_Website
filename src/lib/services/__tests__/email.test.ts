@@ -2,6 +2,8 @@
  * @jest-environment node
  */
 // Mock Resend
+import { sendContactEmail, sendAutoReplyEmail } from '../email';
+
 const mockSend = jest.fn();
 jest.mock('resend', () => ({
   Resend: jest.fn().mockImplementation(() => ({
@@ -10,8 +12,6 @@ jest.mock('resend', () => ({
     },
   })),
 }));
-
-import { sendContactEmail, sendAutoReplyEmail } from '../email';
 
 // Mock console methods
 // Mock console to prevent test output noise
@@ -128,10 +128,9 @@ describe('Email Service', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Invalid API key');
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Resend API error:',
-        { message: 'Invalid API key' }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Resend API error:', {
+        message: 'Invalid API key',
+      });
     });
 
     it('handles network errors', async () => {
@@ -143,10 +142,7 @@ describe('Email Service', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Network error');
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Email service error:',
-        expect.any(Error)
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Email service error:', expect.any(Error));
     });
 
     it('includes all form fields in email content', async () => {
@@ -160,7 +156,7 @@ describe('Email Service', () => {
       await sendContactEmail(mockFormData);
 
       const emailCall = mockSend.mock.calls[0][0];
-      
+
       // Check HTML content includes all fields
       expect(emailCall.html).toContain('John Doe');
       expect(emailCall.html).toContain('john@example.com');
@@ -222,10 +218,9 @@ describe('Email Service', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Rate limit exceeded');
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Auto-reply email error:',
-        { message: 'Rate limit exceeded' }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Auto-reply email error:', {
+        message: 'Rate limit exceeded',
+      });
     });
 
     it('personalizes auto-reply with user name', async () => {
@@ -239,7 +234,7 @@ describe('Email Service', () => {
       await sendAutoReplyEmail(mockFormData);
 
       const emailCall = mockSend.mock.calls[0][0];
-      
+
       expect(emailCall.html).toContain('Hi <strong>John Doe</strong>');
       expect(emailCall.text).toContain('Hi John Doe');
       expect(emailCall.html).toContain('24 hours');
@@ -292,12 +287,14 @@ describe('Email Service', () => {
     });
 
     it('includes timestamp in email content', async () => {
-      const dateSpy = jest.spyOn(Date.prototype, 'toLocaleString').mockReturnValue('12/25/2023, 10:30:00 AM');
+      const dateSpy = jest
+        .spyOn(Date.prototype, 'toLocaleString')
+        .mockReturnValue('12/25/2023, 10:30:00 AM');
 
       await sendContactEmail(mockFormData);
 
       const emailCall = mockSend.mock.calls[0][0];
-      
+
       expect(emailCall.html).toContain('12/25/2023, 10:30:00 AM');
       expect(emailCall.text).toContain('12/25/2023, 10:30:00 AM');
 

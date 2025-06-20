@@ -165,9 +165,9 @@ describe('Performance Utilities', () => {
     it('should preserve function context in debounce', () => {
       const obj = {
         value: 'test',
-        method: jest.fn(function(this: { value: string }) {
+        method: jest.fn(function (this: { value: string }) {
           return this.value;
-        })
+        }),
       };
 
       const debouncedMethod = debounce(obj.method.bind(obj), 100);
@@ -181,9 +181,9 @@ describe('Performance Utilities', () => {
     it('should preserve function context in throttle', () => {
       const obj = {
         value: 'test',
-        method: jest.fn(function(this: { value: string }) {
+        method: jest.fn(function (this: { value: string }) {
           return this.value;
-        })
+        }),
       };
 
       const throttledMethod = throttle(obj.method.bind(obj), 100);
@@ -199,7 +199,7 @@ describe('Performance Utilities', () => {
       const complexArg = {
         nested: { value: 'test' },
         array: [1, 2, 3],
-        fn: () => 'function'
+        fn: () => 'function',
       };
 
       debouncedFn(complexArg, 'string', 123, true);

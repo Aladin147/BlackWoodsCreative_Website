@@ -1,15 +1,13 @@
-import {
-  generateSEO,
-  generateStructuredData,
-  generatePortfolioStructuredData,
-} from '../seo';
 import { siteConfig } from '@/lib/constants/siteConfig';
+
+import { generateSEO, generateStructuredData, generatePortfolioStructuredData } from '../seo';
 
 // Mock the siteConfig
 jest.mock('@/lib/constants/siteConfig', () => ({
   siteConfig: {
     name: 'BlackWoods Creative',
-    description: 'Premium visual storytelling through filmmaking, photography, and 3D visualization.',
+    description:
+      'Premium visual storytelling through filmmaking, photography, and 3D visualization.',
     url: 'https://blackwoodscreative.com',
     ogImage: '/assets/images/og-image.jpg',
     links: {
@@ -90,7 +88,11 @@ describe('generateSEO', () => {
 
     const ogImages = result.openGraph?.images;
     const twitterImages = result.twitter?.images;
-    expect(Array.isArray(ogImages) ? (ogImages[0] as { url?: string })?.url : (ogImages as { url?: string })?.url).toBe(absoluteImage);
+    expect(
+      Array.isArray(ogImages)
+        ? (ogImages[0] as { url?: string })?.url
+        : (ogImages as { url?: string })?.url
+    ).toBe(absoluteImage);
     expect(Array.isArray(twitterImages) ? twitterImages[0] : twitterImages).toBe(absoluteImage);
   });
 
@@ -100,8 +102,14 @@ describe('generateSEO', () => {
 
     const ogImages = result.openGraph?.images;
     const twitterImages = result.twitter?.images;
-    expect(Array.isArray(ogImages) ? (ogImages[0] as { url?: string })?.url : (ogImages as { url?: string })?.url).toBe(`${siteConfig.url}${relativeImage}`);
-    expect(Array.isArray(twitterImages) ? twitterImages[0] : twitterImages).toBe(`${siteConfig.url}${relativeImage}`);
+    expect(
+      Array.isArray(ogImages)
+        ? (ogImages[0] as { url?: string })?.url
+        : (ogImages as { url?: string })?.url
+    ).toBe(`${siteConfig.url}${relativeImage}`);
+    expect(Array.isArray(twitterImages) ? twitterImages[0] : twitterImages).toBe(
+      `${siteConfig.url}${relativeImage}`
+    );
   });
 
   it('sets correct OpenGraph type', () => {
@@ -115,7 +123,7 @@ describe('generateSEO', () => {
   it('includes published and modified times for articles', () => {
     const publishedTime = '2024-01-01T00:00:00.000Z';
     const modifiedTime = '2024-01-02T00:00:00.000Z';
-    
+
     const result = generateSEO({
       type: 'article',
       publishedTime,
@@ -145,7 +153,11 @@ describe('generateSEO', () => {
   it('includes proper robots metadata', () => {
     const result = generateSEO();
 
-    const robots = result.robots as { index?: boolean; follow?: boolean; googleBot?: Record<string, unknown> };
+    const robots = result.robots as {
+      index?: boolean;
+      follow?: boolean;
+      googleBot?: Record<string, unknown>;
+    };
     expect(robots?.index).toBe(true);
     expect(robots?.follow).toBe(true);
     expect(robots?.googleBot?.index).toBe(true);
@@ -160,9 +172,17 @@ describe('generateSEO', () => {
 
     const ogImages = result.openGraph?.images;
     type ImageProps = { width?: number; height?: number; alt?: string };
-    expect(Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.width : (ogImages as ImageProps)?.width).toBe(1200);
-    expect(Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.height : (ogImages as ImageProps)?.height).toBe(630);
-    expect(Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.alt : (ogImages as ImageProps)?.alt).toBe(siteConfig.name);
+    expect(
+      Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.width : (ogImages as ImageProps)?.width
+    ).toBe(1200);
+    expect(
+      Array.isArray(ogImages)
+        ? (ogImages[0] as ImageProps)?.height
+        : (ogImages as ImageProps)?.height
+    ).toBe(630);
+    expect(
+      Array.isArray(ogImages) ? (ogImages[0] as ImageProps)?.alt : (ogImages as ImageProps)?.alt
+    ).toBe(siteConfig.name);
   });
 
   it('includes proper locale', () => {
@@ -226,12 +246,14 @@ describe('generateStructuredData', () => {
 
     expect(Array.isArray(result.services)).toBe(true);
     expect(result.services).toHaveLength(siteConfig.services.length);
-    
-    result.services.forEach((service: { '@type': string; name: string; description: string }, index: number) => {
-      expect(service['@type']).toBe('Service');
-      expect(service.name).toBe(siteConfig.services[index].name);
-      expect(service.description).toBe(siteConfig.services[index].description);
-    });
+
+    result.services.forEach(
+      (service: { '@type': string; name: string; description: string }, index: number) => {
+        expect(service['@type']).toBe('Service');
+        expect(service.name).toBe(siteConfig.services[index].name);
+        expect(service.description).toBe(siteConfig.services[index].description);
+      }
+    );
   });
 
   it('includes logo URL', () => {
@@ -285,24 +307,29 @@ describe('generatePortfolioStructuredData', () => {
   it('maps project data correctly', () => {
     const result = generatePortfolioStructuredData(mockProjects);
 
-    result.workExample.forEach((work: {
-      '@type': string;
-      name: string;
-      description: string;
-      image: string;
-      genre: string;
-      creator: { '@type': string; name: string }
-    }, index: number) => {
-      const project = mockProjects[index];
-      
-      expect(work['@type']).toBe('CreativeWork');
-      expect(work.name).toBe(project.title);
-      expect(work.description).toBe(project.description);
-      expect(work.image).toBe(project.image);
-      expect(work.genre).toBe(project.category);
-      expect(work.creator['@type']).toBe('Organization');
-      expect(work.creator.name).toBe(siteConfig.name);
-    });
+    result.workExample.forEach(
+      (
+        work: {
+          '@type': string;
+          name: string;
+          description: string;
+          image: string;
+          genre: string;
+          creator: { '@type': string; name: string };
+        },
+        index: number
+      ) => {
+        const project = mockProjects[index];
+
+        expect(work['@type']).toBe('CreativeWork');
+        expect(work.name).toBe(project.title);
+        expect(work.description).toBe(project.description);
+        expect(work.image).toBe(project.image);
+        expect(work.genre).toBe(project.category);
+        expect(work.creator['@type']).toBe('Organization');
+        expect(work.creator.name).toBe(siteConfig.name);
+      }
+    );
   });
 
   it('handles optional project fields', () => {

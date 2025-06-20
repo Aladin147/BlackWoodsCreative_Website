@@ -70,7 +70,7 @@ class RequestLogger {
     const requestId = this.generateRequestId();
     const timestamp = new Date().toISOString();
     const url = new URL(request.url);
-    
+
     // Extract query parameters
     const query: Record<string, string> = {};
     url.searchParams.forEach((value, key) => {
@@ -93,7 +93,7 @@ class RequestLogger {
       'sec-fetch-mode',
       'sec-fetch-site',
     ];
-    
+
     allowedHeaders.forEach(header => {
       const value = request.headers.get(header);
       if (value) {
@@ -117,7 +117,7 @@ class RequestLogger {
 
     // Add to logs
     this.logs.push(logEntry);
-    
+
     // Maintain log size limit
     if (this.logs.length > this.maxLogEntries) {
       this.logs.shift();
@@ -135,8 +135,8 @@ class RequestLogger {
   }
 
   updateRequestResponse(
-    requestId: string, 
-    response: NextResponse, 
+    requestId: string,
+    response: NextResponse,
     responseTime: number,
     error?: string
   ): void {
@@ -168,13 +168,13 @@ class RequestLogger {
 
   private updateMetrics(logEntry: RequestLogEntry): void {
     this.metrics.totalRequests++;
-    
+
     // Update method counts
-    this.metrics.requestsByMethod[logEntry.method] = 
+    this.metrics.requestsByMethod[logEntry.method] =
       (this.metrics.requestsByMethod[logEntry.method] || 0) + 1;
-    
+
     // Update path counts
-    this.metrics.requestsByPath[logEntry.path] = 
+    this.metrics.requestsByPath[logEntry.path] =
       (this.metrics.requestsByPath[logEntry.path] || 0) + 1;
 
     // Check for security events
@@ -189,7 +189,7 @@ class RequestLogger {
     if (!logEntry.statusCode || !logEntry.responseTime) return;
 
     // Update status counts
-    this.metrics.requestsByStatus[logEntry.statusCode] = 
+    this.metrics.requestsByStatus[logEntry.statusCode] =
       (this.metrics.requestsByStatus[logEntry.statusCode] || 0) + 1;
 
     // Update success/failure counts
@@ -197,10 +197,10 @@ class RequestLogger {
       this.metrics.successfulRequests++;
     } else {
       this.metrics.failedRequests++;
-      
+
       // Track error types
       if (logEntry.error) {
-        this.metrics.errorsByType[logEntry.error] = 
+        this.metrics.errorsByType[logEntry.error] =
           (this.metrics.errorsByType[logEntry.error] || 0) + 1;
       }
     }
@@ -209,13 +209,14 @@ class RequestLogger {
     const responseTime = logEntry.responseTime;
     this.metrics.slowestRequest = Math.max(this.metrics.slowestRequest, responseTime);
     this.metrics.fastestRequest = Math.min(this.metrics.fastestRequest, responseTime);
-    
+
     // Calculate average response time
     const totalResponseTime = this.logs
       .filter(log => log.responseTime)
       .reduce((sum, log) => sum + (log.responseTime || 0), 0);
     const completedRequests = this.logs.filter(log => log.responseTime).length;
-    this.metrics.averageResponseTime = completedRequests > 0 ? totalResponseTime / completedRequests : 0;
+    this.metrics.averageResponseTime =
+      completedRequests > 0 ? totalResponseTime / completedRequests : 0;
   }
 
   getMetrics(): RequestMetrics {
@@ -227,15 +228,11 @@ class RequestLogger {
   }
 
   getLogsByPath(path: string, limit = 20): RequestLogEntry[] {
-    return this.logs
-      .filter(log => log.path === path)
-      .slice(-limit);
+    return this.logs.filter(log => log.path === path).slice(-limit);
   }
 
   getErrorLogs(limit = 20): RequestLogEntry[] {
-    return this.logs
-      .filter(log => log.statusCode && log.statusCode >= 400)
-      .slice(-limit);
+    return this.logs.filter(log => log.statusCode && log.statusCode >= 400).slice(-limit);
   }
 
   getSecurityLogs(limit = 20): RequestLogEntry[] {
@@ -265,26 +262,35 @@ class RequestLogger {
   exportLogs(format: 'json' | 'csv' = 'json'): string {
     if (format === 'csv') {
       const headers = [
-        'id', 'timestamp', 'method', 'path', 'statusCode', 
-        'responseTime', 'ip', 'userAgent', 'error'
+        'id',
+        'timestamp',
+        'method',
+        'path',
+        'statusCode',
+        'responseTime',
+        'ip',
+        'userAgent',
+        'error',
       ];
       const csvRows = [
         headers.join(','),
-        ...this.logs.map(log => [
-          log.id,
-          log.timestamp,
-          log.method,
-          log.path,
-          log.statusCode || '',
-          log.responseTime || '',
-          log.ip,
-          `"${log.userAgent.replace(/"/g, '""')}"`,
-          log.error || ''
-        ].join(','))
+        ...this.logs.map(log =>
+          [
+            log.id,
+            log.timestamp,
+            log.method,
+            log.path,
+            log.statusCode || '',
+            log.responseTime || '',
+            log.ip,
+            `"${log.userAgent.replace(/"/g, '""')}"`,
+            log.error || '',
+          ].join(',')
+        ),
       ];
       return csvRows.join('\n');
     }
-    
+
     return JSON.stringify(this.logs, null, 2);
   }
 }

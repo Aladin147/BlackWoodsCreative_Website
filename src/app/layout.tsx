@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
+import { headers } from 'next/headers';
+
 import { Header, ScrollProgress } from '@/components/layout';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { headers } from 'next/headers';
-import dynamic from 'next/dynamic';
 import './globals.css';
 
 // Optimized dynamic imports with retry logic and preloading
@@ -12,7 +13,7 @@ const MagneticCursor = dynamic(
   () => import('@/components/interactive').then(mod => ({ default: mod.MagneticCursor })),
   {
     ssr: false,
-    loading: () => null
+    loading: () => null,
   }
 );
 
@@ -20,7 +21,7 @@ const AtmosphericParticles = dynamic(
   () => import('@/components/interactive').then(mod => ({ default: mod.AtmosphericParticles })),
   {
     ssr: false,
-    loading: () => null
+    loading: () => null,
   }
 );
 
@@ -38,7 +39,7 @@ const PerformanceReporter = dynamic(
           setTimeout(() => monitor.reportMetrics(), 3000);
         }
         return null;
-      }
+      },
     }));
   },
   { ssr: false }
@@ -52,7 +53,7 @@ const DevelopmentMonitors = dynamic(
     }
     return Promise.all([
       import('@/hooks/useAnimationPerformance'),
-      import('@/hooks/useDeviceAdaptation')
+      import('@/hooks/useDeviceAdaptation'),
     ]).then(([animMod, deviceMod]) => ({
       default: function DevelopmentMonitors() {
         const AnimationMonitor = animMod.AnimationPerformanceMonitor;
@@ -63,7 +64,7 @@ const DevelopmentMonitors = dynamic(
             <DeviceMonitor />
           </>
         );
-      }
+      },
     }));
   },
   { ssr: false }
@@ -167,13 +168,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {nonce && <meta name="csp-nonce" content={nonce} />}
         {csrfToken && <meta name="csrf-token" content={csrfToken} />}
       </head>
-      <body className="bg-bw-bg-primary text-bw-text-primary font-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
+      <body className="bg-bw-bg-primary font-primary text-bw-text-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
         <ThemeProvider>
           <div>
             {/* Skip to main content link for accessibility */}
             <a
               href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-bw-accent-gold focus:text-bw-bg-primary focus:rounded-md focus:font-medium"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-bw-accent-gold focus:px-4 focus:py-2 focus:font-medium focus:text-bw-bg-primary"
             >
               Skip to main content
             </a>

@@ -36,11 +36,11 @@ export function meetsContrastRequirement(
   size: 'normal' | 'large' = 'normal'
 ): boolean {
   const ratio = getContrastRatio(foreground, background);
-  
+
   if (level === 'AAA') {
     return size === 'large' ? ratio >= 4.5 : ratio >= 7;
   }
-  
+
   return size === 'large' ? ratio >= 3 : ratio >= 4.5;
 }
 
@@ -51,7 +51,7 @@ export class FocusManager {
   static trapFocus(container: HTMLElement): () => void {
     const focusableElements = container.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    ) as NodeListOf<HTMLElement>;
+    );
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
@@ -112,7 +112,10 @@ export function prefersReducedMotion(): boolean {
 }
 
 // Screen reader utilities
-export function announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
+export function announceToScreenReader(
+  message: string,
+  priority: 'polite' | 'assertive' = 'polite'
+): void {
   if (typeof window === 'undefined') return;
 
   const announcement = document.createElement('div');
@@ -237,9 +240,10 @@ export function auditAccessibility(): {
   // Check for form labels
   const inputs = document.querySelectorAll('input, textarea, select');
   inputs.forEach((input, index) => {
-    const hasLabel = input.getAttribute('aria-label') || 
-                    input.getAttribute('aria-labelledby') ||
-                    document.querySelector(`label[for="${input.id}"]`);
+    const hasLabel =
+      input.getAttribute('aria-label') ||
+      input.getAttribute('aria-labelledby') ||
+      document.querySelector(`label[for="${input.id}"]`);
     if (!hasLabel) {
       violations.push(`Form input ${index + 1} missing label`);
     }
@@ -259,23 +263,23 @@ export function auditAccessibility(): {
   return {
     passed: violations.length === 0,
     violations,
-    warnings
+    warnings,
   };
 }
 
 // Export color palette for contrast checking - UPDATED TO MATCH THEME GUIDE
 export const colorPalette = {
-  'bw-bg-primary': '#101211',      // Near Black with green tint
-  'bw-text-primary': '#E8E8E3',    // Off-White, warm and soft
-  'bw-accent-gold': '#C3A358',     // Muted Gold, rich ochre
-  'bw-aurora-teal': '#0F3530',     // Enhanced Dark Teal
-  'bw-aurora-green': '#1E4A38',    // Enhanced Forest Green
-  'bw-border-subtle': '#2A2E2C',   // Low-contrast borders
+  'bw-bg-primary': '#101211', // Near Black with green tint
+  'bw-text-primary': '#E8E8E3', // Off-White, warm and soft
+  'bw-accent-gold': '#C3A358', // Muted Gold, rich ochre
+  'bw-aurora-teal': '#0F3530', // Enhanced Dark Teal
+  'bw-aurora-green': '#1E4A38', // Enhanced Forest Green
+  'bw-border-subtle': '#2A2E2C', // Low-contrast borders
 
   // Legacy colors for backward compatibility
-  'bw-black': '#101211',           // Updated to match bg-primary
-  'bw-white': '#E8E8E3',           // Updated to match text-primary
-  'bw-gold': '#C3A358',            // Updated to match accent-gold
+  'bw-black': '#101211', // Updated to match bg-primary
+  'bw-white': '#E8E8E3', // Updated to match text-primary
+  'bw-gold': '#C3A358', // Updated to match accent-gold
   'bw-charcoal': '#0f0f0f',
   'bw-dark-gray': '#1a1a1a',
   'bw-medium-gray': '#2a2a2a',

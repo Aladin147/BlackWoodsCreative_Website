@@ -1,17 +1,17 @@
-import { 
-  PerformanceBudgetChecker, 
-  getPerformanceBudgetChecker,
-  collectPerformanceData,
-  PerformanceData 
-} from '../performance-budget-checker';
-import { 
-  PRODUCTION_BUDGETS, 
+import {
+  PRODUCTION_BUDGETS,
   DEVELOPMENT_BUDGETS,
   ViolationSeverity,
   calculateViolationSeverity,
   formatBytes,
-  formatMilliseconds
+  formatMilliseconds,
 } from '../../config/performance-budgets';
+import {
+  PerformanceBudgetChecker,
+  getPerformanceBudgetChecker,
+  collectPerformanceData,
+  PerformanceData,
+} from '../performance-budget-checker';
 
 // Mock performance API
 const mockPerformance = {
@@ -52,21 +52,21 @@ describe('PerformanceBudgetChecker', () => {
 
   beforeEach(() => {
     checker = new PerformanceBudgetChecker(PRODUCTION_BUDGETS);
-    
+
     testData = {
       bundles: {
-        main: 400 * 1024,      // 400KB - within budget
-        vendor: 700 * 1024,    // 700KB - within budget
+        main: 400 * 1024, // 400KB - within budget
+        vendor: 700 * 1024, // 700KB - within budget
         total: 1.1 * 1024 * 1024, // 1.1MB - within budget
-        gzipped: 300 * 1024,   // 300KB - within budget
+        gzipped: 300 * 1024, // 300KB - within budget
       },
       coreWebVitals: {
-        lcp: 2000,    // 2s - within budget
-        fid: 80,      // 80ms - within budget
-        cls: 0.08,    // 0.08 - within budget
-        fcp: 1500,    // 1.5s - within budget
-        ttfb: 500,    // 500ms - within budget
-        inp: 150,     // 150ms - within budget
+        lcp: 2000, // 2s - within budget
+        fid: 80, // 80ms - within budget
+        cls: 0.08, // 0.08 - within budget
+        fcp: 1500, // 1.5s - within budget
+        ttfb: 500, // 500ms - within budget
+        inp: 150, // 150ms - within budget
       },
       resources: {
         requests: 40,
@@ -115,7 +115,7 @@ describe('PerformanceBudgetChecker', () => {
 
     it('fails when Core Web Vitals exceed budget', () => {
       testData.coreWebVitals!.lcp = 3000; // Exceeds 2500ms budget
-      testData.coreWebVitals!.fid = 150;  // Exceeds 100ms budget
+      testData.coreWebVitals!.fid = 150; // Exceeds 100ms budget
 
       const result = checker.checkBudgets(testData);
 
@@ -147,9 +147,9 @@ describe('PerformanceBudgetChecker', () => {
 
     it('calculates performance score correctly', () => {
       // Add violations of different severities
-      testData.bundles!.main = 750 * 1024;  // 50% over (HIGH)
-      testData.coreWebVitals!.lcp = 3125;   // 25% over (MEDIUM)
-      testData.performance!.fps = 50;       // Below threshold (LOW)
+      testData.bundles!.main = 750 * 1024; // 50% over (HIGH)
+      testData.coreWebVitals!.lcp = 3125; // 25% over (MEDIUM)
+      testData.performance!.fps = 50; // Below threshold (LOW)
 
       const result = checker.checkBudgets(testData);
 
@@ -163,7 +163,9 @@ describe('PerformanceBudgetChecker', () => {
 
       const result = checker.checkBudgets(testData);
 
-      expect(result.recommendations).toContain('Consider code splitting and lazy loading to reduce bundle sizes');
+      expect(result.recommendations).toContain(
+        'Consider code splitting and lazy loading to reduce bundle sizes'
+      );
       expect(result.recommendations).toContain('Optimize images and use next/image for better LCP');
     });
 
@@ -202,16 +204,20 @@ describe('collectPerformanceData', () => {
     // Mock performance entries
     mockPerformance.getEntriesByType.mockImplementation((type: string) => {
       if (type === 'navigation') {
-        return [{
-          requestStart: 100,
-          responseStart: 200,
-        }];
+        return [
+          {
+            requestStart: 100,
+            responseStart: 200,
+          },
+        ];
       }
       if (type === 'paint') {
-        return [{
-          name: 'first-contentful-paint',
-          startTime: 1500,
-        }];
+        return [
+          {
+            name: 'first-contentful-paint',
+            startTime: 1500,
+          },
+        ];
       }
       if (type === 'resource') {
         return [

@@ -1,12 +1,15 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import { ScrollStoryTeller } from '../ScrollStoryTeller';
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }: React.ComponentProps<'div'>) => <div {...props}>{children}</div>,
-    section: ({ children, ...props }: React.ComponentProps<'section'>) => <section {...props}>{children}</section>,
+    section: ({ children, ...props }: React.ComponentProps<'section'>) => (
+      <section {...props}>{children}</section>
+    ),
     h2: ({ children, ...props }: React.ComponentProps<'h2'>) => <h2 {...props}>{children}</h2>,
     p: ({ children, ...props }: React.ComponentProps<'p'>) => <p {...props}>{children}</p>,
   },
@@ -27,7 +30,7 @@ const mockSections = [
     effects: {
       scale: [0.9, 1, 1.1] as [number, number, number],
       opacity: [0, 1, 1, 0] as [number, number, number, number],
-    }
+    },
   },
   {
     id: 'section-2',
@@ -37,11 +40,28 @@ const mockSections = [
     parallaxSpeed: 1.2,
     effects: {
       rotate: [-2, 2] as [number, number],
-    }
+    },
   },
 ];
 
 describe('ScrollStoryTeller', () => {
+  beforeEach(() => {
+    // Mock window dimensions to trigger lg:block (1024px+)
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 1200,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      writable: true,
+      configurable: true,
+      value: 800,
+    });
+
+    // Trigger resize event to apply the new dimensions
+    window.dispatchEvent(new Event('resize'));
+  });
+
   it('renders all sections', () => {
     render(<ScrollStoryTeller sections={mockSections} />);
 
@@ -54,8 +74,9 @@ describe('ScrollStoryTeller', () => {
   it('renders progress indicators', () => {
     render(<ScrollStoryTeller sections={mockSections} />);
 
-    // Should render progress indicators for each section
-    const progressIndicators = document.querySelectorAll('[class*="w-2 h-8"]');
+    // Look for progress indicators by finding elements that have both w-2 and h-8 classes
+    // Use a more flexible selector that works regardless of class order
+    const progressIndicators = document.querySelectorAll('[class*="w-2"][class*="h-8"][class*="rounded-full"]');
     expect(progressIndicators.length).toBe(mockSections.length);
   });
 
@@ -66,7 +87,7 @@ describe('ScrollStoryTeller', () => {
 
     render(<ScrollStoryTeller sections={mockSections} />);
 
-    const progressIndicators = document.querySelectorAll('[class*="w-2 h-8"]');
+    const progressIndicators = document.querySelectorAll('[class*="w-2"][class*="h-8"][class*="rounded-full"]');
 
     if (progressIndicators.length > 0) {
       fireEvent.click(progressIndicators[0]);
@@ -96,7 +117,7 @@ describe('ScrollStoryTeller', () => {
         id: 'section-no-bg',
         title: 'No Background',
         content: 'Section without background image',
-      }
+      },
     ];
 
     render(<ScrollStoryTeller sections={sectionsWithoutImages} />);
@@ -143,7 +164,9 @@ describe('ScrollStoryTeller', () => {
     render(<ScrollStoryTeller sections={mockSections} />);
 
     // Check for floating decorative elements
-    const floatingElements = document.querySelectorAll('[class*="absolute"][class*="rounded-full"]');
+    const floatingElements = document.querySelectorAll(
+      '[class*="absolute"][class*="rounded-full"]'
+    );
     expect(floatingElements.length).toBeGreaterThan(0);
   });
 
@@ -180,8 +203,8 @@ describe('ScrollStoryTeller', () => {
           opacity: [0, 1, 1, 0] as [number, number, number, number],
           blur: [10, 0, 0, 10] as [number, number, number, number],
           rotate: [-5, 5] as [number, number],
-        }
-      }
+        },
+      },
     ];
 
     render(<ScrollStoryTeller sections={sectionsWithComplexEffects} />);

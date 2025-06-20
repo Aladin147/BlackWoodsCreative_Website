@@ -1,5 +1,6 @@
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import { ScrollProgress } from '../ScrollProgress';
 
 // Mock framer-motion
@@ -26,7 +27,15 @@ interface MockSpringConfig {
 
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, className, style, initial, animate, transition, ...props }: MockMotionDivProps) => (
+    div: ({
+      children,
+      className,
+      style,
+      initial,
+      animate,
+      transition,
+      ...props
+    }: MockMotionDivProps) => (
       <div
         className={className}
         style={style}
@@ -40,12 +49,12 @@ jest.mock('framer-motion', () => ({
     ),
   },
   useScroll: () => ({
-    scrollYProgress: { get: () => 0.5 }
+    scrollYProgress: { get: () => 0.5 },
   }),
   useSpring: (_value: MockMotionValue, config: MockSpringConfig): MockMotionValue => ({
     get: () => 0.5,
     set: jest.fn(),
-    ...config
+    ...config,
   }),
 }));
 
@@ -65,7 +74,7 @@ describe('ScrollProgress', () => {
     // Reset window properties
     window.scrollY = 0;
     window.innerHeight = 1000;
-    
+
     // Clear all event listeners
     jest.clearAllMocks();
   });
@@ -119,18 +128,18 @@ describe('ScrollProgress', () => {
 
   it('sets up scroll event listener', () => {
     const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
-    
+
     render(<ScrollProgress />);
-    
+
     expect(addEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
   });
 
   it('removes scroll event listener on unmount', () => {
     const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
-    
+
     const { unmount } = render(<ScrollProgress />);
     unmount();
-    
+
     expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
   });
 
@@ -167,20 +176,20 @@ describe('ScrollProgress', () => {
   it('handles scroll events correctly', () => {
     // Mock scroll event
     const scrollEvent = new Event('scroll');
-    
+
     render(<ScrollProgress />);
-    
+
     // Simulate scroll
     window.scrollY = 300; // 30% of window height (1000px)
     window.dispatchEvent(scrollEvent);
-    
+
     // Component should handle the scroll event
     expect(window.scrollY).toBe(300);
   });
 
   it('calculates visibility threshold correctly', () => {
     render(<ScrollProgress />);
-    
+
     // The component should show when scrollY > windowHeight * 0.2
     // With windowHeight = 1000, threshold should be 200px
     const threshold = window.innerHeight * 0.2;
@@ -189,13 +198,13 @@ describe('ScrollProgress', () => {
 
   it('handles window resize correctly', () => {
     render(<ScrollProgress />);
-    
+
     // Change window height
     Object.defineProperty(window, 'innerHeight', {
       value: 800,
       writable: true,
     });
-    
+
     // The component should adapt to new window height
     expect(window.innerHeight).toBe(800);
   });
@@ -238,15 +247,15 @@ describe('ScrollProgress', () => {
 
   it('handles multiple scroll events', () => {
     const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
-    
+
     render(<ScrollProgress />);
-    
+
     // Simulate multiple scroll events
     const scrollEvent = new Event('scroll');
     window.dispatchEvent(scrollEvent);
     window.dispatchEvent(scrollEvent);
     window.dispatchEvent(scrollEvent);
-    
+
     // Should only add one listener
     expect(addEventListenerSpy).toHaveBeenCalledTimes(1);
   });

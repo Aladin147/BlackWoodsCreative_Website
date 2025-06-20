@@ -42,12 +42,15 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
       lastRan = Date.now();
     } else {
       clearTimeout(lastFunc);
-      lastFunc = setTimeout(() => {
-        if ((Date.now() - lastRan) >= limit) {
-          func(...args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
+      lastFunc = setTimeout(
+        () => {
+          if (Date.now() - lastRan >= limit) {
+            func(...args);
+            lastRan = Date.now();
+          }
+        },
+        limit - (Date.now() - lastRan)
+      );
     }
   };
 }
@@ -65,7 +68,8 @@ export function validateEmail(email: string): boolean {
     return false;
   }
 
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   return emailRegex.test(trimmedEmail);
 }
 
@@ -110,7 +114,7 @@ export function validateContactForm(data: {
   }
 
   // Phone validation (optional)
-  if (data.phone && data.phone.trim() && !validatePhone(data.phone)) {
+  if (data.phone?.trim() && !validatePhone(data.phone)) {
     errors.phone = 'Please enter a valid phone number';
   }
 
@@ -161,10 +165,7 @@ export function prefersReducedMotion(): boolean {
 /**
  * Smooth scroll to element utility
  */
-export function scrollToElement(
-  elementId: string,
-  offset: number = 0
-): void {
+export function scrollToElement(elementId: string, offset = 0): void {
   const element = document.querySelector(elementId);
   if (element) {
     const elementPosition = element.getBoundingClientRect().top;
@@ -175,4 +176,4 @@ export function scrollToElement(
       behavior: 'smooth',
     });
   }
-};
+}

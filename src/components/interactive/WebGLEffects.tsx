@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { useRef, useEffect, useState, useCallback } from 'react';
+
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 
 interface WebGLContextState {
@@ -105,7 +106,7 @@ const fragmentShaderSource = `
 export function WebGLAuroraEffect({
   className = '',
   intensity = 0.5,
-  interactive = true
+  interactive = true,
 }: {
   className?: string;
   intensity?: number;
@@ -118,43 +119,46 @@ export function WebGLAuroraEffect({
     canvas: null,
     gl: null,
     isSupported: false,
-    error: null
+    error: null,
   });
-  
+
   const { deviceInfo, shouldEnableFeature } = useDeviceAdaptation();
 
   const createShader = useCallback((gl: WebGLRenderingContext, type: number, source: string) => {
     const shader = gl.createShader(type);
     if (!shader) return null;
-    
+
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
-    
+
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
       gl.deleteShader(shader);
       return null;
     }
-    
+
     return shader;
   }, []);
 
-  const createProgram = useCallback((gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader) => {
-    const program = gl.createProgram();
-    if (!program) return null;
-    
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error('Program linking error:', gl.getProgramInfoLog(program));
-      gl.deleteProgram(program);
-      return null;
-    }
-    
-    return program;
-  }, []);
+  const createProgram = useCallback(
+    (gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader) => {
+      const program = gl.createProgram();
+      if (!program) return null;
+
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error('Program linking error:', gl.getProgramInfoLog(program));
+        gl.deleteProgram(program);
+        return null;
+      }
+
+      return program;
+    },
+    []
+  );
 
   const initWebGL = useCallback(() => {
     const canvas = canvasRef.current;
@@ -166,7 +170,7 @@ export function WebGLAuroraEffect({
       setWebglState(prev => ({
         ...prev,
         error: 'WebGL not supported',
-        isSupported: false
+        isSupported: false,
       }));
       return;
     }
@@ -174,12 +178,12 @@ export function WebGLAuroraEffect({
     // Create shaders
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-    
+
     if (!vertexShader || !fragmentShader) {
       setWebglState(prev => ({
         ...prev,
         error: 'Failed to create shaders',
-        isSupported: false
+        isSupported: false,
       }));
       return;
     }
@@ -190,18 +194,13 @@ export function WebGLAuroraEffect({
       setWebglState(prev => ({
         ...prev,
         error: 'Failed to create program',
-        isSupported: false
+        isSupported: false,
       }));
       return;
     }
 
     // Set up geometry
-    const positions = new Float32Array([
-      -1, -1,  0, 0,
-       1, -1,  1, 0,
-      -1,  1,  0, 1,
-       1,  1,  1, 1,
-    ]);
+    const positions = new Float32Array([-1, -1, 0, 0, 1, -1, 1, 0, -1, 1, 0, 1, 1, 1, 1, 1]);
 
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -218,7 +217,7 @@ export function WebGLAuroraEffect({
     // Set up attributes
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 16, 0);
-    
+
     gl.enableVertexAttribArray(texCoordLocation);
     gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 16, 8);
 
@@ -228,7 +227,7 @@ export function WebGLAuroraEffect({
       canvas,
       gl,
       isSupported: true,
-      error: null
+      error: null,
     });
 
     // Animation loop
@@ -238,7 +237,7 @@ export function WebGLAuroraEffect({
       // Resize canvas if needed
       const displayWidth = canvas.clientWidth;
       const displayHeight = canvas.clientHeight;
-      
+
       if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
         canvas.width = displayWidth;
         canvas.height = displayHeight;
@@ -262,15 +261,18 @@ export function WebGLAuroraEffect({
     animationRef.current = requestAnimationFrame(animate);
   }, [createShader, createProgram, intensity]);
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!interactive || !webglState.canvas) return;
-    
-    const rect = webglState.canvas.getBoundingClientRect();
-    mouseRef.current = {
-      x: e.clientX - rect.left,
-      y: rect.height - (e.clientY - rect.top) // Flip Y coordinate
-    };
-  }, [interactive, webglState.canvas]);
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!interactive || !webglState.canvas) return;
+
+      const rect = webglState.canvas.getBoundingClientRect();
+      mouseRef.current = {
+        x: e.clientX - rect.left,
+        y: rect.height - (e.clientY - rect.top), // Flip Y coordinate
+      };
+    },
+    [interactive, webglState.canvas]
+  );
 
   useEffect(() => {
     // Enhanced device capability checking
@@ -330,14 +332,18 @@ export function WebGLAuroraEffect({
         {/* CSS fallback aurora effect */}
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-bw-aurora-teal/20 via-bw-aurora-green/15 to-bw-aurora-bright/10"
-          animate={shouldAnimate ? {
-            opacity: [0.3, 0.6, 0.3],
-            scale: [1, 1.05, 1]
-          } : {}}
+          animate={
+            shouldAnimate
+              ? {
+                  opacity: [0.3, 0.6, 0.3],
+                  scale: [1, 1.05, 1],
+                }
+              : {}
+          }
           transition={{
             duration: animationDuration,
             repeat: Infinity,
-            ease: 'easeInOut'
+            ease: 'easeInOut',
           }}
         />
       </div>
@@ -347,7 +353,7 @@ export function WebGLAuroraEffect({
   return (
     <canvas
       ref={canvasRef}
-      className={`absolute inset-0 w-full h-full ${className}`}
+      className={`absolute inset-0 h-full w-full ${className}`}
       style={{ mixBlendMode: 'screen' }}
     />
   );
@@ -356,7 +362,7 @@ export function WebGLAuroraEffect({
 // Particle system using WebGL
 export function WebGLParticleSystem({
   particleCount = 100,
-  className = ''
+  className = '',
 }: {
   particleCount?: number;
   className?: string;
@@ -393,27 +399,27 @@ export function WebGLParticleSystem({
   }
 
   return (
-    <div className={`absolute inset-0 pointer-events-none ${className}`}>
+    <div className={`pointer-events-none absolute inset-0 ${className}`}>
       {/* WebGL particle implementation would go here */}
       {/* For now, using CSS fallback */}
       {Array.from({ length: adaptedParticleCount }).map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-bw-aurora-teal rounded-full"
+          className="absolute h-1 w-1 rounded-full bg-bw-aurora-teal"
           style={{
             left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`
+            top: `${Math.random() * 100}%`,
           }}
           animate={{
             y: [0, -100, 0],
             opacity: [0, 0.8, 0],
-            scale: [0, 1, 0]
+            scale: [0, 1, 0],
           }}
           transition={{
             duration: 5 + Math.random() * 5,
             repeat: Infinity,
             delay: Math.random() * 5,
-            ease: 'linear'
+            ease: 'linear',
           }}
         />
       ))}
@@ -426,7 +432,7 @@ export function WebGLEnhancedBackground({
   children,
   effectType = 'aurora',
   intensity = 0.5,
-  className = ''
+  className = '',
 }: {
   children: React.ReactNode;
   effectType?: 'aurora' | 'particles' | 'both';
@@ -444,11 +450,9 @@ export function WebGLEnhancedBackground({
           <WebGLParticleSystem particleCount={Math.round(100 * intensity)} />
         )}
       </div>
-      
+
       {/* Content Layer */}
-      <div className="relative z-10">
-        {children}
-      </div>
+      <div className="relative z-10">{children}</div>
     </div>
   );
 }

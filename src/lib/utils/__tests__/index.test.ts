@@ -63,7 +63,7 @@ describe('Utility Functions', () => {
       const mockFn = jest.fn();
       const throttledFn = throttle(mockFn, 100);
 
-      throttledFn('first');  // Should execute immediately
+      throttledFn('first'); // Should execute immediately
       throttledFn('second'); // Should be throttled
 
       expect(mockFn).toHaveBeenCalledTimes(1);
