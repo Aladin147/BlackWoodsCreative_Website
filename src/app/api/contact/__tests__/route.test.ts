@@ -3,7 +3,6 @@
  */
 import { NextRequest } from 'next/server';
 
-import { sendContactEmail, sendAutoReplyEmail } from '@/lib/services';
 import { validateContactForm } from '@/lib/utils';
 import { sanitizeFormData } from '@/lib/utils/sanitize';
 import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
@@ -19,22 +18,19 @@ jest.mock('@/lib/utils/sanitize', () => ({
   sanitizeFormData: jest.fn(data => data),
 }));
 
-jest.mock('@/lib/services', () => ({
-  sendContactEmail: jest.fn(),
-  sendAutoReplyEmail: jest.fn(),
-}));
-
 jest.mock('@/lib/utils/security', () => ({
   verifyCSRFToken: jest.fn(),
   logSecurityEvent: jest.fn(),
 }));
 
+// Mock fetch for Formspree integration
+global.fetch = jest.fn();
+
 // Type the mocked functions
 const mockValidateContactForm = validateContactForm as jest.MockedFunction<
   typeof validateContactForm
 >;
-const mockSendContactEmail = sendContactEmail as jest.MockedFunction<typeof sendContactEmail>;
-const mockSendAutoReplyEmail = sendAutoReplyEmail as jest.MockedFunction<typeof sendAutoReplyEmail>;
+const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
 const mockVerifyCSRFToken = verifyCSRFToken as jest.MockedFunction<typeof verifyCSRFToken>;
 const mockLogSecurityEvent = logSecurityEvent as jest.MockedFunction<typeof logSecurityEvent>;
 
@@ -65,16 +61,12 @@ describe('/api/contact', () => {
       errors: {},
     });
 
-    // Reset email service mocks to return success by default
-    mockSendContactEmail.mockResolvedValue({
-      success: true,
-      messageId: 'test-email-id',
-    });
-
-    mockSendAutoReplyEmail.mockResolvedValue({
-      success: true,
-      messageId: 'test-auto-reply-id',
-    });
+    // Reset fetch mock to return success by default
+    mockFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: jest.fn().mockResolvedValue({ success: true }),
+    } as any);
 
     // Reset security mocks to allow requests by default
     mockVerifyCSRFToken.mockReturnValue(true);
@@ -274,23 +266,38 @@ describe('/api/contact', () => {
       expect(sanitizeFormData).toHaveBeenCalledWith(dataWithXSS);
     });
 
-    it('calls email service with form data', async () => {
+    it('calls Formspree with form data', async () => {
       // Use a unique IP to avoid rate limiting
       const request = createMockRequest(validFormData, {
         'x-forwarded-for': '192.168.400.1',
       });
       await POST(request);
 
-      expect(mockSendContactEmail).toHaveBeenCalledWith(validFormData);
-      expect(mockSendAutoReplyEmail).toHaveBeenCalledWith(validFormData);
-      expect(consoleSpy).toHaveBeenCalledWith('📧 Contact email sent successfully');
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://formspree.io/f/mzzgagbb',
+        expect.objectContaining({
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'User-Agent': 'BlackWoods-Creative-Website/1.0',
+          },
+          body: expect.stringContaining(validFormData.name),
+        })
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        '📧 Contact form submitted to Formspree successfully:',
+        expect.any(Object)
+      );
     });
 
-    it('handles email service failure', async () => {
-      mockSendContactEmail.mockResolvedValue({
-        success: false,
-        error: 'Email service unavailable',
-      });
+    it('handles Formspree service failure', async () => {
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: jest.fn().mockResolvedValue({ error: 'Service unavailable' }),
+      } as any);
 
       const request = createMockRequest(validFormData, {
         'x-forwarded-for': '192.168.500.1',

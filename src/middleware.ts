@@ -12,25 +12,41 @@ import {
   rateLimitConfigs,
 } from './lib/utils/security';
 
-// Initialize rate limiters for different endpoints
-const rateLimiters = {
-  api: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(
-      rateLimitConfigs.api?.maxRequests ?? 100,
-      `${(rateLimitConfigs.api?.windowMs ?? 900000) / 1000} s`
-    ),
-    prefix: '@upstash/ratelimit:api',
-  }),
-  contact: new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(
-      rateLimitConfigs.contact?.maxRequests ?? 10,
-      `${(rateLimitConfigs.contact?.windowMs ?? 900000) / 1000} s`
-    ),
-    prefix: '@upstash/ratelimit:contact',
-  }),
-};
+// Initialize rate limiters for different endpoints (only if Redis is configured)
+let rateLimiters: { api?: Ratelimit; contact?: Ratelimit } = {};
+
+// Check if Redis environment variables are available
+const hasRedisConfig = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN;
+
+if (hasRedisConfig) {
+  try {
+    const redis = Redis.fromEnv();
+    rateLimiters = {
+      api: new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(
+          rateLimitConfigs.api?.maxRequests ?? 100,
+          `${(rateLimitConfigs.api?.windowMs ?? 900000) / 1000} s`
+        ),
+        prefix: '@upstash/ratelimit:api',
+      }),
+      contact: new Ratelimit({
+        redis,
+        limiter: Ratelimit.slidingWindow(
+          rateLimitConfigs.contact?.maxRequests ?? 10,
+          `${(rateLimitConfigs.contact?.windowMs ?? 900000) / 1000} s`
+        ),
+        prefix: '@upstash/ratelimit:contact',
+      }),
+    };
+  } catch (error) {
+    console.warn('⚠️  Redis configuration error, rate limiting disabled');
+    rateLimiters = {};
+  }
+} else {
+  console.warn('⚠️  Redis not configured, rate limiting disabled for development');
+  rateLimiters = {};
+}
 
 export async function middleware(request: NextRequest) {
   const startTime = Date.now();
@@ -56,16 +72,17 @@ export async function middleware(request: NextRequest) {
   // Set nonce in response headers for use in components
   secureResponse.headers.set('x-nonce', nonce);
 
-  // Apply rate limiting to API routes
-  if (request.nextUrl.pathname.startsWith('/api')) {
+  // Apply rate limiting to API routes (only if Redis is configured)
+  if (request.nextUrl.pathname.startsWith('/api') && (rateLimiters.api || rateLimiters.contact)) {
     let rateLimiter = rateLimiters.api;
 
     // Use more restrictive rate limiting for contact form
-    if (request.nextUrl.pathname.includes('/contact')) {
+    if (request.nextUrl.pathname.includes('/contact') && rateLimiters.contact) {
       rateLimiter = rateLimiters.contact;
     }
 
-    const { success, limit, remaining, reset } = await rateLimiter.limit(ip);
+    if (rateLimiter) {
+      const { success, limit, remaining, reset } = await rateLimiter.limit(ip);
 
     if (!success) {
       // Log security event
@@ -102,22 +119,23 @@ export async function middleware(request: NextRequest) {
       return rateLimitResponse;
     }
 
-    // Add rate limit headers to successful responses
-    secureResponse.headers.set('X-RateLimit-Limit', limit.toString());
-    secureResponse.headers.set('X-RateLimit-Remaining', remaining.toString());
-    secureResponse.headers.set('X-RateLimit-Reset', reset.toString());
+      // Add rate limit headers to successful responses
+      secureResponse.headers.set('X-RateLimit-Limit', limit.toString());
+      secureResponse.headers.set('X-RateLimit-Remaining', remaining.toString());
+      secureResponse.headers.set('X-RateLimit-Reset', reset.toString());
 
-    // Update request log with rate limit info
-    const logIndex = requestLogger.getRecentLogs(1).findIndex(log => log.id === requestId);
-    if (logIndex !== -1) {
-      const logs = requestLogger.getRecentLogs(1000);
-      const currentLog = logs.find(log => log.id === requestId);
-      if (currentLog) {
-        currentLog.rateLimitInfo = {
-          limit,
-          remaining,
-          reset,
-        };
+      // Update request log with rate limit info
+      const logIndex = requestLogger.getRecentLogs(1).findIndex(log => log.id === requestId);
+      if (logIndex !== -1) {
+        const logs = requestLogger.getRecentLogs(1000);
+        const currentLog = logs.find(log => log.id === requestId);
+        if (currentLog) {
+          currentLog.rateLimitInfo = {
+            limit,
+            remaining,
+            reset,
+          };
+        }
       }
     }
   }

@@ -76,10 +76,10 @@ describe('Header', () => {
     });
   });
 
-  it('renders header with brand text and navigation', () => {
+  it('renders header with logo and navigation', () => {
     renderHeader();
 
-    expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
+    expect(screen.getByLabelText('BlackWoods Creative - Go to homepage')).toBeInTheDocument();
     expect(screen.getByText('Portfolio')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
     expect(screen.getByText('Contact')).toBeInTheDocument();

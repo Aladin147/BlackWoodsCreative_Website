@@ -2,6 +2,17 @@
 
 A portfolio website built with Next.js 14, featuring advanced animations, WebGL effects, and accessibility support.
 
+## ✨ Key Features
+
+- **Professional Branding**: Official BlackWoods Creative logo with SVG/PNG fallback support
+- **Contact Integration**: Formspree-powered contact form with CSRF protection and validation
+- **Modern Design**: Clean, professional aesthetic with forest-inspired theme
+- **Interactive Elements**: Smooth animations, magnetic effects, and hover interactions
+- **Responsive Layout**: Optimized for all devices and screen sizes
+- **Performance Optimized**: Fast loading with Next.js 14 and optimized images
+- **Security**: CSRF protection, rate limiting, and input sanitization
+- **Accessibility**: WCAG compliant with proper ARIA labels
+
 ## 🏗️ Architecture Overview
 
 ### Tech Stack
@@ -168,6 +179,22 @@ npm run start
 NEXT_PUBLIC_SITE_URL=https://blackwoodscreative.com
 NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
 ```
+
+## 🔄 Recent Updates
+
+### Contact Form Integration (Latest)
+- **Formspree Integration**: Replaced Resend email service with Formspree endpoint (`https://formspree.io/f/mzzgagbb`)
+- **Maintained Security**: All existing CSRF protection, rate limiting, and validation preserved
+- **Comprehensive Testing**: Updated test suites to verify Formspree integration
+- **Error Handling**: Graceful fallback and user feedback for form submissions
+
+### Logo Implementation (Latest)
+- **Official Branding**: Integrated BlackWoods Creative logo from CDN
+- **Multi-format Support**: SVG primary with PNG fallback
+- **Responsive Design**: Adaptive sizing for different screen sizes and contexts
+- **Accessibility**: Proper alt text and ARIA labels for screen readers
+- **Performance**: Optimized loading with Next.js Image component
+- **Fallback Handling**: Text-based fallback if images fail to load
 
 ### Deployment Checklist
 

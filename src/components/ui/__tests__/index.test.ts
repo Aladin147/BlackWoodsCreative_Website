@@ -26,6 +26,11 @@ describe('UI Components Barrel Export', () => {
     expect(typeof UIComponents.PortfolioCardSkeleton).toBe('function');
   });
 
+  it('exports Logo component', () => {
+    expect(UIComponents.Logo).toBeDefined();
+    expect(typeof UIComponents.Logo).toBe('function');
+  });
+
   it('exports all expected components', () => {
     const expectedExports = [
       'PortfolioCard',
@@ -33,6 +38,7 @@ describe('UI Components Barrel Export', () => {
       'LoadingSpinner',
       'LoadingSkeleton',
       'PortfolioCardSkeleton',
+      'Logo',
     ];
 
     expectedExports.forEach(exportName => {
@@ -42,7 +48,7 @@ describe('UI Components Barrel Export', () => {
 
   it('has correct number of exports', () => {
     const exportKeys = Object.keys(UIComponents);
-    expect(exportKeys).toHaveLength(5);
+    expect(exportKeys).toHaveLength(6);
   });
 
   it('all exports are functions (components)', () => {
@@ -59,11 +65,12 @@ describe('UI Components Barrel Export', () => {
   });
 
   it('can destructure individual components', () => {
-    const { PortfolioCard, ErrorBoundary, LoadingSpinner } = UIComponents;
+    const { PortfolioCard, ErrorBoundary, LoadingSpinner, Logo } = UIComponents;
 
     expect(PortfolioCard).toBeDefined();
     expect(ErrorBoundary).toBeDefined();
     expect(LoadingSpinner).toBeDefined();
+    expect(Logo).toBeDefined();
   });
 
   it('maintains component names correctly', () => {
@@ -71,6 +78,7 @@ describe('UI Components Barrel Export', () => {
     expect(UIComponents.LoadingSpinner.name).toBe('LoadingSpinner');
     expect(UIComponents.LoadingSkeleton.name).toBe('LoadingSkeleton');
     expect(UIComponents.PortfolioCardSkeleton.name).toBe('PortfolioCardSkeleton');
+    expect(UIComponents.Logo.name).toBe('Logo');
   });
 
   it('exports are consistent with their source files', () => {
@@ -105,6 +113,7 @@ describe('UI Components Barrel Export', () => {
       'LoadingSpinner',
       'LoadingSkeleton',
       'PortfolioCardSkeleton',
+      'Logo',
     ];
 
     const actualExports = Object.keys(UIComponents);

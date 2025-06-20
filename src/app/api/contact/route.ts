@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { sendContactEmail, sendAutoReplyEmail } from '@/lib/services';
+import { formspreeConfig } from '@/lib/config/formspree';
 import { validateContactForm } from '@/lib/utils';
 import { sanitizeFormData } from '@/lib/utils/sanitize';
 import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
@@ -60,27 +60,48 @@ function checkRateLimit(key: string): { allowed: boolean; resetTime?: number } {
   return { allowed: true };
 }
 
-async function sendEmail(formData: ContactFormData): Promise<boolean> {
+async function sendToFormspree(formData: ContactFormData): Promise<boolean> {
   try {
-    // Send notification email to BlackWoods Creative
-    const contactResult = await sendContactEmail(formData);
+    // Prepare form data for Formspree (optimized to avoid spam detection)
+    const formspreeData = {
+      name: formData.name,
+      email: formData.email,
+      company: formData.company || '',
+      projectType: formData.projectType || '',
+      budget: formData.budget || '',
+      message: formData.message,
+      _subject: formspreeConfig.settings.subjectTemplate.replace('{name}', formData.name),
+      _replyto: formData.email,
+      _next: formspreeConfig.settings.thankYouUrl,
+      // Using JSON format (default) for better deliverability and spam protection
+    };
 
-    if (!contactResult.success) {
-      console.error('Failed to send contact email:', contactResult.error);
+    // Send to Formspree
+    const response = await fetch(formspreeConfig.endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'BlackWoods-Creative-Website/1.0',
+      },
+      body: JSON.stringify(formspreeData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Formspree submission failed:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorData,
+      });
       return false;
     }
 
-    // Send auto-reply to the user (optional, don't fail if this fails)
-    const autoReplyResult = await sendAutoReplyEmail(formData);
-    if (!autoReplyResult.success) {
-      console.warn('Failed to send auto-reply email:', autoReplyResult.error);
-      // Don't return false here - the main email was sent successfully
-    }
-
-    console.log('📧 Contact email sent successfully');
+    const result = await response.json();
+    console.log('📧 Contact form submitted to Formspree successfully:', result);
     return true;
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('Formspree submission error:', error);
     return false;
   }
 }
@@ -201,11 +222,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
       );
     }
 
-    // Send email
-    const emailSent = await sendEmail(sanitizedData);
+    // Send to Formspree
+    const formSubmitted = await sendToFormspree(sanitizedData);
 
-    if (!emailSent) {
-      console.error('Failed to send contact form email');
+    if (!formSubmitted) {
+      console.error('Failed to submit contact form to Formspree');
       return NextResponse.json(
         {
           success: false,

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
 import { MagneticField } from '@/components/interactive';
+import { Logo } from '@/components/ui/Logo';
 import { siteConfig } from '@/lib/constants/siteConfig';
 import { cn, scrollToElement, throttle } from '@/lib/utils';
 // import { useUISounds } from '@/hooks/useAudioSystem'; // Temporarily disabled
@@ -75,23 +76,12 @@ export function Header({ className }: HeaderProps) {
           <div className="flex h-16 items-center justify-between lg:h-20">
             {/* Logo with Magnetic Effect */}
             <MagneticField strength={0.2} distance={100}>
-              <motion.div
-                className="flex flex-shrink-0 items-center justify-center"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.4 }}
-              >
-                <button
-                  onClick={() => handleNavClick('#hero')}
-                  className="cursor-pointer text-bw-text-primary transition-colors duration-300 hover:text-bw-accent-gold"
-                  data-cursor="button"
-                  aria-label="BlackWoods Creative - Go to homepage"
-                  title="BlackWoods Creative - Go to homepage"
-                >
-                  <span className="font-display text-display-lg text-bw-accent-gold">
-                    BlackWoods Creative
-                  </span>
-                </button>
-              </motion.div>
+              <Logo
+                size="lg"
+                onClick={() => handleNavClick('#hero')}
+                priority={true}
+                className="flex-shrink-0"
+              />
             </MagneticField>
 
             {/* Desktop Navigation with Magnetic Effects */}
