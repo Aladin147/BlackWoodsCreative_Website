@@ -182,9 +182,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <MagneticCursor />
             <ScrollProgress />
             <Header />
-            <main id="main-content" className="relative" role="main">
+            <div id="main-content" className="relative">
               {children}
-            </main>
+            </div>
             <PerformanceReporter />
             <DevelopmentMonitors />
           </div>
