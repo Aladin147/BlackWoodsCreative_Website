@@ -22,12 +22,11 @@ export interface ServicePageData {
     answer: string; // 40-55 words for featured snippet
     details?: string[];
   };
-  pricing?: {
+  services?: {
     title: string;
     description: string;
-    packages: Array<{
+    offerings: Array<{
       name: string;
-      price: string;
       features: string[];
       popular?: boolean;
     }>;
@@ -81,8 +80,8 @@ export function ServicePageTemplate({
       {/* Featured Answer Section - Optimized for Featured Snippets */}
       <FeaturedAnswerSection data={data.featuredAnswer} />
 
-      {/* Pricing Section */}
-      {data.pricing && <PricingSection data={data.pricing} />}
+      {/* Services Section */}
+      {data.services && <ServicesSection data={data.services} />}
 
       {/* Process Section */}
       {data.process && <ProcessSection data={data.process} />}
@@ -197,9 +196,9 @@ function FeaturedAnswerSection({ data }: { data: ServicePageData['featuredAnswer
 }
 
 /**
- * Pricing Section Component
+ * Services Section Component
  */
-function PricingSection({ data }: { data: ServicePageData['pricing'] }) {
+function ServicesSection({ data }: { data: ServicePageData['services'] }) {
   return (
     <section className="relative bg-bw-bg-primary py-24 px-6">
       <div className="mx-auto max-w-7xl">
@@ -213,31 +212,28 @@ function PricingSection({ data }: { data: ServicePageData['pricing'] }) {
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data.packages.map((pkg, index) => (
-            <ScrollReveal key={pkg.name} direction="up" distance={40} delay={index * 0.1}>
+          {data.offerings.map((offering, index) => (
+            <ScrollReveal key={offering.name} direction="up" distance={40} delay={index * 0.1}>
               <MagneticField strength={0.1} distance={120}>
                 <div className={`relative p-8 rounded-2xl border ${
-                  pkg.popular 
-                    ? 'border-bw-accent-gold bg-bw-accent-gold/5' 
+                  offering.popular
+                    ? 'border-bw-accent-gold bg-bw-accent-gold/5'
                     : 'border-bw-border-subtle bg-bw-border-subtle/10'
                 }`}>
-                  {pkg.popular && (
+                  {offering.popular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                       <span className="bg-bw-accent-gold text-bw-bg-primary px-4 py-2 rounded-full text-sm font-medium">
                         Most Popular
                       </span>
                     </div>
                   )}
-                  
+
                   <div className="text-center mb-8">
-                    <h3 className="text-display-md font-display mb-2">{pkg.name}</h3>
-                    <div className="text-display-lg font-bold text-bw-accent-gold">
-                      {pkg.price}
-                    </div>
+                    <h3 className="text-display-md font-display mb-4">{offering.name}</h3>
                   </div>
 
                   <ul className="space-y-3 mb-8">
-                    {pkg.features.map((feature, featureIndex) => (
+                    {offering.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center gap-3">
                         <div className="w-2 h-2 bg-bw-accent-gold rounded-full flex-shrink-0" />
                         <span className="text-body-lg">{feature}</span>
@@ -246,15 +242,11 @@ function PricingSection({ data }: { data: ServicePageData['pricing'] }) {
                   </ul>
 
                   <motion.button
-                    className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                      pkg.popular
-                        ? 'bg-bw-accent-gold text-bw-bg-primary hover:bg-bw-accent-gold/90'
-                        : 'bg-bw-border-subtle text-bw-text-primary hover:bg-bw-border-subtle/80'
-                    }`}
+                    className="w-full py-3 px-6 rounded-lg font-medium transition-colors bg-bw-border-subtle text-bw-text-primary hover:bg-bw-accent-gold hover:text-bw-bg-primary"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Get Started
+                    Learn More
                   </motion.button>
                 </div>
               </MagneticField>

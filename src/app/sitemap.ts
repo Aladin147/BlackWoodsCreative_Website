@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/services/corporate-video-pricing-morocco`,
+      url: `${baseUrl}/services/corporate-video-production-morocco`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.9,

@@ -22,8 +22,7 @@ const metadata: SEOMetadata = {
   },
   localBusiness: {
     service: 'Video Production Services',
-    location: 'Morocco, Mohammedia, Casablanca',
-    priceRange: '€€€'
+    location: 'Morocco, Mohammedia, Casablanca'
   },
   canonicalUrl: '/services/video-production-morocco',
   openGraph: {
@@ -43,7 +42,6 @@ const metadata: SEOMetadata = {
     'telephone': '+212 625 55 37 68',
     'email': 'hello@blackwoodscreative.com',
     'url': 'https://blackwoodscreative.com',
-    'priceRange': '€€€',
     'serviceArea': ['Morocco', 'Casablanca', 'Rabat', 'Mohammedia'],
     'hasOfferCatalog': {
       '@type': 'OfferCatalog',
@@ -98,47 +96,42 @@ const pageData: ServicePageData = {
       'Competitive pricing with transparent, no-hidden-fees structure'
     ]
   },
-  pricing: {
-    title: 'Video Production Packages',
-    description: 'Transparent pricing for professional video production services in Morocco',
-    packages: [
+  services: {
+    title: 'Our Video Production Services',
+    description: 'Comprehensive video production solutions tailored to your specific needs and goals',
+    offerings: [
       {
-        name: 'Essential',
-        price: '15,000 MAD',
+        name: 'Corporate Videos',
         features: [
-          'Half-day production (4 hours)',
-          '1-2 camera setup',
-          'Basic lighting and audio',
-          '2-3 minute final video',
-          '2 rounds of revisions',
-          'HD 1080p delivery'
+          'Company profile videos',
+          'Training and educational content',
+          'Internal communications',
+          'Recruitment videos',
+          'Event documentation',
+          'Executive interviews'
         ]
       },
       {
-        name: 'Professional',
-        price: '35,000 MAD',
+        name: 'Brand Films',
         popular: true,
         features: [
-          'Full-day production (8 hours)',
-          '3-4 camera setup',
-          'Professional lighting & audio',
-          '5-7 minute final video',
-          'Motion graphics included',
-          '4K delivery + web versions',
-          'Unlimited revisions'
+          'Commercial advertisements',
+          'Product launch videos',
+          'Brand storytelling',
+          'Social media content',
+          'Promotional campaigns',
+          'Customer testimonials'
         ]
       },
       {
-        name: 'Premium',
-        price: '65,000 MAD',
+        name: 'Specialized Production',
         features: [
-          '2-day production',
-          'Multi-location shooting',
-          'Drone footage included',
-          '10+ minute final video',
-          'Advanced post-production',
-          '4K/8K delivery',
-          'Rush delivery available'
+          'Documentary filmmaking',
+          'Music videos',
+          'Real estate showcases',
+          'Event coverage',
+          'Drone cinematography',
+          'Live streaming services'
         ]
       }
     ]

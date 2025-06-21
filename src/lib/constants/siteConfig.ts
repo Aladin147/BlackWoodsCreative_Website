@@ -49,8 +49,8 @@ export const siteConfig = {
         },
         {
           name: 'Corporate Videos',
-          href: '/services/corporate-video-pricing-morocco',
-          description: 'Corporate video pricing and packages'
+          href: '/services/corporate-video-production-morocco',
+          description: 'Professional corporate video production'
         },
         {
           name: 'Photography',
