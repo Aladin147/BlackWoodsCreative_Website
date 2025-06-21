@@ -20,8 +20,8 @@ const sizeClasses = {
 };
 
 const logoUrls = {
-  svg: '/icons/logo-optimized.svg',
-  png: '/icons/logo-icon.svg', // Using icon version as fallback
+  svg: '/assets/icons/BLKWDS Creative Logo_Inverted.svg',
+  png: '/assets/icons/BLKWDS Creative Logo_inverted.png',
 };
 
 export function Logo({ 
