@@ -50,12 +50,22 @@ export function isHomePage(): boolean {
 }
 
 /**
- * Get the appropriate navigation items based on current page
- * @param navigation - Main navigation config
+ * Get the appropriate navigation items with context-aware hrefs
+ * @param navigation - Main navigation config (kept for backward compatibility)
  * @param homeNavigation - Home page specific navigation
  */
-export function getNavigationItems(navigation: readonly any[], homeNavigation: readonly any[]): readonly any[] {
-  return isHomePage() ? homeNavigation : navigation;
+export function getNavigationItems(_navigation: readonly any[], homeNavigation: readonly any[]): readonly any[] {
+  const isHome = isHomePage();
+
+  // Use homeNavigation for all pages, but adjust hrefs based on context
+  return homeNavigation.map((item: any) => ({
+    ...item,
+    href: isHome && item.homeHref ? item.homeHref : item.href,
+    submenu: item.submenu ? item.submenu.map((subItem: any) => ({
+      ...subItem,
+      // Submenu items always use page hrefs (no context switching for submenus)
+    })) : undefined
+  }));
 }
 
 /**

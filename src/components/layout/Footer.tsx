@@ -14,7 +14,8 @@ import { motion } from 'framer-motion';
 import React from 'react';
 
 import { MagneticField, ScrollReveal } from '@/components/interactive';
-import { handleNavigationClick } from '@/lib/utils/navigation';
+import { siteConfig } from '@/lib/constants/siteConfig';
+import { handleNavigationClick, getNavigationItems } from '@/lib/utils/navigation';
 
 interface FooterProps {
   className?: string;
@@ -43,16 +44,20 @@ const socialLinks = [
   },
 ];
 
-const quickLinks = [
-  { name: 'Services', href: '/services' },
-  { name: 'Our Story', href: '/about/our-story' },
-  { name: 'Portfolio', href: '/portfolio' },
-  { name: 'Contact', href: '/contact' },
-];
+// Use unified navigation for consistency
+const getQuickLinks = () => {
+  const navigationItems = getNavigationItems(siteConfig.navigation, siteConfig.homeNavigation);
+  return navigationItems.map((item: any) => ({
+    name: item.name,
+    href: item.href
+  }));
+};
 
 const services = ['Brand Films', 'Product Photography', '3D Visualization', 'Scene Creation'];
 
 export function Footer({ className }: FooterProps) {
+  const quickLinks = getQuickLinks();
+
   const handleScrollToTop = () => {
     window.scrollTo({
       top: 0,
