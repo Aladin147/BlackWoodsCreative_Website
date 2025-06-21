@@ -154,6 +154,47 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.GOOGLE_VERIFICATION_CODE || '',
   },
+  icons: {
+    icon: [
+      {
+        url: '/assets/icons/favicon.svg',
+        type: 'image/svg+xml',
+      },
+      {
+        url: '/assets/icons/favicon-32x32.png',
+        sizes: '32x32',
+        type: 'image/png',
+      },
+      {
+        url: '/assets/icons/favicon-16x16.png',
+        sizes: '16x16',
+        type: 'image/png',
+      },
+      {
+        url: '/assets/icons/favicon.ico',
+        sizes: 'any',
+        type: 'image/x-icon',
+      },
+    ],
+    apple: [
+      {
+        url: '/assets/icons/apple-touch-icon.png',
+        sizes: '180x180',
+        type: 'image/png',
+      },
+    ],
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/assets/icons/favicon.svg',
+        color: '#D4AF37',
+      },
+      {
+        rel: 'manifest',
+        url: '/assets/icons/site.webmanifest',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
