@@ -18,7 +18,8 @@ import {
   ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
 
-import { BasePageTemplate, SEOMetadata } from './BasePageTemplate';
+import { BasePageTemplate } from './BasePageTemplate';
+import { SEOMetadata } from '@/lib/utils/metadata';
 import { ScrollReveal } from '@/components/interactive';
 import { handleNavigationClick } from '@/lib/utils/navigation';
 
@@ -81,7 +82,7 @@ export interface ValuesData {
 }
 
 // Icon mapping for consistent Heroicons usage
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const iconMap: Record<string, React.ComponentType<any>> = {
   UserIcon,
   BriefcaseIcon,
   FilmIcon,
@@ -130,11 +131,10 @@ export function ContentPageTemplate({
       <ContentHeroSection data={data.hero} />
 
       {/* Content Sections */}
-      {data.sections.map((section, index) => (
+      {data.sections.map((section) => (
         <ContentSectionRenderer
           key={section.id}
           section={section}
-          index={index}
         />
       ))}
     </BasePageTemplate>
@@ -216,10 +216,8 @@ function ContentHeroSection({ data }: { data: HeroData }) {
  */
 function ContentSectionRenderer({
   section,
-  index,
 }: {
   section: ContentSection;
-  index: number;
 }) {
   const baseClasses = getContentSectionClasses(section);
 

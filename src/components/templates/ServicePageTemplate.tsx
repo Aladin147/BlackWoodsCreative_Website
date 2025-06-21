@@ -1,9 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
 
-import { BasePageTemplate, SEOMetadata } from './BasePageTemplate';
+import { BasePageTemplate } from './BasePageTemplate';
+import { SEOMetadata } from '@/lib/utils/metadata';
 import { ScrollReveal, MagneticField } from '@/components/interactive';
 
 // Service page specific data structure
@@ -12,6 +12,7 @@ export interface ServicePageData {
     title: string;
     subtitle: string;
     description: string;
+    breadcrumbs?: Array<{ label: string; href: string }>;
     cta: {
       primary: { text: string; href: string };
       secondary?: { text: string; href: string };
@@ -25,12 +26,17 @@ export interface ServicePageData {
   services?: {
     title: string;
     description: string;
-    offerings: Array<{
+    offerings?: Array<{
       name: string;
       features: string[];
       popular?: boolean;
     }>;
-  };
+  } | Array<{
+    title: string;
+    description: string;
+    features: string[];
+    benefits?: string[];
+  }>;
   process?: {
     title: string;
     steps: Array<{
@@ -38,7 +44,11 @@ export interface ServicePageData {
       title: string;
       description: string;
     }>;
-  };
+  } | Array<{
+    step: number;
+    title: string;
+    description: string;
+  }>;
   testimonials?: Array<{
     quote: string;
     author: string;
@@ -199,6 +209,39 @@ function FeaturedAnswerSection({ data }: { data: ServicePageData['featuredAnswer
  * Services Section Component
  */
 function ServicesSection({ data }: { data: ServicePageData['services'] }) {
+  if (!data) return null;
+
+  // Handle array format (legacy)
+  if (Array.isArray(data)) {
+    return (
+      <section className="relative bg-bw-bg-primary py-24 px-6">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {data.map((service, index) => (
+              <ScrollReveal key={service.title} direction="up" distance={40} delay={index * 0.1}>
+                <div className="p-8 rounded-2xl border border-bw-border-subtle bg-bw-border-subtle/10">
+                  <h3 className="text-display-md font-display mb-4">{service.title}</h3>
+                  <p className="text-body-lg text-bw-text-secondary mb-6">{service.description}</p>
+                  {service.features && (
+                    <ul className="space-y-2">
+                      {service.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center gap-3">
+                          <div className="w-2 h-2 bg-bw-accent-gold rounded-full flex-shrink-0" />
+                          <span className="text-body-lg">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Handle object format (new)
   return (
     <section className="relative bg-bw-bg-primary py-24 px-6">
       <div className="mx-auto max-w-7xl">
@@ -211,48 +254,50 @@ function ServicesSection({ data }: { data: ServicePageData['services'] }) {
           </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data.offerings.map((offering, index) => (
-            <ScrollReveal key={offering.name} direction="up" distance={40} delay={index * 0.1}>
-              <MagneticField strength={0.1} distance={120}>
-                <div className={`relative p-8 rounded-2xl border ${
-                  offering.popular
-                    ? 'border-bw-accent-gold bg-bw-accent-gold/5'
-                    : 'border-bw-border-subtle bg-bw-border-subtle/10'
-                }`}>
-                  {offering.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <span className="bg-bw-accent-gold text-bw-bg-primary px-4 py-2 rounded-full text-sm font-medium">
-                        Most Popular
-                      </span>
+        {data.offerings && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {data.offerings.map((offering, index) => (
+              <ScrollReveal key={offering.name} direction="up" distance={40} delay={index * 0.1}>
+                <MagneticField strength={0.1} distance={120}>
+                  <div className={`relative p-8 rounded-2xl border ${
+                    offering.popular
+                      ? 'border-bw-accent-gold bg-bw-accent-gold/5'
+                      : 'border-bw-border-subtle bg-bw-border-subtle/10'
+                  }`}>
+                    {offering.popular && (
+                      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span className="bg-bw-accent-gold text-bw-bg-primary px-4 py-2 rounded-full text-sm font-medium">
+                          Most Popular
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="text-center mb-8">
+                      <h3 className="text-display-md font-display mb-4">{offering.name}</h3>
                     </div>
-                  )}
 
-                  <div className="text-center mb-8">
-                    <h3 className="text-display-md font-display mb-4">{offering.name}</h3>
+                    <ul className="space-y-3 mb-8">
+                      {offering.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-center gap-3">
+                          <div className="w-2 h-2 bg-bw-accent-gold rounded-full flex-shrink-0" />
+                          <span className="text-body-lg">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <motion.button
+                      className="w-full py-3 px-6 rounded-lg font-medium transition-colors bg-bw-border-subtle text-bw-text-primary hover:bg-bw-accent-gold hover:text-bw-bg-primary"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Learn More
+                    </motion.button>
                   </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {offering.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-bw-accent-gold rounded-full flex-shrink-0" />
-                        <span className="text-body-lg">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <motion.button
-                    className="w-full py-3 px-6 rounded-lg font-medium transition-colors bg-bw-border-subtle text-bw-text-primary hover:bg-bw-accent-gold hover:text-bw-bg-primary"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Learn More
-                  </motion.button>
-                </div>
-              </MagneticField>
-            </ScrollReveal>
-          ))}
-        </div>
+                </MagneticField>
+              </ScrollReveal>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
@@ -262,6 +307,34 @@ function ServicesSection({ data }: { data: ServicePageData['services'] }) {
  * Process Section Component
  */
 function ProcessSection({ data }: { data: ServicePageData['process'] }) {
+  if (!data) return null;
+
+  // Handle array format (legacy)
+  if (Array.isArray(data)) {
+    return (
+      <section className="relative bg-bw-bg-primary py-24 px-6">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {data.map((step, index) => (
+              <ScrollReveal key={step.step} direction="up" distance={40} delay={index * 0.1}>
+                <div className="text-center">
+                  <div className="mb-6 mx-auto w-16 h-16 bg-bw-accent-gold/20 rounded-full flex items-center justify-center">
+                    <span className="text-display-md font-bold text-bw-accent-gold">
+                      {step.step}
+                    </span>
+                  </div>
+                  <h3 className="mb-4 font-display text-display-sm">{step.title}</h3>
+                  <p className="text-body-lg text-bw-text-secondary">{step.description}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Handle object format (new)
   return (
     <section className="relative bg-bw-bg-primary py-24 px-6">
       <div className="mx-auto max-w-7xl">
@@ -295,22 +368,26 @@ function ProcessSection({ data }: { data: ServicePageData['process'] }) {
  * Placeholder components for other sections
  */
 function TestimonialsSection({ data }: { data: ServicePageData['testimonials'] }) {
+  if (!data) return null;
+
   return (
     <section className="relative bg-bw-bg-primary py-24 px-6">
       <div className="mx-auto max-w-7xl text-center">
         <h2 className="mb-12 font-display text-display-lg">What Our Clients Say</h2>
-        {/* Testimonials implementation */}
+        {/* Testimonials implementation - data available: {JSON.stringify(data)} */}
       </div>
     </section>
   );
 }
 
 function FAQSection({ data }: { data: ServicePageData['faq'] }) {
+  if (!data) return null;
+
   return (
     <section className="relative bg-bw-bg-primary py-24 px-6">
       <div className="mx-auto max-w-4xl">
         <h2 className="mb-12 font-display text-display-lg text-center">Frequently Asked Questions</h2>
-        {/* FAQ implementation */}
+        {/* FAQ implementation - data available: {JSON.stringify(data)} */}
       </div>
     </section>
   );

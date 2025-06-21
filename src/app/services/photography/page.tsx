@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 
-import { 
-  ServicePageTemplate, 
-  type ServicePageData, 
-  type SEOMetadata 
+import {
+  ServicePageTemplate,
+  type ServicePageData,
+  type SEOMetadata,
+  generatePageMetadata
 } from '@/components/templates';
 
 // SEO metadata
@@ -37,7 +38,17 @@ const pageData: ServicePageData = {
       { label: 'Home', href: '/' },
       { label: 'Services', href: '/services' },
       { label: 'Photography', href: '/services/photography' }
-    ]
+    ],
+    cta: {
+      primary: {
+        text: 'Get Photography Quote',
+        href: '#contact'
+      },
+      secondary: {
+        text: 'View Portfolio',
+        href: '#portfolio'
+      }
+    }
   },
   services: [
     {
@@ -111,52 +122,20 @@ const pageData: ServicePageData = {
       description: 'Professional editing, color correction, and delivery in all required formats and resolutions.'
     }
   ],
-  cta: {
-    title: 'Ready to Enhance Your Visual Brand?',
-    description: 'Let\'s create stunning photography that elevates your business image and drives results.',
-    primary: {
-      text: 'Get Photography Quote',
-      href: '#contact'
-    },
-    secondary: {
-      text: 'View Portfolio',
-      href: '#portfolio'
-    }
+  featuredAnswer: {
+    question: 'What makes professional photography essential for business success?',
+    answer: 'Professional photography creates a powerful first impression, builds trust with customers, and significantly impacts purchasing decisions. High-quality visuals can increase engagement by up to 650% and directly influence conversion rates across all marketing channels.',
+    details: [
+      'Increase customer trust and credibility by 73%',
+      'Boost social media engagement by up to 650%',
+      'Improve website conversion rates by 40%',
+      'Create consistent brand image across all platforms'
+    ]
   }
 };
 
-// Generate Next.js metadata
-export const metadata: Metadata = {
-  title: seoMetadata.title,
-  description: seoMetadata.description,
-  keywords: seoMetadata.keywords,
-  openGraph: {
-    title: seoMetadata.openGraph?.title,
-    description: seoMetadata.openGraph?.description,
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'BlackWoods Creative',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: seoMetadata.title,
-    description: seoMetadata.description,
-  },
-  alternates: {
-    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
+// Generate Next.js metadata using type-safe helper
+export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function PhotographyPage() {
   return (

@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 
-import { 
-  ServicePageTemplate, 
-  type ServicePageData, 
-  type SEOMetadata 
+import {
+  ServicePageTemplate,
+  type ServicePageData,
+  type SEOMetadata,
+  generatePageMetadata
 } from '@/components/templates';
 
 // SEO metadata
@@ -37,7 +38,17 @@ const pageData: ServicePageData = {
       { label: 'Home', href: '/' },
       { label: 'Services', href: '/services' },
       { label: '3D Visualization', href: '/services/3d-visualization' }
-    ]
+    ],
+    cta: {
+      primary: {
+        text: 'Get 3D Quote',
+        href: '#contact'
+      },
+      secondary: {
+        text: 'View 3D Portfolio',
+        href: '#portfolio'
+      }
+    }
   },
   services: [
     {
@@ -111,52 +122,20 @@ const pageData: ServicePageData = {
       description: 'Final touches, color correction, and delivery in all required formats and resolutions.'
     }
   ],
-  cta: {
-    title: 'Ready to Visualize Your Ideas?',
-    description: 'Transform your concepts into stunning 3D visuals that impress clients and drive results.',
-    primary: {
-      text: 'Get 3D Quote',
-      href: '#contact'
-    },
-    secondary: {
-      text: 'View 3D Portfolio',
-      href: '#portfolio'
-    }
+  featuredAnswer: {
+    question: 'What is 3D visualization and how can it benefit my business?',
+    answer: '3D visualization creates photorealistic digital representations of products, buildings, or concepts before they exist physically. It helps businesses reduce costs, improve communication, accelerate approvals, and create compelling marketing materials that drive sales and engagement.',
+    details: [
+      'Reduce prototyping and photography costs by up to 80%',
+      'Visualize products and spaces before manufacturing or construction',
+      'Create unlimited marketing materials from a single 3D model',
+      'Improve client communication and project approval rates'
+    ]
   }
 };
 
-// Generate Next.js metadata
-export const metadata: Metadata = {
-  title: seoMetadata.title,
-  description: seoMetadata.description,
-  keywords: seoMetadata.keywords,
-  openGraph: {
-    title: seoMetadata.openGraph?.title,
-    description: seoMetadata.openGraph?.description,
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'BlackWoods Creative',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: seoMetadata.title,
-    description: seoMetadata.description,
-  },
-  alternates: {
-    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
+// Generate Next.js metadata using type-safe helper
+export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function ThreeDVisualizationPage() {
   return (

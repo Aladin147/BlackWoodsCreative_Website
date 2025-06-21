@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 
-import { 
-  ContentPageTemplate, 
-  type ContentPageData, 
-  type SEOMetadata 
+import {
+  ContentPageTemplate,
+  type ContentPageData,
+  type SEOMetadata,
+  generatePageMetadata
 } from '@/components/templates';
 
 // SEO metadata for location page
@@ -265,38 +266,8 @@ const pageData: ContentPageData = {
   ]
 };
 
-// Generate Next.js metadata
-export const metadata: Metadata = {
-  title: seoMetadata.title,
-  description: seoMetadata.description,
-  keywords: seoMetadata.keywords,
-  openGraph: {
-    title: seoMetadata.openGraph?.title || seoMetadata.title,
-    description: seoMetadata.openGraph?.description || seoMetadata.description,
-    type: 'website',
-    locale: 'en_US',
-    siteName: 'BlackWoods Creative',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: seoMetadata.title,
-    description: seoMetadata.description,
-  },
-  alternates: {
-    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
+// Generate Next.js metadata using type-safe helper
+export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function LocationPage() {
   return (

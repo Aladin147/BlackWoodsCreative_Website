@@ -54,7 +54,7 @@ export function isHomePage(): boolean {
  * @param navigation - Main navigation config
  * @param homeNavigation - Home page specific navigation
  */
-export function getNavigationItems(navigation: any[], homeNavigation: any[]) {
+export function getNavigationItems(navigation: readonly any[], homeNavigation: readonly any[]) {
   return isHomePage() ? homeNavigation : navigation;
 }
 

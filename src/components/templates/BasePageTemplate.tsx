@@ -1,35 +1,10 @@
 'use client';
 
-import { Metadata } from 'next';
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
 import { Footer, Header } from '@/components/layout';
-import { generateSEO } from '@/lib/utils/seo';
-
-// Enhanced SEO metadata interface for AI-first optimization
-export interface SEOMetadata {
-  title: string;
-  description: string;
-  keywords?: string[];
-  featuredSnippet?: {
-    question: string;
-    answer: string; // 40-55 words for optimal featured snippet
-  };
-  localBusiness?: {
-    service: string;
-    location: string;
-    priceRange?: string;
-  };
-  structuredData?: Record<string, any>;
-  canonicalUrl?: string;
-  openGraph?: {
-    title?: string;
-    description?: string;
-    image?: string;
-    type?: 'website' | 'article' | 'service';
-  };
-}
+import { SEOMetadata } from '@/lib/utils/metadata';
 
 // Content block types for reusable page sections
 export interface ContentBlock {
@@ -88,14 +63,6 @@ export function BasePageTemplate({
   children,
 }: PageTemplateProps) {
   const mergedFeatures = { ...defaultFeatures, ...features };
-
-  // Generate Next.js metadata
-  const nextMetadata = generateSEO({
-    title: metadata.title,
-    description: metadata.description,
-    url: metadata.canonicalUrl,
-    type: metadata.openGraph?.type || 'website',
-  });
 
   // Generate enhanced structured data for AI-first SEO
   const enhancedStructuredData = {
@@ -275,12 +242,4 @@ function getBlockClasses(block: ContentBlock): string {
   return classes;
 }
 
-// Export metadata generation helper
-export function generatePageMetadata(seoData: SEOMetadata): Metadata {
-  return generateSEO({
-    title: seoData.title,
-    description: seoData.description,
-    url: seoData.canonicalUrl,
-    type: seoData.openGraph?.type || 'website',
-  });
-}
+

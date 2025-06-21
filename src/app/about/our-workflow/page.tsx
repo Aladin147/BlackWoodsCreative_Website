@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 
-import { 
-  ContentPageTemplate, 
-  type ContentPageData, 
-  type SEOMetadata 
+import {
+  ContentPageTemplate,
+  type ContentPageData,
+  type SEOMetadata,
+  generatePageMetadata
 } from '@/components/templates';
 
 // SEO metadata optimized for process and methodology searches
@@ -262,38 +263,8 @@ const pageData: ContentPageData = {
   ]
 };
 
-// Generate Next.js metadata
-export const metadata: Metadata = {
-  title: seoMetadata.title,
-  description: seoMetadata.description,
-  keywords: seoMetadata.keywords,
-  openGraph: {
-    title: seoMetadata.openGraph?.title,
-    description: seoMetadata.openGraph?.description,
-    type: 'article',
-    locale: 'en_US',
-    siteName: 'BlackWoods Creative',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: seoMetadata.title,
-    description: seoMetadata.description,
-  },
-  alternates: {
-    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-};
+// Generate Next.js metadata using type-safe helper
+export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function OurWorkflowPage() {
   return (
