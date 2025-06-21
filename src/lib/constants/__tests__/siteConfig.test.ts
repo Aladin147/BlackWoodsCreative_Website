@@ -25,7 +25,7 @@ describe('siteConfig', () => {
     });
 
     it('has correct phone number', () => {
-      expect(siteConfig.links.phone).toBe('+1 (555) 123-4567');
+      expect(siteConfig.links.phone).toBe('+212 625 55 37 68');
     });
 
     it('has correct address', () => {

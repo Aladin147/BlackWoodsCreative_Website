@@ -50,8 +50,8 @@ const contactInfo = [
   {
     icon: PhoneIcon,
     label: 'Phone',
-    value: '+1 (555) 123-4567',
-    href: 'tel:+15551234567',
+    value: '+212 625 55 37 68',
+    href: 'tel:+212625553768',
   },
   {
     icon: MapPinIcon,

@@ -5,7 +5,7 @@ export const siteConfig = {
   ogImage: '/assets/images/og-image.jpg',
   links: {
     email: 'hello@blackwoodscreative.com',
-    phone: '+1 (555) 123-4567', // Placeholder - awaiting actual contact details
+    phone: '+212 625 55 37 68',
     address: 'MFADEL Business Center, Building O, Floor 5. Mohammedia Morocco',
     instagram: 'https://instagram.com/blackwoodscreative',
     linkedin: 'https://linkedin.com/company/blackwoodscreative',

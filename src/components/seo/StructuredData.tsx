@@ -22,7 +22,7 @@ export function StructuredData({ metadata }: StructuredDataProps) {
     ],
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+1-555-123-4567',
+      telephone: '+212-625-55-37-68',
       contactType: 'Customer Service',
     },
   };

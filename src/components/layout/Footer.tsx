@@ -98,7 +98,7 @@ export function Footer({ className }: FooterProps) {
                   </div>
                   <div className="flex items-center gap-3 text-bw-text-secondary">
                     <PhoneIcon className="h-5 w-5 text-bw-accent-gold" />
-                    <span className="text-sm">+1 (555) 123-4567</span>
+                    <span className="text-sm">+212 625 55 37 68</span>
                   </div>
                   <div className="flex items-center gap-3 text-bw-text-secondary">
                     <MapPinIcon className="h-5 w-5 text-bw-accent-gold" />

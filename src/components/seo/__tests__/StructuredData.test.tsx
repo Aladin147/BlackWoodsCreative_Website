@@ -49,7 +49,7 @@ describe('StructuredData', () => {
       ],
       contactPoint: {
         '@type': 'ContactPoint',
-        telephone: '+1-555-123-4567',
+        telephone: '+212-625-55-37-68',
         contactType: 'Customer Service',
       },
     });
@@ -153,7 +153,7 @@ describe('StructuredData', () => {
 
     expect(jsonLd.contactPoint).toEqual({
       '@type': 'ContactPoint',
-      telephone: '+1-555-123-4567',
+      telephone: '+212-625-55-37-68',
       contactType: 'Customer Service',
     });
   });

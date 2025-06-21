@@ -43,7 +43,7 @@ describe('Footer', () => {
       expect(screen.getByText('BlackWoods Creative')).toBeInTheDocument();
       expect(screen.getByText(/Premium visual storytelling/)).toBeInTheDocument();
       expect(screen.getByText('hello@blackwoodscreative.com')).toBeInTheDocument();
-      expect(screen.getByText('+1 (555) 123-4567')).toBeInTheDocument();
+      expect(screen.getByText('+212 625 55 37 68')).toBeInTheDocument();
       expect(screen.getByText(/MFADEL Business Center/)).toBeInTheDocument();
     });
 
