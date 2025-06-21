@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 import { MagneticField } from '@/components/interactive';
 import { Logo } from '@/components/ui/Logo';
@@ -22,6 +23,7 @@ interface HeaderProps {
 export function Header({ className }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   // const { playHoverSound, playClickSound } = useUISounds(); // Temporarily disabled
 
@@ -59,6 +61,23 @@ export function Header({ className }: HeaderProps) {
     };
   }, [isMobileMenuOpen]);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('[data-dropdown]')) {
+        setOpenDropdown(null);
+      }
+    };
+
+    if (openDropdown) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+
+    return undefined;
+  }, [openDropdown]);
+
   return (
     <>
       {/* Skip Links for Accessibility */}
@@ -93,7 +112,7 @@ export function Header({ className }: HeaderProps) {
               />
             </MagneticField>
 
-            {/* Desktop Navigation with Magnetic Effects */}
+            {/* Desktop Navigation with Dropdown Support */}
             <nav
               id="navigation"
               className="hidden items-center space-x-8 md:flex"
@@ -101,27 +120,99 @@ export function Header({ className }: HeaderProps) {
               aria-label="Main navigation"
             >
               {navigationItems.map((item, index) => (
-                <MagneticField key={item.name} strength={0.15} distance={80}>
-                  <motion.button
-                    onClick={() => handleNavClick(item.href)}
-                    aria-label={`Navigate to ${item.name} section`}
-                    className={`group relative cursor-pointer rounded-md px-2 py-1 font-medium transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 ${
-                      isNavigationActive(item.href, currentPath)
-                        ? 'text-bw-accent-gold'
-                        : 'text-bw-text-primary/70'
-                    }`}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: index * 0.15 }}
-                    whileHover={{ y: -1 }}
-                    data-cursor="link"
-                  >
-                    {item.name}
-                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
-                      isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
-                    }`} />
-                  </motion.button>
-                </MagneticField>
+                <div key={item.name} className="relative" data-dropdown>
+                  <MagneticField strength={0.15} distance={80}>
+                    {item.submenu ? (
+                      // Dropdown menu item
+                      <motion.button
+                        onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
+                        onMouseEnter={() => setOpenDropdown(item.name)}
+                        onMouseLeave={() => setOpenDropdown(null)}
+                        aria-label={`${item.name} menu`}
+                        aria-expanded={openDropdown === item.name}
+                        className={`group relative cursor-pointer rounded-md px-2 py-1 font-medium transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 flex items-center gap-1 ${
+                          isNavigationActive(item.href, currentPath)
+                            ? 'text-bw-accent-gold'
+                            : 'text-bw-text-primary/70'
+                        }`}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: index * 0.15 }}
+                        whileHover={{ y: -1 }}
+                        data-cursor="link"
+                      >
+                        {item.name}
+                        <ChevronDownIcon
+                          className={`h-4 w-4 transition-transform duration-200 ${
+                            openDropdown === item.name ? 'rotate-180' : ''
+                          }`}
+                        />
+                        <span className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
+                          isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
+                        }`} />
+                      </motion.button>
+                    ) : (
+                      // Regular menu item
+                      <motion.button
+                        onClick={() => handleNavClick(item.href)}
+                        aria-label={`Navigate to ${item.name}`}
+                        className={`group relative cursor-pointer rounded-md px-2 py-1 font-medium transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 ${
+                          isNavigationActive(item.href, currentPath)
+                            ? 'text-bw-accent-gold'
+                            : 'text-bw-text-primary/70'
+                        }`}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: index * 0.15 }}
+                        whileHover={{ y: -1 }}
+                        data-cursor="link"
+                      >
+                        {item.name}
+                        <span className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
+                          isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
+                        }`} />
+                      </motion.button>
+                    )}
+                  </MagneticField>
+
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {item.submenu && openDropdown === item.name && (
+                      <motion.div
+                        className="absolute left-0 top-full mt-2 w-64 rounded-lg border border-bw-border-subtle bg-bw-bg-primary/95 backdrop-blur-md shadow-lg z-50"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        onMouseEnter={() => setOpenDropdown(item.name)}
+                        onMouseLeave={() => setOpenDropdown(null)}
+                      >
+                        <div className="py-2">
+                          {item.submenu.map((subItem: any, subIndex: number) => (
+                            <motion.button
+                              key={subItem.name}
+                              onClick={() => {
+                                handleNavClick(subItem.href);
+                                setOpenDropdown(null);
+                              }}
+                              className="w-full text-left px-4 py-3 text-sm text-bw-text-primary hover:bg-bw-accent-gold/10 hover:text-bw-accent-gold transition-colors duration-200 focus:outline-none focus:bg-bw-accent-gold/10"
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.2, delay: subIndex * 0.05 }}
+                            >
+                              <div className="font-medium">{subItem.name}</div>
+                              {subItem.description && (
+                                <div className="text-xs text-bw-text-secondary mt-1">
+                                  {subItem.description}
+                                </div>
+                              )}
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               ))}
             </nav>
 
@@ -191,28 +282,71 @@ export function Header({ className }: HeaderProps) {
               transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <nav
-                className="flex flex-col items-center space-y-8"
+                className="flex flex-col items-center space-y-6 max-h-[70vh] overflow-y-auto"
                 role="navigation"
                 aria-label="Mobile navigation"
               >
                 {navigationItems.map((item, index) => (
-                  <motion.button
-                    key={item.name}
-                    onClick={() => handleNavClick(item.href)}
-                    aria-label={`Navigate to ${item.name} section`}
-                    className={`rounded-md px-4 py-2 font-display text-display-md transition-all duration-300 hover:text-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 dark:text-bw-white ${
-                      isNavigationActive(item.href, currentPath)
-                        ? 'text-bw-gold'
-                        : 'text-bw-black'
-                    }`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.15 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {item.name}
-                  </motion.button>
+                  <div key={item.name} className="flex flex-col items-center">
+                    <motion.button
+                      onClick={() => {
+                        if (item.submenu) {
+                          setOpenDropdown(openDropdown === item.name ? null : item.name);
+                        } else {
+                          handleNavClick(item.href);
+                        }
+                      }}
+                      aria-label={item.submenu ? `${item.name} menu` : `Navigate to ${item.name}`}
+                      className={`rounded-md px-4 py-2 font-display text-display-md transition-all duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 flex items-center gap-2 ${
+                        isNavigationActive(item.href, currentPath)
+                          ? 'text-bw-accent-gold'
+                          : 'text-bw-text-primary'
+                      }`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.15 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {item.name}
+                      {item.submenu && (
+                        <ChevronDownIcon
+                          className={`h-4 w-4 transition-transform duration-200 ${
+                            openDropdown === item.name ? 'rotate-180' : ''
+                          }`}
+                        />
+                      )}
+                    </motion.button>
+
+                    {/* Mobile Submenu */}
+                    <AnimatePresence>
+                      {item.submenu && openDropdown === item.name && (
+                        <motion.div
+                          className="mt-4 flex flex-col items-center space-y-3"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {item.submenu.map((subItem: any, subIndex: number) => (
+                            <motion.button
+                              key={subItem.name}
+                              onClick={() => {
+                                handleNavClick(subItem.href);
+                                setOpenDropdown(null);
+                              }}
+                              className="text-sm text-bw-text-secondary hover:text-bw-accent-gold transition-colors duration-200 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.2, delay: subIndex * 0.05 }}
+                            >
+                              {subItem.name}
+                            </motion.button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 ))}
               </nav>
             </motion.div>

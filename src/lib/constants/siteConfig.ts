@@ -1,3 +1,11 @@
+// Navigation type definitions
+export interface NavigationItem {
+  name: string;
+  href: string;
+  description?: string;
+  submenu?: NavigationItem[];
+}
+
 export const siteConfig = {
   name: 'BlackWoods Creative',
   description: 'Premium visual storytelling through filmmaking, photography, and 3D visualization.',
