@@ -2,6 +2,21 @@
 
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+import {
+  UserIcon,
+  BriefcaseIcon,
+  FilmIcon,
+  CameraIcon,
+  CubeIcon,
+  SpeakerWaveIcon,
+  ChartBarIcon,
+  StarIcon,
+  RocketLaunchIcon,
+  HandRaisedIcon,
+  ShieldCheckIcon,
+  GlobeAltIcon,
+  ArrowTrendingUpIcon,
+} from '@heroicons/react/24/outline';
 
 import { BasePageTemplate, SEOMetadata } from './BasePageTemplate';
 import { ScrollReveal } from '@/components/interactive';
@@ -63,6 +78,23 @@ export interface ValuesData {
     icon?: string;
   }>;
 }
+
+// Icon mapping for consistent Heroicons usage
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  UserIcon,
+  BriefcaseIcon,
+  FilmIcon,
+  CameraIcon,
+  CubeIcon,
+  SpeakerWaveIcon,
+  ChartBarIcon,
+  StarIcon,
+  RocketLaunchIcon,
+  HandRaisedIcon,
+  ShieldCheckIcon,
+  GlobeAltIcon,
+  ArrowTrendingUpIcon,
+};
 
 // Content page configuration
 export interface ContentPageData {
@@ -326,17 +358,23 @@ function ValuesSection({ data }: { data: ValuesData }) {
       </ScrollReveal>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {data.values.map((value, index) => (
-          <ScrollReveal key={value.title} direction="up" distance={40} delay={index * 0.1}>
-            <div className="p-8 bg-bw-border-subtle/10 rounded-2xl text-center">
-              {value.icon && (
-                <div className="mb-6 text-4xl">{value.icon}</div>
-              )}
-              <h3 className="mb-4 font-display text-display-sm">{value.title}</h3>
-              <p className="text-body-lg text-bw-text-secondary">{value.description}</p>
-            </div>
-          </ScrollReveal>
-        ))}
+        {data.values.map((value, index) => {
+          const IconComponent = value.icon ? iconMap[value.icon] : null;
+
+          return (
+            <ScrollReveal key={value.title} direction="up" distance={40} delay={index * 0.1}>
+              <div className="p-8 bg-bw-border-subtle/10 rounded-2xl text-center">
+                {IconComponent && (
+                  <div className="mb-6 flex justify-center">
+                    <IconComponent className="h-12 w-12 text-bw-accent-gold" />
+                  </div>
+                )}
+                <h3 className="mb-4 font-display text-display-sm">{value.title}</h3>
+                <p className="text-body-lg text-bw-text-secondary whitespace-pre-line">{value.description}</p>
+              </div>
+            </ScrollReveal>
+          );
+        })}
       </div>
     </div>
   );

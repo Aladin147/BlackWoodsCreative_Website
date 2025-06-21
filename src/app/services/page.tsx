@@ -110,32 +110,32 @@ const pageData: ContentPageData = {
           {
             title: 'Video Production',
             description: 'From corporate videos to brand films, we create compelling video content that engages audiences and drives action. Professional equipment, experienced crew, and proven results.',
-            icon: '🎬'
+            icon: 'FilmIcon'
           },
           {
             title: 'Photography',
             description: 'Professional photography services for products, corporate events, team portraits, and brand imagery. High-quality visuals that enhance your professional image.',
-            icon: '📸'
+            icon: 'CameraIcon'
           },
           {
             title: '3D Visualization',
             description: 'Advanced 3D modeling, rendering, and architectural visualization. Transform concepts into photorealistic visuals for presentations, marketing, and development.',
-            icon: '🏗️'
+            icon: 'CubeIcon'
           },
           {
             title: 'Brand Films',
             description: 'Cinematic brand storytelling that captures your company\'s essence and values. Emotional connections that build lasting customer relationships.',
-            icon: '🎭'
+            icon: 'StarIcon'
           },
           {
             title: 'Corporate Training',
             description: 'Educational and training videos that improve employee engagement and knowledge retention. Clear, professional content for internal communications.',
-            icon: '🎓'
+            icon: 'BriefcaseIcon'
           },
           {
             title: 'Digital Marketing',
             description: 'Social media content, promotional videos, and digital campaigns optimized for online platforms and audience engagement.',
-            icon: '📱'
+            icon: 'ChartBarIcon'
           }
         ]
       },

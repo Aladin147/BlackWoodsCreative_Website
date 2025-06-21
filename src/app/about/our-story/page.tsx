@@ -168,32 +168,32 @@ const pageData: ContentPageData = {
           {
             title: 'Excellence',
             description: 'We never compromise on quality. Every project receives our full attention and expertise, regardless of size or budget.',
-            icon: '⭐'
+            icon: 'StarIcon'
           },
           {
             title: 'Innovation',
             description: 'We stay ahead of industry trends, constantly investing in new technology and techniques to deliver cutting-edge results.',
-            icon: '🚀'
+            icon: 'RocketLaunchIcon'
           },
           {
             title: 'Collaboration',
             description: 'We work as true partners with our clients, ensuring their vision is realized while bringing our creative expertise to every project.',
-            icon: '🤝'
+            icon: 'HandRaisedIcon'
           },
           {
             title: 'Integrity',
             description: 'Transparent communication, honest timelines, and fair pricing. We build lasting relationships based on trust and reliability.',
-            icon: '🛡️'
+            icon: 'ShieldCheckIcon'
           },
           {
             title: 'Local Expertise',
             description: 'Deep understanding of the Moroccan market, culture, and business landscape enables us to create content that truly resonates.',
-            icon: '🇲🇦'
+            icon: 'GlobeAltIcon'
           },
           {
             title: 'Results-Driven',
             description: 'Every piece of content we create is designed with specific business objectives in mind, ensuring measurable impact for our clients.',
-            icon: '📈'
+            icon: 'ArrowTrendingUpIcon'
           }
         ]
       },

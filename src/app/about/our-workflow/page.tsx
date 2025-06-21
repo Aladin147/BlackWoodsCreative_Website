@@ -137,32 +137,32 @@ const pageData: ContentPageData = {
           {
             title: 'Technical Excellence',
             description: 'Professional-grade equipment, proper lighting, crystal-clear audio, and meticulous attention to technical details.',
-            icon: '🎥'
+            icon: 'FilmIcon'
           },
           {
             title: 'Creative Innovation',
             description: 'Fresh perspectives, creative problem-solving, and innovative approaches that make your content stand out.',
-            icon: '💡'
+            icon: 'StarIcon'
           },
           {
             title: 'Brand Consistency',
             description: 'Every element aligns with your brand guidelines, ensuring consistent messaging across all touchpoints.',
-            icon: '🎨'
+            icon: 'CubeIcon'
           },
           {
             title: 'Deadline Reliability',
             description: 'Rigorous project management ensures on-time delivery without compromising quality standards.',
-            icon: '⏰'
+            icon: 'BriefcaseIcon'
           },
           {
             title: 'Client Collaboration',
             description: 'Regular communication, transparent progress updates, and collaborative decision-making throughout the process.',
-            icon: '🤝'
+            icon: 'HandRaisedIcon'
           },
           {
             title: 'Results Focus',
             description: 'Every creative decision is evaluated against your business objectives and success metrics.',
-            icon: '🎯'
+            icon: 'ArrowTrendingUpIcon'
           }
         ]
       },
