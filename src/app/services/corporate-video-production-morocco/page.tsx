@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { ServicePageTemplate, type ServicePageData, type SEOMetadata } from '@/components/templates';
 
 // SEO metadata optimized for featured snippets
-const metadata: SEOMetadata = {
+const seoMetadata: SEOMetadata = {
   title: 'Corporate Video Production in Morocco | Professional Services',
   description: 'Professional corporate video production services in Morocco. Custom solutions for businesses across Casablanca, Rabat, and Mohammedia. Contact BlackWoods Creative for consultation.',
   keywords: [
@@ -176,24 +176,24 @@ const pageData: ServicePageData = {
 };
 
 // Generate Next.js metadata
-export const metadata_export: Metadata = {
-  title: metadata.title,
-  description: metadata.description,
-  keywords: metadata.keywords,
+export const metadata: Metadata = {
+  title: seoMetadata.title,
+  description: seoMetadata.description,
+  keywords: seoMetadata.keywords,
   openGraph: {
-    title: metadata.openGraph?.title,
-    description: metadata.openGraph?.description,
+    title: seoMetadata.openGraph?.title,
+    description: seoMetadata.openGraph?.description,
     type: 'article',
     locale: 'en_US',
     siteName: 'BlackWoods Creative',
   },
   twitter: {
     card: 'summary_large_image',
-    title: metadata.title,
-    description: metadata.description,
+    title: seoMetadata.title,
+    description: seoMetadata.description,
   },
   alternates: {
-    canonical: `https://blackwoodscreative.com${metadata.canonicalUrl}`,
+    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
   },
   robots: {
     index: true,
@@ -211,7 +211,7 @@ export const metadata_export: Metadata = {
 export default function CorporateVideoPricingMoroccoPage() {
   return (
     <ServicePageTemplate
-      metadata={metadata}
+      metadata={seoMetadata}
       data={pageData}
     />
   );

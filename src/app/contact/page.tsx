@@ -7,7 +7,7 @@ import {
 } from '@/components/templates';
 
 // SEO metadata
-const metadata: SEOMetadata = {
+const seoMetadata: SEOMetadata = {
   title: 'Contact BlackWoods Creative | Video Production Services Morocco',
   description: 'Contact BlackWoods Creative for professional video production, photography, and 3D visualization services in Morocco. Get your free consultation today.',
   keywords: [
@@ -246,24 +246,24 @@ const pageData: ContentPageData = {
 };
 
 // Generate Next.js metadata
-export const metadata_export: Metadata = {
-  title: metadata.title,
-  description: metadata.description,
-  keywords: metadata.keywords,
+export const metadata: Metadata = {
+  title: seoMetadata.title,
+  description: seoMetadata.description,
+  keywords: seoMetadata.keywords,
   openGraph: {
-    title: metadata.openGraph?.title,
-    description: metadata.openGraph?.description,
+    title: seoMetadata.openGraph?.title,
+    description: seoMetadata.openGraph?.description,
     type: 'website',
     locale: 'en_US',
     siteName: 'BlackWoods Creative',
   },
   twitter: {
     card: 'summary_large_image',
-    title: metadata.title,
-    description: metadata.description,
+    title: seoMetadata.title,
+    description: seoMetadata.description,
   },
   alternates: {
-    canonical: `https://blackwoodscreative.com${metadata.canonicalUrl}`,
+    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
   },
   robots: {
     index: true,
@@ -281,7 +281,7 @@ export const metadata_export: Metadata = {
 export default function ContactPage() {
   return (
     <ContentPageTemplate
-      metadata={metadata}
+      metadata={seoMetadata}
       data={pageData}
     />
   );

@@ -7,7 +7,7 @@ import {
 } from '@/components/templates';
 
 // SEO metadata for location page
-const metadata: SEOMetadata = {
+const seoMetadata: SEOMetadata = {
   title: 'Location & Facilities | BlackWoods Creative - Professional Studio in Mohammedia, Morocco',
   description: 'Visit BlackWoods Creative\'s state-of-the-art production facilities in Mohammedia, Morocco. Professional studio, equipment, and strategic location serving Casablanca, Rabat, and beyond.',
   keywords: [
@@ -267,23 +267,23 @@ const pageData: ContentPageData = {
 
 // Generate Next.js metadata
 export const metadata: Metadata = {
-  title: metadata.title,
-  description: metadata.description,
-  keywords: metadata.keywords,
+  title: seoMetadata.title,
+  description: seoMetadata.description,
+  keywords: seoMetadata.keywords,
   openGraph: {
-    title: metadata.openGraph?.title,
-    description: metadata.openGraph?.description,
+    title: seoMetadata.openGraph?.title || seoMetadata.title,
+    description: seoMetadata.openGraph?.description || seoMetadata.description,
     type: 'website',
     locale: 'en_US',
     siteName: 'BlackWoods Creative',
   },
   twitter: {
     card: 'summary_large_image',
-    title: metadata.title,
-    description: metadata.description,
+    title: seoMetadata.title,
+    description: seoMetadata.description,
   },
   alternates: {
-    canonical: `https://blackwoodscreative.com${metadata.canonicalUrl}`,
+    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
   },
   robots: {
     index: true,
@@ -301,7 +301,7 @@ export const metadata: Metadata = {
 export default function LocationPage() {
   return (
     <ContentPageTemplate
-      metadata={metadata}
+      metadata={seoMetadata}
       data={pageData}
     />
   );

@@ -7,7 +7,7 @@ import {
 } from '@/components/templates';
 
 // SEO metadata optimized for entity recognition
-const metadata: SEOMetadata = {
+const seoMetadata: SEOMetadata = {
   title: 'Our Story | BlackWoods Creative - Morocco\'s Premier Visual Storytelling Company',
   description: 'Discover the story behind BlackWoods Creative, Morocco\'s leading video production and visual storytelling company. Founded in Mohammedia, serving clients across Morocco since 2019.',
   keywords: [
@@ -275,24 +275,24 @@ const pageData: ContentPageData = {
 };
 
 // Generate Next.js metadata
-export const metadata_export: Metadata = {
-  title: metadata.title,
-  description: metadata.description,
-  keywords: metadata.keywords,
+export const metadata: Metadata = {
+  title: seoMetadata.title,
+  description: seoMetadata.description,
+  keywords: seoMetadata.keywords,
   openGraph: {
-    title: metadata.openGraph?.title,
-    description: metadata.openGraph?.description,
+    title: seoMetadata.openGraph?.title,
+    description: seoMetadata.openGraph?.description,
     type: 'article',
     locale: 'en_US',
     siteName: 'BlackWoods Creative',
   },
   twitter: {
     card: 'summary_large_image',
-    title: metadata.title,
-    description: metadata.description,
+    title: seoMetadata.title,
+    description: seoMetadata.description,
   },
   alternates: {
-    canonical: `https://blackwoodscreative.com${metadata.canonicalUrl}`,
+    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
   },
   robots: {
     index: true,
@@ -310,7 +310,7 @@ export const metadata_export: Metadata = {
 export default function OurStoryPage() {
   return (
     <ContentPageTemplate
-      metadata={metadata}
+      metadata={seoMetadata}
       data={pageData}
     />
   );

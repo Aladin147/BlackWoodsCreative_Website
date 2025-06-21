@@ -7,7 +7,7 @@ import {
 } from '@/components/templates';
 
 // SEO metadata for team page
-const metadata: SEOMetadata = {
+const seoMetadata: SEOMetadata = {
   title: 'Our Team | BlackWoods Creative - Meet Morocco\'s Premier Visual Storytelling Professionals',
   description: 'Meet the talented team behind BlackWoods Creative. Expert filmmakers, photographers, and 3D artists serving clients across Morocco with exceptional visual content.',
   keywords: [
@@ -234,24 +234,24 @@ const pageData: ContentPageData = {
 };
 
 // Generate Next.js metadata
-export const metadata_export: Metadata = {
-  title: metadata.title,
-  description: metadata.description,
-  keywords: metadata.keywords,
+export const metadata: Metadata = {
+  title: seoMetadata.title,
+  description: seoMetadata.description,
+  keywords: seoMetadata.keywords,
   openGraph: {
-    title: metadata.openGraph?.title,
-    description: metadata.openGraph?.description,
+    title: seoMetadata.openGraph?.title,
+    description: seoMetadata.openGraph?.description,
     type: 'website',
     locale: 'en_US',
     siteName: 'BlackWoods Creative',
   },
   twitter: {
     card: 'summary_large_image',
-    title: metadata.title,
-    description: metadata.description,
+    title: seoMetadata.title,
+    description: seoMetadata.description,
   },
   alternates: {
-    canonical: `https://blackwoodscreative.com${metadata.canonicalUrl}`,
+    canonical: `https://blackwoodscreative.com${seoMetadata.canonicalUrl}`,
   },
   robots: {
     index: true,
@@ -269,7 +269,7 @@ export const metadata_export: Metadata = {
 export default function TeamPage() {
   return (
     <ContentPageTemplate
-      metadata={metadata}
+      metadata={seoMetadata}
       data={pageData}
     />
   );
