@@ -266,7 +266,7 @@ const pageData: ContentPageData = {
 };
 
 // Generate Next.js metadata
-export const metadata_export: Metadata = {
+export const metadata: Metadata = {
   title: metadata.title,
   description: metadata.description,
   keywords: metadata.keywords,
