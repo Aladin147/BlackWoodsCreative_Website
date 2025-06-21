@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { generatePageMetadata } from '@/lib/utils/metadata';
 import { FilmIcon, CameraIcon, CubeIcon } from '@heroicons/react/24/outline';
 import { MagneticField, ScrollReveal, StaggeredGrid } from '@/components/interactive';
+import { generateEnhancedOrganizationSchema } from '@/lib/utils/seo';
 
 // SEO-optimized metadata for brand searches
 const seoMetadata = {
@@ -47,81 +48,34 @@ const seoMetadata = {
 
 export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
-// Structured Data for Brand Entity SEO
-const brandStructuredData = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "BlackWoods Creative",
-  "alternateName": ["BlackWood Creative", "BlackWoods", "BlackWood"],
-  "description": "Morocco's premier creative studio specializing in video production, photography, and 3D visualization",
-  "url": "https://blackwoodscreative.com",
-  "logo": "https://blackwoodscreative.com/assets/icons/BLKWDS Creative Logo_Inverted.svg",
-  "foundingDate": "2019",
-  "foundingLocation": {
-    "@type": "Place",
-    "name": "Mohammedia, Morocco"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Mohammedia",
-    "addressCountry": "Morocco"
-  },
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+212-625-55-37-68",
-    "contactType": "customer service",
-    "availableLanguage": ["English", "French", "Arabic"]
-  },
-  "sameAs": [
-    "https://blackwoodscreative.com",
-    "https://www.blackwoodscreative.com"
-  ],
-  "serviceArea": {
-    "@type": "Place",
-    "name": "Morocco"
-  },
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "BlackWoods Creative Services",
-    "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Video Production",
-          "description": "Professional video production services including corporate videos, brand films, and commercial content"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Photography",
-          "description": "Professional photography services including commercial, product, and corporate photography"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "3D Visualization",
-          "description": "3D modeling, rendering, and architectural visualization services"
-        }
-      }
-    ]
-  },
-  "keywords": "BlackWoods, BlackWood, creative studio Morocco, video production Morocco, photography Morocco, 3D visualization Morocco"
-};
+// Enhanced Structured Data with comprehensive misspelling coverage
 
 export default function AboutPage() {
   return (
     <>
-      {/* Structured Data for SEO */}
+      {/* Enhanced Structured Data for Misspelling SEO Strategy */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(brandStructuredData),
-        }}
+        dangerouslySetInnerHTML={generateEnhancedOrganizationSchema({
+          "@type": ["Organization", "LocalBusiness"],
+          "department": [
+            {
+              "@type": "Organization",
+              "name": "BlackWoods Video Production",
+              "description": "Professional video production department"
+            },
+            {
+              "@type": "Organization",
+              "name": "BlackWoods Photography",
+              "description": "Commercial photography department"
+            },
+            {
+              "@type": "Organization",
+              "name": "BlackWoods 3D Visualization",
+              "description": "3D modeling and visualization department"
+            }
+          ]
+        })}
       />
 
       <main className="min-h-screen bg-bw-bg-primary">

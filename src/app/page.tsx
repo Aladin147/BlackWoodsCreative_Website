@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { Footer } from '@/components/layout';
 import { AboutSection, ContactSection } from '@/components/sections';
 import { componentPreloader } from '@/lib/utils/bundle-optimization';
+import { generateEnhancedOrganizationSchema, BLACKWOODS_BRAND_VARIATIONS } from '@/lib/utils/seo';
 
 // Optimized loading component
 const LoadingSection = ({ title, subtitle }: { title: string; subtitle: string }) => (
@@ -64,16 +65,7 @@ export const metadata: Metadata = {
   description:
     'BlackWoods Creative - Morocco\'s leading creative studio specializing in premium video production, professional photography, 3D visualization, and visual storytelling. Discover BlackWoods\' award-winning creative services.',
   keywords: [
-    'BlackWoods',
-    'BlackWood',
-    'BlackWoods Creative',
-    'BlackWoods Morocco',
-    'BlackWoods studio',
-    'BlackWoods video',
-    'BlackWoods photography',
-    'BlackWoods 3D',
-    'BlackWoods film',
-    'BlackWoods creative services',
+    ...BLACKWOODS_BRAND_VARIATIONS,
     'Morocco creative studio',
     'Morocco video production',
     'Morocco photography',
@@ -128,6 +120,20 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      {/* Enhanced Organization Schema for Misspelling SEO Strategy */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={generateEnhancedOrganizationSchema({
+          "@type": ["Organization", "LocalBusiness"],
+          "priceRange": "$$",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "reviewCount": "50"
+          }
+        })}
+      />
+
       <HeroSection />
       <main id="main-content" role="main" aria-label="Main content">
         <PortfolioSection />
