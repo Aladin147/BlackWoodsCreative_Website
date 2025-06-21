@@ -155,11 +155,20 @@ export const metadata: Metadata = {
     google: process.env.GOOGLE_VERIFICATION_CODE || '',
   },
   icons: {
+    // Google Search Results Optimized Favicon Configuration
     icon: [
+      // Primary favicon.ico in site root for Google search results
+      {
+        url: '/favicon.ico',
+        sizes: 'any',
+        type: 'image/x-icon',
+      },
+      // Modern SVG favicon for scalable display
       {
         url: '/assets/icons/favicon.svg',
         type: 'image/svg+xml',
       },
+      // Standard PNG sizes for optimal display
       {
         url: '/assets/icons/favicon-32x32.png',
         sizes: '32x32',
@@ -169,11 +178,6 @@ export const metadata: Metadata = {
         url: '/assets/icons/favicon-16x16.png',
         sizes: '16x16',
         type: 'image/png',
-      },
-      {
-        url: '/assets/icons/favicon.ico',
-        sizes: 'any',
-        type: 'image/x-icon',
       },
     ],
     apple: [
@@ -191,7 +195,7 @@ export const metadata: Metadata = {
       },
       {
         rel: 'manifest',
-        url: '/assets/icons/site.webmanifest',
+        url: '/manifest.json',
       },
     ],
   },
