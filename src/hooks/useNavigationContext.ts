@@ -24,11 +24,26 @@ export function useNavigationContext(): NavigationContext {
   const pathname = usePathname();
   
   return useMemo(() => {
+    // Handle null pathname
+    if (!pathname) {
+      return {
+        currentPath: '/',
+        pageType: 'home' as const,
+        section: undefined,
+        isSubpage: false,
+        parentPath: undefined,
+        relatedLinks: [],
+        breadcrumbVariant: 'minimal' as const,
+        showPageNavigation: false,
+        showRelatedLinks: false
+      };
+    }
+
     // Determine page type
     let pageType: NavigationContext['pageType'] = 'other';
     let section: string | undefined;
     let parentPath: string | undefined;
-    
+
     if (pathname === '/') {
       pageType = 'home';
     } else if (pathname.startsWith('/about')) {

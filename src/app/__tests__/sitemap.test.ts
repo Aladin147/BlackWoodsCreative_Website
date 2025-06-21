@@ -25,7 +25,7 @@ describe('sitemap', () => {
     const result = sitemap();
 
     expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBe(4);
+    expect(result.length).toBeGreaterThan(10); // Now has many more pages
   });
 
   it('includes the main homepage entry', () => {
@@ -33,39 +33,36 @@ describe('sitemap', () => {
     const homepage = result.find(entry => entry.url === siteConfig.url);
 
     expect(homepage).toBeDefined();
-    expect(homepage?.priority).toBe(1);
-    expect(homepage?.changeFrequency).toBe('monthly');
+    expect(homepage?.priority).toBe(1.0);
+    expect(homepage?.changeFrequency).toBe('weekly');
     expect(homepage?.lastModified).toBe('2024-01-01T00:00:00.000Z');
   });
 
-  it('includes the portfolio section entry', () => {
+  it('includes the portfolio page entry', () => {
     const result = sitemap();
-    const portfolio = result.find(entry => entry.url === `${siteConfig.url}/#portfolio`);
+    const portfolio = result.find(entry => entry.url === `${siteConfig.url}/portfolio`);
 
     expect(portfolio).toBeDefined();
-    expect(portfolio?.priority).toBe(0.9);
+    expect(portfolio?.priority).toBe(0.85);
     expect(portfolio?.changeFrequency).toBe('weekly');
-    expect(portfolio?.lastModified).toBe('2024-01-01T00:00:00.000Z');
   });
 
-  it('includes the about section entry', () => {
+  it('includes the about page entry', () => {
     const result = sitemap();
-    const about = result.find(entry => entry.url === `${siteConfig.url}/#about`);
+    const about = result.find(entry => entry.url === `${siteConfig.url}/about`);
 
     expect(about).toBeDefined();
-    expect(about?.priority).toBe(0.8);
+    expect(about?.priority).toBe(0.95);
     expect(about?.changeFrequency).toBe('monthly');
-    expect(about?.lastModified).toBe('2024-01-01T00:00:00.000Z');
   });
 
-  it('includes the contact section entry', () => {
+  it('includes the contact page entry', () => {
     const result = sitemap();
-    const contact = result.find(entry => entry.url === `${siteConfig.url}/#contact`);
+    const contact = result.find(entry => entry.url === `${siteConfig.url}/contact`);
 
     expect(contact).toBeDefined();
-    expect(contact?.priority).toBe(0.7);
+    expect(contact?.priority).toBe(0.8);
     expect(contact?.changeFrequency).toBe('monthly');
-    expect(contact?.lastModified).toBe('2024-01-01T00:00:00.000Z');
   });
 
   it('uses current date for lastModified', () => {

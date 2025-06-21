@@ -147,25 +147,37 @@ describe('siteConfig', () => {
 
   describe('navigation', () => {
     it('has correct number of navigation items', () => {
-      expect(siteConfig.navigation).toHaveLength(3);
+      expect(siteConfig.navigation).toHaveLength(4);
+    });
+
+    it('has services navigation item with submenu', () => {
+      const servicesNav = siteConfig.navigation.find(nav => nav.name === 'Services');
+      expect(servicesNav).toBeDefined();
+      expect(servicesNav?.href).toBe('/services');
+      expect(servicesNav?.submenu).toBeDefined();
+      expect(servicesNav?.submenu?.length).toBeGreaterThan(0);
+    });
+
+    it('has about navigation item with submenu', () => {
+      const aboutNav = siteConfig.navigation.find(nav => nav.name === 'About');
+      expect(aboutNav).toBeDefined();
+      expect(aboutNav?.href).toBe('/about/our-story');
+      expect(aboutNav?.submenu).toBeDefined();
+      expect(aboutNav?.submenu?.length).toBeGreaterThan(0);
     });
 
     it('has portfolio navigation item', () => {
       const portfolioNav = siteConfig.navigation.find(nav => nav.name === 'Portfolio');
       expect(portfolioNav).toBeDefined();
-      expect(portfolioNav?.href).toBe('#portfolio');
-    });
-
-    it('has about navigation item', () => {
-      const aboutNav = siteConfig.navigation.find(nav => nav.name === 'About');
-      expect(aboutNav).toBeDefined();
-      expect(aboutNav?.href).toBe('#about');
+      expect(portfolioNav?.href).toBe('/portfolio');
+      expect(portfolioNav?.homeHref).toBe('#portfolio');
     });
 
     it('has contact navigation item', () => {
       const contactNav = siteConfig.navigation.find(nav => nav.name === 'Contact');
       expect(contactNav).toBeDefined();
-      expect(contactNav?.href).toBe('#contact');
+      expect(contactNav?.href).toBe('/contact');
+      expect(contactNav?.homeHref).toBe('#contact');
     });
 
     it('has all required navigation properties', () => {
@@ -177,9 +189,10 @@ describe('siteConfig', () => {
       });
     });
 
-    it('has valid anchor links', () => {
+    it('has valid navigation links', () => {
       siteConfig.navigation.forEach(nav => {
-        expect(nav.href).toMatch(/^#/);
+        // Should have either hash links (homeHref) or page links (href)
+        expect(nav.href.startsWith('/') || nav.href.startsWith('#')).toBe(true);
       });
     });
 

@@ -232,9 +232,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* Context-Aware Breadcrumb Navigation */}
             <ContextAwareBreadcrumbs />
 
-            <div id="main-content" className="relative">
+            <main id="main-content" className="relative">
               {children}
-            </div>
+            </main>
             <PerformanceReporter />
             <DevelopmentMonitors />
           </div>
