@@ -5,17 +5,22 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { generateBreadcrumbs } from '@/lib/utils/internal-linking';
+import { MagneticField } from '@/components/interactive';
 
 interface BreadcrumbsProps {
   className?: string;
   showHome?: boolean;
   maxItems?: number;
+  variant?: 'default' | 'enhanced' | 'minimal';
+  showCurrentPage?: boolean;
 }
 
-export function Breadcrumbs({ 
-  className = '', 
-  showHome = true, 
-  maxItems = 5 
+export function Breadcrumbs({
+  className = '',
+  showHome = true,
+  maxItems = 5,
+  variant = 'default',
+  showCurrentPage = true
 }: BreadcrumbsProps) {
   const pathname = usePathname();
   
@@ -79,8 +84,8 @@ export function Breadcrumbs({
                 
                 {isEllipsis ? (
                   <span className="text-bw-text-secondary">...</span>
-                ) : isLast ? (
-                  <span 
+                ) : isLast && showCurrentPage ? (
+                  <span
                     className="font-medium text-bw-text-primary"
                     aria-current="page"
                   >
@@ -90,19 +95,35 @@ export function Breadcrumbs({
                       crumb.name
                     )}
                   </span>
-                ) : (
-                  <Link
-                    href={crumb.href}
-                    className="text-bw-text-secondary transition-colors duration-200 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
-                    aria-label={isHome ? 'Go to homepage' : `Go to ${crumb.name}`}
-                  >
-                    {isHome && showHome ? (
-                      <HomeIcon className="h-4 w-4" aria-label="Home" />
-                    ) : (
-                      crumb.name
-                    )}
-                  </Link>
-                )}
+                ) : !isLast ? (
+                  variant === 'enhanced' ? (
+                    <MagneticField strength={0.1} distance={60}>
+                      <Link
+                        href={crumb.href}
+                        className="text-bw-text-secondary transition-all duration-200 hover:text-bw-accent-gold hover:scale-105 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
+                        aria-label={isHome ? 'Go to homepage' : `Go to ${crumb.name}`}
+                      >
+                        {isHome && showHome ? (
+                          <HomeIcon className="h-4 w-4" aria-label="Home" />
+                        ) : (
+                          crumb.name
+                        )}
+                      </Link>
+                    </MagneticField>
+                  ) : (
+                    <Link
+                      href={crumb.href}
+                      className="text-bw-text-secondary transition-colors duration-200 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
+                      aria-label={isHome ? 'Go to homepage' : `Go to ${crumb.name}`}
+                    >
+                      {isHome && showHome ? (
+                        <HomeIcon className="h-4 w-4" aria-label="Home" />
+                      ) : (
+                        crumb.name
+                      )}
+                    </Link>
+                  )
+                ) : null}
               </li>
             );
           })}

@@ -3,6 +3,7 @@ import { generatePageMetadata } from '@/lib/utils/metadata';
 import { FilmIcon, CameraIcon, CubeIcon } from '@heroicons/react/24/outline';
 import { MagneticField, ScrollReveal, StaggeredGrid } from '@/components/interactive';
 import { RelatedLinks } from '@/components/seo';
+import { PageNavigation } from '@/components/navigation';
 import { generateEnhancedOrganizationSchema } from '@/lib/utils/seo';
 
 // SEO-optimized metadata for brand searches
@@ -286,6 +287,9 @@ export default function AboutPage() {
         </div>
       </section>
     </main>
+
+    {/* Context-Aware Page Navigation */}
+    <PageNavigation />
     </>
   );
 }

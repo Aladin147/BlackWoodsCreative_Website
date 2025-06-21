@@ -4,8 +4,9 @@ import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
 import { headers } from 'next/headers';
 
 import { Header, ScrollProgress } from '@/components/layout';
-import { StructuredData, Breadcrumbs } from '@/components/seo';
+import { StructuredData } from '@/components/seo';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { ContextAwareBreadcrumbs } from '@/components/layout/ContextAwareBreadcrumbs';
 import './globals.css';
 
 // Optimized dynamic imports with retry logic and preloading
@@ -228,12 +229,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ScrollProgress />
             <Header />
 
-            {/* Breadcrumb Navigation for SEO */}
-            <div className="border-b border-bw-border-subtle bg-bw-bg-primary">
-              <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
-                <Breadcrumbs className="text-sm" />
-              </div>
-            </div>
+            {/* Context-Aware Breadcrumb Navigation */}
+            <ContextAwareBreadcrumbs />
 
             <div id="main-content" className="relative">
               {children}
