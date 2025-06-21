@@ -20,8 +20,8 @@ const sizeClasses = {
 };
 
 const logoUrls = {
-  svg: 'https://www.blackwoodscreative.com/BLKWDS%20Creative%20Logo_Inverted.svg',
-  png: 'https://www.blackwoodscreative.com/BLKWDS%20Creative%20Logo_inverted.png',
+  svg: '/icons/logo-optimized.svg',
+  png: '/icons/logo-icon.svg', // Using icon version as fallback
 };
 
 export function Logo({ 

@@ -124,7 +124,7 @@ describe('Logo Component', () => {
     render(<Logo />);
 
     const logoImage = screen.getByTestId('logo-image-main');
-    expect(logoImage).toHaveAttribute('src', 'https://www.blackwoodscreative.com/BLKWDS%20Creative%20Logo_Inverted.svg');
+    expect(logoImage).toHaveAttribute('src', '/icons/logo-optimized.svg');
   });
 
   it('sets priority prop correctly', () => {

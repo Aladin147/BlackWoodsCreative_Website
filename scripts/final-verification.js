@@ -8,8 +8,8 @@
 const https = require('https');
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mzzgagbb';
-const LOGO_SVG_URL = 'https://www.blackwoodscreative.com/BLKWDS%20Creative%20Logo_Inverted.svg';
-const LOGO_PNG_URL = 'https://www.blackwoodscreative.com/BLKWDS%20Creative%20Logo_inverted.png';
+const LOGO_SVG_URL = '/icons/logo-optimized.svg'; // Now using local assets
+const LOGO_PNG_URL = '/icons/logo-icon.svg'; // Now using local assets
 
 console.log('🔍 Final Verification - BlackWoods Creative Website Updates\n');
 
