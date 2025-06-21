@@ -46,8 +46,8 @@ const socialLinks = [
 const quickLinks = [
   { name: 'Services', href: '/services' },
   { name: 'Our Story', href: '/about/our-story' },
-  { name: 'Portfolio', href: '#portfolio' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Portfolio', href: '/portfolio' },
+  { name: 'Contact', href: '/contact' },
 ];
 
 const services = ['Brand Films', 'Product Photography', '3D Visualization', 'Scene Creation'];

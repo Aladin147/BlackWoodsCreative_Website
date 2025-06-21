@@ -105,15 +105,19 @@ export const siteConfig = {
     },
   ],
 
-  // Legacy navigation for home page sections
+  // Home page navigation (mix of page links and section links)
   homeNavigation: [
     {
-      name: 'Portfolio',
-      href: '#portfolio',
+      name: 'Services',
+      href: '/services',
     },
     {
       name: 'About',
-      href: '#about',
+      href: '/about/our-story',
+    },
+    {
+      name: 'Portfolio',
+      href: '#portfolio',
     },
     {
       name: 'Contact',
