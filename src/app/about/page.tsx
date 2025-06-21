@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { generatePageMetadata } from '@/lib/utils/metadata';
 import { FilmIcon, CameraIcon, CubeIcon } from '@heroicons/react/24/outline';
 import { MagneticField, ScrollReveal, StaggeredGrid } from '@/components/interactive';
+import { RelatedLinks } from '@/components/seo';
 import { generateEnhancedOrganizationSchema } from '@/lib/utils/seo';
 
 // SEO-optimized metadata for brand searches
@@ -234,6 +235,18 @@ export default function AboutPage() {
               </div>
             </MagneticField>
           </StaggeredGrid>
+        </div>
+      </section>
+
+      {/* Related Pages Section */}
+      <section className="py-16 bg-bw-bg-secondary">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <RelatedLinks
+            title="Explore More About BlackWoods"
+            variant="grid"
+            maxLinks={6}
+            className="mb-12"
+          />
         </div>
       </section>
 

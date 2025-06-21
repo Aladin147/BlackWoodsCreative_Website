@@ -4,7 +4,7 @@ import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
 import { headers } from 'next/headers';
 
 import { Header, ScrollProgress } from '@/components/layout';
-import { StructuredData } from '@/components/seo/StructuredData';
+import { StructuredData, Breadcrumbs } from '@/components/seo';
 import { ThemeProvider } from '@/context/ThemeContext';
 import './globals.css';
 
@@ -227,6 +227,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <MagneticCursor />
             <ScrollProgress />
             <Header />
+
+            {/* Breadcrumb Navigation for SEO */}
+            <div className="border-b border-bw-border-subtle bg-bw-bg-primary">
+              <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+                <Breadcrumbs className="text-sm" />
+              </div>
+            </div>
+
             <div id="main-content" className="relative">
               {children}
             </div>

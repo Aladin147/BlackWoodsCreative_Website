@@ -2,111 +2,108 @@ import { MetadataRoute } from 'next';
 
 import { siteConfig } from '@/lib/constants/siteConfig';
 
+// Enhanced sitemap with SEO-optimized priorities and dynamic dates
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
   const currentDate = new Date().toISOString();
 
+  // Different modification dates for different content types
+  const recentUpdate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(); // 1 week ago
+  const monthlyUpdate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(); // 1 month ago
+
   return [
+    // ===== HOMEPAGE - HIGHEST PRIORITY =====
     {
       url: baseUrl,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 1,
+      changeFrequency: 'weekly',
+      priority: 1.0,
     },
-    // Services pages
+
+    // ===== BRAND-FOCUSED PAGES - HIGH PRIORITY =====
+    {
+      url: `${baseUrl}/about`,
+      lastModified: recentUpdate,
+      changeFrequency: 'monthly',
+      priority: 0.95, // High priority for brand page
+    },
+
+    // ===== SERVICES PAGES - BUSINESS CRITICAL =====
     {
       url: `${baseUrl}/services`,
-      lastModified: currentDate,
+      lastModified: recentUpdate,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/services/video-production-morocco`,
-      lastModified: currentDate,
+      lastModified: recentUpdate,
       changeFrequency: 'monthly',
-      priority: 0.9,
+      priority: 0.85, // High-value service page
     },
     {
       url: `${baseUrl}/services/corporate-video-production-morocco`,
-      lastModified: currentDate,
+      lastModified: recentUpdate,
       changeFrequency: 'monthly',
-      priority: 0.9,
+      priority: 0.85, // High-value service page
     },
     {
       url: `${baseUrl}/services/photography`,
-      lastModified: currentDate,
+      lastModified: recentUpdate,
       changeFrequency: 'monthly',
-      priority: 0.9,
+      priority: 0.85, // High-value service page
     },
     {
       url: `${baseUrl}/services/3d-visualization`,
-      lastModified: currentDate,
+      lastModified: recentUpdate,
       changeFrequency: 'monthly',
-      priority: 0.9,
+      priority: 0.85, // High-value service page
     },
-    // About pages
+
+    // ===== SOLUTIONS PAGE - BUSINESS FOCUSED =====
+    {
+      url: `${baseUrl}/solutions`,
+      lastModified: monthlyUpdate,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // ===== ABOUT SECTION PAGES - BRAND BUILDING =====
     {
       url: `${baseUrl}/about/our-story`,
-      lastModified: currentDate,
+      lastModified: monthlyUpdate,
       changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about/our-workflow`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      priority: 0.75, // Important brand story page
     },
     {
       url: `${baseUrl}/about/team`,
-      lastModified: currentDate,
+      lastModified: monthlyUpdate,
       changeFrequency: 'monthly',
-      priority: 0.8,
+      priority: 0.7, // Team information
+    },
+    {
+      url: `${baseUrl}/about/our-workflow`,
+      lastModified: monthlyUpdate,
+      changeFrequency: 'monthly',
+      priority: 0.65, // Process information
     },
     {
       url: `${baseUrl}/about/location`,
-      lastModified: currentDate,
+      lastModified: monthlyUpdate,
       changeFrequency: 'monthly',
-      priority: 0.8,
+      priority: 0.6, // Location information
     },
-    // Brand-focused pages for SEO
-    {
-      url: `${baseUrl}/about`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/solutions`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    // Main pages
+    // ===== PORTFOLIO & CONTACT - CONVERSION PAGES =====
     {
       url: `${baseUrl}/portfolio`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      lastModified: recentUpdate,
+      changeFrequency: 'weekly', // Updated frequently with new work
+      priority: 0.85, // High priority for showcasing work
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: currentDate,
+      lastModified: monthlyUpdate,
       changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    // Legacy hash links for home page sections
-    {
-      url: `${baseUrl}/#portfolio`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/#contact`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.8, // Important conversion page
     },
   ];
 }
