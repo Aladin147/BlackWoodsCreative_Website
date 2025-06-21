@@ -9,13 +9,23 @@ export {
   generatePageMetadata 
 } from './BasePageTemplate';
 
-export { 
-  ServicePageTemplate, 
-  type ServicePageData, 
-  type ServicePageTemplateProps 
+export {
+  ServicePageTemplate,
+  type ServicePageData,
+  type ServicePageTemplateProps
 } from './ServicePageTemplate';
 
+export {
+  ContentPageTemplate,
+  type ContentPageData,
+  type ContentPageTemplateProps,
+  type ContentSection,
+  type HeroData,
+  type TextData,
+  type TimelineData,
+  type ValuesData
+} from './ContentPageTemplate';
+
 // Future template exports:
-// export { ContentPageTemplate } from './ContentPageTemplate';
 // export { LandingPageTemplate } from './LandingPageTemplate';
 // export { BlogPageTemplate } from './BlogPageTemplate';

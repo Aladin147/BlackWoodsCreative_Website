@@ -43,6 +43,11 @@ export const siteConfig = {
       href: '/services',
       submenu: [
         {
+          name: 'All Services',
+          href: '/services',
+          description: 'Complete overview of our services'
+        },
+        {
           name: 'Video Production',
           href: '/services/video-production-morocco',
           description: 'Professional video production in Morocco'
@@ -65,16 +70,38 @@ export const siteConfig = {
       ]
     },
     {
-      name: 'Portfolio',
-      href: '#portfolio',
+      name: 'About',
+      href: '/about',
+      submenu: [
+        {
+          name: 'Our Story',
+          href: '/about/our-story',
+          description: 'The BlackWoods Creative journey'
+        },
+        {
+          name: 'Our Workflow',
+          href: '/about/our-workflow',
+          description: 'Our proven production process'
+        },
+        {
+          name: 'Team',
+          href: '/about/team',
+          description: 'Meet our creative professionals'
+        },
+        {
+          name: 'Location',
+          href: '/about/location',
+          description: 'Our facilities and equipment'
+        }
+      ]
     },
     {
-      name: 'About',
-      href: '#about',
+      name: 'Portfolio',
+      href: '/portfolio',
     },
     {
       name: 'Contact',
-      href: '#contact',
+      href: '/contact',
     },
   ],
 } as const;
