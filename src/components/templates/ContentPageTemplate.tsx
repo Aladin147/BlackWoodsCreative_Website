@@ -20,6 +20,7 @@ import {
 
 import { BasePageTemplate, SEOMetadata } from './BasePageTemplate';
 import { ScrollReveal } from '@/components/interactive';
+import { handleNavigationClick } from '@/lib/utils/navigation';
 
 // Content section types for rich content pages
 export interface ContentSection {
@@ -389,14 +390,14 @@ function CTASection({ data }: { data: any }) {
       <ScrollReveal direction="up" distance={40}>
         <h2 className="mb-6 font-display text-display-lg">{data.title}</h2>
         <p className="mb-8 text-body-xl text-bw-text-secondary">{data.description}</p>
-        <motion.a
-          href={data.href}
+        <motion.button
+          onClick={() => handleNavigationClick(data.href)}
           className="btn-primary"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           {data.text}
-        </motion.a>
+        </motion.button>
       </ScrollReveal>
     </div>
   );

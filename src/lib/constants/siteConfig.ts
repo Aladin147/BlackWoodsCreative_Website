@@ -71,7 +71,7 @@ export const siteConfig = {
     },
     {
       name: 'About',
-      href: '/about',
+      href: '/about/our-story',
       submenu: [
         {
           name: 'Our Story',
@@ -97,11 +97,27 @@ export const siteConfig = {
     },
     {
       name: 'Portfolio',
-      href: '/portfolio',
+      href: '#portfolio',
     },
     {
       name: 'Contact',
-      href: '/contact',
+      href: '#contact',
+    },
+  ],
+
+  // Legacy navigation for home page sections
+  homeNavigation: [
+    {
+      name: 'Portfolio',
+      href: '#portfolio',
+    },
+    {
+      name: 'About',
+      href: '#about',
+    },
+    {
+      name: 'Contact',
+      href: '#contact',
     },
   ],
 } as const;

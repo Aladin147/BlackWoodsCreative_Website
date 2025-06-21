@@ -12,6 +12,7 @@ import {
   ParallaxText,
   AtmosphericLayer,
 } from '@/components/interactive';
+import { navigateToPortfolio, navigateToContact } from '@/lib/utils/navigation';
 
 interface HeroSectionProps {
   className?: string;
@@ -29,23 +30,11 @@ export function HeroSection({ className }: HeroSectionProps) {
   };
 
   const handleViewWork = () => {
-    const portfolioSection = document.querySelector('#portfolio');
-    if (portfolioSection) {
-      portfolioSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
+    navigateToPortfolio();
   };
 
   const handleStartProject = () => {
-    const contactSection = document.querySelector('#contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
+    navigateToContact();
   };
 
   return (

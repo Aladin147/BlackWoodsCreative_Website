@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import React from 'react';
 
 import { MagneticField, ScrollReveal } from '@/components/interactive';
+import { handleNavigationClick } from '@/lib/utils/navigation';
 
 interface FooterProps {
   className?: string;
@@ -43,10 +44,10 @@ const socialLinks = [
 ];
 
 const quickLinks = [
+  { name: 'Services', href: '/services' },
+  { name: 'Our Story', href: '/about/our-story' },
   { name: 'Portfolio', href: '#portfolio' },
-  { name: 'About', href: '#about' },
   { name: 'Contact', href: '#contact' },
-  { name: 'Services', href: '#portfolio' },
 ];
 
 const services = ['Brand Films', 'Product Photography', '3D Visualization', 'Scene Creation'];
@@ -60,16 +61,10 @@ export function Footer({ className }: FooterProps) {
   };
 
   const handleNavClick = (href: string) => {
-    if (href.startsWith('#')) {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      }
-    } else {
+    if (href.startsWith('http')) {
       window.open(href, '_blank', 'noopener,noreferrer');
+    } else {
+      handleNavigationClick(href);
     }
   };
 

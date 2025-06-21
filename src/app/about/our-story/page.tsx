@@ -227,16 +227,47 @@ const pageData: ContentPageData = {
       }
     },
     {
+      id: 'related-pages',
+      type: 'text',
+      data: {
+        title: 'Learn More About BlackWoods Creative',
+        content: `
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="text-center p-6 bg-bw-border-subtle/10 rounded-2xl">
+              <h4 class="font-bold mb-3">Our Workflow</h4>
+              <p class="text-sm mb-4">Discover our proven process that delivers exceptional results</p>
+              <a href="/about/our-workflow" class="btn-secondary">Learn Our Process</a>
+            </div>
+            <div class="text-center p-6 bg-bw-border-subtle/10 rounded-2xl">
+              <h4 class="font-bold mb-3">Meet Our Team</h4>
+              <p class="text-sm mb-4">Get to know the creative professionals behind our success</p>
+              <a href="/about/team" class="btn-secondary">Meet the Team</a>
+            </div>
+            <div class="text-center p-6 bg-bw-border-subtle/10 rounded-2xl">
+              <h4 class="font-bold mb-3">Our Facilities</h4>
+              <p class="text-sm mb-4">Explore our state-of-the-art studio and equipment</p>
+              <a href="/about/location" class="btn-secondary">Visit Our Studio</a>
+            </div>
+          </div>
+        `
+      },
+      styling: {
+        background: 'secondary',
+        spacing: 'normal',
+        maxWidth: 'wide'
+      }
+    },
+    {
       id: 'call-to-action',
       type: 'cta',
       data: {
         title: 'Ready to Write Your Story?',
         description: 'Join the growing list of successful businesses that trust BlackWoods Creative with their visual storytelling needs.',
         text: 'Start Your Project',
-        href: '/contact'
+        href: '#contact'
       },
       styling: {
-        background: 'secondary',
+        background: 'accent',
         spacing: 'normal'
       }
     }

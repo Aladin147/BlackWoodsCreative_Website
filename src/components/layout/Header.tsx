@@ -6,7 +6,13 @@ import { useState, useEffect } from 'react';
 import { MagneticField } from '@/components/interactive';
 import { Logo } from '@/components/ui/Logo';
 import { siteConfig } from '@/lib/constants/siteConfig';
-import { cn, scrollToElement, throttle } from '@/lib/utils';
+import { cn, throttle } from '@/lib/utils';
+import {
+  handleNavigationClick,
+  getNavigationItems,
+  isNavigationActive,
+  getCurrentPath
+} from '@/lib/utils/navigation';
 // import { useUISounds } from '@/hooks/useAudioSystem'; // Temporarily disabled
 
 interface HeaderProps {
@@ -30,12 +36,15 @@ export function Header({ className }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle smooth scroll to sections
+  // Handle navigation clicks
   const handleNavClick = (href: string) => {
     // playClickSound(); // Temporarily disabled
-    scrollToElement(href, 80); // 80px offset for fixed header
-    setIsMobileMenuOpen(false);
+    handleNavigationClick(href, () => setIsMobileMenuOpen(false));
   };
+
+  // Get appropriate navigation items based on current page
+  const navigationItems = getNavigationItems(siteConfig.navigation, siteConfig.homeNavigation);
+  const currentPath = getCurrentPath();
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -78,7 +87,7 @@ export function Header({ className }: HeaderProps) {
             <MagneticField strength={0.2} distance={100}>
               <Logo
                 size="lg"
-                onClick={() => handleNavClick('#hero')}
+                onClick={() => handleNavClick('/')}
                 priority={true}
                 className="flex-shrink-0"
               />
@@ -91,12 +100,16 @@ export function Header({ className }: HeaderProps) {
               role="navigation"
               aria-label="Main navigation"
             >
-              {siteConfig.navigation.map((item, index) => (
+              {navigationItems.map((item, index) => (
                 <MagneticField key={item.name} strength={0.15} distance={80}>
                   <motion.button
                     onClick={() => handleNavClick(item.href)}
                     aria-label={`Navigate to ${item.name} section`}
-                    className="group relative cursor-pointer rounded-md px-2 py-1 font-medium text-bw-text-primary/70 transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
+                    className={`group relative cursor-pointer rounded-md px-2 py-1 font-medium transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 ${
+                      isNavigationActive(item.href, currentPath)
+                        ? 'text-bw-accent-gold'
+                        : 'text-bw-text-primary/70'
+                    }`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: index * 0.15 }}
@@ -104,7 +117,9 @@ export function Header({ className }: HeaderProps) {
                     data-cursor="link"
                   >
                     {item.name}
-                    <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-bw-accent-gold transition-all duration-300 group-hover:w-full" />
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
+                      isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
+                    }`} />
                   </motion.button>
                 </MagneticField>
               ))}
@@ -180,12 +195,16 @@ export function Header({ className }: HeaderProps) {
                 role="navigation"
                 aria-label="Mobile navigation"
               >
-                {siteConfig.navigation.map((item, index) => (
+                {navigationItems.map((item, index) => (
                   <motion.button
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
                     aria-label={`Navigate to ${item.name} section`}
-                    className="rounded-md px-4 py-2 font-display text-display-md text-bw-black transition-all duration-300 hover:text-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 dark:text-bw-white"
+                    className={`rounded-md px-4 py-2 font-display text-display-md transition-all duration-300 hover:text-bw-gold focus:outline-none focus:ring-2 focus:ring-bw-gold focus:ring-opacity-50 dark:text-bw-white ${
+                      isNavigationActive(item.href, currentPath)
+                        ? 'text-bw-gold'
+                        : 'text-bw-black'
+                    }`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.15 }}
