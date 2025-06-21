@@ -45,10 +45,12 @@ export const siteConfig = {
       icon: 'BuildingOfficeIcon',
     },
   ],
+  // Unified navigation - same structure for all pages with context-aware hrefs
   navigation: [
     {
       name: 'Services',
       href: '/services',
+      homeHref: '#portfolio', // On home page, scroll to portfolio section
       submenu: [
         {
           name: 'All Services',
@@ -80,6 +82,7 @@ export const siteConfig = {
     {
       name: 'About',
       href: '/about/our-story',
+      homeHref: '#about', // On home page, scroll to about section
       submenu: [
         {
           name: 'Our Story',
@@ -106,14 +109,16 @@ export const siteConfig = {
     {
       name: 'Portfolio',
       href: '/portfolio',
+      homeHref: '#portfolio', // On home page, scroll to portfolio section
     },
     {
       name: 'Contact',
       href: '/contact',
+      homeHref: '#contact', // On home page, scroll to contact section
     },
   ],
 
-  // Unified navigation - same structure for all pages with context-aware hrefs
+  // Home page navigation - same as navigation but with homeHref for context switching
   homeNavigation: [
     {
       name: 'Services',
