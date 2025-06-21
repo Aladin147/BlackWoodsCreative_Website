@@ -60,9 +60,69 @@ if (typeof window !== 'undefined') {
 }
 
 export const metadata: Metadata = {
-  title: 'Home',
+  title: 'BlackWoods Creative | Morocco\'s Premier Creative Studio | Video, Photography & 3D',
   description:
-    'BlackWoods Creative - Premium visual storytelling through filmmaking, photography, and 3D visualization.',
+    'BlackWoods Creative - Morocco\'s leading creative studio specializing in premium video production, professional photography, 3D visualization, and visual storytelling. Discover BlackWoods\' award-winning creative services.',
+  keywords: [
+    'BlackWoods',
+    'BlackWood',
+    'BlackWoods Creative',
+    'BlackWoods Morocco',
+    'BlackWoods studio',
+    'BlackWoods video',
+    'BlackWoods photography',
+    'BlackWoods 3D',
+    'BlackWoods film',
+    'BlackWoods creative services',
+    'Morocco creative studio',
+    'Morocco video production',
+    'Morocco photography',
+    'Morocco 3D visualization',
+    'creative studio Morocco',
+    'visual storytelling Morocco',
+    'premium creative services',
+    'professional video production',
+    'corporate video Morocco',
+    'brand films Morocco',
+    'commercial photography',
+    '3D modeling Morocco',
+    'architectural visualization',
+    'product photography Morocco',
+    'creative agency Morocco',
+    'film production Morocco'
+  ],
+  openGraph: {
+    title: 'BlackWoods Creative | Morocco\'s Premier Creative Studio',
+    description: 'Discover BlackWoods Creative - Morocco\'s leading studio for video production, photography, and 3D visualization. Premium creative services that bring your vision to life.',
+    url: 'https://blackwoodscreative.com',
+    siteName: 'BlackWoods Creative',
+    images: [
+      {
+        url: '/assets/images/og-blackwoods-creative.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'BlackWoods Creative - Morocco\'s Premier Creative Studio',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BlackWoods Creative | Morocco\'s Premier Creative Studio',
+    description: 'Discover BlackWoods Creative - Morocco\'s leading studio for video production, photography, and 3D visualization.',
+    images: ['/assets/images/twitter-blackwoods-creative.jpg'],
+    creator: '@blackwoodscreative',
+    site: '@blackwoodscreative',
+  },
+  alternates: {
+    canonical: 'https://blackwoodscreative.com',
+  },
+  other: {
+    'brand-keywords': 'BlackWoods, BlackWood, BlackWoods Creative, BlackWoods Morocco',
+    'service-keywords': 'video production, photography, 3D visualization, creative services',
+    'location-keywords': 'Morocco, Mohammedia, Casablanca, Rabat',
+  },
 };
 
 export default function HomePage() {

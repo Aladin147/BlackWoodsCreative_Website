@@ -58,6 +58,11 @@ export const siteConfig = {
           description: 'Complete overview of our services'
         },
         {
+          name: 'Creative Solutions',
+          href: '/solutions',
+          description: 'Solutions for every industry and interest'
+        },
+        {
           name: 'Video Production',
           href: '/services/video-production-morocco',
           description: 'Professional video production in Morocco'
@@ -84,6 +89,11 @@ export const siteConfig = {
       href: '/about/our-story',
       homeHref: '#about', // On home page, scroll to about section
       submenu: [
+        {
+          name: 'About BlackWoods',
+          href: '/about',
+          description: 'Discover the BlackWoods Creative story'
+        },
         {
           name: 'Our Story',
           href: '/about/our-story',
@@ -131,6 +141,11 @@ export const siteConfig = {
           description: 'Complete overview of our services'
         },
         {
+          name: 'Creative Solutions',
+          href: '/solutions',
+          description: 'Solutions for every industry and interest'
+        },
+        {
           name: 'Video Production',
           href: '/services/video-production-morocco',
           description: 'Professional video production in Morocco'
@@ -157,6 +172,11 @@ export const siteConfig = {
       href: '/about/our-story',
       homeHref: '#about', // On home page, scroll to about section
       submenu: [
+        {
+          name: 'About BlackWoods',
+          href: '/about',
+          description: 'Discover the BlackWoods Creative story'
+        },
         {
           name: 'Our Story',
           href: '/about/our-story',
