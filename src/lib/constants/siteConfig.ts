@@ -97,11 +97,11 @@ export const siteConfig = {
     },
     {
       name: 'Portfolio',
-      href: '#portfolio',
+      href: '/portfolio',
     },
     {
       name: 'Contact',
-      href: '#contact',
+      href: '/contact',
     },
   ],
 

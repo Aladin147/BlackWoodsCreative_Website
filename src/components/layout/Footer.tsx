@@ -217,25 +217,6 @@ export function Footer({ className }: FooterProps) {
             </div>
 
             <div className="flex items-center gap-6">
-              <MagneticField strength={0.1} distance={60}>
-                <button
-                  onClick={() => handleNavClick('#')}
-                  className="cursor-pointer text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-text-primary"
-                  data-cursor="link"
-                >
-                  Privacy Policy
-                </button>
-              </MagneticField>
-              <MagneticField strength={0.1} distance={60}>
-                <button
-                  onClick={() => handleNavClick('#')}
-                  className="cursor-pointer text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-text-primary"
-                  data-cursor="link"
-                >
-                  Terms of Service
-                </button>
-              </MagneticField>
-
               {/* Back to Top with Enhanced Magnetic Effect */}
               <MagneticField strength={0.4} distance={120}>
                 <motion.button
