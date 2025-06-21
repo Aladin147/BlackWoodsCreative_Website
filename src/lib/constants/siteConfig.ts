@@ -39,6 +39,32 @@ export const siteConfig = {
   ],
   navigation: [
     {
+      name: 'Services',
+      href: '/services',
+      submenu: [
+        {
+          name: 'Video Production',
+          href: '/services/video-production-morocco',
+          description: 'Professional video production in Morocco'
+        },
+        {
+          name: 'Corporate Videos',
+          href: '/services/corporate-video-pricing-morocco',
+          description: 'Corporate video pricing and packages'
+        },
+        {
+          name: 'Photography',
+          href: '/services/photography',
+          description: 'Professional photography services'
+        },
+        {
+          name: '3D Visualization',
+          href: '/services/3d-visualization',
+          description: '3D modeling and visualization'
+        }
+      ]
+    },
+    {
       name: 'Portfolio',
       href: '#portfolio',
     },
