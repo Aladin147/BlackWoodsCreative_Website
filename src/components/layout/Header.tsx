@@ -80,14 +80,6 @@ export function Header({ className }: HeaderProps) {
 
   return (
     <>
-      {/* Skip Links for Accessibility */}
-      <a href="#main-content" className="skip-link">
-        Skip to main content
-      </a>
-      <a href="#navigation" className="skip-link">
-        Skip to navigation
-      </a>
-
       <motion.header
         className={cn(
           'fixed left-0 right-0 top-0 z-50 transition-all duration-500',
@@ -228,20 +220,20 @@ export function Header({ className }: HeaderProps) {
                 data-cursor="button"
               >
                 <motion.span
-                  className="h-0.5 w-6 bg-bw-black transition-all duration-300 dark:bg-bw-white"
+                  className="h-0.5 w-6 bg-bw-text-primary transition-all duration-300"
                   animate={{
                     rotate: isMobileMenuOpen ? 45 : 0,
                     y: isMobileMenuOpen ? 0 : -4,
                   }}
                 />
                 <motion.span
-                  className="h-0.5 w-6 bg-bw-black transition-all duration-300 dark:bg-bw-white"
+                  className="h-0.5 w-6 bg-bw-text-primary transition-all duration-300"
                   animate={{
                     opacity: isMobileMenuOpen ? 0 : 1,
                   }}
                 />
                 <motion.span
-                  className="h-0.5 w-6 bg-bw-black transition-all duration-300 dark:bg-bw-white"
+                  className="h-0.5 w-6 bg-bw-text-primary transition-all duration-300"
                   animate={{
                     rotate: isMobileMenuOpen ? -45 : 0,
                     y: isMobileMenuOpen ? 0 : 4,
@@ -265,7 +257,7 @@ export function Header({ className }: HeaderProps) {
           >
             {/* Backdrop */}
             <motion.div
-              className="absolute inset-0 bg-bw-white/90 backdrop-blur-md dark:bg-bw-black/90"
+              className="absolute inset-0 bg-bw-bg-primary/95 backdrop-blur-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
