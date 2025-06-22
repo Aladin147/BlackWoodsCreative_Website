@@ -32,7 +32,7 @@ export function navigateTo(href: string, offset: number = 80): void {
 
   // Handle internal page navigation
   if (href.startsWith('/')) {
-    // Use Next.js router for client-side navigation
+    // Use window.location for now (can be upgraded to Next.js router later)
     window.location.href = href;
     return;
   }
@@ -51,19 +51,18 @@ export function isHomePage(): boolean {
 
 /**
  * Get the appropriate navigation items with context-aware hrefs
- * @param navigation - Main navigation config (kept for backward compatibility)
- * @param homeNavigation - Home page specific navigation
+ * @param navigation - Main navigation config
+ * @param homeNavigation - Home page specific navigation (kept for backward compatibility)
  */
-export function getNavigationItems(_navigation: readonly any[], homeNavigation: readonly any[]): readonly any[] {
-  const isHome = isHomePage();
-
-  // Use homeNavigation for all pages, but adjust hrefs based on context
-  return homeNavigation.map((item: any) => ({
+export function getNavigationItems(navigation: readonly any[], _homeNavigation: readonly any[]): readonly any[] {
+  // Always use proper page navigation - no more hash-based navigation
+  // This ensures all navigation links go to actual pages
+  return navigation.map((item: any) => ({
     ...item,
-    href: isHome && item.homeHref ? item.homeHref : item.href,
+    href: item.href, // Always use the page href, never homeHref
     submenu: item.submenu ? item.submenu.map((subItem: any) => ({
       ...subItem,
-      // Submenu items always use page hrefs (no context switching for submenus)
+      // Submenu items always use page hrefs
     })) : undefined
   }));
 }

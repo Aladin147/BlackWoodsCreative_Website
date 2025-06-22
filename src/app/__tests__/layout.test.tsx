@@ -62,9 +62,9 @@ jest.mock('next/font/google', () => ({
     variable: '--font-primary',
     className: 'font-inter',
   }),
-  Playfair_Display: () => ({
+  Urbanist: () => ({
     variable: '--font-display',
-    className: 'font-playfair',
+    className: 'font-urbanist',
   }),
   JetBrains_Mono: () => ({
     variable: '--font-mono',

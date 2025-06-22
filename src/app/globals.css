@@ -407,9 +407,9 @@ body::after {
 
   /* h1 (Main Headline) - Theme Guide Specification + Responsive */
   .text-display-xl {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-display), 'Urbanist', sans-serif;
     font-size: 2.5rem; /* 40px mobile */
-    font-weight: 600; /* Semi-bold per theme guide */
+    font-weight: 900; /* Black for maximum impact */
     letter-spacing: -0.02em; /* Per theme guide */
     color: var(--bw-accent-gold); /* $accent-gold per theme guide */
     line-height: 1.1;
@@ -429,9 +429,9 @@ body::after {
 
   /* h2 (Section Headings) - Theme Guide Specification + Responsive */
   .text-display-lg {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-display), 'Urbanist', sans-serif;
     font-size: 1.875rem; /* 30px mobile */
-    font-weight: 600; /* Per theme guide */
+    font-weight: 900; /* Black for maximum impact */
     letter-spacing: -0.01em; /* Per theme guide */
     color: var(--bw-text-primary); /* $text-primary per theme guide */
     line-height: 1.2;
@@ -451,9 +451,9 @@ body::after {
 
   /* h3 (Card Titles, Sub-headings) - Theme Guide Specification */
   .text-display-md {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-display), 'Urbanist', sans-serif;
     font-size: 1.5rem; /* 24px per theme guide */
-    font-weight: 600; /* Per theme guide */
+    font-weight: 700; /* Bold for sub-headings */
     color: var(--bw-text-primary); /* $text-primary per theme guide */
     line-height: 1.3;
   }

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
-import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
+import { Inter, Urbanist, JetBrains_Mono } from 'next/font/google';
 import { headers } from 'next/headers';
 
 import { Header, ScrollProgress } from '@/components/layout';
@@ -77,10 +77,11 @@ const inter = Inter({
   display: 'swap',
 });
 
-const playfair = Playfair_Display({
+const urbanist = Urbanist({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
+  weight: ['400', '500', '600', '700', '800', '900'], // Include Black (900) for maximum impact
 });
 
 const jetbrains = JetBrains_Mono({
@@ -209,7 +210,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const csrfToken = headersList.get('x-csrf-token') || undefined;
 
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${inter.variable} ${urbanist.variable} ${jetbrains.variable}`}>
       <head>
         {nonce && <meta name="csp-nonce" content={nonce} />}
         {csrfToken && <meta name="csrf-token" content={csrfToken} />}

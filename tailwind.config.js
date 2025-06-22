@@ -51,16 +51,16 @@ module.exports = {
         },
       },
       fontFamily: {
-        primary: ['Inter', 'SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        display: ['Playfair Display', 'Times New Roman', 'serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+        primary: ['var(--font-primary)', 'Inter', 'SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        display: ['var(--font-display)', 'Urbanist', 'Inter', 'SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       fontSize: {
         // AUTHENTIC THEME GUIDE TYPOGRAPHY SPECIFICATION
-        // h1 (Main Headline) - Playfair Display, 4rem, 600 weight, $accent-gold
-        'heading-1': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '600' }],
-        // h2 (Section Headings) - Playfair Display, 2.5rem, 600 weight, $text-primary
-        'heading-2': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '600' }],
+        // h1 (Main Headline) - Urbanist Black, 4rem, 900 weight, $accent-gold
+        'heading-1': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '900' }],
+        // h2 (Section Headings) - Urbanist Black, 2.5rem, 900 weight, $text-primary
+        'heading-2': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '900' }],
         // h3 (Card Titles, Sub-headings) - Inter, 1.5rem, 600 weight
         'heading-3': ['1.5rem', { lineHeight: '1.3', fontWeight: '600' }],
         // p (Body Text) - Inter, 1rem, 400 weight, line-height 1.6

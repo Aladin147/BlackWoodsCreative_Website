@@ -95,7 +95,7 @@ src/
 ### Deep Forest Haze Theme
 
 - **Primary Colors**: Dark forest greens with gold accents
-- **Typography**: Playfair Display (headings) + Inter (body)
+- **Typography**: Urbanist Bold (headings) + Inter (body)
 - **Animations**: Enhanced aurora visibility, sophisticated parallax
 - **Responsive**: Mobile-first with device-specific adaptations
 
