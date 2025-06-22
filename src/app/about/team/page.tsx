@@ -95,11 +95,11 @@ const pageData: ContentPageData = {
       }
     },
     {
-      id: 'leadership-team',
+      id: 'our-team',
       type: 'values',
       data: {
-        title: 'Leadership Team',
-        description: 'The visionaries and leaders who guide BlackWoods Creative\'s strategic direction',
+        title: 'Our Team',
+        description: 'Meet the talented professionals who make BlackWoods Creative exceptional',
         values: [
           {
             title: 'Aladin A.',
@@ -107,76 +107,34 @@ const pageData: ContentPageData = {
             icon: 'UserIcon'
           },
           {
-            title: 'Dora A.',
-            description: 'General Manager\n\nOversees daily operations and ensures seamless project execution across all departments. Brings organizational excellence and client relationship management expertise to maintain BlackWoods Creative\'s reputation for reliability and quality.',
-            icon: 'BriefcaseIcon'
-          }
-        ]
-      },
-      styling: {
-        background: 'secondary',
-        spacing: 'normal'
-      }
-    },
-    {
-      id: 'creative-team',
-      type: 'values',
-      data: {
-        title: 'Creative Department',
-        description: 'The artistic minds who bring your vision to life with exceptional creativity and technical skill',
-        values: [
-          {
             title: 'Hichem Sabri',
             description: 'Movie Director | La9atat Media Manager\n\nBrings cinematic storytelling expertise and directorial vision to every project. Specializes in creating compelling narratives that engage audiences and drive action, with extensive experience in both commercial and artistic filmmaking.',
             icon: 'FilmIcon'
           },
-          {
-            title: 'Karim Saja',
-            description: 'Expert Photographer | Editor | Image Technician\n\nMaster of visual storytelling through photography and post-production. Combines technical precision with artistic vision to create stunning imagery that enhances brand presence and marketing effectiveness.',
-            icon: 'CameraIcon'
-          }
-        ]
-      },
-      styling: {
-        background: 'primary',
-        spacing: 'normal'
-      }
-    },
-    {
-      id: 'technical-team',
-      type: 'values',
-      data: {
-        title: 'Technical & Production',
-        description: 'The technical experts who ensure flawless execution and innovative solutions',
-        values: [
           {
             title: 'Ibrahim Moufassih',
             description: 'Studio Manager | 3D Print Expert | Stage Manager\n\nEnsures seamless production operations and brings cutting-edge 3D printing and fabrication capabilities. Manages studio logistics and stage coordination to deliver projects on time and within budget.',
             icon: 'CubeIcon'
           },
           {
-            title: 'Zyad Sobhi',
-            description: 'Sound Department Manager\n\nSpecializes in audio production, sound design, and acoustic engineering. Ensures crystal-clear audio quality and immersive sound experiences that enhance the impact of every video production.',
-            icon: 'SpeakerWaveIcon'
-          }
-        ]
-      },
-      styling: {
-        background: 'accent',
-        spacing: 'normal'
-      }
-    },
-    {
-      id: 'business-development',
-      type: 'values',
-      data: {
-        title: 'Business Development',
-        description: 'The relationship builders who connect with clients and drive business growth',
-        values: [
+            title: 'Karim Saja',
+            description: 'Expert Photographer | Editor | Image Technician\n\nMaster of visual storytelling through photography and post-production. Combines technical precision with artistic vision to create stunning imagery that enhances brand presence and marketing effectiveness.',
+            icon: 'CameraIcon'
+          },
+          {
+            title: 'Dora A.',
+            description: 'General Manager\n\nOversees daily operations and ensures seamless project execution across all departments. Brings organizational excellence and client relationship management expertise to maintain BlackWoods Creative\'s reputation for reliability and quality.',
+            icon: 'BriefcaseIcon'
+          },
           {
             title: 'Zineb Ammar',
             description: 'Sales Department\n\nBuilds lasting client relationships and identifies opportunities for businesses to leverage visual content for growth. Combines market knowledge with consultative approach to ensure clients achieve their objectives through strategic video content.',
             icon: 'ChartBarIcon'
+          },
+          {
+            title: 'Zyad Sobhi',
+            description: 'Sound Department Manager\n\nSpecializes in audio production, sound design, and acoustic engineering. Ensures crystal-clear audio quality and immersive sound experiences that enhance the impact of every video production.',
+            icon: 'SpeakerWaveIcon'
           }
         ]
       },
@@ -193,6 +151,10 @@ const pageData: ContentPageData = {
         content: `
           <div class="grid md:grid-cols-2 gap-8">
             <div>
+              <h3 class="text-xl font-bold mb-4 text-bw-accent-gold">Collaborative Excellence</h3>
+              <p>Every team member contributes their unique expertise as equals, creating a collaborative environment where the best ideas rise to the top, regardless of hierarchy.</p>
+            </div>
+            <div>
               <h3 class="text-xl font-bold mb-4 text-bw-accent-gold">Diverse Expertise</h3>
               <p>Our team spans multiple disciplines - from cinematography and photography to 3D visualization and sound design. This diversity enables us to handle complex projects with in-house expertise.</p>
             </div>
@@ -201,12 +163,8 @@ const pageData: ContentPageData = {
               <p>Deep understanding of Moroccan business culture, consumer preferences, and market dynamics ensures content that truly resonates with your target audience.</p>
             </div>
             <div>
-              <h3 class="text-xl font-bold mb-4 text-bw-accent-gold">International Standards</h3>
-              <p>Our team brings experience from international projects while maintaining the personal touch and cultural sensitivity that makes content effective in Morocco.</p>
-            </div>
-            <div>
-              <h3 class="text-xl font-bold mb-4 text-bw-accent-gold">Collaborative Approach</h3>
-              <p>We work as true partners with our clients, ensuring your vision is realized while bringing our expertise to enhance the final result.</p>
+              <h3 class="text-xl font-bold mb-4 text-bw-accent-gold">Unified Vision</h3>
+              <p>We work as one cohesive team with shared goals, ensuring seamless collaboration and consistent quality across every aspect of your project.</p>
             </div>
           </div>
         `
