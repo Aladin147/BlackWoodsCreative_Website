@@ -55,14 +55,17 @@ const DevelopmentMonitors = dynamic(
     return Promise.all([
       import('@/hooks/useAnimationPerformance'),
       import('@/hooks/useDeviceAdaptation'),
-    ]).then(([animMod, deviceMod]) => ({
+      import('@/hooks/useHashCollection'),
+    ]).then(([animMod, deviceMod, hashMod]) => ({
       default: function DevelopmentMonitors() {
         const AnimationMonitor = animMod.AnimationPerformanceMonitor;
         const DeviceMonitor = deviceMod.DeviceAdaptationMonitor;
+        const HashCollectionDebug = hashMod.HashCollectionDebug;
         return (
           <>
             <AnimationMonitor />
             <DeviceMonitor />
+            <HashCollectionDebug />
           </>
         );
       },

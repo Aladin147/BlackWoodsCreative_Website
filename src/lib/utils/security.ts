@@ -5,6 +5,111 @@ import { NextRequest, NextResponse } from 'next/server';
  * Implements comprehensive security measures including CSP, CSRF protection, and more
  */
 
+// Load comprehensive Framer Motion hashes from development collection
+function loadFramerMotionHashes(): string[] {
+  try {
+    // Only load in server environment
+    if (typeof window === 'undefined') {
+      const fs = require('fs');
+      const path = require('path');
+
+      // Try to load the latest collected hashes
+      const hashFiles = [
+        'framer-motion-hashes-1750558089710.json',
+        'src/lib/utils/csp-hashes.json'
+      ];
+
+      for (const fileName of hashFiles) {
+        const hashFilePath = path.join(process.cwd(), fileName);
+        if (fs.existsSync(hashFilePath)) {
+          const fileContent = fs.readFileSync(hashFilePath, 'utf-8');
+          const hashData = JSON.parse(fileContent);
+
+          // Handle different JSON structures
+          if (Array.isArray(hashData.hashes)) {
+            return hashData.hashes;
+          } else if (hashData.hashes && typeof hashData.hashes === 'object') {
+            // Combine all hash categories
+            return [
+              ...(hashData.hashes.common || []),
+              ...(hashData.hashes.collected || []),
+              ...(hashData.hashes.manual || [])
+            ];
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load collected hashes, using fallback:', error);
+  }
+
+  // Fallback to essential hashes if file loading fails
+  return [
+    "'sha256-tTgjrFAQDNcRW/9ebtwfDewCTgZMFnKpGa9tcHFyvcs='",
+    "'sha256-E+XKxe8E3U03Zx3+QBwIsPqhP7hTQb0/u8HHYp6Kmoo='",
+    "'sha256-yjeIWbfkHCqakGNfgINzQek4xBo2zW5+69GgakTPbVY='",
+    "'sha256-HGYbL7c7YTMNrtcUQBvASpkCpnhcLdlW/2pKHJ8sJ98='",
+    "'sha256-igGwtKCyYZbjDinj7jsNnSWb5Avo7xUUWi+36D2r1l8='",
+    "'sha256-zlqnbDt84zf1iSefLU/ImC54isoprH/MRiVZGskwexk='",
+    "'sha256-8kVweCgo+M+HwPlASou2/3D6QAvPiEIKYlrZfc3cdxk='",
+    "'sha256-ZQWo4Cn5Nm60gEr8ny7kaB92rnn4oTiV7JQqMo3+PyA='",
+    "'sha256-WtLsIkggB7ab+53OaGBhXaMA5fstTDE8uWNZc4RaEgA='",
+    "'sha256-NxBRc5sFpYixGRxUjXbEdR+oY91MsYAD5ZyMizZmwxQ='",
+    "'sha256-QX237/hlIhcHo//CDgXlzRCuNT3a9BwQfHBeR1PRdPM='",
+    "'sha256-Y8LrZ2N6qJPNNWCSz1nYlYIG9Sq6rFJK+GqRTkBt3iE='",
+    "'sha256-Wn/6oAmc0SaAHk/bHUMmsujhv9yS/ahVuVwt8eYpoNQ='",
+    "'sha256-Iu5DjghVzFMtPXvj01vObCmCh8dhQUZx9E6yn17jYCU='",
+    "'sha256-r22BBb/Eg90BfeGvJjRh85ANAS4ACA4OqI+81pgc7ks='",
+    "'sha256-GWGY0N6wwt3tl+nwPANspBV0sYMRLJD0rkJ72J9phWw='",
+    "'sha256-Nt1kH5ptvm/W5OWKWDgO1CzT7+D2oBInKWjI3PjlCvw='",
+    "'sha256-D8khTyWIqhXfpVUgreV8I0yRapkFH/Sl14i//ci+vWE='",
+    "'sha256-eLn7RVblru9CzxRXEaM62rL+w1r3e4aJQjAuAUmVqj0='",
+    "'sha256-s1BUYykudHqBwnFKIsRrnIG1nU/RVJVyRMLJ9rkqH/k='",
+    "'sha256-WL3CN4Gp5UIBZTFuwGdFGQ9IFDDcYXW/981lGDJt5mQ='",
+    "'sha256-uBujpxyHbOuzn75sM496NZhK8s3155SPdCxyxGRD9ek='",
+    "'sha256-22cvBJyX6uQmoScdxghADtnVRTAqAfuBYF8lx2enKVg='",
+    "'sha256-b0Z5LuFkZJcWR+sk9vCKzBl1xlqgwgjYKS4Vx4TTrGc='",
+    "'sha256-8bzII+OkGlwX0Dli5QEkBRrof/LKae/l4Gtj9L2AWOU='",
+    "'sha256-hhVUiVM8DomaajFNlYURV9HMYROFWL8pRgpB4UsrcH4='",
+    "'sha256-KKEXPP2xrosVV4irXxbwpJRH2aPxYiN2TkfREWW6qbM='",
+    "'sha256-uZ9cNPxE54WbvoUSGuphWIjBmz9UzpjxjpRIKxsQ7AE='",
+    "'sha256-AnfdA8HQ1ENIMB9a64fsIERn4UPU5QIFX1oxoWFG7Kg='",
+  ];
+}
+
+// Load the comprehensive hash collection
+const FRAMER_MOTION_CSP_HASHES: string[] = loadFramerMotionHashes();
+
+// Optional: Load additional hashes from JSON file (fallback for future updates)
+let additionalHashes: string[] = [];
+
+try {
+  // Only attempt to load in server environment
+  if (typeof window === 'undefined') {
+    const fs = require('fs');
+    const path = require('path');
+    const hashFilePath = path.join(process.cwd(), 'src/lib/utils/csp-hashes.json');
+
+    if (fs.existsSync(hashFilePath)) {
+      const fileContent = fs.readFileSync(hashFilePath, 'utf-8');
+      const hashData = JSON.parse(fileContent);
+
+      // Combine all hash categories and filter out duplicates
+      const allHashes = [
+        ...(hashData.hashes?.common || []),
+        ...(hashData.hashes?.collected || []),
+        ...(hashData.hashes?.manual || [])
+      ];
+
+      // Only add hashes that aren't already in our static collection
+      additionalHashes = allHashes.filter((hash: string) => !FRAMER_MOTION_CSP_HASHES.includes(hash));
+    }
+  }
+} catch (error) {
+  // Silently fail - we have comprehensive static hashes as fallback
+  console.warn('Additional CSP hash loading failed (using static collection):', error);
+}
+
 // Generate cryptographically secure nonce for CSP
 export function generateNonce(): string {
   // Use Web Crypto API for Edge Runtime compatibility
@@ -78,6 +183,21 @@ export function buildCSP(config: CSPConfig = {}): string {
       'https://fonts.googleapis.com',
       // Allow hashed styles for critical CSS
       "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='", // Empty string hash for safety
+      // CRITICAL: Allow unsafe-hashes for style attributes (required for Framer Motion)
+      "'unsafe-hashes'",
+      // PRODUCTION READY: Comprehensive Framer Motion hashes (800+ collected from development)
+      ...FRAMER_MOTION_CSP_HASHES,
+      // Optional: Additional dynamically loaded hashes (fallback)
+      ...additionalHashes,
+      // Development only: Allow unsafe-inline for easier development
+      ...(isDevelopment ? ["'unsafe-inline'"] : []),
+    ],
+    'style-src-elem': [
+      "'self'",
+      ...(nonce ? [`'nonce-${nonce}'`] : []),
+      'https://fonts.googleapis.com',
+      // Allow inline styles for Framer Motion with nonce
+      ...(isDevelopment ? ["'unsafe-inline'"] : []),
     ],
     'img-src': [
       "'self'",
@@ -113,17 +233,27 @@ export function buildCSP(config: CSPConfig = {}): string {
       'https://www.google-analytics.com',
       'https://vercel.live',
     ],
-    'style-src-elem': [
-      "'self'",
-      ...(nonce ? [`'nonce-${nonce}'`] : []),
-      'https://fonts.googleapis.com',
-    ],
   };
+
+  // DEBUG: Log CSP configuration in production to diagnose issue
+  if (!isDevelopment) {
+    console.log('🔍 CSP DEBUG - FRAMER_MOTION_CSP_HASHES count:', FRAMER_MOTION_CSP_HASHES.length);
+    console.log('🔍 CSP DEBUG - additionalHashes count:', additionalHashes.length);
+    console.log('🔍 CSP DEBUG - Total style-src entries:', directives['style-src']?.length || 0);
+    console.log('🔍 CSP DEBUG - First 5 loaded hashes:', FRAMER_MOTION_CSP_HASHES.slice(0, 5));
+    console.log('🔍 CSP DEBUG - Hash loading source: Development collection file');
+  }
 
   // Build CSP string
   const cspString = Object.entries(directives)
     .map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
     .join('; ');
+
+  // DEBUG: Log final CSP string in production
+  if (!isDevelopment) {
+    console.log('🔍 CSP DEBUG - Final CSP String Length:', cspString.length);
+    console.log('🔍 CSP DEBUG - Final CSP String (first 500 chars):', cspString.substring(0, 500));
+  }
 
   return `${cspString}; block-all-mixed-content; upgrade-insecure-requests;`;
 }

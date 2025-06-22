@@ -1,0 +1,67 @@
+/**
+ * CSP-compliant motion styles for Framer Motion components
+ * This file provides fallback styles for motion components when CSP blocks inline styles
+ */
+
+/* Base motion element styles */
+[data-motion-nonce] {
+  /* Ensure transform-origin is set for smooth animations */
+  transform-origin: center;
+  /* Enable hardware acceleration */
+  will-change: transform, opacity;
+  /* Ensure proper stacking context */
+  position: relative;
+}
+
+/* Apply motion styles from data attributes */
+[data-motion-style] {
+  /* This will be dynamically populated by our motion wrapper */
+}
+
+/* Common Framer Motion animation patterns */
+.motion-transform {
+  transition: transform 0.3s ease-out;
+}
+
+.motion-opacity {
+  transition: opacity 0.3s ease-out;
+}
+
+.motion-scale {
+  transition: transform 0.3s ease-out;
+}
+
+/* Hover states for motion components */
+.motion-hover:hover {
+  transform: scale(1.02);
+}
+
+/* Focus states for accessibility */
+.motion-focus:focus {
+  outline: 2px solid var(--bw-accent-gold);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion-nonce],
+  [data-motion-style],
+  .motion-transform,
+  .motion-opacity,
+  .motion-scale {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Performance optimizations */
+[data-motion-nonce] {
+  /* Use GPU acceleration for better performance */
+  transform: translateZ(0);
+  /* Optimize for animations */
+  backface-visibility: hidden;
+  /* Improve text rendering during animations */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

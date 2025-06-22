@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CSP-compliant motion styles */
+@import '../styles/motion-csp.css';
+
 /* CSS Custom Properties - BlackWoods Creative Deep Forest Haze Theme */
 :root {
   /* Core Deep Forest Haze Colors */

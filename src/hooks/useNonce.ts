@@ -34,6 +34,15 @@ export function useNonce(): string | null {
 }
 
 /**
+ * Hook to get nonce for Framer Motion components
+ * Returns nonce for CSP-compliant inline styles
+ */
+export function useFramerNonce(): string | undefined {
+  const nonce = useNonce();
+  return nonce ?? undefined;
+}
+
+/**
  * Hook to create nonce-compatible style objects
  * Ensures styles are applied securely with CSP nonce
  */

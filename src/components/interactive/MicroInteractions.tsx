@@ -1,9 +1,10 @@
 'use client';
 
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useState, useRef, useEffect, ReactNode } from 'react';
 
 import { useAnimationConfig } from '@/hooks/useReducedMotion';
+import { MotionDiv, MotionButton, MotionSpan } from './MotionWrapper';
 
 interface HoverMagnifyProps {
   children: ReactNode;
@@ -15,13 +16,13 @@ export function HoverMagnify({ children, scale = 1.02, className = '' }: HoverMa
   const animationConfig = useAnimationConfig();
 
   return (
-    <motion.div
+    <MotionDiv
       className={className}
       whileHover={{ scale: animationConfig.scale.hover * scale }}
       transition={{ duration: animationConfig.duration.slow, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   );
 }
 
@@ -79,7 +80,7 @@ export function TiltCard({ children, maxTilt = 8, className = '' }: TiltCardProp
   };
 
   return (
-    <motion.div
+    <MotionDiv
       ref={ref}
       className={className}
       style={{
@@ -93,7 +94,7 @@ export function TiltCard({ children, maxTilt = 8, className = '' }: TiltCardProp
       transition={{ duration: animationConfig.duration.slow, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   );
 }
 
@@ -113,7 +114,7 @@ export function FloatingElement({
   const animationConfig = useAnimationConfig();
 
   return (
-    <motion.div
+    <MotionDiv
       className={className}
       animate={
         animationConfig.disableAnimations
@@ -130,7 +131,7 @@ export function FloatingElement({
       }}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   );
 }
 
@@ -151,7 +152,7 @@ export function PulseGlow({
   const animationConfig = useAnimationConfig();
 
   return (
-    <motion.div
+    <MotionDiv
       className={className}
       animate={
         animationConfig.disableAnimations
@@ -171,7 +172,7 @@ export function PulseGlow({
       }}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   );
 }
 
@@ -196,7 +197,7 @@ export function MorphingButton({
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <motion.button
+    <MotionButton
       className={`relative overflow-hidden ${className}`}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
@@ -206,23 +207,23 @@ export function MorphingButton({
       aria-label={ariaLabel}
       title={title}
     >
-      <motion.div
+      <MotionDiv
         animate={{ y: animationConfig.disableAnimations ? 0 : isHovered ? -40 : 0 }}
         transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         {children}
-      </motion.div>
+      </MotionDiv>
 
       {hoverChildren && (
-        <motion.div
+        <MotionDiv
           className="absolute inset-0 flex items-center justify-center"
           animate={{ y: animationConfig.disableAnimations ? 40 : isHovered ? 0 : 40 }}
           transition={{ duration: animationConfig.duration.normal, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           {hoverChildren}
-        </motion.div>
+        </MotionDiv>
       )}
-    </motion.button>
+    </MotionButton>
   );
 }
 
@@ -258,7 +259,7 @@ export function RippleEffect({
       {children}
 
       {ripples.map(ripple => (
-        <motion.div
+        <MotionDiv
           key={ripple.id}
           className="pointer-events-none absolute rounded-full"
           style={{
@@ -291,7 +292,7 @@ export function StaggeredReveal({ children, delay = 0.1, className = '' }: Stagg
   return (
     <div className={className}>
       {children.map((child, index) => (
-        <motion.div
+        <MotionDiv
           key={index}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -302,7 +303,7 @@ export function StaggeredReveal({ children, delay = 0.1, className = '' }: Stagg
           }}
         >
           {child}
-        </motion.div>
+        </MotionDiv>
       ))}
     </div>
   );
@@ -322,7 +323,7 @@ export function TextReveal({ text, className = '', delay = 0.05 }: TextRevealPro
       {words.map((word, wordIndex) => (
         <span key={wordIndex} className="mr-2 inline-block">
           {word.split('').map((char, charIndex) => (
-            <motion.span
+            <MotionSpan
               key={charIndex}
               className="inline-block"
               initial={{ opacity: 0, y: 20 }}
@@ -334,7 +335,7 @@ export function TextReveal({ text, className = '', delay = 0.05 }: TextRevealPro
               }}
             >
               {char}
-            </motion.span>
+            </MotionSpan>
           ))}
         </span>
       ))}
@@ -352,7 +353,7 @@ export function GlitchText({ text, className = '', intensity = 0.5 }: GlitchText
   const glitchOffset = intensity * 4; // Scale the glitch effect based on intensity
 
   return (
-    <motion.div
+    <MotionDiv
       className={`relative ${className}`}
       animate={{
         x: [0, -glitchOffset, glitchOffset, 0],
@@ -370,7 +371,7 @@ export function GlitchText({ text, className = '', intensity = 0.5 }: GlitchText
       }}
     >
       {text}
-    </motion.div>
+    </MotionDiv>
   );
 }
 
@@ -400,7 +401,7 @@ export function TypewriterText({ text, className = '', speed = 50 }: TypewriterT
   return (
     <span className={className}>
       {displayText}
-      <motion.span
+      <MotionSpan
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.8, repeat: Infinity }}
         className="ml-1 inline-block h-5 w-0.5 bg-current"

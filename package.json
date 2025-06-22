@@ -29,7 +29,9 @@
     "bundle:optimize": "npm run analyze:full && echo 'Check .next/analyze/bundle-report.json for optimization recommendations'",
     "test": "jest",
     "test:watch": "jest --watch",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "collect-hashes": "node scripts/collect-hashes.js",
+    "collect-hashes:dev": "npm run dev & sleep 10 && npm run collect-hashes && kill %1"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

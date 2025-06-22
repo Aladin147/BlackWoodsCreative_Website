@@ -8,7 +8,6 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 import {
@@ -17,6 +16,7 @@ import {
   AtmosphericLayer,
   ParallaxText,
 } from '@/components/interactive';
+import { MotionA, MotionDiv, MotionButton } from '@/components/interactive/MotionWrapper';
 import { useCSRFProtection } from '@/hooks/useCSRFProtection';
 import { validateEmail } from '@/lib/utils';
 import { sanitizeFormData } from '@/lib/utils/sanitize';
@@ -241,7 +241,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                     </button>
                   </div>
                 ) : isSubmitted ? (
-                  <motion.div
+                  <MotionDiv
                     className="py-12 text-center"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -256,7 +256,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                     <p className="font-primary text-body-text opacity-85">
                       We&apos;ll get back to you within 24 hours.
                     </p>
-                  </motion.div>
+                  </MotionDiv>
                 ) : (
                   <form
                     onSubmit={handleSubmit}
@@ -287,7 +287,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                           />
                         </MagneticField>
                         {formErrors.name && (
-                          <motion.div
+                          <MotionDiv
                             id="name-error"
                             className="mt-2 flex items-center gap-2 text-sm text-red-400"
                             initial={{ opacity: 0, y: -10 }}
@@ -298,7 +298,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                           >
                             <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
                             {formErrors.name}
-                          </motion.div>
+                          </MotionDiv>
                         )}
                       </div>
                       <div>
@@ -321,7 +321,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                           placeholder="your@email.com"
                         />
                         {formErrors.email && (
-                          <motion.div
+                          <MotionDiv
                             id="email-error"
                             className="mt-2 flex items-center gap-2 text-sm text-red-400"
                             initial={{ opacity: 0, y: -10 }}
@@ -332,7 +332,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                           >
                             <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
                             {formErrors.email}
-                          </motion.div>
+                          </MotionDiv>
                         )}
                       </div>
                     </div>
@@ -422,7 +422,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                         placeholder="Tell us about your project vision, goals, and any specific requirements..."
                       />
                       {formErrors.message && (
-                        <motion.div
+                        <MotionDiv
                           id="message-error"
                           className="mt-2 flex items-center gap-2 text-sm text-red-400"
                           initial={{ opacity: 0, y: -10 }}
@@ -433,11 +433,11 @@ export function ContactSection({ className }: ContactSectionProps) {
                         >
                           <ExclamationTriangleIcon className="h-4 w-4" aria-hidden="true" />
                           {formErrors.message}
-                        </motion.div>
+                        </MotionDiv>
                       )}
                     </div>
 
-                    <motion.button
+                    <MotionButton
                       type="submit"
                       disabled={isSubmitting}
                       className="btn-primary flex w-full items-center justify-center gap-2"
@@ -455,7 +455,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                           Send Message
                         </>
                       )}
-                    </motion.button>
+                    </MotionButton>
                   </form>
                 )}
               </div>
@@ -463,7 +463,7 @@ export function ContactSection({ className }: ContactSectionProps) {
           </ScrollReveal>
 
           {/* Contact Information */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -481,7 +481,7 @@ export function ContactSection({ className }: ContactSectionProps) {
 
               <div className="space-y-6">
                 {contactInfo.map((info, index) => (
-                  <motion.a
+                  <MotionA
                     key={info.label}
                     href={info.href}
                     aria-label={`${info.label}: ${info.value}`}
@@ -499,7 +499,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                       <p className="text-sm text-bw-light-gray">{info.label}</p>
                       <p className="font-medium text-bw-white">{info.value}</p>
                     </div>
-                  </motion.a>
+                  </MotionA>
                 ))}
               </div>
 
@@ -511,7 +511,7 @@ export function ContactSection({ className }: ContactSectionProps) {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </section>
