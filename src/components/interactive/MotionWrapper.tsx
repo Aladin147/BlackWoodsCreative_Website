@@ -15,6 +15,7 @@ import { getHashCollector } from '@/lib/utils/hash-collector';
  * Enhanced CSP-compliant motion component factory
  */
 function createMotionComponent(element: keyof typeof motion) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MotionComponent = forwardRef<HTMLElement, any>((props, ref) => {
     const nonce = useFramerNonce();
     const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
@@ -112,6 +113,7 @@ function createMotionComponent(element: keyof typeof motion) {
       };
     }, [applyNonceToStyles, elementRef]);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const MotionComponent = motion[element] as React.ComponentType<any>;
 
     return (

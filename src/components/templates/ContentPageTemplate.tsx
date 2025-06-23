@@ -92,6 +92,7 @@ export interface CTAData {
 }
 
 // Icon mapping for consistent Heroicons usage
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconMap: Record<string, React.ComponentType<any>> = {
   UserIcon,
   BriefcaseIcon,
