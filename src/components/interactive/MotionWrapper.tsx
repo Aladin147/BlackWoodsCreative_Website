@@ -15,7 +15,7 @@ import { getHashCollector } from '@/lib/utils/hash-collector';
  * Enhanced CSP-compliant motion component factory
  */
 function createMotionComponent(element: keyof typeof motion) {
-  return forwardRef<any, any>((props, ref) => {
+  return forwardRef<HTMLElement, React.ComponentProps<typeof motion.div>>((props, ref) => {
     const nonce = useFramerNonce();
     const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
@@ -112,16 +112,16 @@ function createMotionComponent(element: keyof typeof motion) {
       };
     }, [applyNonceToStyles]);
 
-    const MotionComponent = (motion as any)[element];
+    const MotionComponent = motion[element] as React.ComponentType<React.ComponentProps<typeof motion.div>>;
 
     return (
       <MotionComponent
-        ref={(node: any) => {
+        ref={(node: HTMLElement | null) => {
           setElementRef(node);
           if (typeof ref === 'function') {
             ref(node);
           } else if (ref) {
-            (ref as any).current = node;
+            (ref as React.MutableRefObject<HTMLElement | null>).current = node;
           }
         }}
         {...props}

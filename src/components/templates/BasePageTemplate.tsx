@@ -10,7 +10,7 @@ import { SEOMetadata } from '@/lib/utils/metadata';
 export interface ContentBlock {
   id: string;
   type: 'hero' | 'content' | 'cta' | 'faq' | 'testimonials' | 'services' | 'pricing';
-  data: any;
+  data: Record<string, unknown>;
   styling?: {
     background?: 'primary' | 'secondary' | 'gradient' | 'transparent';
     spacing?: 'tight' | 'normal' | 'loose';

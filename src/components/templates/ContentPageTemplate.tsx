@@ -28,7 +28,7 @@ import { BasePageTemplate } from './BasePageTemplate';
 export interface ContentSection {
   id: string;
   type: 'hero' | 'text' | 'timeline' | 'values' | 'team' | 'process' | 'gallery' | 'cta';
-  data: any;
+  data: HeroData | TextData | TimelineData | ValuesData | CTAData | Record<string, unknown>;
   styling?: {
     background?: 'primary' | 'secondary' | 'accent' | 'transparent';
     spacing?: 'tight' | 'normal' | 'loose';
@@ -82,8 +82,16 @@ export interface ValuesData {
   }>;
 }
 
+// CTA section data
+export interface CTAData {
+  title: string;
+  description: string;
+  text: string;
+  href: string;
+}
+
 // Icon mapping for consistent Heroicons usage
-const iconMap: Record<string, React.ComponentType<any>> = {
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   UserIcon,
   BriefcaseIcon,
   FilmIcon,
@@ -383,7 +391,7 @@ function ValuesSection({ data }: { data: ValuesData }) {
 /**
  * CTA Section
  */
-function CTASection({ data }: { data: any }) {
+function CTASection({ data }: { data: CTAData }) {
   return (
     <div className="mx-auto max-w-4xl text-center">
       <ScrollReveal direction="up" distance={40}>

@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 
-import { getInternalLinksForPage } from '@/lib/utils/internal-linking';
+import { getInternalLinksForPage, type InternalLink } from '@/lib/utils/internal-linking';
 
 export interface NavigationContext {
   currentPath: string;
@@ -11,7 +11,7 @@ export interface NavigationContext {
   section: string | undefined;
   isSubpage: boolean;
   parentPath: string | undefined;
-  relatedLinks: any[];
+  relatedLinks: InternalLink[];
   breadcrumbVariant: 'default' | 'enhanced' | 'minimal';
   showPageNavigation: boolean;
   showRelatedLinks: boolean;

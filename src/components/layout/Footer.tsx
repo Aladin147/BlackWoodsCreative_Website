@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 import React from 'react';
 
 import { MagneticField, ScrollReveal } from '@/components/interactive';
-import { siteConfig } from '@/lib/constants/siteConfig';
+import { siteConfig, type NavigationItem } from '@/lib/constants/siteConfig';
 import { handleNavigationClick, getNavigationItems } from '@/lib/utils/navigation';
 
 interface FooterProps {
@@ -47,7 +47,7 @@ const socialLinks = [
 // Use unified navigation for consistency
 const getQuickLinks = () => {
   const navigationItems = getNavigationItems(siteConfig.navigation, siteConfig.homeNavigation);
-  return navigationItems.map((item: any) => ({
+  return navigationItems.map((item: NavigationItem) => ({
     name: item.name,
     href: item.href
   }));

@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 import { MagneticField } from '@/components/interactive';
 import { Logo } from '@/components/ui/Logo';
-import { siteConfig } from '@/lib/constants/siteConfig';
+import { siteConfig, type NavigationItem } from '@/lib/constants/siteConfig';
 import { cn, throttle } from '@/lib/utils';
 import {
   handleNavigationClick,
@@ -180,7 +180,7 @@ export function Header({ className }: HeaderProps) {
                         onMouseLeave={() => setOpenDropdown(null)}
                       >
                         <div className="py-2">
-                          {item.submenu.map((subItem: any, subIndex: number) => (
+                          {item.submenu.map((subItem: NavigationItem, subIndex: number) => (
                             <motion.button
                               key={subItem.name}
                               onClick={() => {
@@ -320,7 +320,7 @@ export function Header({ className }: HeaderProps) {
                           exit={{ opacity: 0, height: 0 }}
                           transition={{ duration: 0.3 }}
                         >
-                          {item.submenu.map((subItem: any, subIndex: number) => (
+                          {item.submenu.map((subItem: NavigationItem, subIndex: number) => (
                             <motion.button
                               key={subItem.name}
                               onClick={() => {

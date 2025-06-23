@@ -14,6 +14,12 @@ interface PageNavigationProps {
   maxRelated?: number;
 }
 
+interface PageInfo {
+  path: string;
+  title: string;
+  description: string;
+}
+
 // Define page sequences for prev/next navigation
 const PAGE_SEQUENCES = {
   about: [
@@ -149,9 +155,9 @@ export function PageNavigation({
 }
 
 // Utility function to get previous and next pages
-function getPrevNextPages(currentPath: string): { prevPage?: any; nextPage?: any } {
+function getPrevNextPages(currentPath: string): { prevPage?: PageInfo; nextPage?: PageInfo } {
   // Determine which sequence this page belongs to
-  let sequence: any[] = [];
+  let sequence: PageInfo[] = [];
   
   if (currentPath.startsWith('/about')) {
     sequence = PAGE_SEQUENCES.about;

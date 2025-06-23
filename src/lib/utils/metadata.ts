@@ -14,7 +14,7 @@ export interface SEOMetadata {
     location: string;
     priceRange?: string;
   };
-  structuredData?: Record<string, any>;
+  structuredData?: Record<string, unknown>;
   canonicalUrl?: string;
   openGraph?: {
     title?: string;

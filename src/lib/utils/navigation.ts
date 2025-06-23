@@ -3,6 +3,8 @@
  * Supports both hash-based navigation (for home page sections) and page navigation
  */
 
+import type { NavigationItem } from '@/lib/constants/siteConfig';
+
 /**
  * Navigate to a URL or hash section
  * @param href - The href to navigate to (can be hash or full URL)
@@ -53,13 +55,13 @@ export function isHomePage(): boolean {
  * @param navigation - Main navigation config
  * @param homeNavigation - Home page specific navigation (kept for backward compatibility)
  */
-export function getNavigationItems(navigation: readonly any[], _homeNavigation: readonly any[]): readonly any[] {
+export function getNavigationItems(navigation: readonly NavigationItem[], _homeNavigation: readonly NavigationItem[]): readonly NavigationItem[] {
   // Always use proper page navigation - no more hash-based navigation
   // This ensures all navigation links go to actual pages
-  return navigation.map((item: any) => ({
+  return navigation.map((item: NavigationItem) => ({
     ...item,
     href: item.href, // Always use the page href, never homeHref
-    submenu: item.submenu ? item.submenu.map((subItem: any) => ({
+    submenu: item.submenu ? item.submenu.map((subItem: NavigationItem) => ({
       ...subItem,
       // Submenu items always use page hrefs
     })) : undefined

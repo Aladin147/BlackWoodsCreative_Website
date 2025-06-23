@@ -13,7 +13,7 @@ import {
 interface CollectionStats {
   totalHashes: number;
   byComponent: Record<string, number>;
-  mostFrequent: any[];
+  mostFrequent: Array<{ hash: string; count: number; component?: string }>;
 }
 
 /**

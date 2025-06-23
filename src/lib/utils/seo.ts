@@ -191,7 +191,7 @@ export const BLACKWOODS_BRAND_VARIATIONS = [
 ];
 
 // Enhanced Organization Schema with comprehensive misspelling coverage
-export function generateEnhancedOrganizationSchema(additionalData?: Record<string, any>) {
+export function generateEnhancedOrganizationSchema(additionalData?: Record<string, unknown>) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
