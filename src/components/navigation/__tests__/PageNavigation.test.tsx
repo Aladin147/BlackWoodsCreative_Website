@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
 
+import { getInternalLinksForPage } from '@/lib/utils/internal-linking';
+
 import { PageNavigation, CompactPageNavigation, SectionNavigation } from '../PageNavigation';
 
 // Mock Next.js navigation
@@ -20,7 +22,7 @@ jest.mock('@/components/interactive', () => ({
 }));
 
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
-const mockGetInternalLinksForPage = require('@/lib/utils/internal-linking').getInternalLinksForPage;
+const mockGetInternalLinksForPage = getInternalLinksForPage as jest.MockedFunction<typeof getInternalLinksForPage>;
 
 describe('PageNavigation Component', () => {
   beforeEach(() => {
@@ -78,7 +80,7 @@ describe('PageNavigation Component', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
       mockGetInternalLinksForPage.mockReturnValue(mockLinkingStrategy);
 
-      render(<PageNavigation showRelated={true} />);
+      render(<PageNavigation showRelated />);
 
       expect(screen.getByText('Related Pages')).toBeInTheDocument();
       expect(screen.getByText('Our Team')).toBeInTheDocument();
@@ -89,7 +91,7 @@ describe('PageNavigation Component', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
       mockGetInternalLinksForPage.mockReturnValue(mockLinkingStrategy);
 
-      render(<PageNavigation showRelated={true} maxRelated={1} />);
+      render(<PageNavigation showRelated maxRelated={1} />);
 
       expect(screen.getByText('Our Team')).toBeInTheDocument();
       expect(screen.queryByText('Our Workflow')).not.toBeInTheDocument();

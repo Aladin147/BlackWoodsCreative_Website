@@ -171,7 +171,7 @@ export function useMobileNavigation() {
     const mobileConfig = {
       showCompactBreadcrumbs: context.isSubpage,
       showBackButton: context.isSubpage,
-      backButtonHref: context.parentPath || '/',
+      backButtonHref: context.parentPath ?? '/',
       showRelatedInSidebar: context.showRelatedLinks,
       maxRelatedMobile: 2
     };

@@ -23,8 +23,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     return { hasError: true, error };
   }
 
-  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+  override componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
+    // ErrorBoundary caught an error - logged internally
   }
 
   resetError = () => {

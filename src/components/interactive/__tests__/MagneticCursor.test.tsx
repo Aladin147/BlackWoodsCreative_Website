@@ -137,7 +137,7 @@ describe('MagneticCursor', () => {
       <div>
         <MagneticCursor />
         <button>Button</button>
-        <a href="#">Link</a>
+        <a href="/test-link">Link</a>
         <div data-cursor="portfolio">Portfolio Item</div>
       </div>
     );

@@ -1,15 +1,16 @@
-import { Metadata } from 'next';
-import { generatePageMetadata } from '@/lib/utils/metadata';
 import { FilmIcon, CameraIcon, CubeIcon } from '@heroicons/react/24/outline';
+import { Metadata } from 'next';
+
 import { MagneticField, ScrollReveal, StaggeredGrid } from '@/components/interactive';
-import { RelatedLinks } from '@/components/seo';
 import { PageNavigation } from '@/components/navigation';
+import { RelatedLinks } from '@/components/seo';
+import { generatePageMetadata } from '@/lib/utils/metadata';
 import { generateEnhancedOrganizationSchema } from '@/lib/utils/seo';
 
 // SEO-optimized metadata for brand searches
 const seoMetadata = {
-  title: 'About BlackWoods Creative | Morocco\'s Leading Creative Studio Story',
-  description: 'Discover the BlackWoods Creative story - Morocco\'s premier creative studio founded on visual excellence. Learn about BlackWoods\' journey, values, and commitment to exceptional creative services.',
+  title: 'About BlackWoods Creative | Morocco&apos;s Leading Creative Studio Story',
+  description: 'Discover the BlackWoods Creative story - Morocco&apos;s premier creative studio founded on visual excellence. Learn about BlackWoods&apos; journey, values, and commitment to exceptional creative services.',
   keywords: [
     'About BlackWoods',
     'BlackWoods Creative story',
@@ -34,15 +35,15 @@ const seoMetadata = {
   ],
   canonical: 'https://blackwoodscreative.com/about',
   openGraph: {
-    title: 'About BlackWoods Creative | Morocco\'s Leading Creative Studio',
-    description: 'Discover the BlackWoods Creative story - Morocco\'s premier creative studio founded on visual excellence and innovative storytelling.',
+    title: 'About BlackWoods Creative | Morocco&apos;s Leading Creative Studio',
+    description: 'Discover the BlackWoods Creative story - Morocco&apos;s premier creative studio founded on visual excellence and innovative storytelling.',
     url: 'https://blackwoodscreative.com/about',
     images: [
       {
         url: '/assets/images/about-blackwoods-creative.jpg',
         width: 1200,
         height: 630,
-        alt: 'About BlackWoods Creative - Morocco\'s Premier Creative Studio Team',
+        alt: 'About BlackWoods Creative - Morocco&apos;s Premier Creative Studio Team',
       },
     ],
   },
@@ -92,7 +93,7 @@ export default function AboutPage() {
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
               <p className="mx-auto max-w-3xl font-primary text-body-xl text-bw-text-secondary">
-                Morocco's premier creative studio, founded on the belief that exceptional visual storytelling
+                Morocco&apos;s premier creative studio, founded on the belief that exceptional visual storytelling
                 can transform brands, captivate audiences, and drive meaningful results.
               </p>
             </ScrollReveal>
@@ -114,8 +115,8 @@ export default function AboutPage() {
                 <div className="space-y-6 font-primary text-body-xl">
                   <p>
                     BlackWoods Creative was born from a passion for visual excellence and a vision to
-                    elevate Morocco's creative landscape. Founded by a team of dedicated artists and
-                    storytellers, we've grown into Morocco's leading creative studio.
+                    elevate Morocco&apos;s creative landscape. Founded by a team of dedicated artists and
+                    storytellers, we&apos;ve grown into Morocco&apos;s leading creative studio.
                   </p>
                   <p>
                     What sets BlackWoods apart is our unwavering commitment to quality, innovation,
@@ -126,7 +127,7 @@ export default function AboutPage() {
                   <p>
                     From our state-of-the-art facilities in Mohammedia to our collaborative approach
                     with clients across Morocco and beyond, BlackWoods Creative continues to push
-                    the boundaries of what's possible in visual storytelling.
+                    the boundaries of what&apos;s possible in visual storytelling.
                   </p>
                 </div>
               </ScrollReveal>
@@ -214,7 +215,7 @@ export default function AboutPage() {
                 </h3>
                 <p className="font-primary text-body-xl">
                   Professional photography services that capture the essence of your brand
-                  with BlackWoods' signature attention to detail.
+                  with BlackWoods&apos; signature attention to detail.
                 </p>
               </div>
             </MagneticField>

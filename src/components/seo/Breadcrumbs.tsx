@@ -4,8 +4,8 @@ import { ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { generateBreadcrumbs } from '@/lib/utils/internal-linking';
 import { MagneticField } from '@/components/interactive';
+import { generateBreadcrumbs } from '@/lib/utils/internal-linking';
 
 interface BreadcrumbsProps {
   className?: string;

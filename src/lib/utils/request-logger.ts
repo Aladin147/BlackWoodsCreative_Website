@@ -176,11 +176,11 @@ class RequestLogger {
 
     // Update method counts
     this.metrics.requestsByMethod[logEntry.method] =
-      (this.metrics.requestsByMethod[logEntry.method] || 0) + 1;
+      (this.metrics.requestsByMethod[logEntry.method] ?? 0) + 1;
 
     // Update path counts
     this.metrics.requestsByPath[logEntry.path] =
-      (this.metrics.requestsByPath[logEntry.path] || 0) + 1;
+      (this.metrics.requestsByPath[logEntry.path] ?? 0) + 1;
 
     // Check for security events
     if (logEntry.securityFlags) {
@@ -195,7 +195,7 @@ class RequestLogger {
 
     // Update status counts
     this.metrics.requestsByStatus[logEntry.statusCode] =
-      (this.metrics.requestsByStatus[logEntry.statusCode] || 0) + 1;
+      (this.metrics.requestsByStatus[logEntry.statusCode] ?? 0) + 1;
 
     // Update success/failure counts
     if (logEntry.statusCode >= 200 && logEntry.statusCode < 400) {
@@ -206,7 +206,7 @@ class RequestLogger {
       // Track error types
       if (logEntry.error) {
         this.metrics.errorsByType[logEntry.error] =
-          (this.metrics.errorsByType[logEntry.error] || 0) + 1;
+          (this.metrics.errorsByType[logEntry.error] ?? 0) + 1;
       }
     }
 
@@ -218,7 +218,7 @@ class RequestLogger {
     // Calculate average response time
     const totalResponseTime = this.logs
       .filter(log => log.responseTime)
-      .reduce((sum, log) => sum + (log.responseTime || 0), 0);
+      .reduce((sum, log) => sum + (log.responseTime ?? 0), 0);
     const completedRequests = this.logs.filter(log => log.responseTime).length;
     this.metrics.averageResponseTime =
       completedRequests > 0 ? totalResponseTime / completedRequests : 0;
@@ -285,11 +285,11 @@ class RequestLogger {
             log.timestamp,
             log.method,
             log.path,
-            log.statusCode || '',
-            log.responseTime || '',
+            log.statusCode ?? '',
+            log.responseTime ?? '',
             log.ip,
             `"${log.userAgent.replace(/"/g, '""')}"`,
-            log.error || '',
+            log.error ?? '',
           ].join(',')
         ),
       ];
@@ -304,9 +304,7 @@ class RequestLogger {
 let requestLogger: RequestLogger | null = null;
 
 export function getRequestLogger(): RequestLogger {
-  if (!requestLogger) {
-    requestLogger = new RequestLogger();
-  }
+  requestLogger ??= new RequestLogger();
   return requestLogger;
 }
 

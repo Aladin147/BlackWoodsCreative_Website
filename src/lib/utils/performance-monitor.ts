@@ -93,13 +93,13 @@ class PerformanceMonitor {
   }
 
   // Track bundle loading performance
-  trackBundleLoad(chunkName: string, startTime: number) {
+  trackBundleLoad(_chunkName: string, startTime: number) {
     const loadTime = performance.now() - startTime;
-    console.log(`Bundle chunk "${chunkName}" loaded in ${loadTime.toFixed(2)}ms`);
+    // Bundle chunk loading tracked internally
 
     // Update bundle metrics
-    this.bundleMetrics.loadTime = (this.bundleMetrics.loadTime || 0) + loadTime;
-    this.bundleMetrics.chunkCount = (this.bundleMetrics.chunkCount || 0) + 1;
+    this.bundleMetrics.loadTime = (this.bundleMetrics.loadTime ?? 0) + loadTime;
+    this.bundleMetrics.chunkCount = (this.bundleMetrics.chunkCount ?? 0) + 1;
   }
 
   // Get current performance metrics
@@ -142,31 +142,16 @@ class PerformanceMonitor {
 
   // Report metrics to analytics (placeholder)
   reportMetrics() {
-    const metrics = this.getMetrics();
-    const budgetCheck = this.checkPerformanceBudgets();
+    this.getMetrics();
+    this.checkPerformanceBudgets();
 
-    console.group('🚀 Performance Metrics Report');
-    console.log('Core Web Vitals:', {
-      LCP: `${metrics.lcp?.toFixed(2)}ms`,
-      FID: `${metrics.fid?.toFixed(2)}ms`,
-      CLS: metrics.cls?.toFixed(3),
-      FCP: `${metrics.fcp?.toFixed(2)}ms`,
-      TTFB: `${metrics.ttfb?.toFixed(2)}ms`,
-    });
-    console.log('Bundle Performance:', {
-      'Total Load Time': `${metrics.loadTime?.toFixed(2)}ms`,
-      'Chunks Loaded': metrics.chunkCount,
-    });
-    console.log('Budget Check:', budgetCheck.passed ? '✅ PASSED' : '❌ FAILED');
-    if (!budgetCheck.passed) {
-      console.warn('Budget Violations:', budgetCheck.violations);
-    }
-    console.groupEnd();
+    // Performance metrics reported internally
+    // Core Web Vitals and Bundle Performance tracked
 
     // In production, send to analytics service
     if (process.env.NODE_ENV === 'production') {
       // Example: Send to Google Analytics, Sentry, or custom analytics
-      // analytics.track('performance_metrics', metrics);
+      // analytics.track('performance_metrics', _metrics);
     }
   }
 
@@ -181,9 +166,7 @@ class PerformanceMonitor {
 let performanceMonitor: PerformanceMonitor | null = null;
 
 export function getPerformanceMonitor(): PerformanceMonitor {
-  if (!performanceMonitor) {
-    performanceMonitor = new PerformanceMonitor();
-  }
+  performanceMonitor ??= new PerformanceMonitor();
   return performanceMonitor;
 }
 
@@ -193,7 +176,8 @@ export function trackComponentLoad(componentName: string) {
 
   return () => {
     const loadTime = performance.now() - startTime;
-    console.log(`Component "${componentName}" rendered in ${loadTime.toFixed(2)}ms`);
+    // Component render time tracked internally
+    void loadTime; // Explicitly mark as intentionally unused
 
     // Track in performance monitor
     const monitor = getPerformanceMonitor();

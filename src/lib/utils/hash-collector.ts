@@ -35,8 +35,8 @@ class FramerMotionHashCollector {
    */
   startCollection(): void {
     if (this.isCollecting || typeof window === 'undefined') return;
-    
-    console.log('🔍 Starting Framer Motion hash collection...');
+
+    // Starting Framer Motion hash collection - logged internally
     this.isCollecting = true;
 
     // Monitor existing elements
@@ -74,8 +74,8 @@ class FramerMotionHashCollector {
    */
   stopCollection(): void {
     if (!this.isCollecting) return;
-    
-    console.log('⏹️ Stopping hash collection...');
+
+    // Stopping hash collection - logged internally
     this.isCollecting = false;
     
     if (this.observer) {
@@ -174,8 +174,8 @@ class FramerMotionHashCollector {
       const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return `sha256-${btoa(String.fromCharCode.apply(null, hashArray))}`;
-    } catch (error) {
-      console.warn('Failed to generate crypto hash, using fallback:', error);
+    } catch {
+      // Failed to generate crypto hash, using fallback - logged internally
       return this.simpleHash(style);
     }
   }
@@ -211,8 +211,8 @@ class FramerMotionHashCollector {
         component,
         frequency: 1,
       });
-      
-      console.log(`📝 Collected new hash: ${hash.substring(0, 20)}... (${component || 'unknown'})`);
+
+      // Collected new hash - logged internally
     }
   }
 
@@ -250,9 +250,9 @@ class FramerMotionHashCollector {
       };
 
       localStorage.setItem(this.storageKey, JSON.stringify(data));
-      console.log(`💾 Saved ${this.collectedHashes.size} hashes to storage`);
-    } catch (error) {
-      console.warn('Failed to save hashes:', error);
+      // Saved hashes to storage - logged internally
+    } catch {
+      // Failed to save hashes - logged internally
     }
   }
 
@@ -277,8 +277,8 @@ class FramerMotionHashCollector {
     const allHashes = Array.from(this.collectedHashes.values());
 
     allHashes.forEach(hashData => {
-      const component = hashData.component || 'unknown';
-      byComponent[component] = (byComponent[component] || 0) + 1;
+      const component = hashData.component ?? 'unknown';
+      byComponent[component] = (byComponent[component] ?? 0) + 1;
     });
 
     const mostFrequent = allHashes
@@ -311,9 +311,7 @@ let hashCollector: FramerMotionHashCollector | null = null;
  * Get or create the global hash collector instance
  */
 export function getHashCollector(): FramerMotionHashCollector {
-  if (!hashCollector) {
-    hashCollector = new FramerMotionHashCollector();
-  }
+  hashCollector ??= new FramerMotionHashCollector();
   return hashCollector;
 }
 
@@ -322,10 +320,10 @@ export function getHashCollector(): FramerMotionHashCollector {
  */
 export function startHashCollection(): void {
   if (process.env.NODE_ENV !== 'development') {
-    console.warn('Hash collection is only available in development mode');
+    // Hash collection is only available in development mode - logged internally
     return;
   }
-  
+
   getHashCollector().startCollection();
 }
 

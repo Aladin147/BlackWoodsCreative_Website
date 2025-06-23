@@ -1,11 +1,13 @@
 import { renderHook } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
 
-import { 
-  useNavigationContext, 
-  usePageNavigation, 
-  useActiveNavigation, 
-  useMobileNavigation 
+import { getInternalLinksForPage } from '@/lib/utils/internal-linking';
+
+import {
+  useNavigationContext,
+  usePageNavigation,
+  useActiveNavigation,
+  useMobileNavigation
 } from '../useNavigationContext';
 
 // Mock Next.js navigation
@@ -19,7 +21,7 @@ jest.mock('@/lib/utils/internal-linking', () => ({
 }));
 
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
-const mockGetInternalLinksForPage = require('@/lib/utils/internal-linking').getInternalLinksForPage;
+const mockGetInternalLinksForPage = getInternalLinksForPage as jest.MockedFunction<typeof getInternalLinksForPage>;
 
 describe('Navigation Context Hooks', () => {
   beforeEach(() => {

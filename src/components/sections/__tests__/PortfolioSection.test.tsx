@@ -14,7 +14,7 @@ jest.mock('framer-motion', () => ({
       <button {...props}>{children}</button>
     ),
   },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 // Mock interactive components
@@ -65,7 +65,7 @@ jest.mock('@/components/interactive', () => ({
     [key: string]: unknown;
   }) => {
     const [activeCategory, setActiveCategory] = React.useState('All');
-    const allCategories = ['All', ...(categories || [])];
+    const allCategories = ['All', ...(categories ?? [])];
 
     const filteredItems =
       activeCategory === 'All'
@@ -99,9 +99,17 @@ jest.mock('@/components/interactive', () => ({
           {filteredItems?.map(
             (item: { id: string; title: string; category: string }, index: number) => (
               <div
-                key={item.id || index}
+                key={item.id ?? index}
                 data-testid="portfolio-item"
                 onClick={() => onItemClick?.(item)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onItemClick?.(item);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
                 data-cursor="portfolio"
               >
                 <h3>{item.title}</h3>

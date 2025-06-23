@@ -4,6 +4,7 @@ import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useState, useRef, useEffect, ReactNode } from 'react';
 
 import { useAnimationConfig } from '@/hooks/useReducedMotion';
+
 import { MotionDiv, MotionButton, MotionSpan } from './MotionWrapper';
 
 interface HoverMagnifyProps {
@@ -255,7 +256,18 @@ export function RippleEffect({
   };
 
   return (
-    <div className={`relative overflow-hidden ${className}`} onClick={handleClick}>
+    <div
+      className={`relative overflow-hidden ${className}`}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick(e as unknown as React.MouseEvent<HTMLDivElement>);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+    >
       {children}
 
       {ripples.map(ripple => (

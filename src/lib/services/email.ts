@@ -35,8 +35,8 @@ export async function sendContactEmail(formData: ContactFormData): Promise<Email
     }
 
     // Get email addresses from environment variables
-    const toEmail = process.env.CONTACT_EMAIL_TO || 'hello@blackwoodscreative.com';
-    const fromEmail = process.env.CONTACT_EMAIL_FROM || 'noreply@blackwoodscreative.com';
+    const toEmail = process.env.CONTACT_EMAIL_TO ?? 'hello@blackwoodscreative.com';
+    const fromEmail = process.env.CONTACT_EMAIL_FROM ?? 'noreply@blackwoodscreative.com';
 
     // Create email content
     const subject = `New Contact Form Submission from ${formData.name}`;
@@ -157,7 +157,7 @@ This email was sent from the BlackWoods Creative contact form.
       console.error('Resend API error:', result.error);
       return {
         success: false,
-        error: result.error.message || 'Failed to send email',
+        error: result.error.message ?? 'Failed to send email',
       };
     }
 
@@ -188,7 +188,7 @@ export async function sendAutoReplyEmail(formData: ContactFormData): Promise<Ema
       };
     }
 
-    const fromEmail = process.env.CONTACT_EMAIL_FROM || 'noreply@blackwoodscreative.com';
+    const fromEmail = process.env.CONTACT_EMAIL_FROM ?? 'noreply@blackwoodscreative.com';
     const subject = 'Thank you for contacting BlackWoods Creative';
 
     const htmlContent = `
@@ -265,7 +265,7 @@ This is an automated response. Please do not reply to this email.
       console.error('Auto-reply email error:', result.error);
       return {
         success: false,
-        error: result.error.message || 'Failed to send auto-reply',
+        error: result.error.message ?? 'Failed to send auto-reply',
       };
     }
 

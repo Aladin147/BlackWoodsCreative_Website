@@ -69,7 +69,7 @@ export function ProgressiveEnhancement({
   if (isLoading) {
     return (
       <div className={`progressive-enhancement-loading ${className}`}>
-        {fallback || <div className="h-4 w-full animate-pulse rounded bg-gray-200" />}
+        {fallback ?? <div className="h-4 w-full animate-pulse rounded bg-gray-200" />}
       </div>
     );
   }
@@ -84,9 +84,9 @@ export function ProgressiveEnhancement({
 // Conditional rendering component
 function ConditionalRender({ condition, children, fallback }: ConditionalRenderProps) {
   if (!condition) {
-    return <>{fallback}</>;
+    return fallback;
   }
-  return <>{children}</>;
+  return children;
 }
 
 // Feature support detection functions
@@ -260,7 +260,7 @@ export function AdaptiveImage({
       // Add quality parameter for low-quality images
       const url = new URL(src, window.location.origin);
       url.searchParams.set('q', '60');
-      url.searchParams.set('w', Math.min(width || 800, 800).toString());
+      url.searchParams.set('w', Math.min(width ?? 800, 800).toString());
       setImageSrc(url.toString());
     } else if (loading.imageQuality === 'medium') {
       const url = new URL(src, window.location.origin);
@@ -308,7 +308,7 @@ export function AdaptiveVideo({
 
   useEffect(() => {
     if (!deviceInfo.capabilities) {
-      setShouldAutoPlay(autoPlay || false);
+      setShouldAutoPlay(autoPlay ?? false);
       return;
     }
 
@@ -320,7 +320,7 @@ export function AdaptiveVideo({
     } else if (preferences.reducedMotion) {
       setShouldAutoPlay(false);
     } else {
-      setShouldAutoPlay(autoPlay || false);
+      setShouldAutoPlay(autoPlay ?? false);
     }
   }, [deviceInfo.capabilities, autoPlay]);
 
@@ -334,7 +334,9 @@ export function AdaptiveVideo({
       loop={loop}
       playsInline
       preload={deviceInfo.capabilities?.network.saveData ? 'none' : 'metadata'}
-    />
+    >
+      <track kind="captions" srcLang="en" label="English captions" />
+    </video>
   );
 }
 
@@ -354,7 +356,7 @@ export function DeviceCapabilityDebugger() {
           Type: {deviceInfo.isMobile ? 'Mobile' : deviceInfo.isTablet ? 'Tablet' : 'Desktop'}
         </div>
         <div>Screen: {deviceInfo.screenSize}</div>
-        <div>Performance: {deviceInfo.capabilities?.performance.overall || 'Unknown'}</div>
+        <div>Performance: {deviceInfo.capabilities?.performance.overall ?? 'Unknown'}</div>
         <div>WebGL: {deviceInfo.capabilities?.features.webgl ? 'Yes' : 'No'}</div>
         <div>Reduced Motion: {deviceInfo.prefersReducedMotion ? 'Yes' : 'No'}</div>
         {deviceInfo.optimizationProfile && (

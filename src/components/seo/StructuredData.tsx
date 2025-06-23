@@ -10,8 +10,8 @@ export function StructuredData({ metadata }: StructuredDataProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: metadata.title?.toString() || siteConfig.name,
-    description: metadata.description || siteConfig.description,
+    name: metadata.title?.toString() ?? siteConfig.name,
+    description: metadata.description ?? siteConfig.description,
     url: siteConfig.url,
     logo: `${siteConfig.url}${siteConfig.ogImage}`,
     sameAs: [

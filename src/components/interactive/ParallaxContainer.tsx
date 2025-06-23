@@ -88,10 +88,10 @@ export function ParallaxLayer({
 
   const y = useTransform(smoothProgress, [0, 1], yRange);
   const x = useTransform(smoothProgress, [0, 1], xRange);
-  const scaleTransform = useTransform(smoothProgress, [0, 1], scale || [1, 1]);
-  const opacityTransform = useTransform(smoothProgress, [0, 1], opacity || [1, 1]);
-  const rotateTransform = useTransform(smoothProgress, [0, 1], rotate || [0, 0]);
-  const blurTransform = useTransform(smoothProgress, [0, 1], blur || [0, 0]);
+  const scaleTransform = useTransform(smoothProgress, [0, 1], scale ?? [1, 1]);
+  const opacityTransform = useTransform(smoothProgress, [0, 1], opacity ?? [1, 1]);
+  const rotateTransform = useTransform(smoothProgress, [0, 1], rotate ?? [0, 0]);
+  const blurTransform = useTransform(smoothProgress, [0, 1], blur ?? [0, 0]);
 
   const filterTransform = useTransform(blurTransform, value =>
     blur ? `blur(${value}px)` : 'none'

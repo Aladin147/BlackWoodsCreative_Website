@@ -110,7 +110,7 @@ export class DeviceCapabilityDetector {
     return DeviceCapabilityDetector.instance;
   }
 
-  async detectCapabilities(): Promise<DeviceCapabilities> {
+  detectCapabilities(): DeviceCapabilities {
     if (this.capabilities) {
       return this.capabilities;
     }
@@ -121,8 +121,8 @@ export class DeviceCapabilityDetector {
     }
 
     const capabilities: DeviceCapabilities = {
-      cpu: await this.detectCPU(),
-      gpu: await this.detectGPU(),
+      cpu: this.detectCPU(),
+      gpu: this.detectGPU(),
       memory: this.detectMemory(),
       network: this.detectNetwork(),
       display: this.detectDisplay(),
@@ -143,8 +143,8 @@ export class DeviceCapabilityDetector {
     return capabilities;
   }
 
-  private async detectCPU() {
-    const cores = navigator.hardwareConcurrency || 4;
+  private detectCPU() {
+    const cores = navigator.hardwareConcurrency ?? 4;
 
     // Estimate CPU performance based on cores and user agent
     let cpuPerformance: 'low' | 'medium' | 'high' = 'medium';
@@ -172,10 +172,10 @@ export class DeviceCapabilityDetector {
     };
   }
 
-  private async detectGPU() {
+  private detectGPU() {
     const canvas = document.createElement('canvas');
     const gl =
-      canvas.getContext('webgl') ||
+      canvas.getContext('webgl') ??
       (canvas.getContext('experimental-webgl') as WebGLRenderingContext | null);
     const gl2 = canvas.getContext('webgl2');
 
@@ -200,7 +200,7 @@ export class DeviceCapabilityDetector {
 
     // Estimate GPU performance based on renderer
     let gpuPerformance: 'low' | 'medium' | 'high' = 'medium';
-    const rendererStr = (renderer || 'unknown').toLowerCase();
+    const rendererStr = (renderer ?? 'unknown').toLowerCase();
 
     if (rendererStr.includes('intel') && rendererStr.includes('hd')) {
       gpuPerformance = 'low';
@@ -226,8 +226,8 @@ export class DeviceCapabilityDetector {
     const nav = navigator as Navigator & { deviceMemory?: number };
     const perf = performance as Performance & { memory?: { jsHeapSizeLimit: number } };
 
-    const deviceMemory = nav.deviceMemory || 4; // Default to 4GB
-    const jsHeapSizeLimit = perf.memory?.jsHeapSizeLimit || 2147483648; // 2GB default
+    const deviceMemory = nav.deviceMemory ?? 4; // Default to 4GB
+    const jsHeapSizeLimit = perf.memory?.jsHeapSizeLimit ?? 2147483648; // 2GB default
 
     let memoryPerformance: 'low' | 'medium' | 'high' = 'medium';
     if (deviceMemory <= 2) memoryPerformance = 'low';
@@ -261,13 +261,13 @@ export class DeviceCapabilityDetector {
         saveData: boolean;
       };
     };
-    const connection = nav.connection || nav.mozConnection || nav.webkitConnection;
+    const connection = nav.connection ?? nav.mozConnection ?? nav.webkitConnection;
 
     return {
-      effectiveType: connection?.effectiveType || '4g',
-      downlink: connection?.downlink || 10,
-      rtt: connection?.rtt || 100,
-      saveData: connection?.saveData || false,
+      effectiveType: connection?.effectiveType ?? '4g',
+      downlink: connection?.downlink ?? 10,
+      rtt: connection?.rtt ?? 100,
+      saveData: connection?.saveData ?? false,
     };
   }
 
@@ -275,8 +275,8 @@ export class DeviceCapabilityDetector {
     return {
       width: window.innerWidth,
       height: window.innerHeight,
-      pixelRatio: window.devicePixelRatio || 1,
-      colorDepth: screen.colorDepth || 24,
+      pixelRatio: window.devicePixelRatio ?? 1,
+      colorDepth: screen.colorDepth ?? 24,
       refreshRate: 60, // Default, hard to detect accurately
       hdr: window.matchMedia('(dynamic-range: high)').matches,
     };
@@ -510,11 +510,11 @@ export class DeviceCapabilityDetector {
 export const deviceCapabilityDetector = DeviceCapabilityDetector.getInstance();
 
 // Utility functions
-export async function getDeviceCapabilities(): Promise<DeviceCapabilities> {
+export function getDeviceCapabilities(): DeviceCapabilities {
   return deviceCapabilityDetector.detectCapabilities();
 }
 
-export async function getOptimizationProfile(): Promise<OptimizationProfile> {
-  const capabilities = await getDeviceCapabilities();
+export function getOptimizationProfile(): OptimizationProfile {
+  const capabilities = getDeviceCapabilities();
   return deviceCapabilityDetector.generateOptimizationProfile(capabilities);
 }

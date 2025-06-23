@@ -245,8 +245,8 @@ export function auditAccessibility(): {
   const inputs = document.querySelectorAll('input, textarea, select');
   inputs.forEach((input, index) => {
     const hasLabel =
-      input.getAttribute('aria-label') ||
-      input.getAttribute('aria-labelledby') ||
+      input.getAttribute('aria-label') ??
+      input.getAttribute('aria-labelledby') ??
       document.querySelector(`label[for="${input.id}"]`);
     if (!hasLabel) {
       violations.push(`Form input ${index + 1} missing label`);

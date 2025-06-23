@@ -270,7 +270,7 @@ function SimpleStorySection({
   const y = useTransform(
     scrollProgress,
     [sectionStart, sectionEnd],
-    [0, -100 * (section.parallaxSpeed || 1)]
+    [0, -100 * (section.parallaxSpeed ?? 1)]
   );
 
   const scale = useTransform(sectionProgress, [0, 0.5, 1], [0.95, 1, 1.05]);

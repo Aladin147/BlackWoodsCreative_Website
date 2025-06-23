@@ -37,7 +37,7 @@ jest.mock('@/components/interactive', () => ({
     [key: string]: unknown;
   }) => (
     <div data-testid="text-reveal" {...props}>
-      {text || children}
+      {text ?? children}
     </div>
   ),
   PulseGlow: ({ children }: { children: React.ReactNode }) => (

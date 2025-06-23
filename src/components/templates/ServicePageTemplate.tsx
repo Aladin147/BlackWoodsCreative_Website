@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion';
 
-import { BasePageTemplate } from './BasePageTemplate';
-import { SEOMetadata } from '@/lib/utils/metadata';
 import { ScrollReveal, MagneticField } from '@/components/interactive';
+import { SEOMetadata } from '@/lib/utils/metadata';
+
+import { BasePageTemplate } from './BasePageTemplate';
 
 // Service page specific data structure
 export interface ServicePageData {

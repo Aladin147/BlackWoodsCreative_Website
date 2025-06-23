@@ -4,9 +4,9 @@ import { Inter, Urbanist, JetBrains_Mono } from 'next/font/google';
 import { headers } from 'next/headers';
 
 import { Header, ScrollProgress } from '@/components/layout';
+import { ContextAwareBreadcrumbs } from '@/components/layout/ContextAwareBreadcrumbs';
 import { StructuredData } from '@/components/seo';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { ContextAwareBreadcrumbs } from '@/components/layout/ContextAwareBreadcrumbs';
 import './globals.css';
 
 // Optimized dynamic imports with retry logic and preloading
@@ -157,7 +157,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: process.env.GOOGLE_VERIFICATION_CODE || '',
+    google: process.env.GOOGLE_VERIFICATION_CODE ?? '',
   },
   icons: {
     // Google Search Results Optimized Favicon Configuration
@@ -209,8 +209,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // Get nonce and CSRF token from middleware headers
   const headersList = headers();
-  const nonce = headersList.get('x-nonce') || undefined;
-  const csrfToken = headersList.get('x-csrf-token') || undefined;
+  const nonce = headersList.get('x-nonce') ?? undefined;
+  const csrfToken = headersList.get('x-csrf-token') ?? undefined;
 
   return (
     <html lang="en" className={`${inter.variable} ${urbanist.variable} ${jetbrains.variable}`}>

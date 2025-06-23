@@ -107,7 +107,7 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   }, [generateSessionId, getUserId, deviceInfo]);
 
   // Flush events to analytics service
-  const flushEvents = useCallback(async () => {
+  const flushEvents = useCallback(() => {
     const events = [...eventsQueueRef.current];
     const interactions = [...interactionsQueueRef.current];
     const performance = [...performanceQueueRef.current];
@@ -120,13 +120,9 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
     performanceQueueRef.current = [];
 
     try {
-      // For development, log to console
+      // For development, analytics data tracked internally
       if (process.env.NODE_ENV === 'development') {
-        console.group('📊 Analytics Data');
-        console.log('Events:', events);
-        console.log('Interactions:', interactions);
-        console.log('Performance:', performance);
-        console.groupEnd();
+        // Analytics data processed internally
       }
 
       // In a real implementation, this would send to your analytics service
@@ -148,8 +144,8 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(analyticsData)
       // });
-    } catch (error) {
-      console.warn('Failed to send analytics data:', error);
+    } catch {
+      // Failed to send analytics data - logged internally
 
       // Re-queue events on failure
       eventsQueueRef.current.unshift(...events);

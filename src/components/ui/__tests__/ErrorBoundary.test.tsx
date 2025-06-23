@@ -163,7 +163,7 @@ describe('ErrorBoundary', () => {
     );
   });
 
-  it('handles errors in event handlers', async () => {
+  it('handles errors in event handlers', () => {
     const user = userEvent.setup();
 
     const ComponentWithErrorInHandler = () => {

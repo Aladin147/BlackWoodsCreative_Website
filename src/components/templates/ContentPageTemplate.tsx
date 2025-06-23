@@ -1,7 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
 import {
   UserIcon,
   BriefcaseIcon,
@@ -17,11 +15,14 @@ import {
   GlobeAltIcon,
   ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
+import { ReactNode } from 'react';
+
+import { ScrollReveal } from '@/components/interactive';
+import { SEOMetadata } from '@/lib/utils/metadata';
+import { handleNavigationClick } from '@/lib/utils/navigation';
 
 import { BasePageTemplate } from './BasePageTemplate';
-import { SEOMetadata } from '@/lib/utils/metadata';
-import { ScrollReveal } from '@/components/interactive';
-import { handleNavigationClick } from '@/lib/utils/navigation';
 
 // Content section types for rich content pages
 export interface ContentSection {

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
 
+import { generateBreadcrumbs } from '@/lib/utils/internal-linking';
+
 import { Breadcrumbs, CompactBreadcrumbs, StyledBreadcrumbs } from '../Breadcrumbs';
 
 // Mock Next.js navigation
@@ -19,7 +21,7 @@ jest.mock('@/components/interactive', () => ({
 }));
 
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
-const mockGenerateBreadcrumbs = require('@/lib/utils/internal-linking').generateBreadcrumbs;
+const mockGenerateBreadcrumbs = generateBreadcrumbs as jest.MockedFunction<typeof generateBreadcrumbs>;
 
 describe('Breadcrumbs Component', () => {
   beforeEach(() => {

@@ -65,7 +65,7 @@ class PerformanceBudgetChecker {
   private violations: BudgetViolation[] = [];
 
   constructor(customBudget?: PerformanceBudget) {
-    this.budget = customBudget || getPerformanceBudget();
+    this.budget = customBudget ?? getPerformanceBudget();
   }
 
   // Main budget checking function
@@ -413,9 +413,7 @@ class PerformanceBudgetChecker {
     const grouped: Partial<Record<keyof PerformanceBudget, BudgetViolation[]>> = {};
 
     this.violations.forEach(violation => {
-      if (!grouped[violation.category]) {
-        grouped[violation.category] = [];
-      }
+      grouped[violation.category] ??= [];
       grouped[violation.category]!.push(violation);
     });
 
@@ -475,7 +473,7 @@ export function collectPerformanceData(): PerformanceData {
     };
 
     resources.forEach(resource => {
-      const size = resource.transferSize || 0;
+      const size = resource.transferSize ?? 0;
 
       if (data.resources) {
         if (resource.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {

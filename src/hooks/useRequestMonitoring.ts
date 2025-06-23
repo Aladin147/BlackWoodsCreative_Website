@@ -119,7 +119,7 @@ export function useRequestMonitoring() {
       }
 
       const data = await response.json();
-      setLogs(data.logs || []);
+      setLogs(data.logs ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch logs');
     } finally {
@@ -138,7 +138,7 @@ export function useRequestMonitoring() {
       }
 
       const data = await response.json();
-      setLogs(data.errors || []);
+      setLogs(data.errors ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch error logs');
     } finally {
@@ -157,7 +157,7 @@ export function useRequestMonitoring() {
       }
 
       const data = await response.json();
-      setLogs(data.securityEvents || []);
+      setLogs(data.securityEvents ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch security logs');
     } finally {
@@ -177,7 +177,7 @@ export function useRequestMonitoring() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken || '',
+          'X-CSRF-Token': csrfToken ?? '',
         },
         body: JSON.stringify({ action: 'clear-logs' }),
       });
@@ -208,7 +208,7 @@ export function useRequestMonitoring() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken || '',
+          'X-CSRF-Token': csrfToken ?? '',
         },
         body: JSON.stringify({ action: 'export-logs', format }),
       });
@@ -243,7 +243,7 @@ export function useRequestMonitoring() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken || '',
+          'X-CSRF-Token': csrfToken ?? '',
         },
         body: JSON.stringify({
           action: 'log-custom-event',

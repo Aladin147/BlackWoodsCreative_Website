@@ -133,7 +133,7 @@ class HashManager {
     ['collected', 'manual'].forEach(category => {
       const index = this.hashData.hashes[category as keyof typeof this.hashData.hashes].indexOf(formattedHash);
       if (index > -1) {
-        (this.hashData.hashes[category as keyof typeof this.hashData.hashes] as string[]).splice(index, 1);
+        this.hashData.hashes[category as keyof typeof this.hashData.hashes].splice(index, 1);
         console.log(`🗑️ Removed hash from ${category}: ${formattedHash}`);
       }
     });
@@ -177,7 +177,7 @@ class HashManager {
 
     // Process each category
     ['common', 'collected', 'manual'].forEach(category => {
-      const categoryHashes = this.hashData.hashes[category as keyof typeof this.hashData.hashes] as string[];
+      const categoryHashes = this.hashData.hashes[category as keyof typeof this.hashData.hashes];
       const uniqueHashes: string[] = [];
       
       categoryHashes.forEach(hash => {
@@ -189,7 +189,7 @@ class HashManager {
         }
       });
       
-      (this.hashData.hashes[category as keyof typeof this.hashData.hashes] as string[]) = uniqueHashes;
+      this.hashData.hashes[category as keyof typeof this.hashData.hashes] = uniqueHashes;
     });
 
     if (removedCount > 0) {
@@ -269,7 +269,7 @@ class HashManager {
     let cleanedCount = 0;
 
     ['common', 'collected', 'manual'].forEach(category => {
-      const categoryHashes = this.hashData.hashes[category as keyof typeof this.hashData.hashes] as string[];
+      const categoryHashes = this.hashData.hashes[category as keyof typeof this.hashData.hashes];
       const validHashes = categoryHashes.filter(hash => {
         const isValid = this.isValidHash(hash);
         if (!isValid) {
@@ -279,7 +279,7 @@ class HashManager {
         return isValid;
       });
       
-      (this.hashData.hashes[category as keyof typeof this.hashData.hashes] as string[]) = validHashes;
+      this.hashData.hashes[category as keyof typeof this.hashData.hashes] = validHashes;
     });
 
     if (cleanedCount > 0) {
@@ -297,9 +297,7 @@ let hashManager: HashManager | null = null;
  * Get or create the global hash manager instance
  */
 export function getHashManager(): HashManager {
-  if (!hashManager) {
-    hashManager = new HashManager();
-  }
+  hashManager ??= new HashManager();
   return hashManager;
 }
 

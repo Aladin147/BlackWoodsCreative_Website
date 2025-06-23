@@ -9,8 +9,8 @@ import {
 
 // SEO metadata optimized for entity recognition
 const seoMetadata: SEOMetadata = {
-  title: 'Our Story | BlackWoods Creative - Morocco\'s Premier Visual Storytelling Company',
-  description: 'Discover the story behind BlackWoods Creative, Morocco\'s leading video production and visual storytelling company. Founded in Mohammedia, serving clients across Morocco since 2019.',
+  title: 'Our Story | BlackWoods Creative - Morocco&apos;s Premier Visual Storytelling Company',
+  description: 'Discover the story behind BlackWoods Creative, Morocco&apos;s leading video production and visual storytelling company. Founded in Mohammedia, serving clients across Morocco since 2019.',
   keywords: [
     'BlackWoods Creative story',
     'video production company Morocco history',
@@ -22,8 +22,8 @@ const seoMetadata: SEOMetadata = {
   ],
   canonicalUrl: '/about/our-story',
   openGraph: {
-    title: 'Our Story | BlackWoods Creative - Morocco\'s Visual Storytelling Pioneers',
-    description: 'The story of how BlackWoods Creative became Morocco\'s premier video production company, serving clients across Casablanca, Rabat, and beyond.',
+    title: 'Our Story | BlackWoods Creative - Morocco&apos;s Visual Storytelling Pioneers',
+    description: 'The story of how BlackWoods Creative became Morocco&apos;s premier video production company, serving clients across Casablanca, Rabat, and beyond.',
     type: 'article'
   },
   structuredData: {
@@ -36,7 +36,7 @@ const seoMetadata: SEOMetadata = {
         '@type': 'Place',
         'name': 'Mohammedia, Morocco'
       },
-      'description': 'Morocco\'s premier video production and visual storytelling company',
+      'description': 'Morocco&apos;s premier video production and visual storytelling company',
       'address': {
         '@type': 'PostalAddress',
         'addressLocality': 'Mohammedia',
@@ -55,7 +55,7 @@ const seoMetadata: SEOMetadata = {
 const pageData: ContentPageData = {
   hero: {
     title: 'Our Story',
-    subtitle: 'The journey of Morocco\'s premier visual storytelling company',
+    subtitle: 'The journey of Morocco&apos;s premier visual storytelling company',
     description: 'From a vision in Mohammedia to serving clients across Morocco, discover how BlackWoods Creative became the trusted partner for businesses seeking exceptional video content.',
     breadcrumbs: [
       { label: 'Home', href: '/' },
@@ -72,7 +72,7 @@ const pageData: ContentPageData = {
         content: `
           <p>BlackWoods Creative was born from a simple yet powerful vision: to transform how businesses in Morocco tell their stories through compelling visual content. Founded in 2019 in Mohammedia, our journey began when our founder recognized the untapped potential for premium video production services in the Moroccan market.</p>
           
-          <p>What started as a passion project quickly evolved into Morocco's most trusted video production company. Our founder's background in international filmmaking, combined with deep understanding of the local market, created the perfect foundation for building something truly special.</p>
+          <p>What started as a passion project quickly evolved into Morocco&apos;s most trusted video production company. Our founder&apos;s background in international filmmaking, combined with deep understanding of the local market, created the perfect foundation for building something truly special.</p>
           
           <p>From our first corporate video project to becoming the go-to partner for businesses across Casablanca, Rabat, and beyond, every step of our journey has been guided by one principle: exceptional quality that drives real results for our clients.</p>
         `,
@@ -125,7 +125,7 @@ const pageData: ContentPageData = {
           {
             year: '2025',
             title: 'Market Leadership',
-            description: 'Established as Morocco\'s premier video production company, serving 100+ satisfied clients with proven ROI results.',
+            description: 'Established as Morocco&apos;s premier video production company, serving 100+ satisfied clients with proven ROI results.',
             highlight: true
           }
         ]
@@ -209,13 +209,13 @@ const pageData: ContentPageData = {
       data: {
         title: 'Why Morocco Chose Us',
         content: `
-          <p>Our success in the Moroccan market isn't accidental. We've built our reputation on understanding the unique needs of businesses operating in Morocco's dynamic economy.</p>
+          <p>Our success in the Moroccan market isn&apos;t accidental. We&apos;ve built our reputation on understanding the unique needs of businesses operating in Morocco&apos;s dynamic economy.</p>
           
           <p><strong>Local Market Knowledge:</strong> We understand the cultural nuances, business practices, and communication preferences that make content effective in Morocco.</p>
           
           <p><strong>Multilingual Capabilities:</strong> Our team produces content in Arabic, French, and English, ensuring your message reaches every segment of your target audience.</p>
           
-          <p><strong>Strategic Location:</strong> Based in Mohammedia with easy access to Casablanca, Rabat, and other major business centers, we're perfectly positioned to serve clients across Morocco.</p>
+          <p><strong>Strategic Location:</strong> Based in Mohammedia with easy access to Casablanca, Rabat, and other major business centers, we&apos;re perfectly positioned to serve clients across Morocco.</p>
           
           <p><strong>Proven Track Record:</strong> Over 100 successful projects with measurable results, from increased brand awareness to direct sales impact.</p>
         `,

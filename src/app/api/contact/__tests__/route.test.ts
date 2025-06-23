@@ -109,7 +109,7 @@ describe('/api/contact', () => {
 
       // Mock IP address
       Object.defineProperty(request, 'ip', {
-        value: headers['x-forwarded-for'] || '127.0.0.1',
+        value: headers['x-forwarded-for'] ?? '127.0.0.1',
         writable: false,
       });
 
@@ -377,14 +377,14 @@ describe('/api/contact', () => {
 
       // Mock IP address
       Object.defineProperty(request, 'ip', {
-        value: headers['x-forwarded-for'] || '127.0.0.1',
+        value: headers['x-forwarded-for'] ?? '127.0.0.1',
         writable: false,
       });
 
       return request;
     }
 
-    it('resets rate limit after time window', async () => {
+    it('resets rate limit after time window', () => {
       // This test would require mocking time, which is complex
       // In a real scenario, you'd use a more sophisticated testing approach
       // or integration tests with a test database

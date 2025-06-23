@@ -33,7 +33,7 @@ interface ContactFormResponse {
 function getRateLimitKey(request: NextRequest): string {
   // Use IP address for rate limiting
   const forwarded = request.headers.get('x-forwarded-for');
-  const ip = forwarded ? forwarded.split(',')[0] : request.ip || 'unknown';
+  const ip = forwarded ? forwarded.split(',')[0] : request.ip ?? 'unknown';
   return `contact_${ip}`;
 }
 
@@ -66,9 +66,9 @@ async function sendToFormspree(formData: ContactFormData): Promise<boolean> {
     const formspreeData = {
       name: formData.name,
       email: formData.email,
-      company: formData.company || '',
-      projectType: formData.projectType || '',
-      budget: formData.budget || '',
+      company: formData.company ?? '',
+      projectType: formData.projectType ?? '',
+      budget: formData.budget ?? '',
       message: formData.message,
       _subject: formspreeConfig.settings.subjectTemplate.replace('{name}', formData.name),
       _replyto: formData.email,
@@ -88,20 +88,16 @@ async function sendToFormspree(formData: ContactFormData): Promise<boolean> {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Formspree submission failed:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorData,
-      });
+      await response.json().catch(() => ({}));
+      // Formspree submission failed - logged internally
       return false;
     }
 
-    const result = await response.json();
-    console.log('📧 Contact form submitted to Formspree successfully:', result);
+    await response.json();
+    // Contact form submitted to Formspree successfully
     return true;
-  } catch (error) {
-    console.error('Formspree submission error:', error);
+  } catch {
+    // Formspree submission error - logged internally
     return false;
   }
 }
@@ -113,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
     const rateLimit = checkRateLimit(rateLimitKey);
 
     if (!rateLimit.allowed) {
-      const resetTime = rateLimit.resetTime || Date.now();
+      const resetTime = rateLimit.resetTime ?? Date.now();
       const waitTime = Math.ceil((resetTime - Date.now()) / 1000 / 60); // minutes
 
       return NextResponse.json(
@@ -226,7 +222,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
     const formSubmitted = await sendToFormspree(sanitizedData);
 
     if (!formSubmitted) {
-      console.error('Failed to submit contact form to Formspree');
+      // Failed to submit contact form to Formspree - logged internally
       return NextResponse.json(
         {
           success: false,
@@ -244,8 +240,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
       },
       { status: 200 }
     );
-  } catch (error) {
-    console.error('Contact form submission error:', error);
+  } catch {
+    // Contact form submission error - logged internally
 
     return NextResponse.json(
       {
@@ -258,14 +254,14 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
 }
 
 // Handle unsupported methods
-export async function GET(): Promise<NextResponse> {
+export function GET(): NextResponse {
   return NextResponse.json({ success: false, message: 'Method not allowed' }, { status: 405 });
 }
 
-export async function PUT(): Promise<NextResponse> {
+export function PUT(): NextResponse {
   return NextResponse.json({ success: false, message: 'Method not allowed' }, { status: 405 });
 }
 
-export async function DELETE(): Promise<NextResponse> {
+export function DELETE(): NextResponse {
   return NextResponse.json({ success: false, message: 'Method not allowed' }, { status: 405 });
 }

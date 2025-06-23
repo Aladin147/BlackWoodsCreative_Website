@@ -86,7 +86,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
   const { deviceInfo } = useDeviceAdaptation();
 
   // Initialize audio context
-  const initAudioContext = useCallback(async () => {
+  const initAudioContext = useCallback(() => {
     if (typeof window === 'undefined') return;
 
     // Check user preferences
@@ -220,7 +220,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
         const gainNode = audioState.context.createGain();
 
         source.buffer = audioBuffer;
-        source.loop = options.loop || false;
+        source.loop = options.loop ?? false;
 
         // Set up audio graph
         source.connect(gainNode);
@@ -242,7 +242,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
         }
 
         // Start playback
-        const startTime = audioState.context.currentTime + (options.delay || 0) / 1000;
+        const startTime = audioState.context.currentTime + (options.delay ?? 0) / 1000;
         source.start(startTime);
 
         activeSourcesRef.current.set(soundId, source);

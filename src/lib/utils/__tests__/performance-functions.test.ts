@@ -118,9 +118,9 @@ describe('Performance Functions', () => {
     });
 
     it('measures asynchronous function performance', async () => {
-      const testFn = jest.fn(async () => {
+      const testFn = jest.fn(() => {
         // Use fake timers for faster tests
-        return 'async-result';
+        return Promise.resolve('async-result');
       });
 
       const result = await measurePerformance('test-async', testFn);
@@ -435,7 +435,7 @@ describe('Performance Functions', () => {
   });
 
   describe('createLazyComponent', () => {
-    it('creates lazy component with performance tracking', async () => {
+    it('creates lazy component with performance tracking', () => {
       const TestComponent = () => React.createElement('div', {}, 'Lazy Component');
       const mockImport = jest.fn(() => Promise.resolve({ default: TestComponent }));
 
@@ -448,7 +448,7 @@ describe('Performance Functions', () => {
       consoleSpy.mockRestore();
     });
 
-    it('handles import errors', async () => {
+    it('handles import errors', () => {
       const mockImport = jest.fn(() => Promise.reject(new Error('Import failed')));
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -460,7 +460,7 @@ describe('Performance Functions', () => {
       consoleSpy.mockRestore();
     });
 
-    it('logs loading time on successful import', async () => {
+    it('logs loading time on successful import', () => {
       const TestComponent = () => React.createElement('div');
       const mockImport = jest.fn(() => Promise.resolve({ default: TestComponent }));
 

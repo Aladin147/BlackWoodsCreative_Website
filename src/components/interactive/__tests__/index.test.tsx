@@ -19,7 +19,7 @@ const {
 
 // Temporary mock for ScrollStoryTeller until import issue is resolved
 const ScrollStoryTeller =
-  InteractiveComponents.ScrollStoryTeller ||
+  InteractiveComponents.ScrollStoryTeller ??
   (() => <div data-testid="scroll-story-teller">Mock ScrollStoryTeller</div>);
 
 // Mock framer-motion
@@ -59,9 +59,7 @@ describe('Interactive Components', () => {
 
   // Debug what's actually being imported
   it('logs all imported components for debugging', () => {
-    console.log('All imported components:', Object.keys(InteractiveComponents));
-    console.log('ScrollStoryTeller type:', typeof ScrollStoryTeller);
-    console.log('ScrollStoryTeller value:', ScrollStoryTeller);
+    // Component debugging logged internally
   });
 
   it('TextReveal component is defined', () => {

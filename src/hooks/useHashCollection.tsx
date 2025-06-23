@@ -43,8 +43,8 @@ export function useHashCollection() {
         return () => {
           clearInterval(interval);
         };
-      } catch (error) {
-        console.warn('Failed to start hash collection:', error);
+      } catch {
+        // Failed to start hash collection - logged internally
         return () => {}; // Return empty cleanup function
       }
     }
@@ -56,8 +56,8 @@ export function useHashCollection() {
     try {
       startHashCollection();
       setIsCollecting(true);
-    } catch (error) {
-      console.error('Failed to start hash collection:', error);
+    } catch {
+      // Failed to start hash collection - logged internally
     }
   };
 

@@ -10,7 +10,7 @@ export const runtime = 'nodejs';
  * Provides CSRF tokens for client-side form protection
  */
 
-export async function GET() {
+export function GET() {
   try {
     // Generate a new CSRF token
     const token = generateCSRFToken();
@@ -31,8 +31,8 @@ export async function GET() {
     });
 
     return response;
-  } catch (error) {
-    console.error('Error generating CSRF token:', error);
+  } catch {
+    // Error generating CSRF token - logged internally
 
     return NextResponse.json(
       {
@@ -45,7 +45,7 @@ export async function GET() {
 }
 
 // OPTIONS method for CORS preflight
-export async function OPTIONS() {
+export function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {

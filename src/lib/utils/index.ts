@@ -77,8 +77,8 @@ export function validateEmail(email: string): boolean {
  * Phone number validation utility with international support
  */
 export function validatePhone(phone: string): boolean {
-  const cleanPhone = phone.replace(/[\s\-\(\)\.]/g, '');
-  const phoneRegex = /^[\+]?[1-9][\d]{7,15}$/;
+  const cleanPhone = phone.replace(/[\s\-().]/g, '');
+  const phoneRegex = /^[+]?[1-9][\d]{7,15}$/;
   return phoneRegex.test(cleanPhone);
 }
 

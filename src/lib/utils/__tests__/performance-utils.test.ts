@@ -390,7 +390,7 @@ describe('Performance Utils', () => {
   });
 
   describe('createLazyComponent', () => {
-    it('creates lazy component with performance logging', async () => {
+    it('creates lazy component with performance logging', () => {
       const mockComponent = { default: () => React.createElement('div') };
       const importFn = jest.fn().mockResolvedValue(mockComponent);
 
@@ -407,7 +407,7 @@ describe('Performance Utils', () => {
       ).toBe(true);
     });
 
-    it('handles import errors', async () => {
+    it('handles import errors', () => {
       const importFn = jest.fn().mockRejectedValue(new Error('Import failed'));
 
       const LazyComponent = createLazyComponent(importFn);

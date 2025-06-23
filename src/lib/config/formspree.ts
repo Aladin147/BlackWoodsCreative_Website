@@ -16,13 +16,13 @@ export const formspreeConfig = {
     submissions: 'https://formspree.io/api/0/forms/mzzgagbb/submissions',
   },
   
-  // API keys (should be moved to environment variables in production)
+  // API keys - MUST be provided via environment variables
   keys: {
-    // Master API key for full access (use environment variable in production)
-    master: process.env.FORMSPREE_MASTER_KEY || 'a0e79422e82347dbacc2b2f3b35982ed',
-    
-    // Read-only API key for accessing submissions (use environment variable in production)
-    readonly: process.env.FORMSPREE_READONLY_KEY || 'f3d00a4b0e093a74eba8322a20da53c50a5db6b4',
+    // Master API key for full access - REQUIRED environment variable
+    master: process.env.FORMSPREE_MASTER_KEY,
+
+    // Read-only API key for accessing submissions - REQUIRED environment variable
+    readonly: process.env.FORMSPREE_READONLY_KEY,
   },
   
   // Form configuration to avoid spam detection
@@ -46,7 +46,13 @@ export const formspreeConfig = {
  */
 export function getFormspreeHeaders(useReadonly = false): Record<string, string> {
   const apiKey = useReadonly ? formspreeConfig.keys.readonly : formspreeConfig.keys.master;
-  
+
+  if (!apiKey) {
+    throw new Error(
+      `Missing Formspree API key. Please set ${useReadonly ? 'FORMSPREE_READONLY_KEY' : 'FORMSPREE_MASTER_KEY'} environment variable.`
+    );
+  }
+
   return {
     'Authorization': `Bearer ${apiKey}`,
     'Content-Type': 'application/json',
@@ -59,23 +65,32 @@ export function getFormspreeHeaders(useReadonly = false): Record<string, string>
  */
 export function validateFormspreeConfig(): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
-  
+
   if (!formspreeConfig.hashId) {
     errors.push('Formspree hash ID is missing');
   }
-  
+
   if (!formspreeConfig.endpoint) {
     errors.push('Formspree endpoint is missing');
   }
-  
-  if (!formspreeConfig.keys.master && !process.env.FORMSPREE_MASTER_KEY) {
-    errors.push('Formspree master API key is missing');
+
+  if (!formspreeConfig.keys.master) {
+    errors.push('FORMSPREE_MASTER_KEY environment variable is required but not set');
   }
-  
-  if (!formspreeConfig.keys.readonly && !process.env.FORMSPREE_READONLY_KEY) {
-    errors.push('Formspree readonly API key is missing');
+
+  if (!formspreeConfig.keys.readonly) {
+    errors.push('FORMSPREE_READONLY_KEY environment variable is required but not set');
   }
-  
+
+  // Validate API key format (basic check)
+  if (formspreeConfig.keys.master && formspreeConfig.keys.master.length < 20) {
+    errors.push('FORMSPREE_MASTER_KEY appears to be invalid (too short)');
+  }
+
+  if (formspreeConfig.keys.readonly && formspreeConfig.keys.readonly.length < 20) {
+    errors.push('FORMSPREE_READONLY_KEY appears to be invalid (too short)');
+  }
+
   return {
     isValid: errors.length === 0,
     errors,

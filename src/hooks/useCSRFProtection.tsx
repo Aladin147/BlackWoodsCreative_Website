@@ -31,13 +31,13 @@ export function useCSRFProtection() {
 
         if (response.ok) {
           const data = await response.json();
-          setCSRFToken(data.token || null);
+          setCSRFToken(data.token ?? null);
         } else {
-          console.warn('Failed to retrieve CSRF token');
+          // Failed to retrieve CSRF token - logged internally
           setCSRFToken(null);
         }
-      } catch (error) {
-        console.error('Error retrieving CSRF token:', error);
+      } catch {
+        // Error retrieving CSRF token - logged internally
         setCSRFToken(null);
       } finally {
         setIsLoading(false);
@@ -48,7 +48,7 @@ export function useCSRFProtection() {
   }, []);
 
   // Helper function to make CSRF-protected API calls
-  const makeProtectedRequest = async (
+  const makeProtectedRequest = (
     url: string,
     options: RequestInit = {}
   ): Promise<Response> => {

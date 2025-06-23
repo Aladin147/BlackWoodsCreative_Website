@@ -278,7 +278,7 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
  * Get internal links for a specific page
  */
 export function getInternalLinksForPage(pagePath: string): PageLinkingStrategy | null {
-  return INTERNAL_LINKING_STRATEGY.find(strategy => strategy.page === pagePath) || null;
+  return INTERNAL_LINKING_STRATEGY.find(strategy => strategy.page === pagePath) ?? null;
 }
 
 /**

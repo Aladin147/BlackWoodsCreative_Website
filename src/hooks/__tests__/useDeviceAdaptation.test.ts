@@ -1,7 +1,8 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 
-import { useDeviceAdaptation } from '../useDeviceAdaptation';
 import { getOptimizationProfile, getDeviceCapabilities } from '@/lib/utils/device-capabilities';
+
+import { useDeviceAdaptation } from '../useDeviceAdaptation';
 
 // Mock the device capabilities module
 jest.mock('@/lib/utils/device-capabilities', () => ({

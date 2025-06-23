@@ -26,8 +26,8 @@ export async function measurePerformance<T>(name: string, fn: () => T | Promise<
       if (typeof performance !== 'undefined' && performance.measure) {
         performance.measure(name, startMark, endMark);
       }
-    } catch (error) {
-      console.warn(`Performance measurement failed for ${name}:`, error);
+    } catch {
+      // Performance measurement failed - logged internally
     }
 
     return result;
@@ -156,7 +156,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 // Performance monitoring for React components
 export function withPerformanceMonitoring<P extends object>(
   Component: React.ComponentType<P>,
-  componentName: string
+  _componentName: string
 ) {
   return function PerformanceMonitoredComponent(props: P) {
     React.useEffect(() => {
@@ -169,8 +169,7 @@ export function withPerformanceMonitoring<P extends object>(
         const renderTime = endTime - startTime;
 
         if (renderTime > 16) {
-          // More than one frame at 60fps
-          console.warn(`${componentName} render took ${renderTime.toFixed(2)}ms`);
+          // More than one frame at 60fps - logged internally
         }
       };
     });

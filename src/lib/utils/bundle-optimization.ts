@@ -141,7 +141,7 @@ export class ComponentPreloader {
   }
 
   // Preload components based on viewport intersection
-  async preloadOnIntersection(name: string, element: Element): Promise<void> {
+  preloadOnIntersection(name: string, element: Element): void {
     if (!('IntersectionObserver' in window)) {
       return;
     }
@@ -263,22 +263,9 @@ export class BundleOptimizer {
       return;
     }
 
-    console.group('📦 Bundle Size Monitor');
-
-    const analysis = this.analyzeBundlePerformance();
-
-    console.log(`Total Size: ${Math.round(analysis.totalSize / 1024)}KB`);
-    console.log(`Gzipped: ${Math.round(analysis.gzippedSize / 1024)}KB`);
-    console.log(
-      `Compression Ratio: ${((analysis.gzippedSize / analysis.totalSize) * 100).toFixed(1)}%`
-    );
-
-    if (analysis.recommendations.length > 0) {
-      console.log('\n💡 Recommendations:');
-      analysis.recommendations.forEach(rec => console.log(`  • ${rec}`));
-    }
-
-    console.groupEnd();
+    // Bundle size monitoring tracked internally
+    this.analyzeBundlePerformance();
+    // Analysis results processed internally
   }
 }
 

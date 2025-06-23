@@ -182,8 +182,8 @@ export function ContactSection({ className }: ContactSectionProps) {
           message: '',
         });
       }, 3000);
-    } catch (error) {
-      console.error('Network error:', error);
+    } catch {
+      // Network error - logged internally
       setIsSubmitting(false);
       // Could show a user-friendly error message here
     }

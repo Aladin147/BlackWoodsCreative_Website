@@ -357,7 +357,7 @@ describe('useLazyLoad', () => {
     expect(result.current.isLoaded).toBe(false);
   });
 
-  it('should trigger loading when visible', async () => {
+  it('should trigger loading when visible', () => {
     const { result } = renderHook(() => useLazyLoad());
 
     // Simulate intersection

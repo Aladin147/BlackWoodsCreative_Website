@@ -32,7 +32,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={defaultMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd).toEqual({
       '@context': 'https://schema.org',
@@ -63,7 +63,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={metadataWithoutTitle} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.name).toBe('BlackWoods Creative');
   });
@@ -76,7 +76,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={metadataWithoutDescription} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.description).toBe(
       'Premium visual storytelling through filmmaking, photography, and 3D visualization.'
@@ -92,7 +92,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={metadataWithStringTitle} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.name).toBe('Simple String Title');
   });
@@ -109,7 +109,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={metadataWithObjectTitle} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.name).toBe('[object Object]'); // toString() behavior
   });
@@ -118,7 +118,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={defaultMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd).toHaveProperty('@context', 'https://schema.org');
     expect(jsonLd).toHaveProperty('@type', 'Organization');
@@ -134,7 +134,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={defaultMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.sameAs).toEqual([
       'https://www.facebook.com/blackwoodscreative',
@@ -149,7 +149,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={defaultMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.contactPoint).toEqual({
       '@type': 'ContactPoint',
@@ -162,7 +162,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={defaultMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonContent = script?.innerHTML || '';
+    const jsonContent = script?.innerHTML ?? '';
 
     expect(() => JSON.parse(jsonContent)).not.toThrow();
   });
@@ -178,7 +178,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={defaultMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.logo).toBe('https://blackwoodscreative.com/assets/images/og-image.jpg');
   });
@@ -187,7 +187,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={defaultMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.url).toBe('https://blackwoodscreative.com');
   });
@@ -198,7 +198,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={emptyMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.name).toBe('BlackWoods Creative');
     expect(jsonLd.description).toBe(
@@ -215,7 +215,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={nullMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.name).toBe('BlackWoods Creative');
     expect(jsonLd.description).toBe(
@@ -232,7 +232,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={undefinedMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.name).toBe('BlackWoods Creative');
     expect(jsonLd.description).toBe(
@@ -258,12 +258,12 @@ describe('StructuredData', () => {
     const { rerender } = render(<StructuredData metadata={defaultMetadata} />);
 
     const firstScript = document.querySelector('script[type="application/ld+json"]');
-    const firstJsonLd = JSON.parse(firstScript?.innerHTML || '{}');
+    const firstJsonLd = JSON.parse(firstScript?.innerHTML ?? '{}');
 
     rerender(<StructuredData metadata={defaultMetadata} />);
 
     const secondScript = document.querySelector('script[type="application/ld+json"]');
-    const secondJsonLd = JSON.parse(secondScript?.innerHTML || '{}');
+    const secondJsonLd = JSON.parse(secondScript?.innerHTML ?? '{}');
 
     expect(firstJsonLd).toEqual(secondJsonLd);
   });
@@ -279,7 +279,7 @@ describe('StructuredData', () => {
     rerender(<StructuredData metadata={newMetadata} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonLd = JSON.parse(script?.innerHTML || '{}');
+    const jsonLd = JSON.parse(script?.innerHTML ?? '{}');
 
     expect(jsonLd.name).toBe('Updated Title');
     expect(jsonLd.description).toBe('Updated description');
@@ -294,7 +294,7 @@ describe('StructuredData', () => {
     render(<StructuredData metadata={metadataWithSpecialChars} />);
 
     const script = document.querySelector('script[type="application/ld+json"]');
-    const jsonContent = script?.innerHTML || '';
+    const jsonContent = script?.innerHTML ?? '';
 
     expect(() => JSON.parse(jsonContent)).not.toThrow();
 

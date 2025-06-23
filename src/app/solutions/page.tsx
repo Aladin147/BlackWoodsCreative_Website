@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+
 import { generatePageMetadata } from '@/lib/utils/metadata';
 
 // SEO-optimized metadata for "BlackWoods + interest" searches
@@ -91,8 +92,8 @@ export default function SolutionsPage() {
                 BlackWoods Business Solutions
               </h3>
               <p className="mb-6 text-body-md text-bw-text-secondary">
-                Professional video production, corporate photography, and business presentations 
-                that elevate your company's image and communication.
+                Professional video production, corporate photography, and business presentations
+                that elevate your company&apos;s image and communication.
               </p>
               <ul className="space-y-2 text-body-sm text-bw-text-secondary">
                 <li>• Corporate video production</li>
@@ -273,8 +274,8 @@ export default function SolutionsPage() {
             Find Your Perfect <span className="text-bw-accent-gold">BlackWoods</span> Solution
           </h2>
           <p className="mb-8 text-body-lg text-bw-text-secondary">
-            Ready to discover how BlackWoods Creative can solve your specific challenges? 
-            Let's discuss your needs and create a custom solution.
+            Ready to discover how BlackWoods Creative can solve your specific challenges?
+            Let&apos;s discuss your needs and create a custom solution.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <a

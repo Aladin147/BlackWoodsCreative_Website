@@ -120,7 +120,7 @@ export function MagneticCursor() {
 
     return () => {
       // Safe cleanup - check if style element still exists and has a parent
-      if (style && style.parentNode) {
+      if (style?.parentNode) {
         style.parentNode.removeChild(style);
       }
     };

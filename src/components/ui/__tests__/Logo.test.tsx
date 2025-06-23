@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
 import { Logo } from '../Logo';
 
 // Mock Next.js Image component
@@ -128,7 +129,7 @@ describe('Logo Component', () => {
   });
 
   it('sets priority prop correctly', () => {
-    render(<Logo priority={true} />);
+    render(<Logo priority />);
 
     const logoImage = screen.getByTestId('logo-image-main');
     expect(logoImage).toHaveAttribute('data-priority', 'true');

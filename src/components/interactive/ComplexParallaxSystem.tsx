@@ -138,7 +138,7 @@ export function ComplexParallaxSystem({
     return (
       <div className={`relative ${className}`} style={{ height }}>
         {layers.map(layer => (
-          <div key={layer.id} className={`absolute inset-0 ${layer.className || ''}`}>
+          <div key={layer.id} className={`absolute inset-0 ${layer.className ?? ''}`}>
             {layer.children}
           </div>
         ))}
@@ -151,7 +151,7 @@ export function ComplexParallaxSystem({
       {enhancedLayers.map(layer => (
         <motion.div
           key={layer.id}
-          className={`parallax-element animate-optimized absolute inset-0 ${layer.className || ''}`}
+          className={`parallax-element animate-optimized absolute inset-0 ${layer.className ?? ''}`}
           style={{
             y: layer.y,
             opacity: layer.opacity,
@@ -243,7 +243,7 @@ export function CinematicParallaxScene({
       depth: 0.1 + index * 0.05,
       children: element,
       className: 'pointer-events-none',
-    })) || []),
+    })) ?? []),
   ];
 
   const storyTriggers = [

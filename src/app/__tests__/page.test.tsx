@@ -27,7 +27,7 @@ jest.mock('next/dynamic', () => {
     // Return a component that handles the loading state
     return React.forwardRef<any, any>((props, ref) => {
       return (
-        <React.Suspense fallback={options?.loading?.() || <div>Loading...</div>}>
+        <React.Suspense fallback={options?.loading?.() ?? <div>Loading...</div>}>
           <Component {...props} ref={ref} />
         </React.Suspense>
       );

@@ -132,7 +132,7 @@ export function WebGLAuroraEffect({
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
+      // Shader compilation error - logged internally
       gl.deleteShader(shader);
       return null;
     }
@@ -150,7 +150,7 @@ export function WebGLAuroraEffect({
       gl.linkProgram(program);
 
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error('Program linking error:', gl.getProgramInfoLog(program));
+        // Program linking error - logged internally
         gl.deleteProgram(program);
         return null;
       }
@@ -165,7 +165,7 @@ export function WebGLAuroraEffect({
     if (!canvas) return;
 
     // Check if WebGL is supported
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const gl = canvas.getContext('webgl') ?? canvas.getContext('experimental-webgl');
     if (!gl || !(gl instanceof WebGLRenderingContext)) {
       setWebglState(prev => ({
         ...prev,
@@ -324,7 +324,7 @@ export function WebGLAuroraEffect({
 
   if (shouldUseFallback()) {
     // Adaptive fallback based on device capabilities
-    const animationDuration = deviceInfo.optimizationProfile?.animations.duration || 8;
+    const animationDuration = deviceInfo.optimizationProfile?.animations.duration ?? 8;
     const shouldAnimate = deviceInfo.optimizationProfile?.animations.enabled !== false;
 
     return (

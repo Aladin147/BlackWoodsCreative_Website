@@ -84,9 +84,9 @@ describe('sitemap', () => {
     const about = result.find(entry => entry.url.includes('#about'));
     const contact = result.find(entry => entry.url.includes('#contact'));
 
-    expect(homepage?.priority).toBeGreaterThan(portfolio?.priority || 0);
-    expect(portfolio?.priority).toBeGreaterThan(about?.priority || 0);
-    expect(about?.priority).toBeGreaterThan(contact?.priority || 0);
+    expect(homepage?.priority).toBeGreaterThan(portfolio?.priority ?? 0);
+    expect(portfolio?.priority).toBeGreaterThan(about?.priority ?? 0);
+    expect(about?.priority).toBeGreaterThan(contact?.priority ?? 0);
   });
 
   it('uses correct base URL from siteConfig', () => {

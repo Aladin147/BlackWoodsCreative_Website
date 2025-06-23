@@ -119,23 +119,23 @@ function ScrollStorySection({
   const sectionProgress = useTransform(scrollProgress, [sectionStart, sectionEnd], [0, 1]);
 
   // Advanced parallax transforms
-  const y = useTransform(sectionProgress, [0, 1], [0, -100 * (section.parallaxSpeed || 1)]);
+  const y = useTransform(sectionProgress, [0, 1], [0, -100 * (section.parallaxSpeed ?? 1)]);
 
-  const scale = useTransform(sectionProgress, [0, 0.5, 1], section.effects?.scale || [0.8, 1, 1.2]);
+  const scale = useTransform(sectionProgress, [0, 0.5, 1], section.effects?.scale ?? [0.8, 1, 1.2]);
 
   const opacity = useTransform(
     sectionProgress,
     [0, 0.2, 0.8, 1],
-    section.effects?.opacity || [0, 1, 1, 0]
+    section.effects?.opacity ?? [0, 1, 1, 0]
   );
 
   const blur = useTransform(
     sectionProgress,
     [0, 0.2, 0.8, 1],
-    section.effects?.blur || [10, 0, 0, 10]
+    section.effects?.blur ?? [10, 0, 0, 10]
   );
 
-  const rotate = useTransform(sectionProgress, [0, 1], section.effects?.rotate || [0, 0]);
+  const rotate = useTransform(sectionProgress, [0, 1], section.effects?.rotate ?? [0, 0]);
 
   // Pre-calculate transforms to avoid conditional hooks
   const backgroundOpacity = useTransform(opacity, value => value * 0.7);
@@ -164,7 +164,7 @@ function ScrollStorySection({
             className="h-full w-full bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url(${section.backgroundImage})`,
-              transform: `translateY(${-50 * (section.parallaxSpeed || 1)}px)`,
+              transform: `translateY(${-50 * (section.parallaxSpeed ?? 1)}px)`,
             }}
           />
           <div className="absolute inset-0 bg-bw-black/60" />

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
 
+import { getInternalLinksForPage, getRelatedServicePages } from '@/lib/utils/internal-linking';
+
 import { RelatedLinks, RelatedServiceLinks, CTALinks, ContextualNavigation } from '../RelatedLinks';
 
 // Mock Next.js navigation
@@ -21,8 +23,8 @@ jest.mock('@/components/interactive', () => ({
 }));
 
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
-const mockGetInternalLinksForPage = require('@/lib/utils/internal-linking').getInternalLinksForPage;
-const mockGetRelatedServicePages = require('@/lib/utils/internal-linking').getRelatedServicePages;
+const mockGetInternalLinksForPage = getInternalLinksForPage as jest.MockedFunction<typeof getInternalLinksForPage>;
+const mockGetRelatedServicePages = getRelatedServicePages as jest.MockedFunction<typeof getRelatedServicePages>;
 
 describe('RelatedLinks Component', () => {
   beforeEach(() => {

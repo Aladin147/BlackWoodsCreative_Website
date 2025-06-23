@@ -37,7 +37,7 @@ describe('Bundle Optimization Utils', () => {
   });
 
   describe('createOptimizedLazyComponent', () => {
-    it('creates a lazy component with retry logic', async () => {
+    it('creates a lazy component with retry logic', () => {
       const importFn = jest.fn().mockResolvedValue({ default: mockComponent });
 
       const LazyComponent = createOptimizedLazyComponent(importFn, {

@@ -279,8 +279,8 @@ export function ScrollTriggeredCounter({ counters, className = '' }: ScrollTrigg
           <div className="mb-2 text-display-lg text-bw-accent-gold">
             <CountUp
               end={counter.value}
-              prefix={counter.prefix || ''}
-              suffix={counter.suffix || ''}
+              prefix={counter.prefix ?? ''}
+              suffix={counter.suffix ?? ''}
               duration={2 + index * 0.5}
             />
           </div>

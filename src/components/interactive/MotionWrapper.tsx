@@ -41,7 +41,7 @@ function createMotionComponent(element: keyof typeof motion) {
       // Handle style elements in document head
       const styleElements = document.querySelectorAll('style:not([nonce])');
       styleElements.forEach(styleEl => {
-        const content = styleEl.textContent || '';
+        const content = styleEl.textContent ?? '';
         if (content.includes('transform') || content.includes('opacity') || content.includes('scale')) {
           styleEl.setAttribute('nonce', nonce);
         }
@@ -58,7 +58,7 @@ function createMotionComponent(element: keyof typeof motion) {
           // For CSP compliance, we'll create a style element with nonce
           // instead of using inline styles
           if (style.includes('transform') || style.includes('opacity') || style.includes('scale')) {
-            const elementId = element.id || `motion-${Math.random().toString(36).substr(2, 9)}`;
+            const elementId = element.id ?? `motion-${Math.random().toString(36).substr(2, 9)}`;
             if (!element.id) {
               element.id = elementId;
             }

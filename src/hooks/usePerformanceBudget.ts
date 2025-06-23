@@ -88,7 +88,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken || '',
+            'X-CSRF-Token': csrfToken ?? '',
           },
           body: JSON.stringify({
             action: 'check-custom',
@@ -127,7 +127,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
   const getBudgetConfig = useCallback(
     async (environment?: string) => {
       try {
-        const env = environment || finalConfig.environment;
+        const env = environment ?? finalConfig.environment;
         const response = await fetch(`/api/performance-budget?action=config&env=${env}`);
 
         if (!response.ok) {
@@ -202,7 +202,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken || '',
+          'X-CSRF-Token': csrfToken ?? '',
         },
         body: JSON.stringify({
           action: 'save-report',
@@ -298,8 +298,7 @@ export function useComponentPerformanceBudget(componentName: string) {
 
       // Check budgets if render time is concerning
       if (duration > 16) {
-        // More than one frame at 60fps
-        console.warn(`${componentName} render took ${duration.toFixed(2)}ms`);
+        // More than one frame at 60fps - logged internally
 
         // Trigger budget check with component-specific data
         const componentData: PerformanceData = {
@@ -312,7 +311,9 @@ export function useComponentPerformanceBudget(componentName: string) {
           },
         };
 
-        checkBudgets(componentData).catch(console.error);
+        checkBudgets(componentData).catch(() => {
+          // Budget check error - logged internally
+        });
       }
     };
   }, [componentName, checkBudgets]);

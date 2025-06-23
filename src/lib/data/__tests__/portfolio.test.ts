@@ -237,7 +237,7 @@ describe('portfolioData', () => {
     it('has balanced distribution', () => {
       const categoryCount = portfolioData.reduce(
         (acc, project) => {
-          acc[project.category] = (acc[project.category] || 0) + 1;
+          acc[project.category] = (acc[project.category] ?? 0) + 1;
           return acc;
         },
         {} as Record<string, number>

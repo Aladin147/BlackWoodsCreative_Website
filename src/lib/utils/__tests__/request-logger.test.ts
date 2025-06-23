@@ -23,7 +23,7 @@ function createMockRequest(
     url,
     ip,
     headers: {
-      get: (name: string) => headers[name.toLowerCase()] || null,
+      get: (name: string) => headers[name.toLowerCase()] ?? null,
     },
     nextUrl: new URL(url),
   } as unknown as NextRequest;

@@ -20,7 +20,7 @@ jest.mock('framer-motion', () => ({
       <span {...props}>{children}</span>
     ),
   },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 // Mock the scroll utility

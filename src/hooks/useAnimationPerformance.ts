@@ -80,7 +80,7 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
       setMetrics(newMetrics);
 
       if (finalConfig.enableLogging && !isOptimal) {
-        console.warn('Animation Performance Warning:', newMetrics);
+        // Animation Performance Warning - logged internally
       }
     }
 

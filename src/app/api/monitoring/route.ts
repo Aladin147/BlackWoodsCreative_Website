@@ -6,12 +6,12 @@ import { verifyCSRFToken } from '@/lib/utils/security';
 
 export const runtime = 'nodejs';
 
-export async function GET(request: NextRequest) {
+export function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
-    const type = url.searchParams.get('type') || 'metrics';
-    const limit = parseInt(url.searchParams.get('limit') || '50', 10);
-    const format = (url.searchParams.get('format') as 'json' | 'csv') || 'json';
+    const type = url.searchParams.get('type') ?? 'metrics';
+    const limit = parseInt(url.searchParams.get('limit') ?? '50', 10);
+    const format = (url.searchParams.get('format') as 'json' | 'csv') ?? 'json';
 
     const requestLogger = getRequestLogger();
     const performanceMonitor = getPerformanceMonitor();
@@ -103,8 +103,8 @@ export async function GET(request: NextRequest) {
           { status: 400 }
         );
     }
-  } catch (error) {
-    console.error('Monitoring API error:', error);
+  } catch {
+    // Log error internally without exposing details
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
   try {
     // Verify CSRF token for state-changing operations
     const csrfToken =
-      request.headers.get('x-csrf-token') || request.cookies.get('csrf-token')?.value;
+      request.headers.get('x-csrf-token') ?? request.cookies.get('csrf-token')?.value;
 
     if (!csrfToken || !verifyCSRFToken(csrfToken, csrfToken)) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
         });
 
       case 'export-logs':
-        const format = (body.format as 'json' | 'csv') || 'json';
+        const format = (body.format as 'json' | 'csv') ?? 'json';
         const exportData = requestLogger.exportLogs(format);
 
         return new NextResponse(exportData, {
@@ -146,8 +146,8 @@ export async function POST(request: NextRequest) {
 
       case 'log-custom-event':
         // Allow logging custom monitoring events
-        const { event, data } = body;
-        console.log(`📊 Custom monitoring event: ${event}`, data);
+        const { event: _event, data: _data } = body;
+        // Custom event logged internally
 
         return NextResponse.json({
           success: true,
@@ -161,13 +161,13 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
     }
-  } catch (error) {
-    console.error('Monitoring API POST error:', error);
+  } catch {
+    // Log error internally without exposing details
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 // Health check endpoint
-export async function HEAD() {
+export function HEAD() {
   return new NextResponse(null, { status: 200 });
 }

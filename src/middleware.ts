@@ -1,7 +1,6 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { getRequestLogger } from './lib/utils/request-logger';
 import {
@@ -39,7 +38,7 @@ if (hasRedisConfig) {
         prefix: '@upstash/ratelimit:contact',
       }),
     };
-  } catch (error) {
+  } catch {
     console.warn('⚠️  Redis configuration error, rate limiting disabled');
     rateLimiters = {};
   }

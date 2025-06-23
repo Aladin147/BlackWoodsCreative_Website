@@ -8,7 +8,7 @@
  * @param href - The href to navigate to (can be hash or full URL)
  * @param offset - Offset for scroll positioning (default: 80px for fixed header)
  */
-export function navigateTo(href: string, offset: number = 80): void {
+export function navigateTo(href: string, offset = 80): void {
   // Handle hash-based navigation (for sections on current page)
   if (href.startsWith('#')) {
     const element = document.querySelector(href);

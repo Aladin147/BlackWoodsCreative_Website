@@ -11,8 +11,8 @@ jest.mock('framer-motion', () => ({
     input: ({ children, ...props }: any) => <input {...props}>{children}</input>,
     button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
   },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
-  LayoutGroup: ({ children }: any) => <>{children}</>,
+  AnimatePresence: ({ children }: any) => children,
+  LayoutGroup: ({ children }: any) => children,
 }));
 
 // Mock MagneticField

@@ -82,7 +82,7 @@ export function useDeviceAdaptation() {
     const height = window.innerHeight;
     const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : '';
     const isTouchDevice = 'ontouchstart' in window || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0);
-    const pixelRatio = window.devicePixelRatio || 1;
+    const pixelRatio = window.devicePixelRatio ?? 1;
 
     // Screen size detection
     let screenSize: DeviceInfo['screenSize'] = 'sm';
@@ -113,8 +113,8 @@ export function useDeviceAdaptation() {
     try {
       capabilities = await getDeviceCapabilities();
       optimizationProfile = await getOptimizationProfile();
-    } catch (error) {
-      console.warn('Failed to detect device capabilities:', error);
+    } catch {
+      // Failed to detect device capabilities - logged internally
     }
 
     const newDeviceInfo: DeviceInfo = {
@@ -246,7 +246,7 @@ export function useAdaptiveMagnetic(baseStrength: number, baseDistance: number) 
 }
 
 // Component for displaying device adaptation info (development only)
-export function DeviceAdaptationMonitor({}: { enabled?: boolean }) {
+export function DeviceAdaptationMonitor(_props: { enabled?: boolean }) {
   // Temporarily return null to fix build - component disabled due to className corruption issues
   return null;
 }

@@ -32,11 +32,11 @@ export function generatePageMetadata(seoData: SEOMetadata): Metadata {
   return {
     title: seoData.title,
     description: seoData.description,
-    keywords: seoData.keywords || null,
+    keywords: seoData.keywords ?? null,
     openGraph: {
-      title: seoData.openGraph?.title || seoData.title,
-      description: seoData.openGraph?.description || seoData.description,
-      type: seoData.openGraph?.type === 'service' ? 'website' : (seoData.openGraph?.type || 'website'),
+      title: seoData.openGraph?.title ?? seoData.title,
+      description: seoData.openGraph?.description ?? seoData.description,
+      type: seoData.openGraph?.type === 'service' ? 'website' : (seoData.openGraph?.type ?? 'website'),
       locale: 'en_US',
       siteName: 'BlackWoods Creative',
       ...(seoData.openGraph?.image && { images: [{ url: seoData.openGraph.image }] }),

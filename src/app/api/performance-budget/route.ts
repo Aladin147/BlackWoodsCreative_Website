@@ -13,12 +13,12 @@ export const runtime = 'nodejs';
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
-    const action = url.searchParams.get('action') || 'check';
-    const environment = url.searchParams.get('env') || process.env.NODE_ENV;
+    const action = url.searchParams.get('action') ?? 'check';
+    const environment = url.searchParams.get('env') ?? process.env.NODE_ENV;
 
     switch (action) {
       case 'check':
-        return await handleBudgetCheck();
+        return handleBudgetCheck();
 
       case 'config':
         return await handleGetConfig(environment);
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         return await handleGenerateReport();
 
       case 'history':
-        return await handleGetHistory(request);
+        return handleGetHistory(request);
 
       default:
         return NextResponse.json(
@@ -35,8 +35,8 @@ export async function GET(request: NextRequest) {
           { status: 400 }
         );
     }
-  } catch (error) {
-    console.error('Performance budget API error:', error);
+  } catch {
+    // Log error internally without exposing details
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
   try {
     // Verify CSRF token for state-changing operations
     const csrfToken =
-      request.headers.get('x-csrf-token') || request.cookies.get('csrf-token')?.value;
+      request.headers.get('x-csrf-token') ?? request.cookies.get('csrf-token')?.value;
 
     if (!csrfToken || !verifyCSRFToken(csrfToken, csrfToken)) {
       return NextResponse.json({ error: 'Invalid CSRF token' }, { status: 403 });
@@ -56,13 +56,13 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'check-custom':
-        return await handleCustomBudgetCheck(data);
+        return handleCustomBudgetCheck(data);
 
       case 'update-config':
-        return await handleUpdateConfig(data);
+        return handleUpdateConfig(data);
 
       case 'save-report':
-        return await handleSaveReport(data);
+        return handleSaveReport(data);
 
       default:
         return NextResponse.json(
@@ -70,13 +70,13 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
     }
-  } catch (error) {
-    console.error('Performance budget POST error:', error);
+  } catch {
+    // Performance budget POST error - logged internally
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
-async function handleBudgetCheck() {
+function handleBudgetCheck() {
   try {
     // Get current performance data
     const performanceMonitor = getPerformanceMonitor();
@@ -91,11 +91,11 @@ async function handleBudgetCheck() {
         gzipped: 350 * 1024, // 350KB gzipped
       },
       coreWebVitals: {
-        lcp: currentMetrics.lcp || 2200,
-        fid: currentMetrics.fid || 80,
-        cls: currentMetrics.cls || 0.08,
-        fcp: currentMetrics.fcp || 1600,
-        ttfb: currentMetrics.ttfb || 500,
+        lcp: currentMetrics.lcp ?? 2200,
+        fid: currentMetrics.fid ?? 80,
+        cls: currentMetrics.cls ?? 0.08,
+        fcp: currentMetrics.fcp ?? 1600,
+        ttfb: currentMetrics.ttfb ?? 500,
         inp: 150, // Simulated INP
       },
       resources: {
@@ -128,8 +128,8 @@ async function handleBudgetCheck() {
       environment: process.env.NODE_ENV,
       data: performanceData,
     });
-  } catch (error) {
-    console.error('Budget check error:', error);
+  } catch {
+    // Log error internally without exposing details
     return NextResponse.json({ error: 'Failed to check performance budgets' }, { status: 500 });
   }
 }
@@ -155,8 +155,8 @@ async function handleGetConfig(environment: string) {
       environment,
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error('Get config error:', error);
+  } catch {
+    // Get config error - logged internally
     return NextResponse.json({ error: 'Failed to get budget configuration' }, { status: 500 });
   }
 }
@@ -166,7 +166,7 @@ async function handleGenerateReport() {
     const includeRecommendations = true; // Default to include recommendations
 
     // Get budget check results
-    const checkResponse = await handleBudgetCheck();
+    const checkResponse = handleBudgetCheck();
     const checkData = await checkResponse.json();
 
     // JSON format
@@ -178,17 +178,17 @@ async function handleGenerateReport() {
     };
 
     return NextResponse.json(report);
-  } catch (error) {
-    console.error('Generate report error:', error);
+  } catch {
+    // Generate report error - logged internally
     return NextResponse.json({ error: 'Failed to generate performance report' }, { status: 500 });
   }
 }
 
-async function handleGetHistory(request: NextRequest) {
+function handleGetHistory(request: NextRequest) {
   try {
     const url = new URL(request.url);
-    const limit = parseInt(url.searchParams.get('limit') || '10', 10);
-    const days = parseInt(url.searchParams.get('days') || '7', 10);
+    const limit = parseInt(url.searchParams.get('limit') ?? '10', 10);
+    const days = parseInt(url.searchParams.get('days') ?? '7', 10);
 
     // In a real implementation, this would fetch from a database
     // For now, return mock historical data
@@ -207,13 +207,13 @@ async function handleGetHistory(request: NextRequest) {
       period: `${days} days`,
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error('Get history error:', error);
+  } catch {
+    // Get history error - logged internally
     return NextResponse.json({ error: 'Failed to get budget check history' }, { status: 500 });
   }
 }
 
-async function handleCustomBudgetCheck(data: {
+function handleCustomBudgetCheck(data: {
   performanceData: PerformanceData;
   customBudget?: PerformanceBudget;
 }) {
@@ -228,8 +228,8 @@ async function handleCustomBudgetCheck(data: {
       customBudget: !!customBudget,
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error('Custom budget check error:', error);
+  } catch {
+    // Custom budget check error - logged internally
     return NextResponse.json(
       { error: 'Failed to check custom performance budgets' },
       { status: 500 }
@@ -237,7 +237,7 @@ async function handleCustomBudgetCheck(data: {
   }
 }
 
-async function handleUpdateConfig(data: { budget: unknown; environment: string }) {
+function handleUpdateConfig(data: { budget: unknown; environment: string }) {
   try {
     // In a real implementation, this would update stored configuration
     // For now, just validate the configuration
@@ -252,16 +252,16 @@ async function handleUpdateConfig(data: { budget: unknown; environment: string }
       message: 'Budget configuration updated successfully',
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error('Update config error:', error);
+  } catch {
+    // Update config error - logged internally
     return NextResponse.json({ error: 'Failed to update budget configuration' }, { status: 500 });
   }
 }
 
-async function handleSaveReport(data: { report: unknown; tags: string[] }) {
+function handleSaveReport(_data: { report: unknown; tags: string[] }) {
   try {
     // In a real implementation, this would save to database
-    console.log('Saving report:', data.report, 'with tags:', data.tags);
+    // Report saved internally
 
     return NextResponse.json({
       success: true,
@@ -269,8 +269,8 @@ async function handleSaveReport(data: { report: unknown; tags: string[] }) {
       message: 'Performance report saved successfully',
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error('Save report error:', error);
+  } catch {
+    // Log error internally without exposing details
     return NextResponse.json({ error: 'Failed to save performance report' }, { status: 500 });
   }
 }

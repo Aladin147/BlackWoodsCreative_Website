@@ -73,23 +73,21 @@ export function useIntersectionObserverMultiple(options: UseIntersectionObserver
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const observe = (element: Element) => {
-    if (!observerRef.current) {
-      observerRef.current = new IntersectionObserver(
-        observedEntries => {
-          setEntries(prev => {
-            const newEntries = new Map(prev);
-            observedEntries.forEach(entry => {
-              if (freezeOnceVisible && prev.get(entry.target)?.isIntersecting) {
-                return; // Keep frozen state
-              }
-              newEntries.set(entry.target, entry);
-            });
-            return newEntries;
+    observerRef.current ??= new IntersectionObserver(
+      observedEntries => {
+        setEntries(prev => {
+          const newEntries = new Map(prev);
+          observedEntries.forEach(entry => {
+            if (freezeOnceVisible && prev.get(entry.target)?.isIntersecting) {
+              return; // Keep frozen state
+            }
+            newEntries.set(entry.target, entry);
           });
-        },
-        { threshold, root, rootMargin }
-      );
-    }
+          return newEntries;
+        });
+      },
+      { threshold, root, rootMargin }
+    );
 
     observerRef.current.observe(element);
   };
