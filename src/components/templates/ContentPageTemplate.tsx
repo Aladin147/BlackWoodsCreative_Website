@@ -92,7 +92,7 @@ export interface CTAData {
 }
 
 // Icon mapping for consistent Heroicons usage
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const iconMap: Record<string, React.ComponentType<any>> = {
   UserIcon,
   BriefcaseIcon,
   FilmIcon,
@@ -238,28 +238,28 @@ function ContentSectionRenderer({
     case 'text':
       return (
         <section className={baseClasses}>
-          <TextSection data={section.data} styling={section.styling} />
+          <TextSection data={section.data as TextData} styling={section.styling} />
         </section>
       );
 
     case 'timeline':
       return (
         <section className={baseClasses}>
-          <TimelineSection data={section.data} />
+          <TimelineSection data={section.data as TimelineData} />
         </section>
       );
 
     case 'values':
       return (
         <section className={baseClasses}>
-          <ValuesSection data={section.data} />
+          <ValuesSection data={section.data as ValuesData} />
         </section>
       );
 
     case 'cta':
       return (
         <section className={baseClasses}>
-          <CTASection data={section.data} />
+          <CTASection data={section.data as CTAData} />
         </section>
       );
 

@@ -155,7 +155,7 @@ export function PageNavigation({
 }
 
 // Utility function to get previous and next pages
-function getPrevNextPages(currentPath: string): { prevPage?: PageInfo; nextPage?: PageInfo } {
+function getPrevNextPages(currentPath: string): { prevPage?: PageInfo | undefined; nextPage?: PageInfo | undefined } {
   // Determine which sequence this page belongs to
   let sequence: PageInfo[] = [];
   
@@ -165,12 +165,12 @@ function getPrevNextPages(currentPath: string): { prevPage?: PageInfo; nextPage?
     sequence = PAGE_SEQUENCES.services;
   }
   
-  if (sequence.length === 0) return {};
-  
+  if (sequence.length === 0) return { prevPage: undefined, nextPage: undefined };
+
   const currentIndex = sequence.findIndex(page => page.path === currentPath);
-  
-  if (currentIndex === -1) return {};
-  
+
+  if (currentIndex === -1) return { prevPage: undefined, nextPage: undefined };
+
   return {
     prevPage: currentIndex > 0 ? sequence[currentIndex - 1] : undefined,
     nextPage: currentIndex < sequence.length - 1 ? sequence[currentIndex + 1] : undefined

@@ -50,13 +50,13 @@ const VisionSection = dynamic(
 // Register components for intelligent preloading
 if (typeof window !== 'undefined') {
   componentPreloader.register('HeroSection', () =>
-    import('@/components/sections/HeroSection').then((module) => module)
+    import('@/components/sections/HeroSection').then(() => {})
   );
   componentPreloader.register('PortfolioSection', () =>
-    import('@/components/sections/PortfolioSection').then((module) => module)
+    import('@/components/sections/PortfolioSection').then(() => {})
   );
   componentPreloader.register('VisionSection', () =>
-    import('@/components/sections/VisionSection').then((module) => module)
+    import('@/components/sections/VisionSection').then(() => {})
   );
 }
 

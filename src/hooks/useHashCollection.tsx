@@ -10,11 +10,7 @@ import {
   getCollectionStats 
 } from '@/lib/utils/hash-collector';
 
-interface CollectionStats {
-  totalHashes: number;
-  byComponent: Record<string, number>;
-  mostFrequent: Array<{ hash: string; count: number; component?: string }>;
-}
+type CollectionStats = ReturnType<typeof getCollectionStats>;
 
 /**
  * Hook for managing hash collection in development mode

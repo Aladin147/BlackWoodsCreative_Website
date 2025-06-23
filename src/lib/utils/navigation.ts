@@ -57,14 +57,21 @@ export function isHomePage(): boolean {
 export function getNavigationItems(navigation: readonly NavigationItem[], _homeNavigation: readonly NavigationItem[]): readonly NavigationItem[] {
   // Always use proper page navigation - no more hash-based navigation
   // This ensures all navigation links go to actual pages
-  return navigation.map((item: NavigationItem) => ({
-    ...item,
-    href: item.href, // Always use the page href, never homeHref
-    submenu: item.submenu ? item.submenu.map((subItem: NavigationItem) => ({
-      ...subItem,
-      // Submenu items always use page hrefs
-    })) : undefined
-  }));
+  return navigation.map((item: NavigationItem) => {
+    const result: NavigationItem = {
+      ...item,
+      href: item.href, // Always use the page href, never homeHref
+    };
+
+    if (item.submenu) {
+      result.submenu = item.submenu.map((subItem: NavigationItem) => ({
+        ...subItem,
+        // Submenu items always use page hrefs
+      }));
+    }
+
+    return result;
+  });
 }
 
 /**

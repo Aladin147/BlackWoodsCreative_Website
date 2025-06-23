@@ -413,8 +413,10 @@ class PerformanceBudgetChecker {
     const grouped: Partial<Record<keyof PerformanceBudget, BudgetViolation[]>> = {};
 
     this.violations.forEach(violation => {
-      grouped[violation.category] ??= [];
-      grouped[violation.category].push(violation);
+      if (!grouped[violation.category]) {
+        grouped[violation.category] = [];
+      }
+      grouped[violation.category]!.push(violation);
     });
 
     return grouped;

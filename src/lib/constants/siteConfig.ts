@@ -3,7 +3,7 @@ export interface NavigationItem {
   name: string;
   href: string;
   description?: string;
-  submenu?: NavigationItem[];
+  submenu?: readonly NavigationItem[];
 }
 
 export const siteConfig = {
