@@ -81,7 +81,7 @@ function createMotionComponent(element: keyof typeof motion) {
           }
         }
       }
-    }, [nonce]);
+    }, [nonce, elementRef]);
 
     useEffect(() => {
       applyNonceToStyles();
@@ -110,7 +110,7 @@ function createMotionComponent(element: keyof typeof motion) {
         observer.disconnect();
         headObserver.disconnect();
       };
-    }, [applyNonceToStyles]);
+    }, [applyNonceToStyles, elementRef]);
 
     const MotionComponent = motion[element] as React.ComponentType<React.ComponentProps<typeof motion.div>>;
 
