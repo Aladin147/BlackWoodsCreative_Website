@@ -45,8 +45,8 @@ export function useFramerNonce(): string | undefined {
 export function useSecureStyle(styles: React.CSSProperties): React.CSSProperties {
   // In production, we should avoid inline styles entirely
   // This hook is mainly for development and edge cases
-  if (process.env.NODE_ENV === 'production') {
-    console.warn('Inline styles should be avoided in production. Use CSS classes instead.');
+  if (process.env.NODE_ENV === 'development') {
+    // Inline styles should be avoided in production. Use CSS classes instead.
   }
 
   return styles;

@@ -130,8 +130,7 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
 
       document.addEventListener('click', resumeContext, { once: true });
       document.addEventListener('touchstart', resumeContext, { once: true });
-    } catch (error) {
-      console.warn('Failed to initialize audio context:', error);
+    } catch {
       setAudioState(prev => ({ ...prev, isSupported: false }));
     }
   }, [finalConfig]);
@@ -145,7 +144,6 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
         const response = await fetch(soundEffect.url);
         if (!response.ok) {
           // Gracefully handle missing audio files
-          console.info(`Audio file not found: ${soundEffect.url} - continuing without audio`);
           return null;
         }
         const arrayBuffer = await response.arrayBuffer();
@@ -155,7 +153,6 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
         return audioBuffer;
       } catch {
         // Gracefully handle audio loading errors
-        console.info(`Audio system: ${soundEffect.url} not available - continuing without audio`);
         return null;
       }
     },
@@ -251,8 +248,8 @@ export function useAudioSystem(config: Partial<AudioConfig> = {}) {
         source.onended = () => {
           activeSourcesRef.current.delete(soundId);
         };
-      } catch (error) {
-        console.warn(`Failed to play sound: ${soundId}`, error);
+      } catch {
+        // Failed to play sound
       }
     },
     [audioState, deviceInfo.isMobile, loadAudioBuffer, finalConfig.fadeInDuration]

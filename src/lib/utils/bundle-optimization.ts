@@ -30,7 +30,7 @@ export function createOptimizedLazyComponent<T extends ComponentType<Record<stri
   importFn: () => Promise<{ default: T }>,
   options: LazyComponentOptions = {}
 ): LazyExoticComponent<T> & { preload: () => Promise<void> } {
-  const { retryCount = 3, retryDelay = 1000, preload = false, chunkName } = options;
+  const { retryCount = 3, retryDelay = 1000, preload = false, chunkName: _chunkName } = options;
 
   let importPromise: Promise<{ default: T }> | null = null;
 
@@ -43,25 +43,18 @@ export function createOptimizedLazyComponent<T extends ComponentType<Record<stri
       importPromise = importFn();
       const result = await importPromise;
 
-      // Log successful chunk load in development
-      if (process.env.NODE_ENV === 'development' && chunkName) {
-        console.log(`✅ Loaded chunk: ${chunkName}`);
-      }
+      // Chunk loaded successfully
 
       return result;
     } catch (error) {
       importPromise = null; // Reset promise on failure
 
       if (attempt < retryCount) {
-        console.warn(
-          `Failed to load component (attempt ${attempt}/${retryCount}), retrying...`,
-          error
-        );
         await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
         return loadComponent(attempt + 1);
       }
 
-      console.error(`Failed to load component after ${retryCount} attempts:`, error);
+      // Failed to load component after retries
       throw error;
     }
   };
@@ -75,7 +68,6 @@ export function createOptimizedLazyComponent<T extends ComponentType<Record<stri
     try {
       await loadComponent();
     } catch (error) {
-      console.error('Failed to preload component:', error);
       throw error; // Re-throw for proper error handling in tests
     }
   };
@@ -118,16 +110,14 @@ export class ComponentPreloader {
 
     const preloadFn = this.preloadQueue.get(name);
     if (!preloadFn) {
-      console.warn(`Component ${name} not registered for preloading`);
       return;
     }
 
     try {
       await preloadFn();
       this.preloadedComponents.add(name);
-      console.log(`✅ Preloaded component: ${name}`);
     } catch (error) {
-      console.error(`Failed to preload component ${name}:`, error);
+      // Failed to preload component
     }
   }
 

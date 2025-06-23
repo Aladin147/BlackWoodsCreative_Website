@@ -67,7 +67,6 @@ export function useHashCollection() {
       setIsCollecting(false);
       return hashes;
     } catch (error) {
-      console.error('Failed to stop hash collection:', error);
       return [];
     }
   };
@@ -76,7 +75,6 @@ export function useHashCollection() {
     try {
       return exportHashesForCSP();
     } catch (error) {
-      console.error('Failed to export hashes:', error);
       return [];
     }
   };
@@ -91,7 +89,7 @@ export function useHashCollection() {
         mostFrequent: [],
       });
     } catch (error) {
-      console.error('Failed to clear hashes:', error);
+      // Failed to clear hashes
     }
   };
 
@@ -116,10 +114,9 @@ export function useHashCollection() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
-      console.log('📥 Downloaded hash collection data');
+
     } catch (error) {
-      console.error('Failed to download hashes:', error);
+      // Failed to download hashes
     }
   };
 

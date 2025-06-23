@@ -256,7 +256,7 @@ export function useRequestMonitoring() {
         throw new Error(`Failed to log custom event: ${response.statusText}`);
       }
     } catch (err) {
-      console.error('Failed to log custom event:', err);
+      // Failed to log custom event
     }
   }, []);
 

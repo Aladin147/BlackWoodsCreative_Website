@@ -160,7 +160,9 @@ export class DeviceCapabilityDetector {
     const benchmarkTime = performance.now() - startTime;
 
     // Use the result to prevent optimization
-    if (benchmarkResult < 0) console.log('Benchmark result:', benchmarkResult);
+    if (benchmarkResult < 0) {
+      // Benchmark result used to prevent optimization
+    }
 
     if (benchmarkTime > 50) cpuPerformance = 'low';
     else if (benchmarkTime < 20) cpuPerformance = 'high';

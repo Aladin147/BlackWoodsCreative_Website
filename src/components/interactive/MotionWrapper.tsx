@@ -28,8 +28,8 @@ function createMotionComponent(element: keyof typeof motion) {
         // Start collection if not already running
         try {
           collector.startCollection();
-        } catch (error) {
-          console.warn('Failed to start hash collection:', error);
+        } catch {
+          // Failed to start hash collection
         }
       }
     }, []);

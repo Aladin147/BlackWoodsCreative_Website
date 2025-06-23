@@ -32,14 +32,11 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     lastChecked: null,
   });
 
-  const checkBudgets = useCallback(async (customData?: PerformanceData) => {
+  const checkBudgets = useCallback(async (_customData?: PerformanceData) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
       // Use custom data if provided, otherwise collect current performance data
-      if (customData) {
-        console.log('Using custom performance data:', customData);
-      }
 
       const response = await fetch('/api/performance-budget?action=check', {
         method: 'GET',
@@ -136,7 +133,6 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
 
         return await response.json();
       } catch (error) {
-        console.error('Failed to get budget configuration:', error);
         throw error;
       }
     },
@@ -169,7 +165,6 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
 
         return await response.json();
       } catch (error) {
-        console.error('Failed to generate performance report:', error);
         throw error;
       }
     },
@@ -188,7 +183,6 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
 
       return await response.json();
     } catch (error) {
-      console.error('Failed to get budget check history:', error);
       throw error;
     }
   }, []);
@@ -216,7 +210,6 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
 
       return await response.json();
     } catch (error) {
-      console.error('Failed to save performance report:', error);
       throw error;
     }
   }, []);
@@ -226,11 +219,11 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     if (!finalConfig.autoCheck) return;
 
     // Initial check
-    checkBudgets().catch(console.error);
+    checkBudgets().catch(() => {});
 
     // Set up interval
     const interval = setInterval(() => {
-      checkBudgets().catch(console.error);
+      checkBudgets().catch(() => {});
     }, finalConfig.checkInterval);
 
     return () => clearInterval(interval);
@@ -243,7 +236,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     // Monitor for performance issues
     const handlePerformanceIssue = () => {
       // Trigger budget check when performance issues are detected
-      checkBudgets().catch(console.error);
+      checkBudgets().catch(() => {});
     };
 
     // Listen for long tasks (if supported)
@@ -263,7 +256,6 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
         return () => observer.disconnect();
       } catch (error) {
         // PerformanceObserver not supported or failed
-        console.warn('PerformanceObserver not supported:', error);
         return () => {}; // Return empty cleanup function
       }
     }

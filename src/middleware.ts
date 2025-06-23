@@ -39,11 +39,9 @@ if (hasRedisConfig) {
       }),
     };
   } catch {
-    console.warn('⚠️  Redis configuration error, rate limiting disabled');
     rateLimiters = {};
   }
 } else {
-  console.warn('⚠️  Redis not configured, rate limiting disabled for development');
   rateLimiters = {};
 }
 

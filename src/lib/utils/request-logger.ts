@@ -127,10 +127,7 @@ class RequestLogger {
     // Update metrics
     this.updateMetrics(logEntry);
 
-    // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`📝 Request [${requestId}]: ${request.method} ${url.pathname}`);
-    }
+    // Request logged internally
 
     return requestId;
   }
@@ -162,13 +159,7 @@ class RequestLogger {
     // Update metrics
     this.updateResponseMetrics(logEntry);
 
-    // Log completion in development
-    if (process.env.NODE_ENV === 'development') {
-      const status = response.status >= 400 ? '❌' : '✅';
-      console.log(
-        `${status} Request [${requestId}] completed: ${response.status} in ${responseTime.toFixed(2)}ms`
-      );
-    }
+    // Request completion logged internally
   }
 
   private updateMetrics(logEntry: RequestLogEntry): void {

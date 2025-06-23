@@ -229,10 +229,9 @@ class FramerMotionHashCollector {
         Object.values(data.hashes).forEach(hashData => {
           this.collectedHashes.set(hashData.hash, hashData);
         });
-        console.log(`📂 Loaded ${this.collectedHashes.size} existing hashes`);
       }
     } catch (error) {
-      console.warn('Failed to load existing hashes:', error);
+      // Failed to load existing hashes
     }
   }
 
@@ -300,7 +299,6 @@ class FramerMotionHashCollector {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(this.storageKey);
     }
-    console.log('🗑️ Cleared all collected hashes');
   }
 }
 

@@ -119,7 +119,6 @@ export function optimizeImages(url: string, options: ImageOptimizationOptions = 
     return urlObj.toString();
   } catch (error) {
     // If URL parsing fails, return original URL
-    console.warn('Failed to optimize image URL:', error);
     return url;
   }
 }
@@ -183,18 +182,11 @@ export function createLazyComponent<T extends React.ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>
 ) {
   return React.lazy(async () => {
-    const start =
-      typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
-
     try {
       const componentModule = await importFn();
-      const end =
-        typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
-
-      console.log(`Lazy component loaded in ${(end - start).toFixed(2)}ms`);
+      // Lazy component loaded successfully
       return componentModule;
     } catch (error) {
-      console.error('Failed to load lazy component:', error);
       throw error;
     }
   });

@@ -38,7 +38,6 @@ export function navigateTo(href: string, offset = 80): void {
   }
 
   // Fallback for any other cases
-  console.warn(`Unknown navigation type for href: ${href}`);
 }
 
 /**

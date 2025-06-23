@@ -42,7 +42,7 @@ class HashManager {
         return JSON.parse(fileContent);
       }
     } catch (error) {
-      console.warn('Failed to load hash data, using defaults:', error);
+      // Failed to load hash data, using defaults
     }
 
     // Return default structure
@@ -78,7 +78,7 @@ class HashManager {
       const jsonContent = JSON.stringify(this.hashData, null, 2);
       fs.writeFileSync(this.hashFilePath, jsonContent, 'utf-8');
     } catch (error) {
-      console.error('Failed to save hash data:', error);
+      // Failed to save hash data
     }
   }
 
@@ -97,29 +97,21 @@ class HashManager {
       this.hashData.lastUpdated = Date.now();
       this.hashData.stats.totalCollected = this.hashData.hashes.collected.length;
       this.hashData.stats.lastCollectionRun = Date.now();
-      
-      console.log(`📝 Added ${newHashes.length} new hashes to collection`);
+
       this.saveHashData();
-    } else {
-      console.log('ℹ️ No new hashes to add');
     }
   }
 
   /**
    * Add manual hash (for specific cases)
    */
-  addManualHash(hash: string, description?: string): void {
+  addManualHash(hash: string, _description?: string): void {
     const formattedHash = hash.startsWith("'") ? hash : `'${hash}'`;
     
     if (!this.hashData.hashes.manual.includes(formattedHash)) {
       this.hashData.hashes.manual.push(formattedHash);
       this.hashData.lastUpdated = Date.now();
-      
-      console.log(`➕ Added manual hash: ${formattedHash}`);
-      if (description) {
-        console.log(`   Description: ${description}`);
-      }
-      
+
       this.saveHashData();
     }
   }
@@ -134,7 +126,6 @@ class HashManager {
       const index = this.hashData.hashes[category as keyof typeof this.hashData.hashes].indexOf(formattedHash);
       if (index > -1) {
         this.hashData.hashes[category as keyof typeof this.hashData.hashes].splice(index, 1);
-        console.log(`🗑️ Removed hash from ${category}: ${formattedHash}`);
       }
     });
     
@@ -193,7 +184,6 @@ class HashManager {
     });
 
     if (removedCount > 0) {
-      console.log(`🧹 Removed ${removedCount} duplicate hashes`);
       this.hashData.lastUpdated = Date.now();
       this.saveHashData();
     }
@@ -245,12 +235,10 @@ class HashManager {
    * Reset all collected hashes (keep common and manual)
    */
   resetCollectedHashes(): void {
-    const removedCount = this.hashData.hashes.collected.length;
     this.hashData.hashes.collected = [];
     this.hashData.stats.totalCollected = 0;
     this.hashData.lastUpdated = Date.now();
-    
-    console.log(`🔄 Reset ${removedCount} collected hashes`);
+
     this.saveHashData();
   }
 
@@ -273,7 +261,6 @@ class HashManager {
       const validHashes = categoryHashes.filter(hash => {
         const isValid = this.isValidHash(hash);
         if (!isValid) {
-          console.warn(`⚠️ Invalid hash format in ${category}: ${hash}`);
           cleanedCount++;
         }
         return isValid;
@@ -283,7 +270,6 @@ class HashManager {
     });
 
     if (cleanedCount > 0) {
-      console.log(`🧼 Cleaned ${cleanedCount} invalid hashes`);
       this.hashData.lastUpdated = Date.now();
       this.saveHashData();
     }

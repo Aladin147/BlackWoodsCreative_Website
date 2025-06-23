@@ -159,7 +159,6 @@ export function ContactSection({ className }: ContactSectionProps) {
           setFormErrors(result.errors);
         } else {
           // Handle other errors (rate limiting, server errors, etc.)
-          console.error('Form submission error:', result.message);
         }
         setIsSubmitting(false);
         return;
