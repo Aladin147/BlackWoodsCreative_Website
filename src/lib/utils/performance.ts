@@ -182,13 +182,9 @@ export function createLazyComponent<T extends React.ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>
 ) {
   return lazy(async () => {
-    try {
-      const componentModule = await importFn();
-      // Lazy component loaded successfully
-      return componentModule;
-    } catch (error) {
-      throw error;
-    }
+    const componentModule = await importFn();
+    // Lazy component loaded successfully
+    return componentModule;
   });
 }
 

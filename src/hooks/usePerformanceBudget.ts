@@ -123,95 +123,79 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
 
   const getBudgetConfig = useCallback(
     async (environment?: string) => {
-      try {
-        const env = environment ?? finalConfig.environment;
-        const response = await fetch(`/api/performance-budget?action=config&env=${env}`);
+      const env = environment ?? finalConfig.environment;
+      const response = await fetch(`/api/performance-budget?action=config&env=${env}`);
 
-        if (!response.ok) {
-          throw new Error(`Failed to get budget config: ${response.statusText}`);
-        }
-
-        return await response.json();
-      } catch (error) {
-        throw error;
+      if (!response.ok) {
+        throw new Error(`Failed to get budget config: ${response.statusText}`);
       }
+
+      return await response.json();
     },
     [finalConfig.environment]
   );
 
   const generateReport = useCallback(
     async (format: 'json' | 'csv' = 'json', includeRecommendations = true) => {
-      try {
-        const response = await fetch(
-          `/api/performance-budget?action=report&format=${format}&recommendations=${includeRecommendations}`
-        );
+      const response = await fetch(
+        `/api/performance-budget?action=report&format=${format}&recommendations=${includeRecommendations}`
+      );
 
-        if (!response.ok) {
-          throw new Error(`Failed to generate report: ${response.statusText}`);
-        }
-
-        if (format === 'csv') {
-          const blob = await response.blob();
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `performance-budget-report-${Date.now()}.csv`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-          return { success: true, message: 'CSV report downloaded' };
-        }
-
-        return await response.json();
-      } catch (error) {
-        throw error;
+      if (!response.ok) {
+        throw new Error(`Failed to generate report: ${response.statusText}`);
       }
+
+      if (format === 'csv') {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `performance-budget-report-${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        return { success: true, message: 'CSV report downloaded' };
+      }
+
+      return await response.json();
     },
     []
   );
 
   const getHistory = useCallback(async (limit = 10, days = 7) => {
-    try {
-      const response = await fetch(
-        `/api/performance-budget?action=history&limit=${limit}&days=${days}`
-      );
+    const response = await fetch(
+      `/api/performance-budget?action=history&limit=${limit}&days=${days}`
+    );
 
-      if (!response.ok) {
-        throw new Error(`Failed to get budget history: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Failed to get budget history: ${response.statusText}`);
     }
+
+    return await response.json();
   }, []);
 
   const saveReport = useCallback(async (report: BudgetCheckResult, tags: string[] = []) => {
-    try {
-      // Get CSRF token
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    // Get CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-      const response = await fetch('/api/performance-budget', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken ?? '',
-        },
-        body: JSON.stringify({
-          action: 'save-report',
-          data: { report, tags },
-        }),
-      });
+    const response = await fetch('/api/performance-budget', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken ?? '',
+      },
+      body: JSON.stringify({
+        action: 'save-report',
+        data: { report, tags },
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`Failed to save report: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Failed to save report: ${response.statusText}`);
     }
+
+    return await response.json();
   }, []);
 
   // Auto-check budgets on interval

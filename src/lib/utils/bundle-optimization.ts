@@ -65,11 +65,7 @@ export function createOptimizedLazyComponent<T extends ComponentType<Record<stri
 
   // Add preload method
   LazyComponent.preload = async () => {
-    try {
-      await loadComponent();
-    } catch (error) {
-      throw error; // Re-throw for proper error handling in tests
-    }
+    await loadComponent();
   };
 
   // Auto-preload if requested
