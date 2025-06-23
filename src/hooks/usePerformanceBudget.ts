@@ -260,7 +260,7 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
         observer.observe({ entryTypes: ['longtask'] });
 
         return () => observer.disconnect();
-      } catch (error) {
+      } catch {
         // PerformanceObserver not supported or failed
         return () => {
           // Cleanup function - no action needed

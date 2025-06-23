@@ -230,7 +230,7 @@ class FramerMotionHashCollector {
           this.collectedHashes.set(hashData.hash, hashData);
         });
       }
-    } catch (error) {
+    } catch {
       // Failed to load existing hashes
     }
   }

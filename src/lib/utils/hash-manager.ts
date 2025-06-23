@@ -41,7 +41,7 @@ class HashManager {
         const fileContent = fs.readFileSync(this.hashFilePath, 'utf-8');
         return JSON.parse(fileContent);
       }
-    } catch (error) {
+    } catch {
       // Failed to load hash data, using defaults
     }
 
@@ -77,7 +77,7 @@ class HashManager {
     try {
       const jsonContent = JSON.stringify(this.hashData, null, 2);
       fs.writeFileSync(this.hashFilePath, jsonContent, 'utf-8');
-    } catch (error) {
+    } catch {
       // Failed to save hash data
     }
   }

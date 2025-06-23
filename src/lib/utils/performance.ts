@@ -117,7 +117,7 @@ export function optimizeImages(url: string, options: ImageOptimizationOptions = 
 
     urlObj.search = params.toString();
     return urlObj.toString();
-  } catch (error) {
+  } catch {
     // If URL parsing fails, return original URL
     return url;
   }

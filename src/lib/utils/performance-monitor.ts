@@ -1,7 +1,7 @@
 // Performance monitoring utilities for production optimization
 'use client';
 
-import React, { useMemo, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 
 interface PerformanceMetrics {
   fcp: number; // First Contentful Paint

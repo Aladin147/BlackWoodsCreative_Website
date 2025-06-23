@@ -70,7 +70,7 @@ export function useHashCollection() {
       const hashes = stopHashCollection();
       setIsCollecting(false);
       return hashes;
-    } catch (error) {
+    } catch {
       return [];
     }
   };
@@ -78,7 +78,7 @@ export function useHashCollection() {
   const exportHashes = () => {
     try {
       return exportHashesForCSP();
-    } catch (error) {
+    } catch {
       return [];
     }
   };
@@ -92,7 +92,7 @@ export function useHashCollection() {
         byComponent: {},
         mostFrequent: [],
       });
-    } catch (error) {
+    } catch {
       // Failed to clear hashes
     }
   };
@@ -119,7 +119,7 @@ export function useHashCollection() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-    } catch (error) {
+    } catch {
       // Failed to download hashes
     }
   };

@@ -116,7 +116,7 @@ export class ComponentPreloader {
     try {
       await preloadFn();
       this.preloadedComponents.add(name);
-    } catch (error) {
+    } catch {
       // Failed to preload component
     }
   }
