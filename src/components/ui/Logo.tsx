@@ -114,7 +114,9 @@ export function Logo({
         width={variant === 'icon' ? 40 : 200}
         height={variant === 'icon' ? 40 : 60}
         className="hidden"
-        onError={() => {}}
+        onError={() => {
+          // Fallback image error handling - image remains hidden
+        }}
         priority={false}
         data-testid="logo-image-fallback"
       />

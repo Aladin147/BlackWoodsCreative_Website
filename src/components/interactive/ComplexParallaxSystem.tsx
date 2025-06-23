@@ -249,17 +249,23 @@ export function CinematicParallaxScene({
   const storyTriggers = [
     {
       position: 0.2,
-      action: () => {}, // Story chapter 1 trigger
+      action: () => {
+        // Story chapter 1 trigger - placeholder for future implementation
+      },
       id: 'chapter-1',
     },
     {
       position: 0.5,
-      action: () => {}, // Story climax trigger
+      action: () => {
+        // Story climax trigger - placeholder for future implementation
+      },
       id: 'climax',
     },
     {
       position: 0.8,
-      action: () => {}, // Story conclusion trigger
+      action: () => {
+        // Story conclusion trigger - placeholder for future implementation
+      },
       id: 'conclusion',
     },
   ];

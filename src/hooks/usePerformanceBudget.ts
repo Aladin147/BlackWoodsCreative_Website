@@ -219,11 +219,15 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     if (!finalConfig.autoCheck) return;
 
     // Initial check
-    checkBudgets().catch(() => {});
+    checkBudgets().catch(() => {
+      // Initial budget check failed - continue silently
+    });
 
     // Set up interval
     const interval = setInterval(() => {
-      checkBudgets().catch(() => {});
+      checkBudgets().catch(() => {
+        // Interval budget check failed - continue silently
+      });
     }, finalConfig.checkInterval);
 
     return () => clearInterval(interval);
@@ -236,7 +240,9 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
     // Monitor for performance issues
     const handlePerformanceIssue = () => {
       // Trigger budget check when performance issues are detected
-      checkBudgets().catch(() => {});
+      checkBudgets().catch(() => {
+        // Performance issue budget check failed - continue silently
+      });
     };
 
     // Listen for long tasks (if supported)
@@ -256,11 +262,15 @@ export function usePerformanceBudget(config: Partial<PerformanceBudgetConfig> = 
         return () => observer.disconnect();
       } catch (error) {
         // PerformanceObserver not supported or failed
-        return () => {}; // Return empty cleanup function
+        return () => {
+          // Cleanup function - no action needed
+        };
       }
     }
 
-    return () => {}; // Return empty cleanup function for other cases
+    return () => {
+      // Cleanup function - no action needed
+    };
   }, [checkBudgets]);
 
   return {

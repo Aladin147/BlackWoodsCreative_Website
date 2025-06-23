@@ -188,7 +188,9 @@ export function trackComponentLoad(componentName: string) {
 // Hook for React components to track render performance
 export function usePerformanceTracking(componentName: string) {
   const trackEnd = React.useMemo(
-    () => (typeof window !== 'undefined' ? trackComponentLoad(componentName) : () => {}),
+    () => (typeof window !== 'undefined' ? trackComponentLoad(componentName) : () => {
+      // Server-side rendering - no performance tracking needed
+    }),
     [componentName]
   );
 

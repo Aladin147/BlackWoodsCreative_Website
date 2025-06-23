@@ -23,7 +23,16 @@ const mockGetBoundingClientRect = jest.fn(() => ({
   right: 800,
   x: 0,
   y: 0,
-  toJSON: () => {},
+  toJSON: () => ({
+    width: 800,
+    height: 600,
+    top: 0,
+    left: 0,
+    bottom: 600,
+    right: 800,
+    x: 0,
+    y: 0,
+  }),
 }));
 
 describe('AtmosphericParticles', () => {
@@ -88,7 +97,16 @@ describe('AtmosphericParticles', () => {
       right: 0,
       x: 0,
       y: 0,
-      toJSON: () => {},
+      toJSON: () => ({
+        width: 0,
+        height: 0,
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        x: 0,
+        y: 0,
+      }),
     });
 
     const { container } = render(<AtmosphericParticles count={1} />);

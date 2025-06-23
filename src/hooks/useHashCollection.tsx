@@ -45,11 +45,15 @@ export function useHashCollection() {
         };
       } catch {
         // Failed to start hash collection - logged internally
-        return () => {}; // Return empty cleanup function
+        return () => {
+          // Cleanup function - no action needed
+        };
       }
     }
 
-    return () => {}; // Return empty cleanup function for other cases
+    return () => {
+      // Cleanup function - no action needed
+    };
   }, []);
 
   const startCollection = () => {

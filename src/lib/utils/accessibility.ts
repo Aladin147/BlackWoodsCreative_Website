@@ -57,7 +57,9 @@ export class FocusManager {
     const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement | undefined;
 
     if (!firstElement || !lastElement) {
-      return () => {}; // No focusable elements, return empty cleanup
+      return () => {
+        // No focusable elements found - no cleanup needed
+      };
     }
 
     const handleTabKey = (e: KeyboardEvent) => {

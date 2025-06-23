@@ -70,7 +70,7 @@ describe('/api/contact', () => {
 
     // Reset security mocks to allow requests by default
     mockVerifyCSRFToken.mockReturnValue(true);
-    mockLogSecurityEvent.mockImplementation(() => {});
+    mockLogSecurityEvent.mockImplementation(() => undefined);
   });
 
   afterAll(() => {
