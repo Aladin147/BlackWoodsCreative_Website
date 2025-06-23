@@ -16,6 +16,7 @@ import {
   ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { ReactNode } from 'react';
 
 import { ScrollReveal } from '@/components/interactive';
@@ -207,10 +208,13 @@ function ContentHeroSection({ data }: { data: HeroData }) {
         {data.image && (
           <ScrollReveal direction="up" distance={40} delay={0.4}>
             <div className="mt-12 rounded-2xl overflow-hidden">
-              <img
+              <Image
                 src={data.image.src}
                 alt={data.image.alt}
+                width={800}
+                height={600}
                 className="w-full h-auto"
+                priority
               />
             </div>
           </ScrollReveal>

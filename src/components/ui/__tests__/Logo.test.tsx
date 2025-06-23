@@ -6,6 +6,7 @@ import { Logo } from '../Logo';
 jest.mock('next/image', () => {
   return function MockImage({ src, alt, onError, onLoad, className, 'data-testid': testId, priority, ...props }: any) {
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={alt}
