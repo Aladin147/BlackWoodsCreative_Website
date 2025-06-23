@@ -15,7 +15,7 @@ import { getHashCollector } from '@/lib/utils/hash-collector';
  * Enhanced CSP-compliant motion component factory
  */
 function createMotionComponent(element: keyof typeof motion) {
-  return forwardRef<HTMLElement, React.ComponentProps<typeof motion.div>>((props, ref) => {
+  const MotionComponent = forwardRef<HTMLElement, React.ComponentProps<typeof motion.div>>((props, ref) => {
     const nonce = useFramerNonce();
     const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
@@ -121,7 +121,7 @@ function createMotionComponent(element: keyof typeof motion) {
           if (typeof ref === 'function') {
             ref(node);
           } else if (ref) {
-            (ref as React.MutableRefObject<HTMLElement | null>).current = node;
+            ref.current = node;
           }
         }}
         {...props}
@@ -135,6 +135,9 @@ function createMotionComponent(element: keyof typeof motion) {
       />
     );
   });
+
+  MotionComponent.displayName = `Motion${element.charAt(0).toUpperCase() + element.slice(1)}`;
+  return MotionComponent;
 }
 
 export const MotionDiv = createMotionComponent('div');

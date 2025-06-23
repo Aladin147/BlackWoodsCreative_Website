@@ -414,7 +414,7 @@ class PerformanceBudgetChecker {
 
     this.violations.forEach(violation => {
       grouped[violation.category] ??= [];
-      grouped[violation.category]!.push(violation);
+      grouped[violation.category].push(violation);
     });
 
     return grouped;

@@ -36,7 +36,6 @@ export function navigateTo(href: string, offset = 80): void {
   if (href.startsWith('/')) {
     // Use window.location for now (can be upgraded to Next.js router later)
     window.location.href = href;
-    return;
   }
 
   // Fallback for any other cases
