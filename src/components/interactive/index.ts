@@ -1,6 +1,6 @@
 // Advanced Interactive Components - Phase 4
 // Optimized for tree shaking and code splitting
-import React from 'react';
+import React, { createElement } from 'react';
 
 // Core interactive components
 // Temporarily commented out due to import issues - will fix in next step
@@ -13,7 +13,7 @@ interface ScrollStoryTellerProps {
 }
 
 export const ScrollStoryTeller: React.FC<ScrollStoryTellerProps> = props => {
-  return React.createElement(
+  return createElement(
     'div',
     {
       'data-testid': 'scroll-story-teller',

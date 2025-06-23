@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { Component } from 'react';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -13,7 +13,7 @@ interface ErrorBoundaryProps {
   fallback?: React.ComponentType<{ error: Error | null; resetError: () => void }>;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };

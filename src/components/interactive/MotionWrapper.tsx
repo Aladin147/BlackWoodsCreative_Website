@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import React, { forwardRef, useEffect, useCallback } from 'react';
+import React, { forwardRef, useEffect, useCallback, useState } from 'react';
 
 import { useFramerNonce } from '@/hooks/useNonce';
 import { getHashCollector } from '@/lib/utils/hash-collector';
@@ -17,7 +17,7 @@ import { getHashCollector } from '@/lib/utils/hash-collector';
 function createMotionComponent(element: keyof typeof motion) {
   return forwardRef<any, any>((props, ref) => {
     const nonce = useFramerNonce();
-    const [elementRef, setElementRef] = React.useState<HTMLElement | null>(null);
+    const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
     // Initialize hash collection in development mode
     useEffect(() => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createElement, isValidElement, Suspense } from 'react';
 
 import {
   measurePerformance,
@@ -372,7 +372,7 @@ describe('Performance Utils', () => {
   describe('withPerformanceMonitoring', () => {
     it('wraps component with performance monitoring', () => {
       const TestComponent = (props: { name: string }) =>
-        React.createElement('div', null, props.name);
+        createElement('div', null, props.name);
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'TestComponent');
 
       expect(typeof MonitoredComponent).toBe('function');
@@ -381,7 +381,7 @@ describe('Performance Utils', () => {
     it('logs warning for slow renders', () => {
       mockPerformance.now.mockReturnValueOnce(0).mockReturnValueOnce(20);
 
-      const TestComponent = () => React.createElement('div');
+      const TestComponent = () => createElement('div');
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'SlowComponent');
 
       // This would need a proper React testing environment to fully test
@@ -391,17 +391,17 @@ describe('Performance Utils', () => {
 
   describe('createLazyComponent', () => {
     it('creates lazy component with performance logging', () => {
-      const mockComponent = { default: () => React.createElement('div') };
+      const mockComponent = { default: () => createElement('div') };
       const importFn = jest.fn().mockResolvedValue(mockComponent);
 
       const LazyComponent = createLazyComponent(importFn);
 
       expect(
-        React.isValidElement(
-          React.createElement(
-            React.Suspense,
+        isValidElement(
+          createElement(
+            Suspense,
             { fallback: 'Loading...' },
-            React.createElement(LazyComponent)
+            createElement(LazyComponent)
           )
         )
       ).toBe(true);

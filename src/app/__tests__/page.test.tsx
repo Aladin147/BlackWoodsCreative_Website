@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
+import React, { lazy, forwardRef, Suspense } from 'react';
 
 import HomePage from '../page';
 
@@ -22,14 +22,14 @@ jest.mock('@/components/layout', () => ({
 // Mock Next.js dynamic import
 jest.mock('next/dynamic', () => {
   return (importFunc: () => Promise<any>, options?: any) => {
-    const Component = React.lazy(importFunc);
+    const Component = lazy(importFunc);
 
     // Return a component that handles the loading state
-    return React.forwardRef<any, any>((props, ref) => {
+    return forwardRef<any, any>((props, ref) => {
       return (
-        <React.Suspense fallback={options?.loading?.() ?? <div>Loading...</div>}>
+        <Suspense fallback={options?.loading?.() ?? <div>Loading...</div>}>
           <Component {...props} ref={ref} />
-        </React.Suspense>
+        </Suspense>
       );
     });
   };

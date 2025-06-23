@@ -1,7 +1,7 @@
 // Accessibility utilities and helpers for WCAG 2.1 AA compliance
 'use client';
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 
 // Color contrast ratio calculation
 export function getContrastRatio(color1: string, color2: string): number {
@@ -194,10 +194,10 @@ export function handleKeyboardNavigation(
 
 // ARIA live region hook
 export function useAriaLiveRegion() {
-  const [message, setMessage] = React.useState('');
-  const [priority, setPriority] = React.useState<'polite' | 'assertive'>('polite');
+  const [message, setMessage] = useState('');
+  const [priority, setPriority] = useState<'polite' | 'assertive'>('polite');
 
-  const announce = React.useCallback((text: string, level: 'polite' | 'assertive' = 'polite') => {
+  const announce = useCallback((text: string, level: 'polite' | 'assertive' = 'polite') => {
     setMessage(''); // Clear first to ensure re-announcement
     setTimeout(() => {
       setMessage(text);

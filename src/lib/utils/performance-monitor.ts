@@ -1,7 +1,7 @@
 // Performance monitoring utilities for production optimization
 'use client';
 
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 
 interface PerformanceMetrics {
   fcp: number; // First Contentful Paint
@@ -187,7 +187,7 @@ export function trackComponentLoad(componentName: string) {
 
 // Hook for React components to track render performance
 export function usePerformanceTracking(componentName: string) {
-  const trackEnd = React.useMemo(
+  const trackEnd = useMemo(
     () => (typeof window !== 'undefined' ? trackComponentLoad(componentName) : () => {
       // Server-side rendering - no performance tracking needed
     }),
@@ -195,7 +195,7 @@ export function usePerformanceTracking(componentName: string) {
   );
 
   // Track on mount
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       trackEnd();
     }

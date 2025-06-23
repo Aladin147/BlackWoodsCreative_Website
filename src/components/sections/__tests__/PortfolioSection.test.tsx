@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { PortfolioSection } from '../PortfolioSection';
 
@@ -64,7 +64,7 @@ jest.mock('@/components/interactive', () => ({
     className?: string;
     [key: string]: unknown;
   }) => {
-    const [activeCategory, setActiveCategory] = React.useState('All');
+    const [activeCategory, setActiveCategory] = useState('All');
     const allCategories = ['All', ...(categories ?? [])];
 
     const filteredItems =

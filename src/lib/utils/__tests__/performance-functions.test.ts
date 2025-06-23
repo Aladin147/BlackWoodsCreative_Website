@@ -1,6 +1,6 @@
 // Type definitions for browser APIs
 import { render } from '@testing-library/react';
-import React from 'react';
+import React, { createElement } from 'react';
 
 import {
   measurePerformance,
@@ -395,10 +395,10 @@ describe('Performance Functions', () => {
 
   describe('withPerformanceMonitoring', () => {
     it('wraps component with performance monitoring', () => {
-      const TestComponent = ({ text }: { text: string }) => React.createElement('div', {}, text);
+      const TestComponent = ({ text }: { text: string }) => createElement('div', {}, text);
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'TestComponent');
 
-      const { unmount } = render(React.createElement(MonitoredComponent, { text: 'test' }));
+      const { unmount } = render(createElement(MonitoredComponent, { text: 'test' }));
 
       // Simulate slow render
       jest.advanceTimersByTime(20);
@@ -412,11 +412,11 @@ describe('Performance Functions', () => {
     });
 
     it('does not warn for fast renders', () => {
-      const TestComponent = () => React.createElement('div', {}, 'Fast Component');
+      const TestComponent = () => createElement('div', {}, 'Fast Component');
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'FastComponent');
 
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-      const { unmount } = render(React.createElement(MonitoredComponent));
+      const { unmount } = render(createElement(MonitoredComponent));
 
       // Simulate fast render (under 16ms)
       jest.advanceTimersByTime(10);
@@ -427,7 +427,7 @@ describe('Performance Functions', () => {
     });
 
     it('creates component with correct display name', () => {
-      const TestComponent = () => React.createElement('div');
+      const TestComponent = () => createElement('div');
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'TestComponent');
 
       expect(MonitoredComponent.name).toBe('PerformanceMonitoredComponent');
@@ -436,7 +436,7 @@ describe('Performance Functions', () => {
 
   describe('createLazyComponent', () => {
     it('creates lazy component with performance tracking', () => {
-      const TestComponent = () => React.createElement('div', {}, 'Lazy Component');
+      const TestComponent = () => createElement('div', {}, 'Lazy Component');
       const mockImport = jest.fn(() => Promise.resolve({ default: TestComponent }));
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -461,7 +461,7 @@ describe('Performance Functions', () => {
     });
 
     it('logs loading time on successful import', () => {
-      const TestComponent = () => React.createElement('div');
+      const TestComponent = () => createElement('div');
       const mockImport = jest.fn(() => Promise.resolve({ default: TestComponent }));
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();

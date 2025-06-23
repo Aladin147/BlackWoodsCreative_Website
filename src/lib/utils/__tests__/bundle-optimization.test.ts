@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createElement } from 'react';
 
 import {
   createOptimizedLazyComponent,
@@ -11,7 +11,7 @@ import {
 
 // Mock dynamic import
 const mockImport = jest.fn();
-const mockComponent = () => React.createElement('div', null, 'Test Component');
+const mockComponent = () => createElement('div', null, 'Test Component');
 
 // Mock console methods
 const originalConsole = console;

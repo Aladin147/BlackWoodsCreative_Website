@@ -3,7 +3,7 @@
  * for BlackWoods Creative website
  */
 
-import React from 'react';
+import React, { useEffect, createElement, lazy } from 'react';
 
 // Performance measurement utility
 export async function measurePerformance<T>(name: string, fn: () => T | Promise<T>): Promise<T> {
@@ -158,7 +158,7 @@ export function withPerformanceMonitoring<P extends object>(
   _componentName: string
 ) {
   return function PerformanceMonitoredComponent(props: P) {
-    React.useEffect(() => {
+    useEffect(() => {
       const startTime =
         typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
 
@@ -173,7 +173,7 @@ export function withPerformanceMonitoring<P extends object>(
       };
     });
 
-    return React.createElement(Component, props);
+    return createElement(Component, props);
   };
 }
 
@@ -181,7 +181,7 @@ export function withPerformanceMonitoring<P extends object>(
 export function createLazyComponent<T extends React.ComponentType<unknown>>(
   importFn: () => Promise<{ default: T }>
 ) {
-  return React.lazy(async () => {
+  return lazy(async () => {
     try {
       const componentModule = await importFn();
       // Lazy component loaded successfully

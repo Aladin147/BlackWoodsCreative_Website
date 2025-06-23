@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, Children } from 'react';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -188,7 +188,7 @@ export function StaggeredGrid({
   const isInView = useInView(ref, { once: true, margin: '-50px' });
 
   // Convert children to array if it's not already
-  const childrenArray = React.Children.toArray(children);
+  const childrenArray = Children.toArray(children);
 
   return (
     <div ref={ref} className={className}>
