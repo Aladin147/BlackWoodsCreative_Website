@@ -71,8 +71,14 @@ describe('sitemap', () => {
 
     const result = sitemap();
 
+    // Only homepage uses current date, others use calculated dates
+    const homepage = result.find(entry => entry.url === siteConfig.url);
+    expect(homepage?.lastModified).toBe(testDate.toISOString());
+
+    // Other entries should have valid dates (not necessarily current date)
     result.forEach(entry => {
-      expect(entry.lastModified).toBe(testDate.toISOString());
+      expect(entry.lastModified).toBeDefined();
+      expect(typeof entry.lastModified).toBe('string');
     });
   });
 
@@ -80,13 +86,14 @@ describe('sitemap', () => {
     const result = sitemap();
 
     const homepage = result.find(entry => entry.url === siteConfig.url);
-    const portfolio = result.find(entry => entry.url.includes('#portfolio'));
-    const about = result.find(entry => entry.url.includes('#about'));
-    const contact = result.find(entry => entry.url.includes('#contact'));
+    const portfolio = result.find(entry => entry.url === `${siteConfig.url}/portfolio`);
+    const about = result.find(entry => entry.url === `${siteConfig.url}/about`);
+    const contact = result.find(entry => entry.url === `${siteConfig.url}/contact`);
 
-    expect(homepage?.priority).toBeGreaterThan(portfolio?.priority ?? 0);
-    expect(portfolio?.priority).toBeGreaterThan(about?.priority ?? 0);
-    expect(about?.priority).toBeGreaterThan(contact?.priority ?? 0);
+    expect(homepage?.priority).toBe(1.0); // Highest priority
+    expect(about?.priority).toBe(0.95); // High brand priority
+    expect(portfolio?.priority).toBe(0.85); // High showcase priority
+    expect(contact?.priority).toBe(0.8); // Important conversion page
   });
 
   it('uses correct base URL from siteConfig', () => {
@@ -155,9 +162,9 @@ describe('sitemap', () => {
     expect(result1.length).toBe(result2.length);
 
     result1.forEach((entry, index) => {
-      expect(entry.url).toBe(result2[index].url);
-      expect(entry.priority).toBe(result2[index].priority);
-      expect(entry.changeFrequency).toBe(result2[index].changeFrequency);
+      expect(entry.url).toBe(result2[index]?.url);
+      expect(entry.priority).toBe(result2[index]?.priority);
+      expect(entry.changeFrequency).toBe(result2[index]?.changeFrequency);
     });
   });
 
@@ -165,20 +172,23 @@ describe('sitemap', () => {
     const result = sitemap();
 
     // Should be ordered by priority (highest first)
-    expect(result[0].priority).toBe(1); // Homepage
-    expect(result[1].priority).toBe(0.9); // Portfolio
-    expect(result[2].priority).toBe(0.8); // About
-    expect(result[3].priority).toBe(0.7); // Contact
+    expect(result[0]?.priority).toBe(1); // Homepage
+    expect(result[1]?.priority).toBe(0.95); // About (high brand priority)
+    expect(result[2]?.priority).toBe(0.9); // Services
+    expect(result[3]?.priority).toBe(0.85); // Video production service
   });
 
-  it('includes proper anchor links for sections', () => {
+  it('includes proper page entries (no anchor links)', () => {
     const result = sitemap();
 
+    // Current sitemap doesn't include anchor links, only full pages
     const sectionEntries = result.filter(entry => entry.url.includes('#'));
+    expect(sectionEntries).toHaveLength(0);
 
-    expect(sectionEntries).toHaveLength(3);
-    expect(sectionEntries.some(entry => entry.url.includes('#portfolio'))).toBe(true);
-    expect(sectionEntries.some(entry => entry.url.includes('#about'))).toBe(true);
-    expect(sectionEntries.some(entry => entry.url.includes('#contact'))).toBe(true);
+    // Instead, verify we have the main page entries
+    const pageUrls = result.map(entry => entry.url);
+    expect(pageUrls).toContain(`${siteConfig.url}/portfolio`);
+    expect(pageUrls).toContain(`${siteConfig.url}/about`);
+    expect(pageUrls).toContain(`${siteConfig.url}/contact`);
   });
 });

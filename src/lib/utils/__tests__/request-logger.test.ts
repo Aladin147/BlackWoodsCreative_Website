@@ -69,7 +69,7 @@ describe('RequestLogger', () => {
       const logs = logger.getRecentLogs(1);
       expect(logs).toHaveLength(1);
 
-      const logEntry = logs[0];
+      const logEntry = logs[0]!;
       expect(logEntry.id).toBe(requestId);
       expect(logEntry.method).toBe('POST');
       expect(logEntry.path).toBe('/api/test');
@@ -92,9 +92,9 @@ describe('RequestLogger', () => {
         },
       };
 
-      const requestId = logger.logRequest(request, additionalData);
+      logger.logRequest(request, additionalData);
       const logs = logger.getRecentLogs(1);
-      const logEntry = logs[0];
+      const logEntry = logs[0]!;
 
       expect(logEntry.userId).toBe('user123');
       expect(logEntry.sessionId).toBe('session456');
@@ -113,7 +113,7 @@ describe('RequestLogger', () => {
 
       logger.logRequest(request);
       const logs = logger.getRecentLogs(1);
-      const logEntry = logs[0];
+      const logEntry = logs[0]!;
 
       expect(logEntry.headers['content-type']).toBe('application/json');
       expect(logEntry.headers['user-agent']).toBe('Test Browser');
@@ -132,7 +132,7 @@ describe('RequestLogger', () => {
       logger.updateRequestResponse(requestId, response, responseTime);
 
       const logs = logger.getRecentLogs(1);
-      const logEntry = logs[0];
+      const logEntry = logs[0]!;
 
       expect(logEntry.statusCode).toBe(200);
       expect(logEntry.responseTime).toBe(150);
@@ -149,7 +149,7 @@ describe('RequestLogger', () => {
       logger.updateRequestResponse(requestId, response, responseTime, error);
 
       const logs = logger.getRecentLogs(1);
-      const logEntry = logs[0];
+      const logEntry = logs[0]!;
 
       expect(logEntry.statusCode).toBe(500);
       expect(logEntry.responseTime).toBe(250);
@@ -224,7 +224,13 @@ describe('RequestLogger', () => {
       testData.forEach(({ path, status, error, securityFlags }) => {
         const request = createMockRequest({ url: `https://example.com${path}` });
         const response = createMockResponse(status);
-        const requestId = logger.logRequest(request, { securityFlags });
+        const additionalData = securityFlags ? { securityFlags: {
+          suspiciousActivity: securityFlags.suspiciousActivity,
+          rateLimited: false,
+          csrfFailure: false,
+          invalidInput: false,
+        } } : {};
+        const requestId = logger.logRequest(request, additionalData);
         logger.updateRequestResponse(requestId, response, 100, error);
       });
     });
@@ -244,7 +250,7 @@ describe('RequestLogger', () => {
     it('filters security logs', () => {
       const securityLogs = logger.getSecurityLogs();
       expect(securityLogs).toHaveLength(1);
-      expect(securityLogs[0].path).toBe('/api/auth');
+      expect(securityLogs[0]?.path).toBe('/api/auth');
     });
   });
 
@@ -266,8 +272,8 @@ describe('RequestLogger', () => {
 
       expect(Array.isArray(parsed)).toBe(true);
       expect(parsed).toHaveLength(1);
-      expect(parsed[0].method).toBe('POST');
-      expect(parsed[0].path).toBe('/api/test');
+      expect(parsed[0]?.method).toBe('POST');
+      expect(parsed[0]?.path).toBe('/api/test');
     });
 
     it('exports logs as CSV', () => {

@@ -42,7 +42,7 @@ export function Breadcrumbs({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": breadcrumbs.map((crumb, index) => ({
+    "itemListElement": breadcrumbs.filter(crumb => crumb).map((crumb, index) => ({
       "@type": "ListItem",
       "position": index + 1,
       "name": crumb.name,

@@ -285,10 +285,8 @@ describe('/api/contact', () => {
           body: expect.stringContaining(validFormData.name),
         })
       );
-      expect(consoleSpy).toHaveBeenCalledWith(
-        '📧 Contact form submitted to Formspree successfully:',
-        expect.any(Object)
-      );
+      // Note: In test environment, the logger doesn't output to console
+      // The success is tracked through the log.api.success call which doesn't log in test mode
     });
 
     it('handles Formspree service failure', async () => {

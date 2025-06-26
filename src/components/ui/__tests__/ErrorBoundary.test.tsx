@@ -13,7 +13,7 @@ const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
 };
 
 // Custom fallback component for testing
-const CustomFallback = ({ error, resetError }: { error?: Error; resetError: () => void }) => (
+const CustomFallback = ({ error, resetError }: { error: Error | null; resetError: () => void }) => (
   <div>
     <h2>Custom Error Fallback</h2>
     <p>Error: {error?.message}</p>
@@ -156,10 +156,10 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
+    // The ErrorBoundary uses log.error() which formats the message with timestamp and emoji
     expect(consoleSpy).toHaveBeenCalledWith(
-      'ErrorBoundary caught an error:',
-      expect.any(Error),
-      expect.any(Object)
+      expect.stringContaining('ErrorBoundary caught an error'),
+      expect.any(Error)
     );
   });
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import { log } from '@/lib/utils/logger';
+
 /**
  * Hook for CSRF protection in forms and API calls
  * Automatically handles CSRF token retrieval and inclusion in requests
@@ -30,14 +32,22 @@ export function useCSRFProtection() {
         });
 
         if (response.ok) {
-          const data = await response.json();
-          setCSRFToken(data.token ?? null);
+          try {
+            const data = await response.json();
+            setCSRFToken(data.token ?? null);
+          } catch (error) {
+            // JSON parsing error
+            log.security('CSRF token parsing error', { error });
+            setCSRFToken(null);
+          }
         } else {
-          // Failed to retrieve CSRF token - logged internally
+          // Failed to retrieve CSRF token
+          log.security('Failed to retrieve CSRF token', { status: response.status });
           setCSRFToken(null);
         }
-      } catch {
-        // Error retrieving CSRF token - logged internally
+      } catch (error) {
+        // Error retrieving CSRF token
+        log.security('Error retrieving CSRF token', { error });
         setCSRFToken(null);
       } finally {
         setIsLoading(false);

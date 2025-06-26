@@ -11,7 +11,7 @@ global.fetch = mockFetch;
 
 // Mock console methods
 const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+jest.spyOn(console, 'error').mockImplementation();
 
 describe('useCSRFProtection', () => {
   beforeEach(() => {
@@ -75,7 +75,10 @@ describe('useCSRFProtection', () => {
       });
 
       expect(result.current.csrfToken).toBeNull();
-      expect(consoleSpy).toHaveBeenCalledWith('Failed to retrieve CSRF token');
+      // The hook uses log.security() which calls console.warn with formatted message
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Security Event: Failed to retrieve CSRF token')
+      );
     });
 
     it('handles network errors gracefully', async () => {
@@ -88,9 +91,9 @@ describe('useCSRFProtection', () => {
       });
 
       expect(result.current.csrfToken).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Error retrieving CSRF token:',
-        expect.any(Error)
+      // The hook uses log.security() which calls console.warn with formatted message
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Security Event: Error retrieving CSRF token')
       );
     });
   });
@@ -136,21 +139,30 @@ describe('useCSRFProtection', () => {
     });
 
     it('throws error when token not available', async () => {
+      // Mock fetch to fail so no token is retrieved
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 500,
+      });
+
       const { result } = renderHook(() => useCSRFProtection());
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      // Token should be null since no meta tag and no API response
+      // Token should be null since no meta tag and API failed
       expect(result.current.csrfToken).toBeNull();
 
-      await expect(result.current.makeProtectedRequest('/api/test')).rejects.toThrow(
+      expect(() => result.current.makeProtectedRequest('/api/test')).toThrow(
         'CSRF token not available'
       );
     });
 
     it('preserves existing headers in protected requests', async () => {
+      // Clear previous mocks
+      mockFetch.mockClear();
+
       // Setup token
       const metaTag = document.createElement('meta');
       metaTag.name = 'csrf-token';
@@ -308,7 +320,10 @@ describe('useCSRFProtection', () => {
       });
 
       expect(result.current.csrfToken).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalled();
+      // The hook uses log.security() which calls console.warn with formatted message
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Security Event: CSRF token parsing error')
+      );
     });
   });
 });

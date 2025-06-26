@@ -73,7 +73,7 @@ describe('HomePage', () => {
 
     // Verify order by checking DOM positions
     for (let i = 0; i < sections.length - 1; i++) {
-      expect(sections[i].compareDocumentPosition(sections[i + 1])).toBe(
+      expect(sections[i]?.compareDocumentPosition(sections[i + 1]!)).toBe(
         Node.DOCUMENT_POSITION_FOLLOWING
       );
     }

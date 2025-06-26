@@ -23,13 +23,34 @@ jest.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-// Mock the scroll utility
+// Mock the scroll utility and navigation
 jest.mock('@/lib/utils', () => ({
   ...jest.requireActual('@/lib/utils'),
   scrollToElement: jest.fn(),
   throttle: jest.fn(fn => fn), // Return the function as-is for testing
   cn: jest.fn((...classes) => classes.filter(Boolean).join(' ')),
 }));
+
+// Mock the navigation utility
+jest.mock('@/lib/utils/navigation', () => {
+  return {
+    navigateTo: jest.fn(),
+    getNavigationItems: jest.fn((navigation, homeNavigation) => {
+      // Return homeNavigation items (which have #portfolio href) to simulate home page behavior
+      return homeNavigation ?? navigation;
+    }),
+    handleNavigationClick: jest.fn((href, closeMenu) => {
+      // Simulate the behavior: if href contains portfolio, call scrollToElement with #portfolio
+      if (href && (href === '#portfolio' || href.includes('portfolio'))) {
+        // Use the mocked scrollToElement from @/lib/utils
+        scrollToElement('#portfolio', 80);
+      }
+      if (closeMenu) closeMenu();
+    }),
+    isNavigationActive: jest.fn(() => false),
+    getCurrentPath: jest.fn(() => '/'),
+  };
+});
 
 // Mock siteConfig with enhanced navigation structure
 jest.mock('@/lib/constants/siteConfig', () => ({
@@ -166,7 +187,7 @@ describe('Header', () => {
 
     // Click a navigation link (get the first one)
     const portfolioLinks = screen.getAllByText('Portfolio');
-    await user.click(portfolioLinks[0]);
+    await user.click(portfolioLinks[0]!);
 
     // Verify handleNavigationClick was called (Portfolio should navigate to #portfolio on home page)
     // Note: The actual navigation behavior depends on the current page context
@@ -177,7 +198,7 @@ describe('Header', () => {
     renderHeader();
 
     const portfolioLinks = screen.getAllByText('Portfolio');
-    await user.click(portfolioLinks[0]);
+    await user.click(portfolioLinks[0]!);
 
     expect(mockScrollToElement).toHaveBeenCalledWith('#portfolio', 80);
   });
@@ -196,7 +217,7 @@ describe('Header', () => {
     renderHeader();
 
     const portfolioLinks = screen.getAllByText('Portfolio');
-    portfolioLinks[0].focus();
+    portfolioLinks[0]?.focus();
 
     await user.keyboard('{Enter}');
     expect(mockScrollToElement).toHaveBeenCalledWith('#portfolio', 80);

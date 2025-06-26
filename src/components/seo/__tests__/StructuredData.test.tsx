@@ -225,8 +225,8 @@ describe('StructuredData', () => {
 
   it('handles undefined metadata properties gracefully', () => {
     const undefinedMetadata: Metadata = {
-      title: undefined,
-      description: undefined,
+      title: null,
+      description: null,
     };
 
     render(<StructuredData metadata={undefinedMetadata} />);

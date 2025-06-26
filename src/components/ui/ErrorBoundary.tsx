@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion';
 import React, { Component } from 'react';
 
+import { log } from '@/lib/utils/logger';
+
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
@@ -23,8 +25,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return { hasError: true, error };
   }
 
-  override componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
-    // ErrorBoundary caught an error - logged internally
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // ErrorBoundary caught an error
+    log.error('ErrorBoundary caught an error', error, { errorInfo });
   }
 
   resetError = () => {

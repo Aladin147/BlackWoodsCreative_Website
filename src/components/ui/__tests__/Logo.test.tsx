@@ -144,7 +144,7 @@ describe('Logo Component', () => {
       const { unmount } = render(<Logo size={size} />);
 
       const logoImage = screen.getByTestId('logo-image-main');
-      expect(logoImage).toHaveClass(expectedClasses[index]);
+      expect(logoImage).toHaveClass(expectedClasses[index]!);
 
       unmount();
     });

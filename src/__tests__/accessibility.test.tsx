@@ -249,7 +249,7 @@ describe('Accessibility Utilities', () => {
       const buttons = screen.getAllByRole('button');
 
       // Focus last button first
-      buttons[1].focus();
+      buttons[1]?.focus();
 
       // Shift+Tab should go to previous
       await user.keyboard('{Shift>}{Tab}{/Shift}');

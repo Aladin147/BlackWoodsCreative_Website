@@ -63,12 +63,57 @@ describe('useDeviceAdaptation', () => {
     jest.clearAllMocks();
 
     // Set up default device capabilities mocks (will be overridden in specific tests)
-    mockGetOptimizationProfile.mockResolvedValue(undefined); // No optimization profile by default
-    mockGetDeviceCapabilities.mockResolvedValue({
-      cpu: { cores: 4, performance: 'medium' },
-      gpu: { webglSupported: false, performance: 'low' },
-      memory: { total: 4, available: 3 },
-      performance: { overall: 'medium' },
+    mockGetOptimizationProfile.mockReturnValue({
+      animations: {
+        enabled: true,
+        complexity: 'enhanced',
+        duration: 0.4,
+        easing: 'ease-in-out',
+        parallax: true,
+        magnetic: true,
+        particles: false,
+      },
+      rendering: {
+        webgl: false,
+        particleCount: 50,
+        textureQuality: 'medium',
+        shadowQuality: 'medium',
+        antialiasing: false,
+      },
+      loading: {
+        imageQuality: 'medium',
+        lazyLoading: true,
+        preloading: true,
+        bundleSplitting: true,
+      },
+      network: {
+        compression: true,
+        caching: true,
+        prefetch: true,
+        serviceWorker: false,
+      },
+    });
+    mockGetDeviceCapabilities.mockReturnValue({
+      cpu: { cores: 4, architecture: 'x64', performance: 'medium' },
+      gpu: { vendor: 'unknown', renderer: 'unknown', webglSupported: false, webgl2Supported: false, maxTextureSize: 0, performance: 'low' },
+      memory: { deviceMemory: 4, jsHeapSizeLimit: 2147483648, performance: 'medium' },
+      network: { effectiveType: '4g', downlink: 10, rtt: 100, saveData: false },
+      display: { width: 1920, height: 1080, pixelRatio: 1, colorDepth: 24, refreshRate: 60, hdr: false },
+      features: {
+        webgl: false,
+        webgl2: false,
+        webassembly: true,
+        serviceWorker: false,
+        intersectionObserver: true,
+        resizeObserver: true,
+        performanceObserver: true,
+        webAnimations: true,
+        cssCustomProperties: true,
+        cssGrid: true,
+        cssFlexbox: true,
+      },
+      performance: { overall: 'medium', graphics: 'low', computation: 'medium', memory: 'medium' },
+      preferences: { reducedMotion: false, reducedData: false, highContrast: false, darkMode: false },
     });
 
     // Reset to default desktop setup
@@ -224,6 +269,14 @@ describe('useDeviceAdaptation', () => {
 
   describe('Adaptive Configuration', () => {
     it('returns mobile config for mobile devices', async () => {
+      // Mock mobile device capabilities - force fallback to simple device detection
+      mockGetOptimizationProfile.mockImplementation(() => {
+        throw new Error('Device capabilities not available');
+      });
+      mockGetDeviceCapabilities.mockImplementation(() => {
+        throw new Error('Device capabilities not available');
+      });
+
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
       Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
@@ -241,6 +294,14 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('returns tablet config for tablet devices', async () => {
+      // Mock tablet device capabilities - force fallback to simple device detection
+      mockGetOptimizationProfile.mockImplementation(() => {
+        throw new Error('Device capabilities not available');
+      });
+      mockGetDeviceCapabilities.mockImplementation(() => {
+        throw new Error('Device capabilities not available');
+      });
+
       // Use a generic tablet user agent that doesn't match mobile patterns
       mockNavigator('Mozilla/5.0 (compatible; Tablet; rv:14.0)');
       mockScreen(768, 1024);
@@ -293,6 +354,14 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('disables features for mobile devices', async () => {
+      // Mock mobile device capabilities - force fallback to simple device detection
+      mockGetOptimizationProfile.mockImplementation(() => {
+        throw new Error('Device capabilities not available');
+      });
+      mockGetDeviceCapabilities.mockImplementation(() => {
+        throw new Error('Device capabilities not available');
+      });
+
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
       Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });

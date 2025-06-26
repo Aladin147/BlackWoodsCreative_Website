@@ -269,6 +269,144 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
       }
     ],
     callToActionLinks: []
+  },
+
+  // About subpage linking strategies
+  {
+    page: '/about/our-story',
+    relatedPages: [
+      {
+        href: '/about/team',
+        text: 'Meet Our Team',
+        description: 'The creative minds behind BlackWoods',
+        priority: 'high',
+        context: 'about-section'
+      },
+      {
+        href: '/about/our-workflow',
+        text: 'Our Workflow',
+        description: 'How we bring projects to life',
+        priority: 'medium',
+        context: 'about-section'
+      },
+      {
+        href: '/about/location',
+        text: 'Our Location',
+        description: 'Visit our studio in Morocco',
+        priority: 'medium',
+        context: 'about-section'
+      }
+    ],
+    contextualLinks: [
+      {
+        href: '/services',
+        text: 'Our Services',
+        description: 'What we can do for you',
+        priority: 'medium',
+        context: 'services-reference'
+      }
+    ],
+    callToActionLinks: [
+      {
+        href: '/contact',
+        text: 'Get In Touch',
+        description: 'Start your project with us',
+        priority: 'high',
+        context: 'contact-cta'
+      }
+    ]
+  },
+
+  // About team page linking strategy
+  {
+    page: '/about/team',
+    relatedPages: [
+      {
+        href: '/about/our-story',
+        text: 'Our Story',
+        description: 'Learn about BlackWoods Creative journey',
+        priority: 'high',
+        context: 'about-section'
+      },
+      {
+        href: '/about/our-workflow',
+        text: 'Our Workflow',
+        description: 'How we bring projects to life',
+        priority: 'medium',
+        context: 'about-section'
+      }
+    ],
+    contextualLinks: [
+      {
+        href: '/portfolio',
+        text: 'View Our Work',
+        description: 'See what our team has created',
+        priority: 'medium',
+        context: 'portfolio-reference'
+      },
+      {
+        href: '/services',
+        text: 'Our Services',
+        description: 'What our team can do for you',
+        priority: 'medium',
+        context: 'services-reference'
+      }
+    ],
+    callToActionLinks: [
+      {
+        href: '/contact',
+        text: 'Work With Us',
+        description: 'Start your project with our team',
+        priority: 'high',
+        context: 'contact-cta'
+      }
+    ]
+  },
+
+  // Service subpage linking strategies
+  {
+    page: '/services/video-production-morocco',
+    relatedPages: [
+      {
+        href: '/services/corporate-video-production-morocco',
+        text: 'Corporate Videos',
+        description: 'Professional corporate video production',
+        priority: 'high',
+        context: 'related-services'
+      },
+      {
+        href: '/services/photography',
+        text: 'Photography',
+        description: 'Commercial and artistic photography',
+        priority: 'medium',
+        context: 'related-services'
+      },
+      {
+        href: '/services/3d-visualization',
+        text: '3D Visualization',
+        description: 'Stunning 3D modeling and rendering',
+        priority: 'medium',
+        context: 'related-services'
+      }
+    ],
+    contextualLinks: [
+      {
+        href: '/portfolio',
+        text: 'View Our Work',
+        description: 'See our video production portfolio',
+        priority: 'medium',
+        context: 'portfolio-reference'
+      }
+    ],
+    callToActionLinks: [
+      {
+        href: '/contact',
+        text: 'Start Your Project',
+        description: 'Get a quote for your video project',
+        priority: 'high',
+        context: 'contact-cta'
+      }
+    ]
   }
 ];
 
@@ -370,5 +508,18 @@ export function getRelatedServicePages(currentService: string): InternalLink[] {
     }
   ];
 
-  return allServices.filter(service => service.href !== currentService);
+  // Handle both service slug and full href
+  const currentServiceHref = currentService.startsWith('/services/')
+    ? currentService
+    : `/services/${currentService}`;
+
+  // Filter out current service and return empty array for unknown services
+  const filteredServices = allServices.filter(service => service.href !== currentServiceHref);
+
+  // If no services were filtered out, it means the current service doesn't exist
+  if (filteredServices.length === allServices.length && !allServices.some(s => s.href === currentServiceHref)) {
+    return [];
+  }
+
+  return filteredServices;
 }

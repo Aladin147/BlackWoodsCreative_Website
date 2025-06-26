@@ -10,6 +10,20 @@ jest.mock('next/navigation', () => ({
   usePathname: jest.fn(),
 }));
 
+// Mock Next.js Link
+jest.mock('next/link', () => {
+  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {
+    return <a href={href} {...props}>{children}</a>;
+  };
+});
+
+// Mock Heroicons
+jest.mock('@heroicons/react/24/outline', () => ({
+  ChevronLeftIcon: ({ className }: { className?: string }) => <svg data-testid="chevron-left" className={className} />,
+  ChevronRightIcon: ({ className }: { className?: string }) => <svg data-testid="chevron-right" className={className} />,
+  HomeIcon: ({ className }: { className?: string }) => <svg data-testid="home-icon" className={className} />,
+}));
+
 // Mock internal linking utility
 jest.mock('@/lib/utils/internal-linking', () => ({
   getInternalLinksForPage: jest.fn(),
@@ -31,9 +45,10 @@ describe('PageNavigation Component', () => {
 
   describe('PageNavigation', () => {
     const mockLinkingStrategy = {
+      page: '/about/our-story',
       relatedPages: [
-        { href: '/about/team', text: 'Our Team', description: 'Meet our experts' },
-        { href: '/about/workflow', text: 'Our Workflow', description: 'How we work' }
+        { href: '/about/team', text: 'Our Team', description: 'Meet our experts', priority: 'high' as const, context: 'about-section' },
+        { href: '/about/workflow', text: 'Our Workflow', description: 'How we work', priority: 'medium' as const, context: 'about-section' }
       ],
       contextualLinks: [],
       callToActionLinks: []
@@ -83,8 +98,10 @@ describe('PageNavigation Component', () => {
       render(<PageNavigation showRelated />);
 
       expect(screen.getByText('Related Pages')).toBeInTheDocument();
-      expect(screen.getByText('Our Team')).toBeInTheDocument();
-      expect(screen.getByText('Our Workflow')).toBeInTheDocument();
+
+      // Check for related links specifically by their href attributes
+      expect(screen.getByRole('link', { name: /Our Team.*Meet our experts/i })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /Our Workflow.*How we work/i })).toBeInTheDocument();
     });
 
     it('limits related links based on maxRelated prop', () => {
@@ -93,8 +110,9 @@ describe('PageNavigation Component', () => {
 
       render(<PageNavigation showRelated maxRelated={1} />);
 
-      expect(screen.getByText('Our Team')).toBeInTheDocument();
-      expect(screen.queryByText('Our Workflow')).not.toBeInTheDocument();
+      // Check for related links specifically (should only show 1 due to maxRelated)
+      expect(screen.getByRole('link', { name: /Our Team.*Meet our experts/i })).toBeInTheDocument();
+      expect(screen.queryByRole('link', { name: /Our Workflow.*How we work/i })).not.toBeInTheDocument();
     });
 
     it('hides prev/next navigation when showPrevNext is false', () => {
@@ -197,7 +215,7 @@ describe('PageNavigation Component', () => {
   describe('Page Sequence Logic', () => {
     it('correctly identifies About page sequence', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [], callToActionLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about/our-story', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       render(<PageNavigation />);
 
@@ -207,7 +225,7 @@ describe('PageNavigation Component', () => {
 
     it('correctly identifies Services page sequence', () => {
       mockUsePathname.mockReturnValue('/services/video-production-morocco');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [], callToActionLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/services/video-production-morocco', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       render(<PageNavigation />);
 
@@ -217,7 +235,7 @@ describe('PageNavigation Component', () => {
 
     it('handles pages not in any sequence', () => {
       mockUsePathname.mockReturnValue('/portfolio');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [], callToActionLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/portfolio', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       render(<PageNavigation />);
 
@@ -229,7 +247,7 @@ describe('PageNavigation Component', () => {
   describe('Accessibility', () => {
     it('provides proper ARIA labels', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [], callToActionLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about/our-story', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       render(<PageNavigation />);
 
@@ -251,7 +269,7 @@ describe('PageNavigation Component', () => {
 
     it('provides keyboard navigation support', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [], callToActionLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about/our-story', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       render(<PageNavigation />);
 

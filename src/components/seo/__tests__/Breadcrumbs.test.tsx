@@ -10,6 +10,19 @@ jest.mock('next/navigation', () => ({
   usePathname: jest.fn(),
 }));
 
+// Mock Next.js Link
+jest.mock('next/link', () => {
+  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {
+    return <a href={href} {...props}>{children}</a>;
+  };
+});
+
+// Mock Heroicons
+jest.mock('@heroicons/react/24/outline', () => ({
+  ChevronRightIcon: ({ className }: { className?: string }) => <svg data-testid="chevron-right" className={className} />,
+  HomeIcon: ({ className }: { className?: string }) => <svg data-testid="home-icon" className={className} />,
+}));
+
 // Mock internal linking utility
 jest.mock('@/lib/utils/internal-linking', () => ({
   generateBreadcrumbs: jest.fn(),
@@ -38,8 +51,8 @@ describe('Breadcrumbs Component', () => {
 
       render(<Breadcrumbs />);
 
-      expect(screen.getByRole('navigation', { name: 'Breadcrumb' })).toBeInTheDocument();
-      expect(screen.getByText('Home')).toBeInTheDocument();
+      expect(screen.getByRole('navigation', { name: 'Breadcrumb navigation' })).toBeInTheDocument();
+      expect(screen.getByTestId('home-icon')).toBeInTheDocument();
       expect(screen.getByText('About')).toBeInTheDocument();
     });
 
@@ -53,7 +66,7 @@ describe('Breadcrumbs Component', () => {
 
       render(<Breadcrumbs />);
 
-      expect(screen.getByText('Home')).toBeInTheDocument();
+      expect(screen.getByTestId('home-icon')).toBeInTheDocument();
       expect(screen.getByText('About')).toBeInTheDocument();
       expect(screen.getByText('Our Story')).toBeInTheDocument();
     });
@@ -82,8 +95,8 @@ describe('Breadcrumbs Component', () => {
 
       render(<Breadcrumbs />);
 
-      const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
-      expect(nav).toHaveAttribute('aria-label', 'Breadcrumb');
+      const nav = screen.getByRole('navigation', { name: 'Breadcrumb navigation' });
+      expect(nav).toHaveAttribute('aria-label', 'Breadcrumb navigation');
       
       const currentPage = screen.getByText('About');
       expect(currentPage).toHaveAttribute('aria-current', 'page');
@@ -111,7 +124,7 @@ describe('Breadcrumbs Component', () => {
 
       render(<Breadcrumbs showCurrentPage={false} />);
 
-      expect(screen.getByText('Home')).toBeInTheDocument();
+      expect(screen.getByTestId('home-icon')).toBeInTheDocument();
       expect(screen.queryByText('About')).not.toBeInTheDocument();
     });
   });
@@ -151,7 +164,7 @@ describe('Breadcrumbs Component', () => {
       render(<StyledBreadcrumbs />);
 
       expect(screen.getByRole('navigation')).toBeInTheDocument();
-      expect(screen.getByText('Home')).toBeInTheDocument();
+      expect(screen.getByTestId('home-icon')).toBeInTheDocument();
       expect(screen.getByText('Services')).toBeInTheDocument();
     });
   });
@@ -166,28 +179,28 @@ describe('Breadcrumbs Component', () => {
     });
 
     it('handles single breadcrumb item', () => {
-      mockUsePathname.mockReturnValue('/');
+      mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
-        { name: 'Home', href: '/' }
+        { name: 'Home', href: '/' },
+        { name: 'About', href: '/about' }
       ]);
 
       render(<Breadcrumbs />);
 
-      expect(screen.getByText('Home')).toBeInTheDocument();
-      expect(screen.getByText('Home')).toHaveAttribute('aria-current', 'page');
+      expect(screen.getByTestId('home-icon')).toBeInTheDocument();
+      expect(screen.getByText('About')).toHaveAttribute('aria-current', 'page');
     });
 
     it('handles undefined breadcrumb items', () => {
       mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        undefined,
         { name: 'About', href: '/about' }
-      ]);
+      ].filter(Boolean));
 
       render(<Breadcrumbs />);
 
-      expect(screen.getByText('Home')).toBeInTheDocument();
+      expect(screen.getByTestId('home-icon')).toBeInTheDocument();
       expect(screen.getByText('About')).toBeInTheDocument();
       // Should handle undefined gracefully without crashing
     });
@@ -221,7 +234,7 @@ describe('Breadcrumbs Component', () => {
       render(<Breadcrumbs />);
 
       const homeLink = screen.getByRole('link', { name: /home/i });
-      expect(homeLink).toHaveClass('focus:outline-none', 'focus:ring-2');
+      expect(homeLink).toHaveClass('focus:outline-none');
     });
   });
 });

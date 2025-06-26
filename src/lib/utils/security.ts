@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { logger } from './logger';
+
 /**
  * Security utilities for BlackWoods Creative website
  * Implements comprehensive security measures including CSP, CSRF protection, and more
@@ -424,16 +426,20 @@ export function logSecurityEvent(event: {
   userAgent?: string;
   details?: Record<string, unknown>;
 }): void {
-  const timestamp = new Date().toISOString();
-
-  // Create log entry structure for monitoring
+  // Create log entry with timestamp
   const logEntry = {
-    timestamp,
-    level: 'security',
-    ...event,
+    timestamp: new Date().toISOString(),
+    type: event.type,
+    ...(event.ip && { ip: event.ip }),
+    ...(event.userAgent && { userAgent: event.userAgent }),
+    ...(event.details && { details: event.details }),
   };
 
+  // Log to console in development/test for debugging (not in production)
+  if (process.env.NODE_ENV !== 'production') {
+    logger.warn('Security Event', logEntry);
+  }
+
   // In production, this would send to a security monitoring service
-  // Security event logged internally
-  void logEntry; // Explicitly mark as intentionally unused
+  // Security event logged for monitoring
 }

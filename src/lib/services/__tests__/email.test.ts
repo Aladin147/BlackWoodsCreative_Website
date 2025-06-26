@@ -111,7 +111,7 @@ describe('Email Service', () => {
       expect(result.success).toBe(false);
       expect(result.error).toBe('Email service not configured');
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'RESEND_API_KEY not configured, email sending disabled'
+        expect.stringContaining('RESEND_API_KEY not configured, email sending disabled')
       );
       expect(mockSend).not.toHaveBeenCalled();
     });
@@ -128,9 +128,10 @@ describe('Email Service', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Invalid API key');
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Resend API error:', {
-        message: 'Invalid API key',
-      });
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Resend API error'),
+        { message: 'Invalid API key' }
+      );
     });
 
     it('handles network errors', async () => {
@@ -142,7 +143,10 @@ describe('Email Service', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Network error');
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Email service error:', expect.any(Error));
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Email service error'),
+        expect.any(Error)
+      );
     });
 
     it('includes all form fields in email content', async () => {
@@ -218,9 +222,10 @@ describe('Email Service', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Rate limit exceeded');
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Auto-reply email error:', {
-        message: 'Rate limit exceeded',
-      });
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Auto-reply email error'),
+        { message: 'Rate limit exceeded' }
+      );
     });
 
     it('personalizes auto-reply with user name', async () => {

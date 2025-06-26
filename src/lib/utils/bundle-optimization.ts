@@ -1,6 +1,8 @@
 // Advanced bundle optimization utilities for production performance
 import { lazy, ComponentType, LazyExoticComponent } from 'react';
 
+import { logger } from './logger';
+
 export interface BundleAnalysis {
   totalSize: number;
   gzippedSize: number;
@@ -43,7 +45,10 @@ export function createOptimizedLazyComponent<T extends ComponentType<Record<stri
       importPromise = importFn();
       const result = await importPromise;
 
-      // Chunk loaded successfully
+      // Log successful chunk load in development/test (not in production)
+      if (process.env.NODE_ENV !== 'production' && _chunkName) {
+        logger.debug('Loaded chunk', { chunkName: _chunkName });
+      }
 
       return result;
     } catch (error) {
@@ -106,14 +111,27 @@ export class ComponentPreloader {
 
     const preloadFn = this.preloadQueue.get(name);
     if (!preloadFn) {
+      // Log warning in development/test for unregistered components (not in production)
+      if (process.env.NODE_ENV !== 'production') {
+        logger.warn('Component not registered for preloading', { componentName: name });
+      }
       return;
     }
 
     try {
       await preloadFn();
       this.preloadedComponents.add(name);
-    } catch {
-      // Failed to preload component
+
+      // Log successful preload in development/test (not in production)
+      if (process.env.NODE_ENV !== 'production') {
+        logger.debug('Preloaded component', { componentName: name });
+      }
+    } catch (error) {
+      // Log preload errors in development/test (not in production)
+      if (process.env.NODE_ENV !== 'production') {
+        logger.error('Failed to preload component', { componentName: name, error });
+      }
+      // Preload failed, component will load on demand
     }
   }
 
@@ -244,14 +262,22 @@ export class BundleOptimizer {
   }
 
   // Monitor bundle size in development
-  static monitorBundleSize(): void {
+  static monitorBundleSize(): BundleAnalysis | void {
     if (process.env.NODE_ENV !== 'development') {
       return;
     }
 
-    // Bundle size monitoring tracked internally
-    this.analyzeBundlePerformance();
-    // Analysis results processed internally
+    // Log bundle monitoring information
+    const analysis = this.analyzeBundlePerformance();
+
+    logger.info('Bundle Size Monitor', {
+      totalSizeKB: Math.round(analysis.totalSize / 1024),
+      gzippedSizeKB: Math.round(analysis.gzippedSize / 1024),
+      chunksCount: analysis.chunks.length,
+      recommendations: analysis.recommendations.length > 0 ? analysis.recommendations : undefined
+    });
+
+    return analysis;
   }
 }
 

@@ -165,17 +165,23 @@ export function useActiveNavigation() {
  */
 export function useMobileNavigation() {
   const context = useNavigationContext();
-  
+
   return useMemo(() => {
+    // For mobile back button: subpages go to parent, main pages go to home
+    let backButtonHref = '/';
+    if (context.isSubpage && context.parentPath) {
+      backButtonHref = context.parentPath;
+    }
+
     // Simplified navigation for mobile
     const mobileConfig = {
       showCompactBreadcrumbs: context.isSubpage,
       showBackButton: context.isSubpage,
-      backButtonHref: context.parentPath ?? '/',
+      backButtonHref,
       showRelatedInSidebar: context.showRelatedLinks,
       maxRelatedMobile: 2
     };
-    
+
     return mobileConfig;
   }, [context]);
 }

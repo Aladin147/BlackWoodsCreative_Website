@@ -3,6 +3,8 @@
 
 import { useMemo, useEffect } from 'react';
 
+import { logger } from './logger';
+
 interface PerformanceMetrics {
   fcp: number; // First Contentful Paint
   lcp: number; // Largest Contentful Paint
@@ -93,9 +95,13 @@ class PerformanceMonitor {
   }
 
   // Track bundle loading performance
-  trackBundleLoad(_chunkName: string, startTime: number) {
+  trackBundleLoad(chunkName: string, startTime: number) {
     const loadTime = performance.now() - startTime;
-    // Bundle chunk loading tracked internally
+
+    // Log in development/test for debugging (not in production)
+    if (process.env.NODE_ENV !== 'production') {
+      logger.debug('Bundle chunk loaded', { chunkName, loadTime: `${loadTime.toFixed(2)}ms` });
+    }
 
     // Update bundle metrics
     this.bundleMetrics.loadTime = (this.bundleMetrics.loadTime ?? 0) + loadTime;
@@ -141,17 +147,50 @@ class PerformanceMonitor {
   }
 
   // Report metrics to analytics (placeholder)
-  reportMetrics() {
-    this.getMetrics();
-    this.checkPerformanceBudgets();
+  reportMetrics(): object | void {
+    const metrics = this.getMetrics();
+    const budgetCheck = this.checkPerformanceBudgets();
 
-    // Performance metrics reported internally
-    // Core Web Vitals and Bundle Performance tracked
+    // Performance metrics available for development tools (not in production)
+    if (process.env.NODE_ENV !== 'production') {
+      // Log to console for debugging
+      logger.info('Performance Metrics Report', {
+        coreWebVitals: {
+          fcp: metrics.fcp,
+          lcp: metrics.lcp,
+          fid: metrics.fid,
+          cls: metrics.cls,
+          ttfb: metrics.ttfb,
+        },
+        bundlePerformance: {
+          loadTime: metrics.loadTime,
+          chunkCount: metrics.chunkCount,
+        },
+        budgetCheck: budgetCheck.passed ? 'PASSED' : 'FAILED',
+        violations: budgetCheck.passed ? undefined : budgetCheck.violations
+      });
+
+      // Also return for programmatic access
+      return {
+        coreWebVitals: {
+          fcp: metrics.fcp,
+          lcp: metrics.lcp,
+          fid: metrics.fid,
+          cls: metrics.cls,
+          ttfb: metrics.ttfb,
+        },
+        bundlePerformance: {
+          loadTime: metrics.loadTime,
+          chunkCount: metrics.chunkCount,
+        },
+        budgetCheck,
+      };
+    }
 
     // In production, send to analytics service
     if (process.env.NODE_ENV === 'production') {
       // Example: Send to Google Analytics, Sentry, or custom analytics
-      // analytics.track('performance_metrics', _metrics);
+      // analytics.track('performance_metrics', metrics);
     }
   }
 
@@ -175,9 +214,13 @@ export function trackComponentLoad(componentName: string) {
   const startTime = performance.now();
 
   return () => {
-    const loadTime = performance.now() - startTime;
-    // Component render time tracked internally
-    void loadTime; // Explicitly mark as intentionally unused
+    const endTime = performance.now();
+    const renderTime = endTime - startTime;
+
+    // Log in development/test for debugging (not in production)
+    if (process.env.NODE_ENV !== 'production') {
+      logger.debug('Component rendered', { componentName, renderTime: `${renderTime.toFixed(2)}ms` });
+    }
 
     // Track in performance monitor
     const monitor = getPerformanceMonitor();

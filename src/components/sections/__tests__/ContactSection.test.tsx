@@ -293,9 +293,9 @@ describe('ContactSection', () => {
     await user.type(emailInput, 'john@example.com');
     await user.type(companyInput, 'Test Company');
 
-    expect(nameInput.value).toBe('John Doe');
-    expect(emailInput.value).toBe('john@example.com');
-    expect(companyInput.value).toBe('Test Company');
+    expect((nameInput as HTMLInputElement).value).toBe('John Doe');
+    expect((emailInput as HTMLInputElement).value).toBe('john@example.com');
+    expect((companyInput as HTMLInputElement).value).toBe('Test Company');
   });
 
   it('handles select field changes', async () => {
@@ -308,7 +308,7 @@ describe('ContactSection', () => {
     await user.selectOptions(projectTypeSelect, 'Brand Film');
     await user.selectOptions(budgetSelect, '$10K - $25K');
 
-    expect(projectTypeSelect.value).toBe('Brand Film');
-    expect(budgetSelect.value).toBe('$10K - $25K');
+    expect((projectTypeSelect as HTMLSelectElement).value).toBe('Brand Film');
+    expect((budgetSelect as HTMLSelectElement).value).toBe('$10K - $25K');
   });
 });

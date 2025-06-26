@@ -55,7 +55,7 @@ describe('Internal Linking Utilities', () => {
     it('converts kebab-case to title case', () => {
       const breadcrumbs = generateBreadcrumbs('/services/corporate-video-production-morocco');
       
-      expect(breadcrumbs[2].name).toBe('Corporate Video Production Morocco');
+      expect(breadcrumbs[2]?.name).toBe('Corporate Video Production Morocco');
     });
 
     it('handles empty segments gracefully', () => {
@@ -273,7 +273,7 @@ describe('Internal Linking Utilities', () => {
         expect(service.text).toBeDefined();
         expect(service.text.length).toBeGreaterThan(0);
         expect(service.description).toBeDefined();
-        expect(service.description.length).toBeGreaterThan(0);
+        expect(service.description?.length).toBeGreaterThan(0);
         expect(service.href).toBeDefined();
         expect(service.href.startsWith('/services/')).toBe(true);
       });

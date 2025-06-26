@@ -85,6 +85,30 @@ jest.mock('@/lib/utils', () => ({
   scrollToElement: jest.fn(),
 }));
 
+// Mock navigation utility
+jest.mock('@/lib/utils/navigation', () => ({
+  navigateToPortfolio: jest.fn(() => {
+    // Simulate scrolling to portfolio section
+    const portfolioElement = document.querySelector('#portfolio');
+    if (portfolioElement) {
+      portfolioElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }),
+  navigateToContact: jest.fn(() => {
+    // Simulate scrolling to contact section
+    const contactElement = document.querySelector('#contact');
+    if (contactElement) {
+      contactElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }),
+}));
+
 // Mock scrollIntoView
 Object.defineProperty(Element.prototype, 'scrollIntoView', {
   value: jest.fn(),

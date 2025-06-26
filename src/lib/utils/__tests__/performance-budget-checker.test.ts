@@ -107,10 +107,10 @@ describe('PerformanceBudgetChecker', () => {
 
       expect(result.passed).toBe(false);
       expect(result.violations).toHaveLength(1);
-      expect(result.violations[0].metric).toBe('main');
-      expect(result.violations[0].category).toBe('bundles');
-      expect(result.violations[0].severity).toBe(ViolationSeverity.LOW); // 20% over = LOW severity
-      expect(result.violations[0].percentage).toBe(20);
+      expect(result.violations[0]?.metric).toBe('main');
+      expect(result.violations[0]?.category).toBe('bundles');
+      expect(result.violations[0]?.severity).toBe(ViolationSeverity.LOW); // 20% over = LOW severity
+      expect(result.violations[0]?.percentage).toBe(20);
     });
 
     it('fails when Core Web Vitals exceed budget', () => {
@@ -132,8 +132,8 @@ describe('PerformanceBudgetChecker', () => {
 
       expect(result.passed).toBe(false);
       expect(result.violations).toHaveLength(1);
-      expect(result.violations[0].metric).toBe('fps');
-      expect(result.violations[0].message).toContain('below minimum threshold');
+      expect(result.violations[0]?.metric).toBe('fps');
+      expect(result.violations[0]?.message).toContain('below minimum threshold');
     });
 
     it('calculates correct violation severity', () => {
@@ -141,8 +141,8 @@ describe('PerformanceBudgetChecker', () => {
 
       const result = checker.checkBudgets(testData);
 
-      expect(result.violations[0].severity).toBe(ViolationSeverity.CRITICAL);
-      expect(result.violations[0].percentage).toBe(100);
+      expect(result.violations[0]?.severity).toBe(ViolationSeverity.CRITICAL);
+      expect(result.violations[0]?.percentage).toBe(100);
     });
 
     it('calculates performance score correctly', () => {

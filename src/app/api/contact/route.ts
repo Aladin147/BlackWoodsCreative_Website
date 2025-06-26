@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { formspreeConfig } from '@/lib/config/formspree';
 import { validateContactForm } from '@/lib/utils';
+import { log } from '@/lib/utils/logger';
 import { sanitizeFormData } from '@/lib/utils/sanitize';
 import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
 
@@ -93,8 +94,8 @@ async function sendToFormspree(formData: ContactFormData): Promise<boolean> {
       return false;
     }
 
-    await response.json();
-    // Contact form submitted to Formspree successfully
+    const result = await response.json();
+    log.api.success('/api/contact', { formspree: result });
     return true;
   } catch {
     // Formspree submission error - logged internally
@@ -240,8 +241,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
       },
       { status: 200 }
     );
-  } catch {
-    // Contact form submission error - logged internally
+  } catch (error) {
+    log.api.error('/api/contact', error);
 
     return NextResponse.json(
       {

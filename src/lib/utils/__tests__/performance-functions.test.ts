@@ -1,6 +1,6 @@
 // Type definitions for browser APIs
 import { render } from '@testing-library/react';
-import React, { createElement } from 'react';
+import { createElement } from 'react';
 
 import {
   measurePerformance,
@@ -265,11 +265,7 @@ describe('Performance Functions', () => {
       expect(result).toBe('invalid-url');
       // The function should handle invalid URLs gracefully and return the original URL
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to optimize image URL:',
-        expect.objectContaining({
-          name: 'TypeError',
-          message: expect.stringContaining('Invalid URL'),
-        })
+        expect.stringContaining('Failed to optimize image URL')
       );
       consoleSpy.mockRestore();
     });
@@ -406,7 +402,9 @@ describe('Performance Functions', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       unmount();
 
-      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('TestComponent render took'));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Component render performance warning')
+      );
 
       consoleSpy.mockRestore();
     });
@@ -501,7 +499,9 @@ describe('Performance Functions', () => {
       const result = monitorMemoryUsage();
       expect(result).toBeNull();
 
-      performanceWithMemory.memory = originalMemory;
+      if (originalMemory) {
+        performanceWithMemory.memory = originalMemory;
+      }
     });
 
     it('calculates percentage correctly', () => {
@@ -589,9 +589,9 @@ describe('Performance Functions', () => {
       const result = await analyzeBundleSize();
 
       expect(result.modules).toHaveLength(3);
-      expect(result.modules[0].name).toBe('react');
-      expect(result.modules[1].name).toBe('framer-motion');
-      expect(result.modules[2].name).toBe('app');
+      expect(result.modules[0]?.name).toBe('react');
+      expect(result.modules[1]?.name).toBe('framer-motion');
+      expect(result.modules[2]?.name).toBe('app');
     });
   });
 
@@ -691,7 +691,9 @@ describe('Performance Functions', () => {
       expect(result).toHaveProperty('violations');
       expect(result.passed).toBe(true); // No memory violation when API unavailable
 
-      performanceWithMemory.memory = originalMemory;
+      if (originalMemory) {
+        performanceWithMemory.memory = originalMemory;
+      }
     });
 
     it('returns correct structure for passing budget', async () => {

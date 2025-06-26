@@ -5,6 +5,8 @@
 
 import React, { useEffect, createElement, lazy } from 'react';
 
+import { logger } from './logger';
+
 // Performance measurement utility
 export async function measurePerformance<T>(name: string, fn: () => T | Promise<T>): Promise<T> {
   const startMark = `${name}-start`;
@@ -117,7 +119,11 @@ export function optimizeImages(url: string, options: ImageOptimizationOptions = 
 
     urlObj.search = params.toString();
     return urlObj.toString();
-  } catch {
+  } catch (error) {
+    // Log error in development/test for debugging
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+      logger.warn('Failed to optimize image URL', error as Record<string, unknown>);
+    }
     // If URL parsing fails, return original URL
     return url;
   }
@@ -155,7 +161,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 // Performance monitoring for React components
 export function withPerformanceMonitoring<P extends object>(
   Component: React.ComponentType<P>,
-  _componentName: string
+  componentName: string
 ) {
   return function PerformanceMonitoredComponent(props: P) {
     useEffect(() => {
@@ -168,7 +174,14 @@ export function withPerformanceMonitoring<P extends object>(
         const renderTime = endTime - startTime;
 
         if (renderTime > 16) {
-          // More than one frame at 60fps - logged internally
+          // More than one frame at 60fps - log warning in development/test
+          if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+            logger.warn('Component render performance warning', {
+              componentName,
+              renderTime: `${renderTime.toFixed(2)}ms`,
+              threshold: '16ms'
+            });
+          }
         }
       };
     });

@@ -1,5 +1,7 @@
 import { Resend } from 'resend';
 
+import { logger } from '../utils/logger';
+
 // Initialize Resend client lazily
 function getResendClient(): Resend {
   return new Resend(process.env.RESEND_API_KEY);
@@ -27,6 +29,10 @@ export async function sendContactEmail(formData: ContactFormData): Promise<Email
   try {
     // Check if API key is configured
     if (!process.env.RESEND_API_KEY) {
+      // Log warning in development/test for debugging
+      if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+        logger.warn('RESEND_API_KEY not configured, email sending disabled');
+      }
       return {
         success: false,
         error: 'Email service not configured',
@@ -153,6 +159,10 @@ This email was sent from the BlackWoods Creative contact form.
     });
 
     if (result.error) {
+      // Log error in development/test for debugging
+      if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+        logger.error('Resend API error', result.error);
+      }
       return {
         success: false,
         error: result.error.message ?? 'Failed to send email',
@@ -165,6 +175,10 @@ This email was sent from the BlackWoods Creative contact form.
       ...(result.data?.id && { messageId: result.data.id }),
     };
   } catch (error) {
+    // Log error in development/test for debugging
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+      logger.error('Email service error', error);
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -259,6 +273,10 @@ This is an automated response. Please do not reply to this email.
     });
 
     if (result.error) {
+      // Log error in development/test for debugging
+      if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+        logger.error('Auto-reply email error', result.error);
+      }
       return {
         success: false,
         error: result.error.message ?? 'Failed to send auto-reply',

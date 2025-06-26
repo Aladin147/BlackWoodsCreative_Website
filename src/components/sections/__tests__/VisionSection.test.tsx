@@ -147,7 +147,7 @@ describe('VisionSection', () => {
       const progressIndicators = document.querySelectorAll('.w-1.h-12.rounded-full');
 
       // Click first indicator
-      fireEvent.click(progressIndicators[0]);
+      fireEvent.click(progressIndicators[0]!);
 
       // Should not throw error
       expect(progressIndicators[0]).toBeInTheDocument();
@@ -214,7 +214,7 @@ describe('VisionSection', () => {
       const progressIndicators = document.querySelectorAll('.w-1.h-12.rounded-full');
 
       // Click first indicator
-      fireEvent.click(progressIndicators[0]);
+      fireEvent.click(progressIndicators[0]!);
 
       expect(scrollIntoViewSpy).toHaveBeenCalledWith({ behavior: 'smooth' });
     });

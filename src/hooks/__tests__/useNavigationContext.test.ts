@@ -31,7 +31,7 @@ describe('Navigation Context Hooks', () => {
   describe('useNavigationContext', () => {
     it('correctly identifies homepage', () => {
       mockUsePathname.mockReturnValue('/');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useNavigationContext());
 
@@ -44,7 +44,7 @@ describe('Navigation Context Hooks', () => {
 
     it('correctly identifies about pages', () => {
       mockUsePathname.mockReturnValue('/about');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useNavigationContext());
 
@@ -55,7 +55,7 @@ describe('Navigation Context Hooks', () => {
 
     it('correctly identifies about subpages', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about/our-story', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useNavigationContext());
 
@@ -67,7 +67,7 @@ describe('Navigation Context Hooks', () => {
 
     it('correctly identifies services pages', () => {
       mockUsePathname.mockReturnValue('/services/video-production-morocco');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/services/video-production-morocco', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useNavigationContext());
 
@@ -79,7 +79,7 @@ describe('Navigation Context Hooks', () => {
 
     it('correctly identifies portfolio pages', () => {
       mockUsePathname.mockReturnValue('/portfolio');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/portfolio', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useNavigationContext());
 
@@ -89,7 +89,7 @@ describe('Navigation Context Hooks', () => {
 
     it('correctly identifies contact pages', () => {
       mockUsePathname.mockReturnValue('/contact');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/contact', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useNavigationContext());
 
@@ -99,7 +99,7 @@ describe('Navigation Context Hooks', () => {
 
     it('correctly identifies other pages', () => {
       mockUsePathname.mockReturnValue('/unknown-page');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/unknown-page', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useNavigationContext());
 
@@ -110,7 +110,7 @@ describe('Navigation Context Hooks', () => {
     it('determines correct breadcrumb variant', () => {
       // Test enhanced variant for about pages
       mockUsePathname.mockReturnValue('/about/team');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about/team', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result: aboutResult } = renderHook(() => useNavigationContext());
       expect(aboutResult.current.breadcrumbVariant).toBe('enhanced');
@@ -134,9 +134,11 @@ describe('Navigation Context Hooks', () => {
     it('determines navigation features correctly', () => {
       // Test subpage with navigation features
       mockUsePathname.mockReturnValue('/about/our-story');
-      mockGetInternalLinksForPage.mockReturnValue({ 
-        relatedPages: [{ href: '/about/team', text: 'Team' }], 
-        contextualLinks: [] 
+      mockGetInternalLinksForPage.mockReturnValue({
+        page: '/about/our-story',
+        relatedPages: [{ href: '/about/team', text: 'Team', priority: 'high' as const, context: 'about-section' }],
+        contextualLinks: [],
+        callToActionLinks: []
       });
 
       const { result } = renderHook(() => useNavigationContext());
@@ -147,14 +149,16 @@ describe('Navigation Context Hooks', () => {
 
     it('handles related links correctly', () => {
       const mockRelatedLinks = [
-        { href: '/about/team', text: 'Our Team' },
-        { href: '/about/workflow', text: 'Our Workflow' }
+        { href: '/about/team', text: 'Our Team', priority: 'high' as const, context: 'about-section' },
+        { href: '/about/workflow', text: 'Our Workflow', priority: 'medium' as const, context: 'about-section' }
       ];
 
       mockUsePathname.mockReturnValue('/about');
       mockGetInternalLinksForPage.mockReturnValue({ 
-        relatedPages: mockRelatedLinks, 
-        contextualLinks: [] 
+        page: '/about',
+        relatedPages: mockRelatedLinks,
+        contextualLinks: [],
+        callToActionLinks: []
       });
 
       const { result } = renderHook(() => useNavigationContext());
@@ -166,9 +170,11 @@ describe('Navigation Context Hooks', () => {
   describe('usePageNavigation', () => {
     it('returns correct configuration for subpages', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
-      mockGetInternalLinksForPage.mockReturnValue({ 
-        relatedPages: [{ href: '/about/team', text: 'Team' }], 
-        contextualLinks: [] 
+      mockGetInternalLinksForPage.mockReturnValue({
+        page: '/about/our-story',
+        relatedPages: [{ href: '/about/team', text: 'Team', priority: 'high' as const, context: 'about-section' }],
+        contextualLinks: [],
+        callToActionLinks: []
       });
 
       const { result } = renderHook(() => usePageNavigation());
@@ -181,7 +187,7 @@ describe('Navigation Context Hooks', () => {
 
     it('returns correct configuration for homepage', () => {
       mockUsePathname.mockReturnValue('/');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => usePageNavigation());
 
@@ -191,7 +197,7 @@ describe('Navigation Context Hooks', () => {
 
     it('configures breadcrumb props correctly', () => {
       mockUsePathname.mockReturnValue('/services/video-production-morocco');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/services/video-production-morocco', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => usePageNavigation());
 
@@ -251,9 +257,11 @@ describe('Navigation Context Hooks', () => {
   describe('useMobileNavigation', () => {
     it('returns correct mobile configuration for subpages', () => {
       mockUsePathname.mockReturnValue('/about/our-story');
-      mockGetInternalLinksForPage.mockReturnValue({ 
-        relatedPages: [{ href: '/about/team', text: 'Team' }], 
-        contextualLinks: [] 
+      mockGetInternalLinksForPage.mockReturnValue({
+        page: '/about/our-story',
+        relatedPages: [{ href: '/about/team', text: 'Team', priority: 'high' as const, context: 'about-section' }],
+        contextualLinks: [],
+        callToActionLinks: []
       });
 
       const { result } = renderHook(() => useMobileNavigation());
@@ -267,7 +275,7 @@ describe('Navigation Context Hooks', () => {
 
     it('returns correct mobile configuration for main pages', () => {
       mockUsePathname.mockReturnValue('/services');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/services', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useMobileNavigation());
 
@@ -278,7 +286,7 @@ describe('Navigation Context Hooks', () => {
 
     it('handles pages without parent correctly', () => {
       mockUsePathname.mockReturnValue('/portfolio');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/portfolio', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result } = renderHook(() => useMobileNavigation());
 
@@ -289,7 +297,7 @@ describe('Navigation Context Hooks', () => {
   describe('Hook Memoization', () => {
     it('memoizes navigation context correctly', () => {
       mockUsePathname.mockReturnValue('/about');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result, rerender } = renderHook(() => useNavigationContext());
       const firstResult = result.current;
@@ -302,7 +310,7 @@ describe('Navigation Context Hooks', () => {
 
     it('updates when pathname changes', () => {
       mockUsePathname.mockReturnValue('/about');
-      mockGetInternalLinksForPage.mockReturnValue({ relatedPages: [], contextualLinks: [] });
+      mockGetInternalLinksForPage.mockReturnValue({ page: '/about', relatedPages: [], contextualLinks: [], callToActionLinks: [] });
 
       const { result, rerender } = renderHook(() => useNavigationContext());
       const firstResult = result.current;

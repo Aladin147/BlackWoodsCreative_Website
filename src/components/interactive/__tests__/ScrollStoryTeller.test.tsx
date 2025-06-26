@@ -90,7 +90,7 @@ describe('ScrollStoryTeller', () => {
     const progressIndicators = document.querySelectorAll('[class*="w-2"][class*="h-8"][class*="rounded-full"]');
 
     if (progressIndicators.length > 0) {
-      fireEvent.click(progressIndicators[0]);
+      fireEvent.click(progressIndicators[0]!);
       expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
     }
   });

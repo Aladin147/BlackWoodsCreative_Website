@@ -250,8 +250,8 @@ describe('generateStructuredData', () => {
     result.services.forEach(
       (service: { '@type': string; name: string; description: string }, index: number) => {
         expect(service['@type']).toBe('Service');
-        expect(service.name).toBe(siteConfig.services[index].name);
-        expect(service.description).toBe(siteConfig.services[index].description);
+        expect(service.name).toBe(siteConfig.services[index]?.name);
+        expect(service.description).toBe(siteConfig.services[index]?.description);
       }
     );
   });
@@ -319,7 +319,7 @@ describe('generatePortfolioStructuredData', () => {
         },
         index: number
       ) => {
-        const project = mockProjects[index];
+        const project = mockProjects[index]!;
 
         expect(work['@type']).toBe('CreativeWork');
         expect(work.name).toBe(project.title);
@@ -336,12 +336,12 @@ describe('generatePortfolioStructuredData', () => {
     const result = generatePortfolioStructuredData(mockProjects);
 
     // First project has year and tags
-    expect(result.workExample[0].dateCreated).toBe('2023');
-    expect(result.workExample[0].keywords).toBe('video, production');
+    expect(result.workExample[0]?.dateCreated).toBe('2023');
+    expect(result.workExample[0]?.keywords).toBe('video, production');
 
     // Second project doesn't have year and tags
-    expect(result.workExample[1].dateCreated).toBeUndefined();
-    expect(result.workExample[1].keywords).toBeUndefined();
+    expect(result.workExample[1]?.dateCreated).toBeUndefined();
+    expect(result.workExample[1]?.keywords).toBeUndefined();
   });
 
   it('handles empty projects array', () => {
@@ -363,8 +363,8 @@ describe('generatePortfolioStructuredData', () => {
 
     const result = generatePortfolioStructuredData(minimalProjects);
 
-    expect(result.workExample[0].dateCreated).toBeUndefined();
-    expect(result.workExample[0].keywords).toBeUndefined();
-    expect(result.workExample[0].name).toBe('Minimal Project');
+    expect(result.workExample[0]?.dateCreated).toBeUndefined();
+    expect(result.workExample[0]?.keywords).toBeUndefined();
+    expect(result.workExample[0]?.name).toBe('Minimal Project');
   });
 });

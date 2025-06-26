@@ -172,10 +172,10 @@ describe('LoadingSpinner', () => {
     sizes.forEach((size, index) => {
       const { unmount } = render(<LoadingSpinner size={size} />);
       const spinner = document.querySelector('.rounded-full.border-2');
-      const [heightClass, widthClass] = expectedClasses[index].split(' ');
+      const [heightClass, widthClass] = expectedClasses[index]?.split(' ') ?? [];
 
-      expect(spinner).toHaveClass(heightClass);
-      expect(spinner).toHaveClass(widthClass);
+      expect(spinner).toHaveClass(heightClass!);
+      expect(spinner).toHaveClass(widthClass!);
       unmount();
     });
   });

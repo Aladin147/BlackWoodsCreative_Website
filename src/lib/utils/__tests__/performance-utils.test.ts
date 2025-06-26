@@ -1,4 +1,4 @@
-import React, { createElement, isValidElement, Suspense } from 'react';
+import { createElement, isValidElement, Suspense } from 'react';
 
 import {
   measurePerformance,
@@ -257,10 +257,7 @@ describe('Performance Utils', () => {
 
       expect(result).toBe(invalidUrl);
       expect(consoleSpy.warn).toHaveBeenCalledWith(
-        'Failed to optimize image URL:',
-        expect.objectContaining({
-          message: expect.stringContaining('Invalid URL'),
-        })
+        expect.stringContaining('Failed to optimize image URL')
       );
     });
 

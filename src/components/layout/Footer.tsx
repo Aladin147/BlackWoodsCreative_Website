@@ -44,13 +44,19 @@ const socialLinks = [
   },
 ];
 
-// Use unified navigation for consistency
+// Use unified navigation for consistency - prefer hash navigation for internal links
 const getQuickLinks = () => {
   const navigationItems = getNavigationItems(siteConfig.navigation, siteConfig.homeNavigation);
-  return navigationItems.map((item: NavigationItem) => ({
-    name: item.name,
-    href: item.href
-  }));
+  return navigationItems.map((item: NavigationItem) => {
+    // For Footer, prefer hash-based navigation for internal scrolling
+    const homeNavItem = siteConfig.homeNavigation.find(nav => nav.name === item.name);
+    const href = homeNavItem?.homeHref ?? item.href;
+
+    return {
+      name: item.name,
+      href: href
+    };
+  });
 };
 
 const services = ['Brand Films', 'Product Photography', '3D Visualization', 'Scene Creation'];
@@ -68,6 +74,15 @@ export function Footer({ className }: FooterProps) {
   const handleNavClick = (href: string) => {
     if (href.startsWith('http')) {
       window.open(href, '_blank', 'noopener,noreferrer');
+    } else if (href.startsWith('#')) {
+      // Handle hash-based navigation for internal scrolling
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
     } else {
       handleNavigationClick(href);
     }
@@ -217,8 +232,28 @@ export function Footer({ className }: FooterProps) {
         {/* Bottom Bar with Magnetic Effects */}
         <ScrollReveal direction="up" distance={30} delay={0.5}>
           <div className="flex flex-col items-center justify-between gap-4 border-t border-bw-border-subtle pt-8 md:flex-row">
-            <div className="text-sm text-bw-text-secondary">
-              © {new Date().getFullYear()} BlackWoods Creative. All rights reserved.
+            <div className="flex flex-col items-center gap-2 text-sm text-bw-text-secondary md:flex-row md:gap-4">
+              <span>© {new Date().getFullYear()} BlackWoods Creative. All rights reserved.</span>
+              <div className="flex items-center gap-4">
+                <MagneticField strength={0.1} distance={80}>
+                  <button
+                    onClick={() => handleNavClick('/privacy')}
+                    className="cursor-pointer text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-accent-gold"
+                    data-cursor="link"
+                  >
+                    Privacy Policy
+                  </button>
+                </MagneticField>
+                <MagneticField strength={0.1} distance={80}>
+                  <button
+                    onClick={() => handleNavClick('/terms')}
+                    className="cursor-pointer text-sm text-bw-text-secondary transition-colors duration-300 hover:text-bw-accent-gold"
+                    data-cursor="link"
+                  >
+                    Terms of Service
+                  </button>
+                </MagneticField>
+              </div>
             </div>
 
             <div className="flex items-center gap-6">
