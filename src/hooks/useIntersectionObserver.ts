@@ -20,7 +20,7 @@ interface IntersectionObserverEntry {
 
 export function useIntersectionObserver(
   options: UseIntersectionObserverOptions = {}
-): [RefObject<HTMLElement>, IntersectionObserverEntry | null] {
+): [RefObject<HTMLElement | null>, IntersectionObserverEntry | null] {
   const {
     threshold = 0.1,
     root = null,
@@ -29,7 +29,7 @@ export function useIntersectionObserver(
     triggerOnce = false,
   } = options;
 
-  const elementRef = useRef<HTMLElement>(null);
+  const elementRef = useRef<HTMLElement | null>(null);
   const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
   const [hasTriggered, setHasTriggered] = useState(false);
 
@@ -44,7 +44,7 @@ export function useIntersectionObserver(
     if (triggerOnce && hasTriggered) return;
 
     const observerParams = { threshold, root, rootMargin };
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(entries => {
       const entry = entries[0];
       if (entry) {
         setEntry(entry);

@@ -17,10 +17,10 @@ export function navigateTo(href: string, offset = 80): void {
     if (element) {
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
+
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
     return;
@@ -54,7 +54,10 @@ export function isHomePage(): boolean {
  * @param navigation - Main navigation config
  * @param homeNavigation - Home page specific navigation (kept for backward compatibility)
  */
-export function getNavigationItems(navigation: readonly NavigationItem[], _homeNavigation: readonly NavigationItem[]): readonly NavigationItem[] {
+export function getNavigationItems(
+  navigation: readonly NavigationItem[],
+  _homeNavigation: readonly NavigationItem[]
+): readonly NavigationItem[] {
   // Always use proper page navigation - no more hash-based navigation
   // This ensures all navigation links go to actual pages
   return navigation.map((item: NavigationItem) => {
@@ -114,12 +117,12 @@ export function isNavigationActive(href: string, currentPath: string): boolean {
   if (href.startsWith('#')) {
     return currentPath === '/';
   }
-  
+
   // For page links, check exact match or if current path starts with href
   if (href === '/') {
     return currentPath === '/';
   }
-  
+
   return currentPath.startsWith(href);
 }
 

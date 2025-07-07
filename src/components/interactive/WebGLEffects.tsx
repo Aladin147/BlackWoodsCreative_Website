@@ -113,7 +113,7 @@ export function WebGLAuroraEffect({
   interactive?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
   const mouseRef = useRef({ x: 0, y: 0 });
   const [webglState, setWebglState] = useState<WebGLContextState>({
     canvas: null,
@@ -402,27 +402,40 @@ export function WebGLParticleSystem({
     <div className={`pointer-events-none absolute inset-0 ${className}`}>
       {/* WebGL particle implementation would go here */}
       {/* For now, using CSS fallback */}
-      {Array.from({ length: adaptedParticleCount }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute h-1 w-1 rounded-full bg-bw-aurora-teal"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -100, 0],
-            opacity: [0, 0.8, 0],
-            scale: [0, 1, 0],
-          }}
-          transition={{
-            duration: 5 + Math.random() * 5,
-            repeat: Infinity,
-            delay: Math.random() * 5,
-            ease: 'linear',
-          }}
-        />
-      ))}
+      {Array.from({ length: adaptedParticleCount }).map((_, i) => {
+        // Use deterministic positioning based on index to prevent hydration issues
+        const getDeterministicValue = (seed: number, min: number, max: number): number => {
+          const x = Math.sin(seed) * 10000;
+          return min + (x - Math.floor(x)) * (max - min);
+        };
+
+        const leftPos = getDeterministicValue(i * 7, 0, 100);
+        const topPos = getDeterministicValue(i * 11, 0, 100);
+        const duration = getDeterministicValue(i * 13, 5, 10);
+        const delay = getDeterministicValue(i * 17, 0, 5);
+
+        return (
+          <motion.div
+            key={i}
+            className="absolute h-1 w-1 rounded-full bg-bw-aurora-teal"
+            style={{
+              left: `${leftPos}%`,
+              top: `${topPos}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0, 0.8, 0],
+              scale: [0, 1, 0],
+            }}
+            transition={{
+              duration,
+              repeat: Infinity,
+              delay,
+              ease: 'linear',
+            }}
+          />
+        );
+      })}
     </div>
   );
 }

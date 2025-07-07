@@ -48,7 +48,7 @@ describe('UI Components Barrel Export', () => {
 
   it('has correct number of exports', () => {
     const exportKeys = Object.keys(UIComponents);
-    expect(exportKeys).toHaveLength(6);
+    expect(exportKeys).toHaveLength(7);
   });
 
   it('all exports are functions (components)', () => {
@@ -114,6 +114,7 @@ describe('UI Components Barrel Export', () => {
       'LoadingSkeleton',
       'PortfolioCardSkeleton',
       'Logo',
+      'OptimizedImage',
     ];
 
     const actualExports = Object.keys(UIComponents);

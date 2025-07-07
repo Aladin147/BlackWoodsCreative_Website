@@ -279,7 +279,7 @@ describe('/api/contact', () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'User-Agent': 'BlackWoods-Creative-Website/1.0',
           },
           body: expect.stringContaining(validFormData.name),

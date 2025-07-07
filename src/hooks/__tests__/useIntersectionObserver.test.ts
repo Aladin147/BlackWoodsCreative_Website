@@ -145,7 +145,7 @@ describe('useIntersectionObserver', () => {
   it('should not create observer when IntersectionObserver is not supported', () => {
     // Temporarily remove IntersectionObserver to test fallback
     const originalIntersectionObserver = global.IntersectionObserver;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     (global as any).IntersectionObserver = undefined;
 
     const { result } = renderHook(() => useIntersectionObserver());

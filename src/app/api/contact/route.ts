@@ -34,7 +34,8 @@ interface ContactFormResponse {
 function getRateLimitKey(request: NextRequest): string {
   // Use IP address for rate limiting
   const forwarded = request.headers.get('x-forwarded-for');
-  const ip = forwarded ? forwarded.split(',')[0] : request.ip ?? 'unknown';
+  const realIp = request.headers.get('x-real-ip');
+  const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? 'unknown' : (realIp ?? 'unknown');
   return `contact_${ip}`;
 }
 
@@ -82,7 +83,7 @@ async function sendToFormspree(formData: ContactFormData): Promise<boolean> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'User-Agent': 'BlackWoods-Creative-Website/1.0',
       },
       body: JSON.stringify(formspreeData),
@@ -130,7 +131,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<ContactFo
     // Verify CSRF token
     const csrfToken = request.headers.get('x-csrf-token');
     const sessionToken = request.cookies.get('csrf-token')?.value;
-    const ip = request.ip ?? '127.0.0.1';
+    const forwarded = request.headers.get('x-forwarded-for');
+    const realIp = request.headers.get('x-real-ip');
+    const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? '127.0.0.1' : (realIp ?? '127.0.0.1');
     const userAgent = request.headers.get('user-agent') ?? '';
 
     if (!csrfToken || !sessionToken || !verifyCSRFToken(csrfToken, sessionToken)) {

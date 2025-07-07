@@ -1,6 +1,6 @@
 /**
  * Optimized Image Components
- * 
+ *
  * High-performance image components with optimization, lazy loading, and progressive enhancement
  */
 
@@ -16,7 +16,7 @@ import {
   ImageSource,
   imageOptimizer,
   IMAGE_BREAKPOINTS,
-  QUALITY_PRESETS
+  QUALITY_PRESETS,
 } from '@/lib/images/optimization';
 
 // Base optimized image props
@@ -36,32 +36,34 @@ export interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'alt'> {
 
 // Progressive image component
 export const ProgressiveImage = forwardRef<HTMLDivElement, OptimizedImageProps>(
-  ({
-    src,
-    alt,
-    caption,
-    credit,
-    showCaption = false,
-    showCredit = false,
-    optimization = {},
-    fallback,
-    onLoad,
+  (
+    {
+      src,
+      alt,
+      caption,
+      credit,
+      showCaption = false,
+      showCredit = false,
+      optimization = {},
+      fallback,
+      onLoad,
 
-    className = '',
-    containerClassName = '',
-    width,
-    height,
-    priority = false,
-    sizes,
-    ...props
-  }, ref) => {
+      className = '',
+      containerClassName = '',
+      width,
+      height,
+      priority = false,
+      sizes,
+      ...props
+    },
+    ref
+  ) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [imageError, setImageError] = useState(false);
 
     // Generate blur placeholder
-    const blurDataURL = optimization.placeholder === 'blur' 
-      ? imageOptimizer.generateBlurPlaceholder()
-      : undefined;
+    const blurDataURL =
+      optimization.placeholder === 'blur' ? imageOptimizer.generateBlurPlaceholder() : undefined;
 
     // Generate optimized sizes
     const optimizedSizes = sizes ?? imageOptimizer.generateSizes();
@@ -84,21 +86,21 @@ export const ProgressiveImage = forwardRef<HTMLDivElement, OptimizedImageProps>(
         {/* Main image */}
         <div className={`relative ${className}`}>
           <Image
+            {...props}
             src={src}
             alt={alt}
-            width={width}
-            height={height}
-            priority={priority}
-            sizes={optimizedSizes}
+            {...(width !== undefined && { width })}
+            {...(height !== undefined && { height })}
+            priority={priority ?? false}
+            {...(optimizedSizes && { sizes: optimizedSizes })}
             quality={optimization.quality ?? QUALITY_PRESETS.high}
             placeholder={optimization.placeholder ?? 'blur'}
-            blurDataURL={blurDataURL}
+            {...(blurDataURL && { blurDataURL })}
             className={`transition-opacity duration-500 ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             onLoad={handleLoad}
             onError={handleError}
-            {...props}
           />
 
           {/* Loading overlay */}
@@ -108,18 +110,18 @@ export const ProgressiveImage = forwardRef<HTMLDivElement, OptimizedImageProps>(
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="absolute inset-0 bg-gray-200 flex items-center justify-center"
+                className="absolute inset-0 flex items-center justify-center bg-gray-200"
               >
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+                <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600" />
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Error state */}
           {imageError && !fallback && (
-            <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
               <div className="text-center text-gray-500">
-                <div className="text-2xl mb-2">📷</div>
+                <div className="mb-2 text-2xl">📷</div>
                 <div className="text-sm">Image not available</div>
               </div>
             </div>
@@ -129,12 +131,8 @@ export const ProgressiveImage = forwardRef<HTMLDivElement, OptimizedImageProps>(
         {/* Caption and credit */}
         {(showCaption && caption) || (showCredit && credit) ? (
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-            {showCaption && caption && (
-              <p className="text-white text-sm mb-1">{caption}</p>
-            )}
-            {showCredit && credit && (
-              <p className="text-white/80 text-xs">© {credit}</p>
-            )}
+            {showCaption && caption && <p className="mb-1 text-sm text-white">{caption}</p>}
+            {showCredit && credit && <p className="text-xs text-white/80">© {credit}</p>}
           </div>
         ) : null}
       </div>
@@ -165,7 +163,7 @@ export function PortfolioImage({
 
   return (
     <motion.div
-      className={`relative cursor-pointer group ${containerClassName}`}
+      className={`group relative cursor-pointer ${containerClassName}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
@@ -177,7 +175,7 @@ export function PortfolioImage({
         alt={alt}
         {...(caption && { caption })}
         {...(credit && { credit })}
-        className={`w-full h-full object-cover ${className}`}
+        className={`h-full w-full object-cover ${className}`}
         optimization={{ quality: QUALITY_PRESETS.high }}
         {...props}
       />
@@ -191,11 +189,11 @@ export function PortfolioImage({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-0 bg-black/50 flex items-center justify-center"
+              className="absolute inset-0 flex items-center justify-center bg-black/50"
             >
               {overlayContent ?? (
-                <div className="text-white text-center">
-                  <div className="text-2xl mb-2">👁️</div>
+                <div className="text-center text-white">
+                  <div className="mb-2 text-2xl">👁️</div>
                   <div className="text-sm">View Details</div>
                 </div>
               )}
@@ -225,14 +223,8 @@ export function ImageGallery({
   autoPlayInterval?: number;
   optimization?: Partial<ImageOptimizationConfig>;
 }) {
-  const {
-    currentImage,
-    currentIndex,
-    totalImages,
-    goToNext,
-    goToPrevious,
-    goToIndex,
-  } = useImageGallery(images, optimization);
+  const { currentImage, currentIndex, totalImages, goToNext, goToPrevious, goToIndex } =
+    useImageGallery(images, optimization);
 
   // Auto-play functionality
   useEffect(() => {
@@ -264,7 +256,7 @@ export function ImageGallery({
               {...(currentImage.credit && { credit: currentImage.credit })}
               showCaption
               showCredit
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               optimization={optimization}
               priority={currentIndex === 0}
             />
@@ -276,14 +268,14 @@ export function ImageGallery({
           <>
             <button
               onClick={goToPrevious}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
               aria-label="Previous image"
             >
               ←
             </button>
             <button
               onClick={goToNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
               aria-label="Next image"
             >
               →
@@ -292,19 +284,19 @@ export function ImageGallery({
         )}
 
         {/* Image counter */}
-        <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+        <div className="absolute right-4 top-4 rounded-full bg-black/50 px-3 py-1 text-sm text-white">
           {currentIndex + 1} / {totalImages}
         </div>
       </div>
 
       {/* Thumbnails */}
       {showThumbnails && totalImages > 1 && (
-        <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => goToIndex(index)}
-              className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
+              className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${
                 index === currentIndex
                   ? 'border-blue-500'
                   : 'border-transparent hover:border-gray-300'
@@ -313,7 +305,7 @@ export function ImageGallery({
               <ProgressiveImage
                 src={image.src}
                 alt={`Thumbnail ${index + 1}`}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
                 optimization={{ quality: QUALITY_PRESETS.medium }}
                 width={80}
                 height={80}
@@ -400,9 +392,7 @@ export function HeroImage({
 
       {/* Content overlay */}
       {overlayContent && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          {overlayContent}
-        </div>
+        <div className="absolute inset-0 flex items-center justify-center">{overlayContent}</div>
       )}
     </div>
   );

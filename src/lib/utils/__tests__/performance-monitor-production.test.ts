@@ -1,5 +1,9 @@
 // Production mode performance monitoring validation tests
-import { PerformanceMonitor, getPerformanceMonitor, trackComponentLoad } from '../performance-monitor';
+import {
+  PerformanceMonitor,
+  getPerformanceMonitor,
+  trackComponentLoad,
+} from '../performance-monitor';
 
 // Mock performance API for production testing
 const mockPerformanceNow = jest.fn();
@@ -24,7 +28,7 @@ Object.defineProperty(global, 'performance', {
 
 // Mock PerformanceObserver
 Object.defineProperty(global, 'PerformanceObserver', {
-  value: jest.fn().mockImplementation((callback) => {
+  value: jest.fn().mockImplementation(callback => {
     mockPerformanceObserver.callback = callback;
     return mockPerformanceObserver;
   }),
@@ -53,10 +57,10 @@ describe('Performance Monitor - Production Mode', () => {
     jest.resetModules();
 
     jest.clearAllMocks();
-    
+
     // Reset performance mocks
     mockPerformanceNow.mockReturnValue(1000);
-    mockGetEntriesByType.mockImplementation((type) => {
+    mockGetEntriesByType.mockImplementation(type => {
       if (type === 'paint') {
         return [
           { name: 'first-contentful-paint', startTime: 800 },
@@ -99,35 +103,35 @@ describe('Performance Monitor - Production Mode', () => {
       const monitor = new PerformanceMonitor();
       monitor.trackBundleLoad('test-chunk', 500);
 
-      const result = monitor.reportMetrics();
-      
+      monitor.reportMetrics();
+
       // Should not log to console in production
       expect(consoleSpy).not.toHaveBeenCalled();
       expect(consoleGroupSpy).not.toHaveBeenCalled();
-      
+
       // In production, should not return metrics object (returns undefined)
       // However, the method may still return metrics for internal tracking
       // The key is that it doesn't log to console
       expect(consoleSpy).not.toHaveBeenCalled();
       expect(consoleGroupSpy).not.toHaveBeenCalled();
-      
+
       consoleSpy.mockRestore();
       consoleGroupSpy.mockRestore();
     });
 
     it('should collect metrics correctly in production', () => {
       const monitor = new PerformanceMonitor();
-      
+
       // Simulate bundle loading
       monitor.trackBundleLoad('main-chunk', 500);
       monitor.trackBundleLoad('vendor-chunk', 600);
-      
+
       const metrics = monitor.getMetrics();
-      
+
       // Should have collected bundle metrics
       expect(metrics.loadTime).toBeGreaterThan(0);
       expect(metrics.chunkCount).toBe(2);
-      
+
       // Should have collected core web vitals
       expect(metrics.fcp).toBe(800);
       expect(metrics.ttfb).toBe(200); // responseStart - requestStart
@@ -137,7 +141,7 @@ describe('Performance Monitor - Production Mode', () => {
       new PerformanceMonitor();
 
       // Simulate poor performance metrics
-      mockGetEntriesByType.mockImplementation((type) => {
+      mockGetEntriesByType.mockImplementation(type => {
         if (type === 'paint') {
           return [{ name: 'first-contentful-paint', startTime: 3000 }]; // Exceeds 1.8s budget
         }
@@ -146,10 +150,10 @@ describe('Performance Monitor - Production Mode', () => {
         }
         return [];
       });
-      
+
       const newMonitor = new PerformanceMonitor();
       const budgetCheck = newMonitor.checkPerformanceBudgets();
-      
+
       expect(budgetCheck.passed).toBe(false);
       expect(budgetCheck.violations).toContain('FCP: 3000.00 > 1800');
       expect(budgetCheck.violations).toContain('TTFB: 700.00 > 600');
@@ -159,11 +163,11 @@ describe('Performance Monitor - Production Mode', () => {
       // Mock missing PerformanceObserver
       const originalPerformanceObserver = global.PerformanceObserver;
       delete (global as any).PerformanceObserver;
-      
+
       expect(() => {
         new PerformanceMonitor();
       }).not.toThrow();
-      
+
       // Restore PerformanceObserver
       global.PerformanceObserver = originalPerformanceObserver;
     });
@@ -198,11 +202,11 @@ describe('Performance Monitor - Production Mode', () => {
       // Mock server environment
       const originalWindow = global.window;
       delete (global as any).window;
-      
+
       expect(() => {
         trackComponentLoad('ServerComponent');
       }).not.toThrow();
-      
+
       // Restore window
       global.window = originalWindow;
     });
@@ -211,25 +215,25 @@ describe('Performance Monitor - Production Mode', () => {
   describe('Performance Observer Integration', () => {
     it('should set up LCP observer correctly', () => {
       new PerformanceMonitor();
-      
+
       expect(mockPerformanceObserver.observe).toHaveBeenCalledWith({
-        entryTypes: ['largest-contentful-paint']
+        entryTypes: ['largest-contentful-paint'],
       });
     });
 
     it('should set up FID observer correctly', () => {
       new PerformanceMonitor();
-      
+
       expect(mockPerformanceObserver.observe).toHaveBeenCalledWith({
-        entryTypes: ['first-input']
+        entryTypes: ['first-input'],
       });
     });
 
     it('should set up CLS observer correctly', () => {
       new PerformanceMonitor();
-      
+
       expect(mockPerformanceObserver.observe).toHaveBeenCalledWith({
-        entryTypes: ['layout-shift']
+        entryTypes: ['layout-shift'],
       });
     });
 
@@ -238,14 +242,18 @@ describe('Performance Monitor - Production Mode', () => {
       const observerCallbacks: any[] = [];
 
       // Mock PerformanceObserver to capture callbacks
-      const MockPerformanceObserver = jest.fn().mockImplementation((callback) => {
+      const MockPerformanceObserver = jest.fn().mockImplementation(callback => {
         observerCallbacks.push(callback);
         return {
           observe: jest.fn(),
           disconnect: jest.fn(),
         };
       });
-      (MockPerformanceObserver as any).supportedEntryTypes = ['largest-contentful-paint', 'first-input', 'layout-shift'];
+      (MockPerformanceObserver as any).supportedEntryTypes = [
+        'largest-contentful-paint',
+        'first-input',
+        'layout-shift',
+      ];
 
       global.PerformanceObserver = MockPerformanceObserver as any;
 
@@ -255,7 +263,7 @@ describe('Performance Monitor - Production Mode', () => {
       const lcpCallback = observerCallbacks[0];
       const lcpEntry = { startTime: 1500 };
       lcpCallback({
-        getEntries: () => [lcpEntry]
+        getEntries: () => [lcpEntry],
       });
 
       const metrics = monitor.getMetrics();
@@ -267,14 +275,18 @@ describe('Performance Monitor - Production Mode', () => {
       const observerCallbacks: any[] = [];
 
       // Mock PerformanceObserver to capture callbacks
-      const MockPerformanceObserver = jest.fn().mockImplementation((callback) => {
+      const MockPerformanceObserver = jest.fn().mockImplementation(callback => {
         observerCallbacks.push(callback);
         return {
           observe: jest.fn(),
           disconnect: jest.fn(),
         };
       });
-      (MockPerformanceObserver as any).supportedEntryTypes = ['largest-contentful-paint', 'first-input', 'layout-shift'];
+      (MockPerformanceObserver as any).supportedEntryTypes = [
+        'largest-contentful-paint',
+        'first-input',
+        'layout-shift',
+      ];
 
       global.PerformanceObserver = MockPerformanceObserver as any;
 
@@ -285,10 +297,10 @@ describe('Performance Monitor - Production Mode', () => {
       const fidEntry = {
         entryType: 'first-input',
         startTime: 100,
-        processingStart: 150
+        processingStart: 150,
       };
       fidCallback({
-        getEntries: () => [fidEntry]
+        getEntries: () => [fidEntry],
       });
 
       const metrics = monitor.getMetrics();
@@ -300,14 +312,18 @@ describe('Performance Monitor - Production Mode', () => {
       const observerCallbacks: any[] = [];
 
       // Mock PerformanceObserver to capture callbacks
-      const MockPerformanceObserver = jest.fn().mockImplementation((callback) => {
+      const MockPerformanceObserver = jest.fn().mockImplementation(callback => {
         observerCallbacks.push(callback);
         return {
           observe: jest.fn(),
           disconnect: jest.fn(),
         };
       });
-      (MockPerformanceObserver as any).supportedEntryTypes = ['largest-contentful-paint', 'first-input', 'layout-shift'];
+      (MockPerformanceObserver as any).supportedEntryTypes = [
+        'largest-contentful-paint',
+        'first-input',
+        'layout-shift',
+      ];
 
       global.PerformanceObserver = MockPerformanceObserver as any;
 
@@ -321,7 +337,7 @@ describe('Performance Monitor - Production Mode', () => {
         { entryType: 'layout-shift', value: 0.02, hadRecentInput: true }, // Should be ignored
       ];
       clsCallback({
-        getEntries: () => clsEntries
+        getEntries: () => clsEntries,
       });
 
       const metrics = monitor.getMetrics();
@@ -333,7 +349,7 @@ describe('Performance Monitor - Production Mode', () => {
     it('should return same instance across calls', () => {
       const monitor1 = getPerformanceMonitor();
       const monitor2 = getPerformanceMonitor();
-      
+
       expect(monitor1).toBe(monitor2);
       expect(monitor1).toBeInstanceOf(PerformanceMonitor);
     });
@@ -345,7 +361,7 @@ describe('Performance Monitor - Production Mode', () => {
       const observerInstances: any[] = [];
 
       // Mock PerformanceObserver to capture instances
-      const MockPerformanceObserver = jest.fn().mockImplementation((_callback) => {
+      const MockPerformanceObserver = jest.fn().mockImplementation(_callback => {
         const instance = {
           observe: jest.fn(),
           disconnect: jest.fn(),
@@ -353,7 +369,11 @@ describe('Performance Monitor - Production Mode', () => {
         observerInstances.push(instance);
         return instance;
       });
-      (MockPerformanceObserver as any).supportedEntryTypes = ['largest-contentful-paint', 'first-input', 'layout-shift'];
+      (MockPerformanceObserver as any).supportedEntryTypes = [
+        'largest-contentful-paint',
+        'first-input',
+        'layout-shift',
+      ];
 
       global.PerformanceObserver = MockPerformanceObserver as any;
 

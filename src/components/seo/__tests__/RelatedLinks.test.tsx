@@ -12,20 +12,36 @@ jest.mock('next/navigation', () => ({
 
 // Mock Next.js Link
 jest.mock('next/link', () => {
-  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {
-    return <a href={href} {...props}>{children}</a>;
+  return function MockLink({
+    children,
+    href,
+    ...props
+  }: {
+    children: React.ReactNode;
+    href: string;
+    [key: string]: any;
+  }) {
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    );
   };
 });
 
 // Mock Heroicons
 jest.mock('@heroicons/react/24/outline', () => ({
-  ArrowRightIcon: ({ className }: { className?: string }) => <svg data-testid="arrow-right" className={className} />,
+  ArrowRightIcon: ({ className }: { className?: string }) => (
+    <svg data-testid="arrow-right" className={className} />
+  ),
 }));
 
 // Mock Framer Motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: { children: React.ReactNode; [key: string]: any }) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: { children: React.ReactNode; [key: string]: any }) => (
+      <div {...props}>{children}</div>
+    ),
   },
 }));
 
@@ -37,13 +53,21 @@ jest.mock('@/lib/utils/internal-linking', () => ({
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
-  MagneticField: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-field">{children}</div>,
-  ScrollReveal: ({ children }: { children: React.ReactNode }) => <div data-testid="scroll-reveal">{children}</div>,
+  MagneticField: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="magnetic-field">{children}</div>
+  ),
+  ScrollReveal: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="scroll-reveal">{children}</div>
+  ),
 }));
 
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
-const mockGetInternalLinksForPage = getInternalLinksForPage as jest.MockedFunction<typeof getInternalLinksForPage>;
-const mockGetRelatedServicePages = getRelatedServicePages as jest.MockedFunction<typeof getRelatedServicePages>;
+const mockGetInternalLinksForPage = getInternalLinksForPage as jest.MockedFunction<
+  typeof getInternalLinksForPage
+>;
+const mockGetRelatedServicePages = getRelatedServicePages as jest.MockedFunction<
+  typeof getRelatedServicePages
+>;
 
 describe('RelatedLinks Component', () => {
   beforeEach(() => {
@@ -54,16 +78,46 @@ describe('RelatedLinks Component', () => {
     const mockLinkingStrategy = {
       page: '/about',
       relatedPages: [
-        { href: '/about/our-story', text: 'Our Story', description: 'Learn about our journey', priority: 'high' as const, context: 'about-section' },
-        { href: '/about/team', text: 'Our Team', description: 'Meet our experts', priority: 'high' as const, context: 'about-section' },
-        { href: '/about/workflow', text: 'Our Workflow', description: 'How we work', priority: 'medium' as const, context: 'about-section' }
+        {
+          href: '/about/our-story',
+          text: 'Our Story',
+          description: 'Learn about our journey',
+          priority: 'high' as const,
+          context: 'about-section',
+        },
+        {
+          href: '/about/team',
+          text: 'Our Team',
+          description: 'Meet our experts',
+          priority: 'high' as const,
+          context: 'about-section',
+        },
+        {
+          href: '/about/workflow',
+          text: 'Our Workflow',
+          description: 'How we work',
+          priority: 'medium' as const,
+          context: 'about-section',
+        },
       ],
       contextualLinks: [
-        { href: '/services', text: 'Our Services', description: 'What we offer', priority: 'high' as const, context: 'about' }
+        {
+          href: '/services',
+          text: 'Our Services',
+          description: 'What we offer',
+          priority: 'high' as const,
+          context: 'about',
+        },
       ],
       callToActionLinks: [
-        { href: '/contact', text: 'Contact Us', description: 'Get in touch', priority: 'high' as const, context: 'cta-section' }
-      ]
+        {
+          href: '/contact',
+          text: 'Contact Us',
+          description: 'Get in touch',
+          priority: 'high' as const,
+          context: 'cta-section',
+        },
+      ],
     };
 
     it('renders related links in default variant', () => {
@@ -137,7 +191,7 @@ describe('RelatedLinks Component', () => {
         page: '/about',
         relatedPages: [],
         contextualLinks: [],
-        callToActionLinks: []
+        callToActionLinks: [],
       });
 
       const { container } = render(<RelatedLinks />);
@@ -147,8 +201,20 @@ describe('RelatedLinks Component', () => {
 
   describe('RelatedServiceLinks', () => {
     const mockRelatedServices = [
-      { href: '/services/video-production', text: 'Video Production', description: 'Professional video services', priority: 'medium' as const, context: 'related-services' },
-      { href: '/services/photography', text: 'Photography', description: 'Professional photography', priority: 'medium' as const, context: 'related-services' }
+      {
+        href: '/services/video-production',
+        text: 'Video Production',
+        description: 'Professional video services',
+        priority: 'medium' as const,
+        context: 'related-services',
+      },
+      {
+        href: '/services/photography',
+        text: 'Photography',
+        description: 'Professional photography',
+        priority: 'medium' as const,
+        context: 'related-services',
+      },
     ];
 
     it('renders related service links', () => {
@@ -184,9 +250,21 @@ describe('RelatedLinks Component', () => {
       relatedPages: [],
       contextualLinks: [],
       callToActionLinks: [
-        { href: '/contact', text: 'Get Started', description: 'Contact us today', priority: 'high' as const, context: 'cta-section' },
-        { href: '/portfolio', text: 'View Work', description: 'See our portfolio', priority: 'medium' as const, context: 'cta-section' }
-      ]
+        {
+          href: '/contact',
+          text: 'Get Started',
+          description: 'Contact us today',
+          priority: 'high' as const,
+          context: 'cta-section',
+        },
+        {
+          href: '/portfolio',
+          text: 'View Work',
+          description: 'See our portfolio',
+          priority: 'medium' as const,
+          context: 'cta-section',
+        },
+      ],
     };
 
     it('renders call-to-action links', () => {
@@ -216,7 +294,7 @@ describe('RelatedLinks Component', () => {
         page: '/about',
         relatedPages: [],
         contextualLinks: [],
-        callToActionLinks: []
+        callToActionLinks: [],
       });
 
       const { container } = render(<CTALinks />);
@@ -228,13 +306,31 @@ describe('RelatedLinks Component', () => {
     const mockLinkingStrategy = {
       page: '/about',
       relatedPages: [
-        { href: '/about/story', text: 'Story', description: 'Our story', priority: 'high' as const, context: 'header' },
-        { href: '/about/team', text: 'Team', description: 'Our team', priority: 'high' as const, context: 'header' }
+        {
+          href: '/about/story',
+          text: 'Story',
+          description: 'Our story',
+          priority: 'high' as const,
+          context: 'header',
+        },
+        {
+          href: '/about/team',
+          text: 'Team',
+          description: 'Our team',
+          priority: 'high' as const,
+          context: 'header',
+        },
       ],
       contextualLinks: [
-        { href: '/services', text: 'Services', description: 'Our services', priority: 'medium' as const, context: 'header' }
+        {
+          href: '/services',
+          text: 'Services',
+          description: 'Our services',
+          priority: 'medium' as const,
+          context: 'header',
+        },
       ],
-      callToActionLinks: []
+      callToActionLinks: [],
     };
 
     it('renders contextual navigation for specific context', () => {
@@ -255,7 +351,7 @@ describe('RelatedLinks Component', () => {
         page: '/about',
         relatedPages: [],
         contextualLinks: [],
-        callToActionLinks: []
+        callToActionLinks: [],
       });
 
       const { container } = render(<ContextualNavigation context="header" />);
@@ -275,10 +371,16 @@ describe('RelatedLinks Component', () => {
     const mockLinkingStrategy = {
       page: '/about',
       relatedPages: [
-        { href: '/about/story', text: 'Our Story', description: 'Learn about us', priority: 'high' as const, context: 'about-section' }
+        {
+          href: '/about/story',
+          text: 'Our Story',
+          description: 'Learn about us',
+          priority: 'high' as const,
+          context: 'about-section',
+        },
       ],
       contextualLinks: [],
-      callToActionLinks: []
+      callToActionLinks: [],
     };
 
     it('provides proper link accessibility', () => {

@@ -5,6 +5,7 @@ export { PortfolioCard } from './PortfolioCard';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { LoadingSpinner, LoadingSkeleton, PortfolioCardSkeleton } from './LoadingSpinner';
 export { Logo } from './Logo';
+export { OptimizedImage } from './OptimizedImage';
 
 // Future exports (to be added as components are created):
 // export { Button } from './Button'

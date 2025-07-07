@@ -4,7 +4,7 @@ import { logSecurityEvent } from '@/lib/utils/security';
 
 /**
  * CSP Violation Reporting Endpoint
- * 
+ *
  * This endpoint receives Content Security Policy violation reports
  * and logs them for security monitoring and debugging.
  */
@@ -12,21 +12,22 @@ import { logSecurityEvent } from '@/lib/utils/security';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Extract CSP violation details
     const violation = body['csp-report'];
-    
+
     if (!violation) {
-      return NextResponse.json(
-        { error: 'Invalid CSP report format' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid CSP report format' }, { status: 400 });
     }
 
     // Log the security event
+    const forwarded = request.headers.get('x-forwarded-for');
+    const realIp = request.headers.get('x-real-ip');
+    const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? 'unknown' : (realIp ?? 'unknown');
+
     logSecurityEvent({
       type: 'csp_violation',
-      ip: request.ip ?? request.headers.get('x-forwarded-for') ?? 'unknown',
+      ip,
       userAgent: request.headers.get('user-agent') ?? 'unknown',
       details: {
         documentUri: violation['document-uri'],
@@ -50,18 +51,11 @@ export async function POST(request: NextRequest) {
     // 3. Aggregate violation data for analysis
     // 4. Send to external monitoring services (Sentry, etc.)
 
-    return NextResponse.json(
-      { success: true, message: 'CSP violation reported' },
-      { status: 200 }
-    );
-
+    return NextResponse.json({ success: true, message: 'CSP violation reported' }, { status: 200 });
   } catch {
     // CSP report processing error - logged internally
 
-    return NextResponse.json(
-      { error: 'Failed to process CSP report' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to process CSP report' }, { status: 500 });
   }
 }
 

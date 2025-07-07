@@ -16,10 +16,10 @@ const mockPerformanceObserver = {
 };
 
 // Mock console methods
-const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-const consoleGroupSpy = jest.spyOn(console, 'group').mockImplementation();
-const consoleGroupEndSpy = jest.spyOn(console, 'groupEnd').mockImplementation();
-const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+jest.spyOn(console, 'log').mockImplementation();
+jest.spyOn(console, 'group').mockImplementation();
+jest.spyOn(console, 'groupEnd').mockImplementation();
+jest.spyOn(console, 'warn').mockImplementation();
 
 // Mock global performance
 Object.defineProperty(global, 'performance', {

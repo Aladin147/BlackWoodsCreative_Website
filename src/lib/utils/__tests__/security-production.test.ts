@@ -2,30 +2,32 @@
 // Mock the security functions to avoid Next.js server imports
 
 // Mock security event logging function
-const mockLogSecurityEvent = jest.fn((event: {
-  type: 'csp_violation' | 'rate_limit' | 'csrf_failure' | 'suspicious_activity';
-  ip?: string;
-  userAgent?: string;
-  details?: Record<string, unknown>;
-}) => {
-  // Handle malformed events gracefully
-  if (!event || typeof event !== 'object') {
-    return; // Silently ignore malformed events
-  }
+const mockLogSecurityEvent = jest.fn(
+  (event: {
+    type: 'csp_violation' | 'rate_limit' | 'csrf_failure' | 'suspicious_activity';
+    ip?: string;
+    userAgent?: string;
+    details?: Record<string, unknown>;
+  }) => {
+    // Handle malformed events gracefully
+    if (!event || typeof event !== 'object') {
+      return; // Silently ignore malformed events
+    }
 
-  const logEntry = {
-    timestamp: new Date().toISOString(),
-    type: event.type || 'unknown',
-    ...(event.ip && { ip: event.ip }),
-    ...(event.userAgent && { userAgent: event.userAgent }),
-    ...(event.details && { details: event.details }),
-  };
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      type: event.type || 'unknown',
+      ...(event.ip && { ip: event.ip }),
+      ...(event.userAgent && { userAgent: event.userAgent }),
+      ...(event.details && { details: event.details }),
+    };
 
-  // Only log in development/test (not in production)
-  if (process.env.NODE_ENV !== 'production') {
-    console.warn('🔒 Security Event:', JSON.stringify(logEntry));
+    // Only log in development/test (not in production)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('🔒 Security Event:', JSON.stringify(logEntry));
+    }
   }
-});
+);
 
 // Mock input sanitization
 const mockSanitizeInput = jest.fn((input: string): string => {
@@ -58,7 +60,8 @@ const mockSanitizeEmail = jest.fn((email: string): string => {
     return '';
   }
 
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   return emailRegex.test(sanitized) ? sanitized : '';
 });
 
@@ -131,7 +134,7 @@ describe('Security Event Logging - Production Mode', () => {
         type: 'csp_violation' as const,
         ip: '192.168.1.1',
         userAgent: 'Mozilla/5.0 Test Browser',
-        details: { violatedDirective: 'script-src' }
+        details: { violatedDirective: 'script-src' },
       };
 
       logSecurityEvent(securityEvent);
@@ -150,8 +153,8 @@ describe('Security Event Logging - Production Mode', () => {
         details: {
           violatedDirective: 'script-src',
           blockedURI: 'https://malicious-site.com/script.js',
-          documentURI: 'https://blackwoodscreative.com/portfolio'
-        }
+          documentURI: 'https://blackwoodscreative.com/portfolio',
+        },
       };
 
       expect(() => logSecurityEvent(cspEvent)).not.toThrow();
@@ -165,8 +168,8 @@ describe('Security Event Logging - Production Mode', () => {
         details: {
           endpoint: '/api/contact',
           requestCount: 150,
-          timeWindow: '1 minute'
-        }
+          timeWindow: '1 minute',
+        },
       };
 
       expect(() => logSecurityEvent(rateLimitEvent)).not.toThrow();
@@ -180,8 +183,8 @@ describe('Security Event Logging - Production Mode', () => {
         details: {
           endpoint: '/api/contact',
           expectedToken: 'abc123',
-          receivedToken: 'xyz789'
-        }
+          receivedToken: 'xyz789',
+        },
       };
 
       expect(() => logSecurityEvent(csrfEvent)).not.toThrow();
@@ -195,8 +198,8 @@ describe('Security Event Logging - Production Mode', () => {
         details: {
           activity: 'Multiple failed login attempts',
           attemptCount: 10,
-          timespan: '5 minutes'
-        }
+          timespan: '5 minutes',
+        },
       };
 
       expect(() => logSecurityEvent(suspiciousEvent)).not.toThrow();
@@ -204,7 +207,7 @@ describe('Security Event Logging - Production Mode', () => {
 
     it('should handle events with minimal data', () => {
       const minimalEvent = {
-        type: 'rate_limit' as const
+        type: 'rate_limit' as const,
       };
 
       expect(() => logSecurityEvent(minimalEvent)).not.toThrow();
@@ -220,8 +223,8 @@ describe('Security Event Logging - Production Mode', () => {
           location: 'login page',
           timestamp: Date.now(),
           sessionId: 'sess_123456',
-          userId: 'user_789'
-        }
+          userId: 'user_789',
+        },
       };
 
       expect(() => logSecurityEvent(completeEvent)).not.toThrow();
@@ -264,7 +267,7 @@ describe('Security Event Logging - Production Mode', () => {
         'javascript:void(0)',
         'data:text/html,<script>alert(1)</script>',
         '../../etc/passwd',
-        'SELECT * FROM users WHERE id = 1; DROP TABLE users;'
+        'SELECT * FROM users WHERE id = 1; DROP TABLE users;',
       ];
 
       dangerousInputs.forEach(input => {
@@ -281,7 +284,7 @@ describe('Security Event Logging - Production Mode', () => {
         'john.doe@example.com',
         'A normal message with punctuation.',
         '123-456-7890',
-        'https://example.com/safe-url'
+        'https://example.com/safe-url',
       ];
 
       safeInputs.forEach(input => {
@@ -297,11 +300,7 @@ describe('Security Event Logging - Production Mode', () => {
     });
 
     it('should sanitize email addresses correctly', () => {
-      const validEmails = [
-        'test@example.com',
-        'user.name@domain.co.uk',
-        'valid+email@test.org'
-      ];
+      const validEmails = ['test@example.com', 'user.name@domain.co.uk', 'valid+email@test.org'];
 
       const invalidEmails = [
         'invalid.email',
@@ -309,7 +308,7 @@ describe('Security Event Logging - Production Mode', () => {
         'user@',
         'user..name@domain.com',
         '.user@domain.com',
-        'user.@domain.com'
+        'user.@domain.com',
       ];
 
       validEmails.forEach(email => {
@@ -339,7 +338,7 @@ describe('Security Event Logging - Production Mode', () => {
         type: 'csp_violation' as const,
         ip: '192.168.1.1',
         userAgent: 'Test Browser',
-        details: { test: true }
+        details: { test: true },
       };
 
       logSecurityEvent(securityEvent);
@@ -356,7 +355,7 @@ describe('Security Event Logging - Production Mode', () => {
       const events = [
         { type: 'rate_limit' as const, ip: '10.0.0.1' },
         { type: 'csrf_failure' as const, ip: '10.0.0.2' },
-        { type: 'suspicious_activity' as const, ip: '10.0.0.3' }
+        { type: 'suspicious_activity' as const, ip: '10.0.0.3' },
       ];
 
       events.forEach(event => logSecurityEvent(event));
@@ -371,7 +370,7 @@ describe('Security Event Logging - Production Mode', () => {
         type: 'rate_limit' as const,
         ip: `192.168.1.${i % 255}`,
         userAgent: `Bot${i}`,
-        details: { requestCount: i + 1 }
+        details: { requestCount: i + 1 },
       }));
 
       expect(() => {
@@ -380,12 +379,14 @@ describe('Security Event Logging - Production Mode', () => {
     });
 
     it('should handle concurrent security events', async () => {
-      const concurrentEvents = Array.from({ length: 50 }, (_, i) => 
-        Promise.resolve().then(() => logSecurityEvent({
-          type: 'suspicious_activity' as const,
-          ip: `10.0.0.${i}`,
-          details: { concurrent: true }
-        }))
+      const concurrentEvents = Array.from({ length: 50 }, (_, i) =>
+        Promise.resolve().then(() =>
+          logSecurityEvent({
+            type: 'suspicious_activity' as const,
+            ip: `10.0.0.${i}`,
+            details: { concurrent: true },
+          })
+        )
       );
 
       await expect(Promise.all(concurrentEvents)).resolves.not.toThrow();
@@ -393,19 +394,19 @@ describe('Security Event Logging - Production Mode', () => {
 
     it('should maintain performance under load', () => {
       const startTime = performance.now();
-      
+
       // Log 1000 security events
       for (let i = 0; i < 1000; i++) {
         logSecurityEvent({
           type: 'csp_violation' as const,
           ip: `172.16.${Math.floor(i / 255)}.${i % 255}`,
-          details: { loadTest: true }
+          details: { loadTest: true },
         });
       }
-      
+
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       // Should complete within reasonable time (less than 100ms)
       expect(duration).toBeLessThan(100);
     });
@@ -419,7 +420,7 @@ describe('Security Event Logging - Production Mode', () => {
         {},
         { type: 'invalid_type' },
         { type: 'csp_violation', details: null },
-        { type: 'rate_limit', ip: null, userAgent: undefined }
+        { type: 'rate_limit', ip: null, userAgent: undefined },
       ];
 
       malformedEvents.forEach(event => {
@@ -432,7 +433,7 @@ describe('Security Event Logging - Production Mode', () => {
       // For now, we ensure the function doesn't throw
       const networkEvent = {
         type: 'suspicious_activity' as const,
-        details: { networkTest: true }
+        details: { networkTest: true },
       };
 
       expect(() => logSecurityEvent(networkEvent)).not.toThrow();

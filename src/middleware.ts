@@ -48,7 +48,9 @@ if (hasRedisConfig) {
 export async function middleware(request: NextRequest) {
   const startTime = Date.now();
   const response = NextResponse.next();
-  const ip = request.ip ?? '127.0.0.1';
+  const forwarded = request.headers.get('x-forwarded-for');
+  const realIp = request.headers.get('x-real-ip');
+  const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? '127.0.0.1' : (realIp ?? '127.0.0.1');
   const userAgent = request.headers.get('user-agent') ?? '';
 
   // Initialize request logging
@@ -63,8 +65,11 @@ export async function middleware(request: NextRequest) {
   // Generate nonce for CSP
   const nonce = generateNonce();
 
-  // Apply security headers with nonce
-  const secureResponse = withSecurityHeaders(response, nonce);
+  // Apply security headers with nonce (skip CSP in development for easier debugging)
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const secureResponse = isDevelopment
+    ? response // Skip security headers in development
+    : withSecurityHeaders(response, nonce);
 
   // Set nonce in response headers for use in components
   secureResponse.headers.set('x-nonce', nonce);
@@ -81,40 +86,40 @@ export async function middleware(request: NextRequest) {
     if (rateLimiter) {
       const { success, limit, remaining, reset } = await rateLimiter.limit(ip);
 
-    if (!success) {
-      // Log security event
-      logSecurityEvent({
-        type: 'rate_limit',
-        ip,
-        userAgent,
-        details: {
-          path: request.nextUrl.pathname,
-          method: request.method,
-        },
-      });
+      if (!success) {
+        // Log security event
+        logSecurityEvent({
+          type: 'rate_limit',
+          ip,
+          userAgent,
+          details: {
+            path: request.nextUrl.pathname,
+            method: request.method,
+          },
+        });
 
-      // Update request log with rate limit info
-      const responseTime = Date.now() - startTime;
-      const rateLimitResponse = new NextResponse('Too many requests', {
-        status: 429,
-        headers: {
-          'Retry-After': Math.round((reset - Date.now()) / 1000).toString(),
-          'X-RateLimit-Limit': limit.toString(),
-          'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
-          'Content-Type': 'text/plain',
-        },
-      });
+        // Update request log with rate limit info
+        const responseTime = Date.now() - startTime;
+        const rateLimitResponse = new NextResponse('Too many requests', {
+          status: 429,
+          headers: {
+            'Retry-After': Math.round((reset - Date.now()) / 1000).toString(),
+            'X-RateLimit-Limit': limit.toString(),
+            'X-RateLimit-Remaining': remaining.toString(),
+            'X-RateLimit-Reset': reset.toString(),
+            'Content-Type': 'text/plain',
+          },
+        });
 
-      requestLogger.updateRequestResponse(
-        requestId,
-        rateLimitResponse,
-        responseTime,
-        'Rate limit exceeded'
-      );
+        requestLogger.updateRequestResponse(
+          requestId,
+          rateLimitResponse,
+          responseTime,
+          'Rate limit exceeded'
+        );
 
-      return rateLimitResponse;
-    }
+        return rateLimitResponse;
+      }
 
       // Add rate limit headers to successful responses
       secureResponse.headers.set('X-RateLimit-Limit', limit.toString());

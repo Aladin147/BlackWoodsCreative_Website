@@ -15,7 +15,8 @@ const testData = {
   company: 'Test Company',
   projectType: 'web-development',
   budget: '$5000-$10000',
-  message: 'This is a direct test of the Formspree endpoint to verify it works correctly with improved spam protection.',
+  message:
+    'This is a direct test of the Formspree endpoint to verify it works correctly with improved spam protection.',
   _subject: 'New Contact Form Submission from Test User',
   _replyto: 'test@example.com',
   _next: 'https://blackwoodscreative.com/thank-you',
@@ -34,27 +35,27 @@ function testFormspreeEndpoint() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'User-Agent': 'BlackWoods-Creative-Website-Test/1.0',
     },
   };
 
-  const req = https.request(FORMSPREE_ENDPOINT, options, (res) => {
+  const req = https.request(FORMSPREE_ENDPOINT, options, res => {
     console.log(`📊 Status Code: ${res.statusCode}`);
     console.log(`📋 Headers:`, res.headers);
-    
+
     let data = '';
-    
-    res.on('data', (chunk) => {
+
+    res.on('data', chunk => {
       data += chunk;
     });
-    
+
     res.on('end', () => {
       console.log('\n📨 Response Body:');
       try {
         const jsonResponse = JSON.parse(data);
         console.log(JSON.stringify(jsonResponse, null, 2));
-        
+
         if (res.statusCode === 200 && jsonResponse.ok) {
           console.log('\n✅ SUCCESS: Formspree endpoint is working correctly!');
           console.log('🎉 Contact form integration is properly configured.');
@@ -69,7 +70,7 @@ function testFormspreeEndpoint() {
     });
   });
 
-  req.on('error', (error) => {
+  req.on('error', error => {
     console.error('\n❌ REQUEST ERROR:', error.message);
     console.log('💡 Check your internet connection and the Formspree endpoint URL');
   });

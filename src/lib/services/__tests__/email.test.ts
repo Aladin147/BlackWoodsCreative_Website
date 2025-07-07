@@ -128,10 +128,9 @@ describe('Email Service', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Invalid API key');
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Resend API error'),
-        { message: 'Invalid API key' }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Resend API error'), {
+        message: 'Invalid API key',
+      });
     });
 
     it('handles network errors', async () => {

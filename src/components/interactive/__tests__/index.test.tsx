@@ -17,10 +17,10 @@ const {
   TypewriterText,
 } = InteractiveComponents;
 
-// Temporary mock for ScrollStoryTeller until import issue is resolved
-const ScrollStoryTeller =
-  InteractiveComponents.ScrollStoryTeller ??
-  (() => <div data-testid="scroll-story-teller">Mock ScrollStoryTeller</div>);
+// Mock ScrollStoryTeller since it's not yet implemented
+const ScrollStoryTeller = () => (
+  <div data-testid="scroll-story-teller">Mock ScrollStoryTeller</div>
+);
 
 // Mock framer-motion
 jest.mock('framer-motion', () => ({

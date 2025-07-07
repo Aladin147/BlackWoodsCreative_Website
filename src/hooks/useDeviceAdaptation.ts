@@ -81,7 +81,9 @@ export function useDeviceAdaptation() {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-    const isTouchDevice = 'ontouchstart' in window || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0);
+    const isTouchDevice =
+      'ontouchstart' in window ||
+      (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0);
     const pixelRatio = window.devicePixelRatio ?? 1;
 
     // Screen size detection
@@ -101,10 +103,14 @@ export function useDeviceAdaptation() {
     const orientation = height > width ? 'portrait' : 'landscape';
 
     // Hover capability detection
-    const hasHover = typeof window.matchMedia !== 'undefined' ? window.matchMedia('(hover: hover)').matches : true;
+    const hasHover =
+      typeof window.matchMedia !== 'undefined' ? window.matchMedia('(hover: hover)').matches : true;
 
     // Motion preference detection
-    const prefersReducedMotion = typeof window.matchMedia !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+    const prefersReducedMotion =
+      typeof window.matchMedia !== 'undefined'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
 
     // Enhanced device capabilities detection
     let capabilities: DeviceCapabilities | undefined;
@@ -178,6 +184,9 @@ export function useDeviceAdaptation() {
 
   useEffect(() => {
     detectDevice();
+
+    // Only add event listeners in browser environment
+    if (typeof window === 'undefined') return;
 
     const handleResize = () => detectDevice();
     const handleOrientationChange = () => setTimeout(detectDevice, 100);

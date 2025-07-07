@@ -145,145 +145,145 @@ export function generatePortfolioStructuredData(
 // Comprehensive BlackWoods brand variations for maximum search coverage
 export const BLACKWOODS_BRAND_VARIATIONS = [
   // Primary brand names
-  "BlackWoods Creative",
-  "BlackWood Creative",
-  "BlackWoods",
-  "BlackWood",
+  'BlackWoods Creative',
+  'BlackWood Creative',
+  'BlackWoods',
+  'BlackWood',
 
   // Capitalization variations
-  "Blackwood Creative",
-  "Blackwoods Creative",
-  "blackwoods creative",
-  "blackwood creative",
+  'Blackwood Creative',
+  'Blackwoods Creative',
+  'blackwoods creative',
+  'blackwood creative',
 
   // Spacing variations
-  "Black Woods Creative",
-  "Black Wood Creative",
-  "Black Woods",
-  "Black Wood",
+  'Black Woods Creative',
+  'Black Wood Creative',
+  'Black Woods',
+  'Black Wood',
 
   // Abbreviation variations
-  "BLKWDS Creative",
-  "BLKWDS",
-  "BWC",
+  'BLKWDS Creative',
+  'BLKWDS',
+  'BWC',
 
   // Common misspellings
-  "Blckwoods Creative",
-  "Blckwood Creative",
-  "Blackwods Creative",
-  "Blackwod Creative",
-  "Blakwoods Creative",
-  "Blakwood Creative",
+  'Blckwoods Creative',
+  'Blckwood Creative',
+  'Blackwods Creative',
+  'Blackwod Creative',
+  'Blakwoods Creative',
+  'Blakwood Creative',
 
   // Location-based variations
-  "BlackWoods Morocco",
-  "Blackwood Morocco",
-  "Black Woods Morocco",
-  "BLKWDS Morocco",
+  'BlackWoods Morocco',
+  'Blackwood Morocco',
+  'Black Woods Morocco',
+  'BLKWDS Morocco',
 
   // Service-based variations
-  "BlackWoods Video",
-  "BlackWoods Film",
-  "BlackWoods Photo",
-  "BlackWoods 3D",
-  "Blackwood Video",
-  "Blackwood Film"
+  'BlackWoods Video',
+  'BlackWoods Film',
+  'BlackWoods Photo',
+  'BlackWoods 3D',
+  'Blackwood Video',
+  'Blackwood Film',
 ];
 
 // Enhanced Organization Schema with comprehensive misspelling coverage
 export function generateEnhancedOrganizationSchema(additionalData?: Record<string, unknown>) {
   const schema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "BlackWoods Creative",
-    "alternateName": BLACKWOODS_BRAND_VARIATIONS,
-    "description": "Morocco's premier creative studio specializing in video production, photography, and 3D visualization",
-    "url": "https://blackwoodscreative.com",
-    "logo": "https://blackwoodscreative.com/assets/icons/BLKWDS Creative Logo_Inverted.svg",
-    "foundingDate": "2019",
-    "foundingLocation": {
-      "@type": "Place",
-      "name": "Mohammedia, Morocco"
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'BlackWoods Creative',
+    alternateName: BLACKWOODS_BRAND_VARIATIONS,
+    description:
+      "Morocco's premier creative studio specializing in video production, photography, and 3D visualization",
+    url: 'https://blackwoodscreative.com',
+    logo: 'https://blackwoodscreative.com/assets/icons/BLKWDS Creative Logo_Inverted.svg',
+    foundingDate: '2019',
+    foundingLocation: {
+      '@type': 'Place',
+      name: 'Mohammedia, Morocco',
     },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Mohammedia",
-      "addressRegion": "Casablanca-Settat",
-      "addressCountry": "Morocco"
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Mohammedia',
+      addressRegion: 'Casablanca-Settat',
+      addressCountry: 'Morocco',
     },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+212-625-55-37-68",
-      "contactType": "customer service",
-      "availableLanguage": ["English", "French", "Arabic"]
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+212-625-55-37-68',
+      contactType: 'customer service',
+      availableLanguage: ['English', 'French', 'Arabic'],
     },
-    "sameAs": [
-      "https://blackwoodscreative.com",
-      "https://www.blackwoodscreative.com"
-    ],
-    "serviceArea": {
-      "@type": "Place",
-      "name": "Morocco"
+    sameAs: ['https://blackwoodscreative.com', 'https://www.blackwoodscreative.com'],
+    serviceArea: {
+      '@type': 'Place',
+      name: 'Morocco',
     },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "BlackWoods Creative Services",
-      "itemListElement": [
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'BlackWoods Creative Services',
+      itemListElement: [
         {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Video Production",
-            "description": "Professional video production services including corporate videos, brand films, and commercial content",
-            "provider": {
-              "@type": "Organization",
-              "name": "BlackWoods Creative"
-            }
-          }
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Video Production',
+            description:
+              'Professional video production services including corporate videos, brand films, and commercial content',
+            provider: {
+              '@type': 'Organization',
+              name: 'BlackWoods Creative',
+            },
+          },
         },
         {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Photography",
-            "description": "Professional photography services including commercial, product, and corporate photography",
-            "provider": {
-              "@type": "Organization",
-              "name": "BlackWoods Creative"
-            }
-          }
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Photography',
+            description:
+              'Professional photography services including commercial, product, and corporate photography',
+            provider: {
+              '@type': 'Organization',
+              name: 'BlackWoods Creative',
+            },
+          },
         },
         {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "3D Visualization",
-            "description": "3D modeling, rendering, and architectural visualization services",
-            "provider": {
-              "@type": "Organization",
-              "name": "BlackWoods Creative"
-            }
-          }
-        }
-      ]
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: '3D Visualization',
+            description: '3D modeling, rendering, and architectural visualization services',
+            provider: {
+              '@type': 'Organization',
+              name: 'BlackWoods Creative',
+            },
+          },
+        },
+      ],
     },
-    "keywords": BLACKWOODS_BRAND_VARIATIONS.join(", "),
-    "knowsAbout": [
-      "Video Production",
-      "Photography",
-      "3D Visualization",
-      "Brand Films",
-      "Corporate Videos",
-      "Commercial Photography",
-      "Architectural Visualization",
-      "Visual Storytelling",
-      "Creative Services Morocco"
+    keywords: BLACKWOODS_BRAND_VARIATIONS.join(', '),
+    knowsAbout: [
+      'Video Production',
+      'Photography',
+      '3D Visualization',
+      'Brand Films',
+      'Corporate Videos',
+      'Commercial Photography',
+      'Architectural Visualization',
+      'Visual Storytelling',
+      'Creative Services Morocco',
     ],
-    ...additionalData
+    ...additionalData,
   };
 
   return {
-    __html: JSON.stringify(schema)
+    __html: JSON.stringify(schema),
   };
 }
 
@@ -297,7 +297,7 @@ export const MISSPELLING_PATTERNS = {
     'blakwoods',
     'black-woods',
     'black-wood',
-    'blkwds'
+    'blkwds',
   ],
 
   // Path-level misspellings
@@ -311,7 +311,7 @@ export const MISSPELLING_PATTERNS = {
     '/blkwds',
     '/bwc',
     '/blackwoods-creative',
-    '/blackwood-creative'
+    '/blackwood-creative',
   ],
 
   // Service-specific misspellings
@@ -321,8 +321,8 @@ export const MISSPELLING_PATTERNS = {
     '/blackwood-photo',
     '/blackwood-3d',
     '/blkwds-video',
-    '/blkwds-film'
-  ]
+    '/blkwds-film',
+  ],
 };
 
 // SEO-optimized meta keywords for brand variations
@@ -333,6 +333,6 @@ export function generateBrandKeywords(additionalKeywords: string[] = []): string
     // Service combinations
     ...BLACKWOODS_BRAND_VARIATIONS.slice(0, 10).map(brand => `${brand} video production`),
     ...BLACKWOODS_BRAND_VARIATIONS.slice(0, 10).map(brand => `${brand} photography`),
-    ...BLACKWOODS_BRAND_VARIATIONS.slice(0, 10).map(brand => `${brand} 3D visualization`)
+    ...BLACKWOODS_BRAND_VARIATIONS.slice(0, 10).map(brand => `${brand} 3D visualization`),
   ];
 }

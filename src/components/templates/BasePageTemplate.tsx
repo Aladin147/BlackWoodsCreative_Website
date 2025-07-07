@@ -50,7 +50,7 @@ const defaultFeatures = {
 
 /**
  * Base Page Template Component
- * 
+ *
  * Provides consistent layout, SEO optimization, and performance features
  * for all pages while maintaining the existing design system.
  */
@@ -103,9 +103,9 @@ export function BasePageTemplate({
         {mergedFeatures.showHeader && <Header />}
 
         {/* Main content area */}
-        <main 
-          id="main-content" 
-          role="main" 
+        <main
+          id="main-content"
+          role="main"
           className={`relative ${getLayoutClasses(layout)}`}
           aria-label="Main content"
         >
@@ -140,7 +140,7 @@ export function BasePageTemplate({
 
 /**
  * Content Block Renderer
- * 
+ *
  * Renders different types of content blocks with consistent styling
  * and animation support.
  */
@@ -154,14 +154,15 @@ function ContentBlockRenderer({
   enableAnimations: boolean;
 }) {
   const baseClasses = getBlockClasses(block);
-  const animationProps = enableAnimations && block.animations?.enabled
-    ? {
-        initial: { opacity: 0, y: 20 },
-        whileInView: { opacity: 1, y: 0 },
-        transition: { duration: 0.6, delay: block.animations.delay ?? index * 0.1 },
-        viewport: { once: true },
-      }
-    : {};
+  const animationProps =
+    enableAnimations && block.animations?.enabled
+      ? {
+          initial: { opacity: 0, y: 20 },
+          whileInView: { opacity: 1, y: 0 },
+          transition: { duration: 0.6, delay: block.animations.delay ?? index * 0.1 },
+          viewport: { once: true },
+        }
+      : {};
 
   // Dynamic render based on block type
   return (
@@ -170,8 +171,8 @@ function ContentBlockRenderer({
         {/* Content will be rendered based on block type */}
         <div data-block-type={block.type} data-block-id={block.id}>
           {/* Placeholder for now - will be enhanced with specific block components */}
-          <div className="text-center py-8">
-            <h2 className="text-2xl font-bold mb-4">{block.type.toUpperCase()} Block</h2>
+          <div className="py-8 text-center">
+            <h2 className="mb-4 text-2xl font-bold">{block.type.toUpperCase()} Block</h2>
             <p className="text-bw-text-secondary">Block ID: {block.id}</p>
           </div>
         </div>
@@ -241,5 +242,3 @@ function getBlockClasses(block: ContentBlock): string {
 
   return classes;
 }
-
-

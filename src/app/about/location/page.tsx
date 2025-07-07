@@ -4,13 +4,14 @@ import {
   ContentPageTemplate,
   type ContentPageData,
   type SEOMetadata,
-  generatePageMetadata
+  generatePageMetadata,
 } from '@/components/templates';
 
 // SEO metadata for location page
 const seoMetadata: SEOMetadata = {
   title: 'Location & Facilities | BlackWoods Creative - Professional Studio in Mohammedia, Morocco',
-  description: 'Visit BlackWoods Creative\'s state-of-the-art production facilities in Mohammedia, Morocco. Professional studio, equipment, and strategic location serving Casablanca, Rabat, and beyond.',
+  description:
+    "Visit BlackWoods Creative's state-of-the-art production facilities in Mohammedia, Morocco. Professional studio, equipment, and strategic location serving Casablanca, Rabat, and beyond.",
   keywords: [
     'BlackWoods Creative location',
     'video production studio Morocco',
@@ -18,32 +19,33 @@ const seoMetadata: SEOMetadata = {
     'professional studio Morocco',
     'video production equipment',
     'Morocco film studio',
-    'Casablanca video production'
+    'Casablanca video production',
   ],
   canonicalUrl: '/about/location',
   openGraph: {
     title: 'Location & Facilities | BlackWoods Creative Professional Studio Morocco',
-    description: 'State-of-the-art production facilities in Mohammedia, strategically located to serve all of Morocco.',
-    type: 'website'
+    description:
+      'State-of-the-art production facilities in Mohammedia, strategically located to serve all of Morocco.',
+    type: 'website',
   },
   structuredData: {
     '@type': 'Place',
-    'name': 'BlackWoods Creative Studio',
-    'address': {
+    name: 'BlackWoods Creative Studio',
+    address: {
       '@type': 'PostalAddress',
-      'streetAddress': 'MFADEL Business Center, Building O, Floor 5',
-      'addressLocality': 'Mohammedia',
-      'addressCountry': 'Morocco'
+      streetAddress: 'MFADEL Business Center, Building O, Floor 5',
+      addressLocality: 'Mohammedia',
+      addressCountry: 'Morocco',
     },
-    'geo': {
+    geo: {
       '@type': 'GeoCoordinates',
-      'latitude': '33.6866',
-      'longitude': '-7.3833'
+      latitude: '33.6866',
+      longitude: '-7.3833',
     },
-    'telephone': '+212 625 55 37 68',
-    'url': 'https://blackwoodscreative.com',
-    'description': 'Professional video production studio and facilities in Mohammedia, Morocco'
-  }
+    telephone: '+212 625 55 37 68',
+    url: 'https://blackwoodscreative.com',
+    description: 'Professional video production studio and facilities in Mohammedia, Morocco',
+  },
 };
 
 // Page content data
@@ -51,12 +53,13 @@ const pageData: ContentPageData = {
   hero: {
     title: 'Location & Facilities',
     subtitle: 'State-of-the-art production facilities in the heart of Morocco',
-    description: 'Our strategically located studio in Mohammedia provides the perfect base for serving clients across Morocco, with professional equipment and facilities that meet international standards.',
+    description:
+      'Our strategically located studio in Mohammedia provides the perfect base for serving clients across Morocco, with professional equipment and facilities that meet international standards.',
     breadcrumbs: [
       { label: 'Home', href: '/' },
       { label: 'About', href: '/about' },
-      { label: 'Location', href: '/about/location' }
-    ]
+      { label: 'Location', href: '/about/location' },
+    ],
   },
   sections: [
     {
@@ -69,56 +72,63 @@ const pageData: ContentPageData = {
           
           <p>Our location offers the perfect balance of accessibility and tranquility, allowing us to serve clients across Morocco efficiently while providing a distraction-free environment for high-quality content creation.</p>
         `,
-        highlight: true
+        highlight: true,
       },
       styling: {
         background: 'primary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'studio-facilities',
       type: 'values',
       data: {
         title: 'Professional Studio Facilities',
-        description: 'Comprehensive production facilities designed for exceptional content creation',
+        description:
+          'Comprehensive production facilities designed for exceptional content creation',
         values: [
           {
             title: 'Main Production Studio',
-            description: 'Spacious 500m² studio with professional lighting grid, acoustic treatment, and flexible set configurations. Ideal for corporate interviews, product shoots, and controlled environment filming.',
-            icon: 'FilmIcon'
+            description:
+              'Spacious 500m² studio with professional lighting grid, acoustic treatment, and flexible set configurations. Ideal for corporate interviews, product shoots, and controlled environment filming.',
+            icon: 'FilmIcon',
           },
           {
             title: 'Post-Production Suites',
-            description: 'Dedicated editing bays with high-performance workstations, color-calibrated monitors, and professional audio monitoring. Optimized for 4K/8K workflow and collaborative review sessions.',
-            icon: 'CubeIcon'
+            description:
+              'Dedicated editing bays with high-performance workstations, color-calibrated monitors, and professional audio monitoring. Optimized for 4K/8K workflow and collaborative review sessions.',
+            icon: 'CubeIcon',
           },
           {
             title: 'Equipment Storage',
-            description: 'Climate-controlled storage for cameras, lenses, lighting, and audio equipment. Organized inventory system ensures quick setup and optimal equipment maintenance.',
-            icon: 'BriefcaseIcon'
+            description:
+              'Climate-controlled storage for cameras, lenses, lighting, and audio equipment. Organized inventory system ensures quick setup and optimal equipment maintenance.',
+            icon: 'BriefcaseIcon',
           },
           {
             title: 'Client Meeting Areas',
-            description: 'Comfortable consultation spaces with presentation capabilities. Perfect for project planning, review sessions, and collaborative creative development.',
-            icon: 'UserIcon'
+            description:
+              'Comfortable consultation spaces with presentation capabilities. Perfect for project planning, review sessions, and collaborative creative development.',
+            icon: 'UserIcon',
           },
           {
             title: '3D Printing Lab',
-            description: 'Advanced 3D printing and fabrication capabilities for custom props, prototypes, and specialized production elements. Supports both creative and technical project requirements.',
-            icon: 'CubeIcon'
+            description:
+              'Advanced 3D printing and fabrication capabilities for custom props, prototypes, and specialized production elements. Supports both creative and technical project requirements.',
+            icon: 'CubeIcon',
           },
           {
             title: 'Sound Recording Booth',
-            description: 'Acoustically treated recording space for voice-overs, interviews, and audio production. Professional microphones and monitoring for broadcast-quality sound.',
-            icon: 'SpeakerWaveIcon'
-          }
-        ]
+            description:
+              'Acoustically treated recording space for voice-overs, interviews, and audio production. Professional microphones and monitoring for broadcast-quality sound.',
+            icon: 'SpeakerWaveIcon',
+          },
+        ],
       },
       styling: {
         background: 'secondary',
-        spacing: 'loose'
-      }
+        spacing: 'loose',
+      },
     },
     {
       id: 'equipment-specs',
@@ -168,13 +178,13 @@ const pageData: ContentPageData = {
               </ul>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'primary',
         spacing: 'normal',
-        maxWidth: 'wide'
-      }
+        maxWidth: 'wide',
+      },
     },
     {
       id: 'location-advantages',
@@ -185,30 +195,34 @@ const pageData: ContentPageData = {
         values: [
           {
             title: 'Central Morocco Access',
-            description: 'Strategic location between Casablanca and Rabat, providing easy access to Morocco\'s major business centers within 30-45 minutes travel time.',
-            icon: 'GlobeAltIcon'
+            description:
+              "Strategic location between Casablanca and Rabat, providing easy access to Morocco's major business centers within 30-45 minutes travel time.",
+            icon: 'GlobeAltIcon',
           },
           {
             title: 'Transportation Hub',
-            description: 'Close proximity to Mohammed V International Airport, major highways, and rail connections. Ideal for equipment transport and client accessibility.',
-            icon: 'RocketLaunchIcon'
+            description:
+              'Close proximity to Mohammed V International Airport, major highways, and rail connections. Ideal for equipment transport and client accessibility.',
+            icon: 'RocketLaunchIcon',
           },
           {
             title: 'Business Environment',
-            description: 'Professional business district with modern infrastructure, reliable utilities, and supportive business services. Perfect for client meetings and operations.',
-            icon: 'BriefcaseIcon'
+            description:
+              'Professional business district with modern infrastructure, reliable utilities, and supportive business services. Perfect for client meetings and operations.',
+            icon: 'BriefcaseIcon',
           },
           {
             title: 'Diverse Locations',
-            description: 'Access to varied filming locations: coastal areas, urban environments, industrial zones, and natural landscapes all within short distances.',
-            icon: 'CameraIcon'
-          }
-        ]
+            description:
+              'Access to varied filming locations: coastal areas, urban environments, industrial zones, and natural landscapes all within short distances.',
+            icon: 'CameraIcon',
+          },
+        ],
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'contact-info',
@@ -242,38 +256,34 @@ const pageData: ContentPageData = {
               </p>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'secondary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'call-to-action',
       type: 'cta',
       data: {
         title: 'Schedule a Studio Visit',
-        description: 'Experience our facilities firsthand and discuss how our location and equipment can serve your project needs.',
+        description:
+          'Experience our facilities firsthand and discuss how our location and equipment can serve your project needs.',
         text: 'Contact Us',
-        href: '/contact'
+        href: '/contact',
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
-    }
-  ]
+        spacing: 'normal',
+      },
+    },
+  ],
 };
 
 // Generate Next.js metadata using type-safe helper
 export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function LocationPage() {
-  return (
-    <ContentPageTemplate
-      metadata={seoMetadata}
-      data={pageData}
-    />
-  );
+  return <ContentPageTemplate metadata={seoMetadata} data={pageData} />;
 }

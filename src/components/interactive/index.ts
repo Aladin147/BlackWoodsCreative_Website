@@ -1,40 +1,24 @@
 // Advanced Interactive Components - Phase 4
 // Optimized for tree shaking and code splitting
-import React, { createElement } from 'react';
+//
+// PERFORMANCE NOTE: Heavy components (AtmosphericParticles, WebGL effects,
+// Complex parallax systems) should be dynamically imported for better performance
 
 // Core interactive components
 // Temporarily commented out due to import issues - will fix in next step
 // export { ScrollStoryTeller } from './ScrollStoryTeller';
 
 // Temporary stub for ScrollStoryTeller only (until we implement it)
-interface ScrollStoryTellerProps {
-  className?: string;
-  children?: React.ReactNode;
-}
-
-export const ScrollStoryTeller: React.FC<ScrollStoryTellerProps> = props => {
-  return createElement(
-    'div',
-    {
-      'data-testid': 'scroll-story-teller',
-      className: props.className,
-    },
-    'ScrollStoryTeller Stub'
-  );
-};
+// Removed problematic React import and createElement usage
 
 export { MagneticCursor } from './MagneticCursor';
 
-// Parallax components (heavy - consider dynamic imports)
-export {
-  ParallaxLayer,
-  ParallaxContainer,
-  CinematicParallax,
-  MagneticField,
-  DepthOfField,
-} from './ParallaxContainer';
+// Parallax components (heavy - use direct exports for now to fix import issues)
+// TODO: Re-implement dynamic imports after fixing module loading issues
+export { ParallaxLayer, ParallaxContainer, CinematicParallax, MagneticField, DepthOfField } from './ParallaxContainer';
 
-// Micro-interactions (lighter components)
+// Micro-interactions (lighter components - use direct exports for now to fix import issues)
+// TODO: Re-implement dynamic imports after fixing module loading issues
 export {
   HoverMagnify,
   TiltCard,
@@ -45,7 +29,7 @@ export {
   StaggeredReveal,
   TextReveal,
   GlitchText,
-  TypewriterText,
+  TypewriterText
 } from './MicroInteractions';
 
 // Deep Forest Haze atmospheric effects

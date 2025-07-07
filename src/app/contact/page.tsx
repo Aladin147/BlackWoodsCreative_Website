@@ -4,13 +4,14 @@ import {
   ContentPageTemplate,
   type ContentPageData,
   type SEOMetadata,
-  generatePageMetadata
+  generatePageMetadata,
 } from '@/components/templates';
 
 // SEO metadata
 const seoMetadata: SEOMetadata = {
   title: 'Contact BlackWoods Creative | Video Production Services Morocco',
-  description: 'Contact BlackWoods Creative for professional video production, photography, and 3D visualization services in Morocco. Get your free consultation today.',
+  description:
+    'Contact BlackWoods Creative for professional video production, photography, and 3D visualization services in Morocco. Get your free consultation today.',
   keywords: [
     'contact BlackWoods Creative',
     'video production consultation Morocco',
@@ -18,14 +19,15 @@ const seoMetadata: SEOMetadata = {
     'contact video company Morocco',
     'Mohammedia video production',
     'Casablanca video services',
-    'free consultation Morocco'
+    'free consultation Morocco',
   ],
   canonicalUrl: '/contact',
   openGraph: {
     title: 'Contact BlackWoods Creative | Professional Video Production Morocco',
-    description: 'Get in touch with Morocco\'s premier video production company. Free consultation and custom quotes available.',
-    type: 'website'
-  }
+    description:
+      "Get in touch with Morocco's premier video production company. Free consultation and custom quotes available.",
+    type: 'website',
+  },
 };
 
 // Page content data
@@ -33,11 +35,12 @@ const pageData: ContentPageData = {
   hero: {
     title: 'Contact Us',
     subtitle: 'Ready to bring your vision to life?',
-    description: 'Get in touch with Morocco\'s premier video production team. We\'re here to discuss your project and provide expert guidance on achieving your goals.',
+    description:
+      "Get in touch with Morocco's premier video production team. We're here to discuss your project and provide expert guidance on achieving your goals.",
     breadcrumbs: [
       { label: 'Home', href: '/' },
-      { label: 'Contact', href: '/contact' }
-    ]
+      { label: 'Contact', href: '/contact' },
+    ],
   },
   sections: [
     {
@@ -176,42 +179,45 @@ const pageData: ContentPageData = {
               </form>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'primary',
         spacing: 'loose',
-        maxWidth: 'wide'
-      }
+        maxWidth: 'wide',
+      },
     },
     {
       id: 'why-choose-us',
       type: 'values',
       data: {
         title: 'Why Choose BlackWoods Creative?',
-        description: 'What sets us apart as Morocco\'s premier video production company',
+        description: "What sets us apart as Morocco's premier video production company",
         values: [
           {
             title: 'Free Consultation',
-            description: 'We provide detailed project consultation at no cost, helping you understand the best approach for your goals.',
-            icon: 'HandRaisedIcon'
+            description:
+              'We provide detailed project consultation at no cost, helping you understand the best approach for your goals.',
+            icon: 'HandRaisedIcon',
           },
           {
             title: 'Fast Response',
-            description: 'We respond to all inquiries within 24 hours, often much sooner. Your time is valuable, and we respect that.',
-            icon: 'RocketLaunchIcon'
+            description:
+              'We respond to all inquiries within 24 hours, often much sooner. Your time is valuable, and we respect that.',
+            icon: 'RocketLaunchIcon',
           },
           {
             title: 'Custom Solutions',
-            description: 'Every project is unique. We create tailored solutions that fit your specific needs, timeline, and budget.',
-            icon: 'StarIcon'
-          }
-        ]
+            description:
+              'Every project is unique. We create tailored solutions that fit your specific needs, timeline, and budget.',
+            icon: 'StarIcon',
+          },
+        ],
       },
       styling: {
         background: 'secondary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'next-steps',
@@ -236,24 +242,19 @@ const pageData: ContentPageData = {
               <p class="text-sm text-bw-text-secondary">Once approved, we begin production with regular updates throughout the process.</p>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
-    }
-  ]
+        spacing: 'normal',
+      },
+    },
+  ],
 };
 
 // Generate Next.js metadata using type-safe helper
 export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function ContactPage() {
-  return (
-    <ContentPageTemplate
-      metadata={seoMetadata}
-      data={pageData}
-    />
-  );
+  return <ContentPageTemplate metadata={seoMetadata} data={pageData} />;
 }

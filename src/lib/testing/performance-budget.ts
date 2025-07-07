@@ -1,6 +1,6 @@
 /**
  * Performance Budget Validation
- * 
+ *
  * Tools for validating bundle sizes and performance metrics against established budgets
  */
 
@@ -13,14 +13,14 @@ export interface PerformanceBudget {
     css: number;
     total: number;
   };
-  
+
   // Asset size budgets (in KB)
   assets: {
     images: number;
     fonts: number;
     other: number;
   };
-  
+
   // Performance metrics budgets (in ms)
   metrics: {
     firstContentfulPaint: number;
@@ -30,13 +30,13 @@ export interface PerformanceBudget {
     timeToInteractive: number;
     totalBlockingTime: number;
   };
-  
+
   // Network budgets
   network: {
     requests: number;
     transferSize: number; // Total transfer size in KB
   };
-  
+
   // Lighthouse score budgets (0-100)
   lighthouse: {
     performance: number;
@@ -170,7 +170,12 @@ export class PerformanceBudgetValidator {
     bundleAnalysis: BundleAnalysis,
     performanceMetrics: PerformanceMetrics,
     networkMetrics?: { requests: number; transferSize: number },
-    lighthouseScores?: { performance: number; accessibility: number; bestPractices: number; seo: number }
+    lighthouseScores?: {
+      performance: number;
+      accessibility: number;
+      bestPractices: number;
+      seo: number;
+    }
   ): PerformanceBudgetResult {
     const violations: BudgetViolation[] = [];
     const warnings: BudgetWarning[] = [];
@@ -211,7 +216,8 @@ export class PerformanceBudgetValidator {
 
     // Calculate score and generate recommendations
     const score = totalChecks > 0 ? (passedChecks / totalChecks) * 100 : 100;
-    const passed = violations.filter(v => v.severity === 'critical' || v.severity === 'major').length === 0;
+    const passed =
+      violations.filter(v => v.severity === 'critical' || v.severity === 'major').length === 0;
     const recommendations = this.generateRecommendations(violations);
 
     return {
@@ -455,7 +461,12 @@ export class PerformanceBudgetValidator {
   }
 
   // Validate Lighthouse scores
-  private validateLighthouse(scores: { performance: number; accessibility: number; bestPractices: number; seo: number }): {
+  private validateLighthouse(scores: {
+    performance: number;
+    accessibility: number;
+    bestPractices: number;
+    seo: number;
+  }): {
     violations: BudgetViolation[];
     warnings: BudgetWarning[];
     totalChecks: number;
@@ -567,7 +578,10 @@ export class PerformanceBudgetValidator {
   }
 
   // Merge budget configurations
-  private mergeBudgets(defaultBudget: PerformanceBudget, customBudget: Partial<PerformanceBudget>): PerformanceBudget {
+  private mergeBudgets(
+    defaultBudget: PerformanceBudget,
+    customBudget: Partial<PerformanceBudget>
+  ): PerformanceBudget {
     return {
       bundles: { ...defaultBudget.bundles, ...customBudget.bundles },
       assets: { ...defaultBudget.assets, ...customBudget.assets },
@@ -616,10 +630,14 @@ export const PerformanceBudgetUtils = {
   // Get severity color
   getSeverityColor: (severity: 'critical' | 'major' | 'minor'): string => {
     switch (severity) {
-      case 'critical': return '#dc2626'; // red-600
-      case 'major': return '#ea580c'; // orange-600
-      case 'minor': return '#ca8a04'; // yellow-600
-      default: return '#6b7280'; // gray-500
+      case 'critical':
+        return '#dc2626'; // red-600
+      case 'major':
+        return '#ea580c'; // orange-600
+      case 'minor':
+        return '#ca8a04'; // yellow-600
+      default:
+        return '#6b7280'; // gray-500
     }
   },
 
@@ -640,7 +658,10 @@ export const PerformanceBudgetUtils = {
     if (violations.length > 0) {
       report += `## Budget Violations\n`;
       violations.forEach((violation, index) => {
-        const utilization = PerformanceBudgetUtils.calculateUtilization(violation.actual, violation.budget);
+        const utilization = PerformanceBudgetUtils.calculateUtilization(
+          violation.actual,
+          violation.budget
+        );
         report += `### ${index + 1}. ${violation.metric}\n`;
         report += `**Category:** ${violation.category}\n`;
         report += `**Severity:** ${violation.severity}\n`;
@@ -655,7 +676,10 @@ export const PerformanceBudgetUtils = {
     if (warnings.length > 0) {
       report += `## Warnings\n`;
       warnings.forEach((warning, index) => {
-        const utilization = PerformanceBudgetUtils.calculateUtilization(warning.actual, warning.budget);
+        const utilization = PerformanceBudgetUtils.calculateUtilization(
+          warning.actual,
+          warning.budget
+        );
         report += `### ${index + 1}. ${warning.metric}\n`;
         report += `**Category:** ${warning.category}\n`;
         report += `**Actual:** ${PerformanceBudgetUtils.formatFileSize(warning.actual)}\n`;
@@ -712,7 +736,9 @@ export const PerformanceBudgetUtils = {
   },
 
   // Mock performance metrics for testing
-  generateMockPerformanceMetrics: (overrides: Partial<PerformanceMetrics> = {}): PerformanceMetrics => {
+  generateMockPerformanceMetrics: (
+    overrides: Partial<PerformanceMetrics> = {}
+  ): PerformanceMetrics => {
     const defaultMetrics: PerformanceMetrics = {
       firstContentfulPaint: 1200, // 1.2s
       largestContentfulPaint: 2000, // 2s
@@ -727,7 +753,9 @@ export const PerformanceBudgetUtils = {
   },
 
   // Mock network metrics for testing
-  generateMockNetworkMetrics: (overrides: Partial<{ requests: number; transferSize: number }> = {}): { requests: number; transferSize: number } => {
+  generateMockNetworkMetrics: (
+    overrides: Partial<{ requests: number; transferSize: number }> = {}
+  ): { requests: number; transferSize: number } => {
     const defaultMetrics = {
       requests: 35,
       transferSize: 800 * 1024, // 800KB
@@ -737,7 +765,14 @@ export const PerformanceBudgetUtils = {
   },
 
   // Mock Lighthouse scores for testing
-  generateMockLighthouseScores: (overrides: Partial<{ performance: number; accessibility: number; bestPractices: number; seo: number }> = {}): { performance: number; accessibility: number; bestPractices: number; seo: number } => {
+  generateMockLighthouseScores: (
+    overrides: Partial<{
+      performance: number;
+      accessibility: number;
+      bestPractices: number;
+      seo: number;
+    }> = {}
+  ): { performance: number; accessibility: number; bestPractices: number; seo: number } => {
     const defaultScores = {
       performance: 92,
       accessibility: 96,
@@ -749,7 +784,9 @@ export const PerformanceBudgetUtils = {
   },
 
   // Validate budget configuration
-  validateBudgetConfig: (budget: Partial<PerformanceBudget>): { valid: boolean; errors: string[] } => {
+  validateBudgetConfig: (
+    budget: Partial<PerformanceBudget>
+  ): { valid: boolean; errors: string[] } => {
     const errors: string[] = [];
 
     // Check bundle budgets
@@ -803,7 +840,9 @@ export const PerformanceBudgetUtils = {
   },
 
   // Calculate Core Web Vitals score
-  calculateCoreWebVitalsScore: (metrics: PerformanceMetrics): {
+  calculateCoreWebVitalsScore: (
+    metrics: PerformanceMetrics
+  ): {
     score: number;
     lcp: 'good' | 'needs-improvement' | 'poor';
     fid: 'good' | 'needs-improvement' | 'poor';

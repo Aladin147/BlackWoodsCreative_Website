@@ -19,14 +19,12 @@ describe('ContentPlaceholderManager', () => {
 
   describe('Content Registration', () => {
     it('should register content successfully', () => {
-      const textContent = ContentUtils.createTextPlaceholder(
-        'test-text',
-        'Test content',
-        { title: 'Test Title' }
-      );
+      const textContent = ContentUtils.createTextPlaceholder('test-text', 'Test content', {
+        title: 'Test Title',
+      });
 
       manager.register(textContent);
-      
+
       expect(manager.exists('test-text')).toBe(true);
       expect(manager.get('test-text')).toEqual(textContent);
     });
@@ -114,7 +112,7 @@ describe('ContentPlaceholderManager', () => {
       });
 
       expect(success).toBe(true);
-      
+
       const updated = manager.get('test-text') as TextContent;
       expect(updated.content).toBe('Updated content');
       expect(updated.status).toBe('published');
@@ -135,7 +133,7 @@ describe('ContentPlaceholderManager', () => {
 
     it('should delete existing content', () => {
       expect(manager.exists('test-text')).toBe(true);
-      
+
       const success = manager.delete('test-text');
       expect(success).toBe(true);
       expect(manager.exists('test-text')).toBe(false);
@@ -155,13 +153,13 @@ describe('ContentPlaceholderManager', () => {
       ];
 
       manager.registerBatch(contents);
-      
+
       const exported = manager.export();
       expect(Object.keys(exported)).toHaveLength(2);
 
       const newManager = new ContentPlaceholderManager();
       newManager.import(exported);
-      
+
       expect(newManager.getAll()).toHaveLength(2);
       expect(newManager.exists('text-1')).toBe(true);
       expect(newManager.exists('image-1')).toBe(true);
@@ -184,11 +182,9 @@ describe('ContentPlaceholderManager', () => {
 describe('ContentUtils', () => {
   describe('Content Creation', () => {
     it('should create text placeholder', () => {
-      const textContent = ContentUtils.createTextPlaceholder(
-        'test-text',
-        'Test content',
-        { title: 'Test Title' }
-      );
+      const textContent = ContentUtils.createTextPlaceholder('test-text', 'Test content', {
+        title: 'Test Title',
+      });
 
       expect(textContent.id).toBe('test-text');
       expect(textContent.type).toBe('text');
@@ -199,11 +195,9 @@ describe('ContentUtils', () => {
     });
 
     it('should create image placeholder', () => {
-      const imageContent = ContentUtils.createImagePlaceholder(
-        'test-image',
-        'Test alt text',
-        { title: 'Test Image' }
-      );
+      const imageContent = ContentUtils.createImagePlaceholder('test-image', 'Test alt text', {
+        title: 'Test Image',
+      });
 
       expect(imageContent.id).toBe('test-image');
       expect(imageContent.type).toBe('image');
@@ -257,7 +251,7 @@ describe('ContentUtils', () => {
     it('should generate unique IDs', () => {
       const id1 = ContentUtils.generateId('text');
       const id2 = ContentUtils.generateId('text');
-      
+
       expect(id1).not.toBe(id2);
       expect(id1).toMatch(/^text-\d+-[a-z0-9]+$/);
       expect(id2).toMatch(/^text-\d+-[a-z0-9]+$/);

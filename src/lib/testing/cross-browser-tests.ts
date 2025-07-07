@@ -1,6 +1,6 @@
 /**
  * Cross-Browser Automated Testing
- * 
+ *
  * Automated tests for cross-browser compatibility using Playwright
  */
 
@@ -67,7 +67,8 @@ export class CrossBrowserTestSuite {
       deviceScaleFactor: 2,
       isMobile: true,
       hasTouch: true,
-      userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
+      userAgent:
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
     },
     {
       name: 'Firefox Mobile',
@@ -93,7 +94,8 @@ export class CrossBrowserTestSuite {
       deviceScaleFactor: 2,
       isMobile: true,
       hasTouch: true,
-      userAgent: 'Mozilla/5.0 (iPad; CPU OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
+      userAgent:
+        'Mozilla/5.0 (iPad; CPU OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
     },
   ];
 
@@ -218,9 +220,12 @@ export class CrossBrowserTestSuite {
 
     // Calculate average performance metrics
     const avgLoadTime = results.reduce((sum, r) => sum + r.performance.loadTime, 0) / totalTests;
-    const avgFCP = results.reduce((sum, r) => sum + r.performance.firstContentfulPaint, 0) / totalTests;
-    const avgLCP = results.reduce((sum, r) => sum + r.performance.largestContentfulPaint, 0) / totalTests;
-    const avgCLS = results.reduce((sum, r) => sum + r.performance.cumulativeLayoutShift, 0) / totalTests;
+    const avgFCP =
+      results.reduce((sum, r) => sum + r.performance.firstContentfulPaint, 0) / totalTests;
+    const avgLCP =
+      results.reduce((sum, r) => sum + r.performance.largestContentfulPaint, 0) / totalTests;
+    const avgCLS =
+      results.reduce((sum, r) => sum + r.performance.cumulativeLayoutShift, 0) / totalTests;
 
     // Collect issues
     const critical = results.flatMap(r => r.errors);
@@ -253,9 +258,11 @@ export class CrossBrowserTestSuite {
       recommendations.push('Review and address browser-specific warnings');
     }
 
-    const mobileResults = results.filter(r => r.browser.includes('Mobile') || r.browser.includes('iPad'));
+    const mobileResults = results.filter(
+      r => r.browser.includes('Mobile') || r.browser.includes('iPad')
+    );
     const mobilePassed = mobileResults.filter(r => r.passed).length;
-    
+
     if (mobilePassed < mobileResults.length) {
       recommendations.push('Improve mobile browser compatibility');
     }
@@ -305,23 +312,23 @@ export class CrossBrowserTestSuite {
             issues.push('WebP support limited in older Safari versions');
           }
           break;
-        
+
         case 'css-grid':
           if (config.browserName === 'firefox' && config.isMobile) {
             issues.push('CSS Grid may have rendering differences on Firefox mobile');
           }
           break;
-        
+
         case 'intersection-observer':
           supported = true; // Modern browsers support this
           break;
-        
+
         case 'service-worker':
           if (config.browserName === 'webkit' && config.isMobile) {
             issues.push('Service Worker support may be limited on iOS Safari');
           }
           break;
-        
+
         default:
           supported = true;
       }
@@ -406,7 +413,11 @@ export const BrowserTestUtils = {
   },
 
   // Get performance grade
-  getPerformanceGrade: (loadTime: number, lcp: number, cls: number): 'A' | 'B' | 'C' | 'D' | 'F' => {
+  getPerformanceGrade: (
+    loadTime: number,
+    lcp: number,
+    cls: number
+  ): 'A' | 'B' | 'C' | 'D' | 'F' => {
     let score = 100;
 
     // Load time scoring

@@ -48,7 +48,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-function DefaultErrorFallback({ error, resetError }: { error: Error | null; resetError: () => void }) {
+function DefaultErrorFallback({
+  error,
+  resetError,
+}: {
+  error: Error | null;
+  resetError: () => void;
+}) {
   return (
     <motion.div
       className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-bw-dark-gray p-8 text-center"

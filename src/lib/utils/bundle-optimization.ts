@@ -274,7 +274,7 @@ export class BundleOptimizer {
       totalSizeKB: Math.round(analysis.totalSize / 1024),
       gzippedSizeKB: Math.round(analysis.gzippedSize / 1024),
       chunksCount: analysis.chunks.length,
-      recommendations: analysis.recommendations.length > 0 ? analysis.recommendations : undefined
+      recommendations: analysis.recommendations.length > 0 ? analysis.recommendations : undefined,
     });
 
     return analysis;

@@ -29,7 +29,7 @@ async function testContactAPI() {
       if (csrfResponse.ok) {
         const { token } = await csrfResponse.json();
         console.log('✅ CSRF token obtained successfully');
-        
+
         // Test with CSRF token
         console.log('\n2. Testing contact form with CSRF token...');
         const response = await fetch(`${API_BASE}/api/contact`, {
@@ -56,7 +56,7 @@ async function testContactAPI() {
       }
     } catch (csrfError) {
       console.log('⚠️  CSRF token failed, testing without CSRF...');
-      
+
       // Test without CSRF token (might be blocked by middleware)
       console.log('\n2. Testing contact form without CSRF token...');
       const response = await fetch(`${API_BASE}/api/contact`, {
@@ -80,7 +80,6 @@ async function testContactAPI() {
         console.log('\n❌ Unexpected response from API');
       }
     }
-
   } catch (error) {
     console.error('\n❌ Test failed:', error.message);
     console.log('\n💡 Make sure the development server is running on http://localhost:3001');

@@ -1,6 +1,6 @@
 /**
  * Image Optimization Pipeline
- * 
+ *
  * Comprehensive image loading and optimization system for portfolio and content images
  */
 
@@ -96,11 +96,7 @@ export class ImageOptimizer {
     height?: number,
     config: Partial<ImageOptimizationConfig> = {}
   ): string {
-    const {
-      quality = QUALITY_PRESETS.high,
-      format = 'auto',
-      unoptimized = false,
-    } = config;
+    const { quality = QUALITY_PRESETS.high, format = 'auto', unoptimized = false } = config;
 
     // Return original URL if unoptimized
     if (unoptimized) return src;
@@ -132,7 +128,7 @@ export class ImageOptimizer {
     // For external images, we can use services like Cloudinary, ImageKit, etc.
     // For now, return the original URL with basic optimization parameters
     const url = new URL(src);
-    
+
     // Add optimization parameters if the service supports them
     if (url.hostname.includes('unsplash.com')) {
       url.searchParams.set('w', width.toString());
@@ -149,7 +145,7 @@ export class ImageOptimizer {
   // Generate responsive image sizes
   generateSizes(breakpoints: Partial<typeof IMAGE_BREAKPOINTS> = IMAGE_BREAKPOINTS): string {
     const entries = Object.entries(breakpoints).sort(([, a], [, b]) => a - b);
-    
+
     return entries
       .map(([, width], index) => {
         if (index === entries.length - 1) {
@@ -177,7 +173,7 @@ export class ImageOptimizer {
   // Preload critical images
   preloadImage(src: string, config: Partial<ImageOptimizationConfig> = {}): Promise<string> {
     const cacheKey = `${src}-${JSON.stringify(config)}`;
-    
+
     // Return cached promise if exists
     const cachedPromise = this.loadingPromises.get(cacheKey);
     if (cachedPromise) {
@@ -187,12 +183,12 @@ export class ImageOptimizer {
     // Create new loading promise
     const loadingPromise = new Promise<string>((resolve, reject) => {
       const img = new Image();
-      
+
       img.onload = () => {
         this.cache.set(cacheKey, src);
         resolve(src);
       };
-      
+
       img.onerror = () => {
         reject(new Error(`Failed to load image: ${src}`));
       };
@@ -256,10 +252,7 @@ export class ImageOptimizer {
 }
 
 // Image loading hook
-export function useImageOptimization(
-  src: string,
-  config: Partial<ImageOptimizationConfig> = {}
-) {
+export function useImageOptimization(src: string, config: Partial<ImageOptimizationConfig> = {}) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [optimizedSrc, setOptimizedSrc] = useState<string>('');
@@ -326,7 +319,7 @@ export function useProgressiveImage(
 
         // Load the image
         const img = new Image();
-        
+
         img.onload = () => {
           if (!isCancelled) {
             setCurrentSrc(optimizedSrc);
@@ -365,7 +358,10 @@ export function useProgressiveImage(
 }
 
 // Image preloader hook
-export function useImagePreloader(sources: string[], config: Partial<ImageOptimizationConfig> = {}) {
+export function useImagePreloader(
+  sources: string[],
+  config: Partial<ImageOptimizationConfig> = {}
+) {
   const [preloadedCount, setPreloadedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Error[]>([]);
@@ -384,7 +380,10 @@ export function useImagePreloader(sources: string[], config: Partial<ImageOptimi
         await optimizer.preloadImage(src, config);
         setPreloadedCount(prev => prev + 1);
       } catch (error) {
-        setErrors(prev => [...prev, error instanceof Error ? error : new Error(`Failed to preload image ${index}`)]);
+        setErrors(prev => [
+          ...prev,
+          error instanceof Error ? error : new Error(`Failed to preload image ${index}`),
+        ]);
       }
     });
 
@@ -407,11 +406,12 @@ export function useImagePreloader(sources: string[], config: Partial<ImageOptimi
 }
 
 // Image gallery optimization
-export function useImageGallery(images: ImageSource[], config: Partial<ImageOptimizationConfig> = {}) {
+export function useImageGallery(
+  images: ImageSource[],
+  config: Partial<ImageOptimizationConfig> = {}
+) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [preloadRange, setPreloadRange] = useState(3); // Preload 3 images ahead and behind
-
-
 
   // Get images to preload based on current index
   const imagesToPreload = useMemo(() => {
@@ -431,11 +431,14 @@ export function useImageGallery(images: ImageSource[], config: Partial<ImageOpti
     setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
   }, [images.length]);
 
-  const goToIndex = useCallback((index: number) => {
-    if (index >= 0 && index < images.length) {
-      setCurrentIndex(index);
-    }
-  }, [images.length]);
+  const goToIndex = useCallback(
+    (index: number) => {
+      if (index >= 0 && index < images.length) {
+        setCurrentIndex(index);
+      }
+    },
+    [images.length]
+  );
 
   return {
     currentImage: images[currentIndex],

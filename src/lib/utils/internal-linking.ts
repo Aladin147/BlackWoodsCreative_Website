@@ -30,22 +30,22 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'About BlackWoods Creative',
         description: 'Discover our story and mission',
         priority: 'high',
-        context: 'hero-section'
+        context: 'hero-section',
       },
       {
         href: '/services',
         text: 'Our Services',
         description: 'Explore our complete service offerings',
         priority: 'high',
-        context: 'services-overview'
+        context: 'services-overview',
       },
       {
         href: '/portfolio',
         text: 'View Our Portfolio',
         description: 'See our latest creative work',
         priority: 'high',
-        context: 'portfolio-section'
-      }
+        context: 'portfolio-section',
+      },
     ],
     contextualLinks: [
       {
@@ -53,15 +53,15 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Video Production Services',
         description: 'Professional video production in Morocco',
         priority: 'medium',
-        context: 'services-mention'
+        context: 'services-mention',
       },
       {
         href: '/services/photography',
         text: 'Photography Services',
         description: 'Commercial and artistic photography',
         priority: 'medium',
-        context: 'services-mention'
-      }
+        context: 'services-mention',
+      },
     ],
     callToActionLinks: [
       {
@@ -69,9 +69,9 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Start Your Project',
         description: 'Get in touch to begin your creative journey',
         priority: 'high',
-        context: 'cta-section'
-      }
-    ]
+        context: 'cta-section',
+      },
+    ],
   },
 
   // About page linking strategy
@@ -83,22 +83,22 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Our Story',
         description: 'Learn about BlackWoods Creative journey',
         priority: 'high',
-        context: 'story-section'
+        context: 'story-section',
       },
       {
         href: '/about/team',
         text: 'Meet Our Team',
         description: 'Get to know the creative minds behind BlackWoods',
         priority: 'high',
-        context: 'team-section'
+        context: 'team-section',
       },
       {
         href: '/about/our-workflow',
         text: 'Our Workflow',
         description: 'Discover how we bring ideas to life',
         priority: 'medium',
-        context: 'process-section'
-      }
+        context: 'process-section',
+      },
     ],
     contextualLinks: [
       {
@@ -106,15 +106,15 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Explore Our Services',
         description: 'See what we can create for you',
         priority: 'high',
-        context: 'services-reference'
+        context: 'services-reference',
       },
       {
         href: '/portfolio',
         text: 'View Our Work',
         description: 'See examples of our creative projects',
         priority: 'medium',
-        context: 'work-examples'
-      }
+        context: 'work-examples',
+      },
     ],
     callToActionLinks: [
       {
@@ -122,9 +122,9 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Work With Us',
         description: 'Ready to start your project?',
         priority: 'high',
-        context: 'cta-section'
-      }
-    ]
+        context: 'cta-section',
+      },
+    ],
   },
 
   // Services page linking strategy
@@ -136,29 +136,29 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Video Production',
         description: 'Professional video production services',
         priority: 'high',
-        context: 'service-grid'
+        context: 'service-grid',
       },
       {
         href: '/services/photography',
         text: 'Photography',
         description: 'Commercial and artistic photography',
         priority: 'high',
-        context: 'service-grid'
+        context: 'service-grid',
       },
       {
         href: '/services/3d-visualization',
         text: '3D Visualization',
         description: 'Stunning 3D modeling and rendering',
         priority: 'high',
-        context: 'service-grid'
+        context: 'service-grid',
       },
       {
         href: '/services/corporate-video-production-morocco',
         text: 'Corporate Videos',
         description: 'Professional corporate video production',
         priority: 'medium',
-        context: 'service-grid'
-      }
+        context: 'service-grid',
+      },
     ],
     contextualLinks: [
       {
@@ -166,15 +166,15 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'See Our Work',
         description: 'Examples of our creative projects',
         priority: 'high',
-        context: 'work-examples'
+        context: 'work-examples',
       },
       {
         href: '/about/our-workflow',
         text: 'Our Process',
         description: 'How we deliver exceptional results',
         priority: 'medium',
-        context: 'process-reference'
-      }
+        context: 'process-reference',
+      },
     ],
     callToActionLinks: [
       {
@@ -182,9 +182,9 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Get a Quote',
         description: 'Request a custom quote for your project',
         priority: 'high',
-        context: 'cta-section'
-      }
-    ]
+        context: 'cta-section',
+      },
+    ],
   },
 
   // Portfolio page linking strategy
@@ -196,15 +196,15 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Our Services',
         description: 'Learn about our service offerings',
         priority: 'high',
-        context: 'service-reference'
+        context: 'service-reference',
       },
       {
         href: '/about/team',
         text: 'Meet the Team',
         description: 'The creative minds behind these projects',
         priority: 'medium',
-        context: 'team-reference'
-      }
+        context: 'team-reference',
+      },
     ],
     contextualLinks: [
       {
@@ -212,15 +212,15 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Video Production Services',
         description: 'Learn more about our video capabilities',
         priority: 'medium',
-        context: 'video-projects'
+        context: 'video-projects',
       },
       {
         href: '/services/photography',
         text: 'Photography Services',
         description: 'Discover our photography expertise',
         priority: 'medium',
-        context: 'photo-projects'
-      }
+        context: 'photo-projects',
+      },
     ],
     callToActionLinks: [
       {
@@ -228,9 +228,9 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Start Your Project',
         description: 'Ready to create something amazing?',
         priority: 'high',
-        context: 'cta-section'
-      }
-    ]
+        context: 'cta-section',
+      },
+    ],
   },
 
   // Contact page linking strategy
@@ -242,22 +242,22 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'View Our Services',
         description: 'Explore what we can do for you',
         priority: 'high',
-        context: 'services-reference'
+        context: 'services-reference',
       },
       {
         href: '/portfolio',
         text: 'See Our Work',
         description: 'Get inspired by our previous projects',
         priority: 'medium',
-        context: 'portfolio-reference'
+        context: 'portfolio-reference',
       },
       {
         href: '/about/location',
         text: 'Visit Our Studio',
         description: 'Find us in Mohammedia, Morocco',
         priority: 'medium',
-        context: 'location-reference'
-      }
+        context: 'location-reference',
+      },
     ],
     contextualLinks: [
       {
@@ -265,10 +265,10 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Our Process',
         description: 'Learn how we work with clients',
         priority: 'low',
-        context: 'process-reference'
-      }
+        context: 'process-reference',
+      },
     ],
-    callToActionLinks: []
+    callToActionLinks: [],
   },
 
   // About subpage linking strategies
@@ -280,22 +280,22 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Meet Our Team',
         description: 'The creative minds behind BlackWoods',
         priority: 'high',
-        context: 'about-section'
+        context: 'about-section',
       },
       {
         href: '/about/our-workflow',
         text: 'Our Workflow',
         description: 'How we bring projects to life',
         priority: 'medium',
-        context: 'about-section'
+        context: 'about-section',
       },
       {
         href: '/about/location',
         text: 'Our Location',
         description: 'Visit our studio in Morocco',
         priority: 'medium',
-        context: 'about-section'
-      }
+        context: 'about-section',
+      },
     ],
     contextualLinks: [
       {
@@ -303,8 +303,8 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Our Services',
         description: 'What we can do for you',
         priority: 'medium',
-        context: 'services-reference'
-      }
+        context: 'services-reference',
+      },
     ],
     callToActionLinks: [
       {
@@ -312,9 +312,9 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Get In Touch',
         description: 'Start your project with us',
         priority: 'high',
-        context: 'contact-cta'
-      }
-    ]
+        context: 'contact-cta',
+      },
+    ],
   },
 
   // About team page linking strategy
@@ -326,15 +326,15 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Our Story',
         description: 'Learn about BlackWoods Creative journey',
         priority: 'high',
-        context: 'about-section'
+        context: 'about-section',
       },
       {
         href: '/about/our-workflow',
         text: 'Our Workflow',
         description: 'How we bring projects to life',
         priority: 'medium',
-        context: 'about-section'
-      }
+        context: 'about-section',
+      },
     ],
     contextualLinks: [
       {
@@ -342,15 +342,15 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'View Our Work',
         description: 'See what our team has created',
         priority: 'medium',
-        context: 'portfolio-reference'
+        context: 'portfolio-reference',
       },
       {
         href: '/services',
         text: 'Our Services',
         description: 'What our team can do for you',
         priority: 'medium',
-        context: 'services-reference'
-      }
+        context: 'services-reference',
+      },
     ],
     callToActionLinks: [
       {
@@ -358,9 +358,9 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Work With Us',
         description: 'Start your project with our team',
         priority: 'high',
-        context: 'contact-cta'
-      }
-    ]
+        context: 'contact-cta',
+      },
+    ],
   },
 
   // Service subpage linking strategies
@@ -372,22 +372,22 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Corporate Videos',
         description: 'Professional corporate video production',
         priority: 'high',
-        context: 'related-services'
+        context: 'related-services',
       },
       {
         href: '/services/photography',
         text: 'Photography',
         description: 'Commercial and artistic photography',
         priority: 'medium',
-        context: 'related-services'
+        context: 'related-services',
       },
       {
         href: '/services/3d-visualization',
         text: '3D Visualization',
         description: 'Stunning 3D modeling and rendering',
         priority: 'medium',
-        context: 'related-services'
-      }
+        context: 'related-services',
+      },
     ],
     contextualLinks: [
       {
@@ -395,8 +395,8 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'View Our Work',
         description: 'See our video production portfolio',
         priority: 'medium',
-        context: 'portfolio-reference'
-      }
+        context: 'portfolio-reference',
+      },
     ],
     callToActionLinks: [
       {
@@ -404,10 +404,10 @@ export const INTERNAL_LINKING_STRATEGY: PageLinkingStrategy[] = [
         text: 'Start Your Project',
         description: 'Get a quote for your video project',
         priority: 'high',
-        context: 'contact-cta'
-      }
-    ]
-  }
+        context: 'contact-cta',
+      },
+    ],
+  },
 ];
 
 // ===== UTILITY FUNCTIONS =====
@@ -429,7 +429,7 @@ export function getContextualLinks(pagePath: string, context: string): InternalL
   return [
     ...strategy.relatedPages,
     ...strategy.contextualLinks,
-    ...strategy.callToActionLinks
+    ...strategy.callToActionLinks,
   ].filter(link => link.context === context);
 }
 
@@ -443,7 +443,7 @@ export function getHighPriorityLinks(pagePath: string): InternalLink[] {
   return [
     ...strategy.relatedPages,
     ...strategy.contextualLinks,
-    ...strategy.callToActionLinks
+    ...strategy.callToActionLinks,
   ].filter(link => link.priority === 'high');
 }
 
@@ -455,7 +455,7 @@ export function generateBreadcrumbs(pathname: string): Array<{ name: string; hre
   const breadcrumbs = [{ name: 'Home', href: '/' }];
 
   let currentPath = '';
-  segments.forEach((segment) => {
+  segments.forEach(segment => {
     currentPath += `/${segment}`;
 
     // Convert segment to readable name
@@ -466,7 +466,7 @@ export function generateBreadcrumbs(pathname: string): Array<{ name: string; hre
 
     breadcrumbs.push({
       name,
-      href: currentPath
+      href: currentPath,
     });
   });
 
@@ -483,29 +483,29 @@ export function getRelatedServicePages(currentService: string): InternalLink[] {
       text: 'Video Production',
       description: 'Professional video production services',
       priority: 'medium' as const,
-      context: 'related-services'
+      context: 'related-services',
     },
     {
       href: '/services/photography',
       text: 'Photography',
       description: 'Commercial and artistic photography',
       priority: 'medium' as const,
-      context: 'related-services'
+      context: 'related-services',
     },
     {
       href: '/services/3d-visualization',
       text: '3D Visualization',
       description: 'Stunning 3D modeling and rendering',
       priority: 'medium' as const,
-      context: 'related-services'
+      context: 'related-services',
     },
     {
       href: '/services/corporate-video-production-morocco',
       text: 'Corporate Videos',
       description: 'Professional corporate video production',
       priority: 'medium' as const,
-      context: 'related-services'
-    }
+      context: 'related-services',
+    },
   ];
 
   // Handle both service slug and full href
@@ -517,7 +517,10 @@ export function getRelatedServicePages(currentService: string): InternalLink[] {
   const filteredServices = allServices.filter(service => service.href !== currentServiceHref);
 
   // If no services were filtered out, it means the current service doesn't exist
-  if (filteredServices.length === allServices.length && !allServices.some(s => s.href === currentServiceHref)) {
+  if (
+    filteredServices.length === allServices.length &&
+    !allServices.some(s => s.href === currentServiceHref)
+  ) {
     return [];
   }
 

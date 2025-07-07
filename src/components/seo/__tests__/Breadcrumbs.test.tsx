@@ -12,15 +12,31 @@ jest.mock('next/navigation', () => ({
 
 // Mock Next.js Link
 jest.mock('next/link', () => {
-  return function MockLink({ children, href, ...props }: { children: React.ReactNode; href: string; [key: string]: any }) {
-    return <a href={href} {...props}>{children}</a>;
+  return function MockLink({
+    children,
+    href,
+    ...props
+  }: {
+    children: React.ReactNode;
+    href: string;
+    [key: string]: any;
+  }) {
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    );
   };
 });
 
 // Mock Heroicons
 jest.mock('@heroicons/react/24/outline', () => ({
-  ChevronRightIcon: ({ className }: { className?: string }) => <svg data-testid="chevron-right" className={className} />,
-  HomeIcon: ({ className }: { className?: string }) => <svg data-testid="home-icon" className={className} />,
+  ChevronRightIcon: ({ className }: { className?: string }) => (
+    <svg data-testid="chevron-right" className={className} />
+  ),
+  HomeIcon: ({ className }: { className?: string }) => (
+    <svg data-testid="home-icon" className={className} />
+  ),
 }));
 
 // Mock internal linking utility
@@ -30,11 +46,15 @@ jest.mock('@/lib/utils/internal-linking', () => ({
 
 // Mock interactive components
 jest.mock('@/components/interactive', () => ({
-  MagneticField: ({ children }: { children: React.ReactNode }) => <div data-testid="magnetic-field">{children}</div>,
+  MagneticField: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="magnetic-field">{children}</div>
+  ),
 }));
 
 const mockUsePathname = usePathname as jest.MockedFunction<typeof usePathname>;
-const mockGenerateBreadcrumbs = generateBreadcrumbs as jest.MockedFunction<typeof generateBreadcrumbs>;
+const mockGenerateBreadcrumbs = generateBreadcrumbs as jest.MockedFunction<
+  typeof generateBreadcrumbs
+>;
 
 describe('Breadcrumbs Component', () => {
   beforeEach(() => {
@@ -46,7 +66,7 @@ describe('Breadcrumbs Component', () => {
       mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        { name: 'About', href: '/about' }
+        { name: 'About', href: '/about' },
       ]);
 
       render(<Breadcrumbs />);
@@ -61,7 +81,7 @@ describe('Breadcrumbs Component', () => {
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
         { name: 'About', href: '/about' },
-        { name: 'Our Story', href: '/about/our-story' }
+        { name: 'Our Story', href: '/about/our-story' },
       ]);
 
       render(<Breadcrumbs />);
@@ -77,7 +97,7 @@ describe('Breadcrumbs Component', () => {
         { name: 'Home', href: '/' },
         { name: 'Services', href: '/services' },
         { name: 'Video Production', href: '/services/video-production' },
-        { name: 'Morocco', href: '/services/video-production-morocco' }
+        { name: 'Morocco', href: '/services/video-production-morocco' },
       ]);
 
       render(<Breadcrumbs maxItems={3} />);
@@ -90,14 +110,14 @@ describe('Breadcrumbs Component', () => {
       mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        { name: 'About', href: '/about' }
+        { name: 'About', href: '/about' },
       ]);
 
       render(<Breadcrumbs />);
 
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb navigation' });
       expect(nav).toHaveAttribute('aria-label', 'Breadcrumb navigation');
-      
+
       const currentPage = screen.getByText('About');
       expect(currentPage).toHaveAttribute('aria-current', 'page');
     });
@@ -106,7 +126,7 @@ describe('Breadcrumbs Component', () => {
       mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        { name: 'About', href: '/about' }
+        { name: 'About', href: '/about' },
       ]);
 
       render(<Breadcrumbs variant="enhanced" />);
@@ -119,7 +139,7 @@ describe('Breadcrumbs Component', () => {
       mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        { name: 'About', href: '/about' }
+        { name: 'About', href: '/about' },
       ]);
 
       render(<Breadcrumbs showCurrentPage={false} />);
@@ -135,7 +155,7 @@ describe('Breadcrumbs Component', () => {
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
         { name: 'About', href: '/about' },
-        { name: 'Our Story', href: '/about/our-story' }
+        { name: 'Our Story', href: '/about/our-story' },
       ]);
 
       render(<CompactBreadcrumbs />);
@@ -158,7 +178,7 @@ describe('Breadcrumbs Component', () => {
       mockUsePathname.mockReturnValue('/services');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        { name: 'Services', href: '/services' }
+        { name: 'Services', href: '/services' },
       ]);
 
       render(<StyledBreadcrumbs />);
@@ -182,7 +202,7 @@ describe('Breadcrumbs Component', () => {
       mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        { name: 'About', href: '/about' }
+        { name: 'About', href: '/about' },
       ]);
 
       render(<Breadcrumbs />);
@@ -193,10 +213,12 @@ describe('Breadcrumbs Component', () => {
 
     it('handles undefined breadcrumb items', () => {
       mockUsePathname.mockReturnValue('/about');
-      mockGenerateBreadcrumbs.mockReturnValue([
-        { name: 'Home', href: '/' },
-        { name: 'About', href: '/about' }
-      ].filter(Boolean));
+      mockGenerateBreadcrumbs.mockReturnValue(
+        [
+          { name: 'Home', href: '/' },
+          { name: 'About', href: '/about' },
+        ].filter(Boolean)
+      );
 
       render(<Breadcrumbs />);
 
@@ -212,7 +234,7 @@ describe('Breadcrumbs Component', () => {
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
         { name: 'About', href: '/about' },
-        { name: 'Our Story', href: '/about/our-story' }
+        { name: 'Our Story', href: '/about/our-story' },
       ]);
 
       render(<Breadcrumbs />);
@@ -228,7 +250,7 @@ describe('Breadcrumbs Component', () => {
       mockUsePathname.mockReturnValue('/about');
       mockGenerateBreadcrumbs.mockReturnValue([
         { name: 'Home', href: '/' },
-        { name: 'About', href: '/about' }
+        { name: 'About', href: '/about' },
       ]);
 
       render(<Breadcrumbs />);

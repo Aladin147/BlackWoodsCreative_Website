@@ -56,7 +56,7 @@ const achievements = [
 
 export function AboutSection({ className }: AboutSectionProps) {
   return (
-    <section id="about" className={`relative bg-bw-bg-primary px-6 py-32 ${className}`}>
+    <section id="about" data-testid="about-section" className={`relative bg-bw-bg-primary px-6 py-32 ${className}`}>
       {/* Atmospheric Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <AtmosphericLayer type="gradient" intensity={0.3} color="bw-aurora-green" />

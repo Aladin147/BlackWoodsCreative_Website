@@ -102,7 +102,7 @@ jest.mock('@/components/interactive', () => ({
                 key={item.id ?? index}
                 data-testid="portfolio-item"
                 onClick={() => onItemClick?.(item)}
-                onKeyDown={(e) => {
+                onKeyDown={e => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     onItemClick?.(item);

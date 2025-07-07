@@ -1,6 +1,6 @@
 /**
  * Content Integration Hooks
- * 
+ *
  * React hooks for seamless content integration with placeholder fallbacks
  */
 
@@ -22,7 +22,7 @@ import {
   ServiceContent,
   TeamContent,
   BlogContent,
-  PageContent
+  PageContent,
 } from './placeholder-system';
 
 // Hook options
@@ -101,21 +101,24 @@ export function useContent<T extends Content>(
   }, [loadContent]);
 
   // Update content
-  const update = useCallback((updates: Partial<T>): Promise<boolean> => {
-    try {
-      const success = contentManager.update(id, updates);
-      if (success) {
-        const updatedContent = contentManager.get<T>(id);
-        setContent(updatedContent);
+  const update = useCallback(
+    (updates: Partial<T>): Promise<boolean> => {
+      try {
+        const success = contentManager.update(id, updates);
+        if (success) {
+          const updatedContent = contentManager.get<T>(id);
+          setContent(updatedContent);
+        }
+        return Promise.resolve(success);
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Failed to update content');
+        setError(error);
+        onError?.(error);
+        return Promise.resolve(false);
       }
-      return Promise.resolve(success);
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to update content');
-      setError(error);
-      onError?.(error);
-      return Promise.resolve(false);
-    }
-  }, [id, onError]);
+    },
+    [id, onError]
+  );
 
   // Load content on mount
   useEffect(() => {
@@ -336,10 +339,10 @@ export function useContentSearch(query: string, type?: ContentType) {
     }
 
     setLoading(true);
-    
+
     try {
       let allContent = contentManager.getAll();
-      
+
       // Filter by type if specified
       if (type) {
         allContent = allContent.filter(content => content.type === type);
@@ -348,25 +351,26 @@ export function useContentSearch(query: string, type?: ContentType) {
       // Simple text search in metadata and content
       const searchResults = allContent.filter(content => {
         const searchText = query.toLowerCase();
-        
+
         // Search in metadata
         if (content.metadata?.title?.toLowerCase().includes(searchText)) return true;
         if (content.metadata?.description?.toLowerCase().includes(searchText)) return true;
-        if (content.metadata?.tags?.some(tag => tag.toLowerCase().includes(searchText))) return true;
-        
+        if (content.metadata?.tags?.some(tag => tag.toLowerCase().includes(searchText)))
+          return true;
+
         // Search in content-specific fields
         if ('content' in content && typeof content.content === 'string') {
           return content.content.toLowerCase().includes(searchText);
         }
-        
+
         if ('title' in content && typeof content.title === 'string') {
           return content.title.toLowerCase().includes(searchText);
         }
-        
+
         if ('description' in content && typeof content.description === 'string') {
           return content.description.toLowerCase().includes(searchText);
         }
-        
+
         return false;
       });
 
@@ -399,10 +403,10 @@ export function useContentStats() {
 
   const updateStats = useCallback(() => {
     const allContent = contentManager.getAll();
-    
+
     const byType: Record<string, number> = {};
     const byStatus: Record<string, number> = {};
-    
+
     allContent.forEach(content => {
       byType[content.type] = (byType[content.type] ?? 0) + 1;
       byStatus[content.status] = (byStatus[content.status] ?? 0) + 1;
@@ -419,7 +423,7 @@ export function useContentStats() {
 
   useEffect(() => {
     updateStats();
-    
+
     // Update stats periodically
     const interval = setInterval(updateStats, 5000);
     return () => clearInterval(interval);

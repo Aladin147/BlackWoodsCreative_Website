@@ -1,21 +1,14 @@
 // Page Templates Barrel Export
 // This file exports all page templates for clean imports
 
-export {
-  BasePageTemplate,
-  type ContentBlock,
-  type PageTemplateProps
-} from './BasePageTemplate';
+export { BasePageTemplate, type ContentBlock, type PageTemplateProps } from './BasePageTemplate';
 
-export {
-  type SEOMetadata,
-  generatePageMetadata
-} from '@/lib/utils/metadata';
+export { type SEOMetadata, generatePageMetadata } from '@/lib/utils/metadata';
 
 export {
   ServicePageTemplate,
   type ServicePageData,
-  type ServicePageTemplateProps
+  type ServicePageTemplateProps,
 } from './ServicePageTemplate';
 
 export {
@@ -26,7 +19,7 @@ export {
   type HeroData,
   type TextData,
   type TimelineData,
-  type ValuesData
+  type ValuesData,
 } from './ContentPageTemplate';
 
 // Future template exports:

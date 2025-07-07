@@ -10,8 +10,12 @@ jest.mock('@/lib/utils/device-capabilities', () => ({
   getDeviceCapabilities: jest.fn(),
 }));
 
-const mockGetOptimizationProfile = getOptimizationProfile as jest.MockedFunction<typeof getOptimizationProfile>;
-const mockGetDeviceCapabilities = getDeviceCapabilities as jest.MockedFunction<typeof getDeviceCapabilities>;
+const mockGetOptimizationProfile = getOptimizationProfile as jest.MockedFunction<
+  typeof getOptimizationProfile
+>;
+const mockGetDeviceCapabilities = getDeviceCapabilities as jest.MockedFunction<
+  typeof getDeviceCapabilities
+>;
 
 // Mock window.matchMedia
 const mockMatchMedia = (matches: boolean) => {
@@ -95,10 +99,24 @@ describe('useDeviceAdaptation', () => {
     });
     mockGetDeviceCapabilities.mockReturnValue({
       cpu: { cores: 4, architecture: 'x64', performance: 'medium' },
-      gpu: { vendor: 'unknown', renderer: 'unknown', webglSupported: false, webgl2Supported: false, maxTextureSize: 0, performance: 'low' },
+      gpu: {
+        vendor: 'unknown',
+        renderer: 'unknown',
+        webglSupported: false,
+        webgl2Supported: false,
+        maxTextureSize: 0,
+        performance: 'low',
+      },
       memory: { deviceMemory: 4, jsHeapSizeLimit: 2147483648, performance: 'medium' },
       network: { effectiveType: '4g', downlink: 10, rtt: 100, saveData: false },
-      display: { width: 1920, height: 1080, pixelRatio: 1, colorDepth: 24, refreshRate: 60, hdr: false },
+      display: {
+        width: 1920,
+        height: 1080,
+        pixelRatio: 1,
+        colorDepth: 24,
+        refreshRate: 60,
+        hdr: false,
+      },
       features: {
         webgl: false,
         webgl2: false,
@@ -113,16 +131,33 @@ describe('useDeviceAdaptation', () => {
         cssFlexbox: true,
       },
       performance: { overall: 'medium', graphics: 'low', computation: 'medium', memory: 'medium' },
-      preferences: { reducedMotion: false, reducedData: false, highContrast: false, darkMode: false },
+      preferences: {
+        reducedMotion: false,
+        reducedData: false,
+        highContrast: false,
+        darkMode: false,
+      },
     });
 
     // Reset to default desktop setup
     mockMatchMedia(false);
     mockNavigator('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
     mockScreen(1920, 1080);
-    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1920 });
-    Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1080 });
-    Object.defineProperty(window, 'devicePixelRatio', { writable: true, configurable: true, value: 1 });
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 1920,
+    });
+    Object.defineProperty(window, 'innerHeight', {
+      writable: true,
+      configurable: true,
+      value: 1080,
+    });
+    Object.defineProperty(window, 'devicePixelRatio', {
+      writable: true,
+      configurable: true,
+      value: 1,
+    });
   });
 
   describe('Device Detection', () => {
@@ -143,8 +178,16 @@ describe('useDeviceAdaptation', () => {
     it('detects mobile device correctly', async () => {
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 375,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 812,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -163,10 +206,22 @@ describe('useDeviceAdaptation', () => {
       // Use a generic tablet user agent that doesn't match mobile patterns
       mockNavigator('Mozilla/5.0 (compatible; Tablet; rv:14.0)', undefined);
       mockScreen(768, 1024);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 768 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1024 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 768,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 1024,
+      });
       Object.defineProperty(window, 'ontouchstart', { value: true, configurable: true });
-      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, writable: true, configurable: true });
+      Object.defineProperty(navigator, 'maxTouchPoints', {
+        value: 5,
+        writable: true,
+        configurable: true,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -186,8 +241,16 @@ describe('useDeviceAdaptation', () => {
   describe('Screen Size Detection', () => {
     it('detects large screen correctly', async () => {
       mockScreen(1920, 1080);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1920 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1080 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 1920,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 1080,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -201,8 +264,16 @@ describe('useDeviceAdaptation', () => {
 
     it('detects small screen correctly', async () => {
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 375,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 812,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -215,8 +286,16 @@ describe('useDeviceAdaptation', () => {
 
     it('detects medium screen correctly', async () => {
       mockScreen(768, 1024);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 768 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1024 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 768,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 1024,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -241,8 +320,16 @@ describe('useDeviceAdaptation', () => {
 
     it('detects portrait orientation', async () => {
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 375,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 812,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -255,7 +342,11 @@ describe('useDeviceAdaptation', () => {
 
     it('detects touch capability', async () => {
       Object.defineProperty(window, 'ontouchstart', { value: true, configurable: true });
-      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, writable: true, configurable: true });
+      Object.defineProperty(navigator, 'maxTouchPoints', {
+        value: 5,
+        writable: true,
+        configurable: true,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -279,8 +370,16 @@ describe('useDeviceAdaptation', () => {
 
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 375,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 812,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -305,10 +404,22 @@ describe('useDeviceAdaptation', () => {
       // Use a generic tablet user agent that doesn't match mobile patterns
       mockNavigator('Mozilla/5.0 (compatible; Tablet; rv:14.0)');
       mockScreen(768, 1024);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 768 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 1024 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 768,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 1024,
+      });
       Object.defineProperty(window, 'ontouchstart', { value: true, configurable: true });
-      Object.defineProperty(navigator, 'maxTouchPoints', { value: 5, writable: true, configurable: true });
+      Object.defineProperty(navigator, 'maxTouchPoints', {
+        value: 5,
+        writable: true,
+        configurable: true,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -364,8 +475,16 @@ describe('useDeviceAdaptation', () => {
 
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 375,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 812,
+      });
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -381,7 +500,7 @@ describe('useDeviceAdaptation', () => {
     it('handles unknown features gracefully', () => {
       const { result } = renderHook(() => useDeviceAdaptation());
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       expect(result.current.shouldEnableFeature('unknownFeature' as any)).toBe(undefined);
     });
   });
@@ -391,11 +510,19 @@ describe('useDeviceAdaptation', () => {
       // Set up desktop environment first
       mockNavigator('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
       mockScreen(1280, 720);
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1280 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 720 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 1280,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 720,
+      });
 
       // Ensure no touch support for desktop
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       delete (window as any).ontouchstart;
       Object.defineProperty(navigator, 'maxTouchPoints', {
         value: 0,
@@ -414,8 +541,16 @@ describe('useDeviceAdaptation', () => {
       expect(result.current.deviceInfo.screenSize).toBe('xl');
 
       // Simulate resize to mobile
-      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 });
-      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 812 });
+      Object.defineProperty(window, 'innerWidth', {
+        writable: true,
+        configurable: true,
+        value: 375,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        writable: true,
+        configurable: true,
+        value: 812,
+      });
 
       act(() => {
         window.dispatchEvent(new Event('resize'));
@@ -434,7 +569,7 @@ describe('useDeviceAdaptation', () => {
   describe('Edge Cases', () => {
     it('handles missing navigator gracefully', () => {
       const originalNavigator = global.navigator;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       delete (global as any).navigator;
 
       expect(() => {
@@ -445,7 +580,7 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('handles missing screen gracefully', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       delete (window as any).screen;
 
       expect(() => {
@@ -454,7 +589,7 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('handles missing matchMedia gracefully', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       delete (window as any).matchMedia;
 
       expect(() => {

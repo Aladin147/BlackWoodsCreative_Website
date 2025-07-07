@@ -55,34 +55,34 @@ export const siteConfig = {
         {
           name: 'All Services',
           href: '/services',
-          description: 'Complete overview of our services'
+          description: 'Complete overview of our services',
         },
         {
           name: 'Creative Solutions',
           href: '/solutions',
-          description: 'Solutions for every industry and interest'
+          description: 'Solutions for every industry and interest',
         },
         {
           name: 'Video Production',
           href: '/services/video-production-morocco',
-          description: 'Professional video production in Morocco'
+          description: 'Professional video production in Morocco',
         },
         {
           name: 'Corporate Videos',
           href: '/services/corporate-video-production-morocco',
-          description: 'Professional corporate video production'
+          description: 'Professional corporate video production',
         },
         {
           name: 'Photography',
           href: '/services/photography',
-          description: 'Professional photography services'
+          description: 'Professional photography services',
         },
         {
           name: '3D Visualization',
           href: '/services/3d-visualization',
-          description: '3D modeling and visualization'
-        }
-      ]
+          description: '3D modeling and visualization',
+        },
+      ],
     },
     {
       name: 'About',
@@ -92,29 +92,29 @@ export const siteConfig = {
         {
           name: 'About BlackWoods',
           href: '/about',
-          description: 'Discover the BlackWoods Creative story'
+          description: 'Discover the BlackWoods Creative story',
         },
         {
           name: 'Our Story',
           href: '/about/our-story',
-          description: 'The BlackWoods Creative journey'
+          description: 'The BlackWoods Creative journey',
         },
         {
           name: 'Our Workflow',
           href: '/about/our-workflow',
-          description: 'Our proven production process'
+          description: 'Our proven production process',
         },
         {
           name: 'Team',
           href: '/about/team',
-          description: 'Meet our creative professionals'
+          description: 'Meet our creative professionals',
         },
         {
           name: 'Location',
           href: '/about/location',
-          description: 'Our facilities and equipment'
-        }
-      ]
+          description: 'Our facilities and equipment',
+        },
+      ],
     },
     {
       name: 'Portfolio',
@@ -138,34 +138,34 @@ export const siteConfig = {
         {
           name: 'All Services',
           href: '/services',
-          description: 'Complete overview of our services'
+          description: 'Complete overview of our services',
         },
         {
           name: 'Creative Solutions',
           href: '/solutions',
-          description: 'Solutions for every industry and interest'
+          description: 'Solutions for every industry and interest',
         },
         {
           name: 'Video Production',
           href: '/services/video-production-morocco',
-          description: 'Professional video production in Morocco'
+          description: 'Professional video production in Morocco',
         },
         {
           name: 'Corporate Videos',
           href: '/services/corporate-video-production-morocco',
-          description: 'Professional corporate video production'
+          description: 'Professional corporate video production',
         },
         {
           name: 'Photography',
           href: '/services/photography',
-          description: 'Professional photography services'
+          description: 'Professional photography services',
         },
         {
           name: '3D Visualization',
           href: '/services/3d-visualization',
-          description: '3D modeling and visualization'
-        }
-      ]
+          description: '3D modeling and visualization',
+        },
+      ],
     },
     {
       name: 'About',
@@ -175,29 +175,29 @@ export const siteConfig = {
         {
           name: 'About BlackWoods',
           href: '/about',
-          description: 'Discover the BlackWoods Creative story'
+          description: 'Discover the BlackWoods Creative story',
         },
         {
           name: 'Our Story',
           href: '/about/our-story',
-          description: 'The BlackWoods Creative journey'
+          description: 'The BlackWoods Creative journey',
         },
         {
           name: 'Our Workflow',
           href: '/about/our-workflow',
-          description: 'Our proven production process'
+          description: 'Our proven production process',
         },
         {
           name: 'Team',
           href: '/about/team',
-          description: 'Meet our creative professionals'
+          description: 'Meet our creative professionals',
         },
         {
           name: 'Location',
           href: '/about/location',
-          description: 'Our facilities and equipment'
-        }
-      ]
+          description: 'Our facilities and equipment',
+        },
+      ],
     },
     {
       name: 'Portfolio',

@@ -27,8 +27,9 @@ const nextConfig = {
   },
   poweredByHeader: false,
   compress: true,
-  swcMinify: true,
   reactStrictMode: true,
+  // Move serverComponentsExternalPackages out of experimental in Next.js 15
+  serverExternalPackages: ['sharp'],
   experimental: {
     optimizePackageImports: [
       'framer-motion',
@@ -37,11 +38,46 @@ const nextConfig = {
       'clsx',
       'tailwind-merge',
     ],
-    // Optimize server components
-    serverComponentsExternalPackages: ['sharp'],
+    // Enable modern JavaScript features
+    esmExternals: true,
+    // CSS optimization disabled due to critters dependency issue
+    // optimizeCss: true,
   },
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
+  },
+
+  // Simplified webpack optimizations
+  webpack: (config, { dev, isServer }) => {
+    // Only apply client-side optimizations in production
+    if (!dev && !isServer) {
+      // Simplified chunk splitting for better performance
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            priority: 10,
+            reuseExistingChunk: true,
+          },
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
+            priority: 20,
+            reuseExistingChunk: true,
+          },
+        },
+      };
+    }
+
+    // SVG optimization (both client and server)
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+
+    return config;
   },
 };
 
@@ -80,6 +116,46 @@ module.exports = withBundleAnalyzer({
           },
         ],
       },
+      // Static assets caching
+      {
+        source: '/assets/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Next.js static files
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Images
+      {
+        source: '/assets/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
+      // Fonts
+      {
+        source: '/assets/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
   },
 
@@ -105,11 +181,31 @@ module.exports = withBundleAnalyzer({
 
       // ===== SERVICE-SPECIFIC MISSPELLINGS =====
       // Video production misspellings
-      { source: '/blackwood-video', destination: '/services/video-production-morocco', permanent: true },
-      { source: '/blackwood-film', destination: '/services/video-production-morocco', permanent: true },
-      { source: '/blkwds-video', destination: '/services/video-production-morocco', permanent: true },
-      { source: '/blkwds-film', destination: '/services/video-production-morocco', permanent: true },
-      { source: '/black-wood-video', destination: '/services/video-production-morocco', permanent: true },
+      {
+        source: '/blackwood-video',
+        destination: '/services/video-production-morocco',
+        permanent: true,
+      },
+      {
+        source: '/blackwood-film',
+        destination: '/services/video-production-morocco',
+        permanent: true,
+      },
+      {
+        source: '/blkwds-video',
+        destination: '/services/video-production-morocco',
+        permanent: true,
+      },
+      {
+        source: '/blkwds-film',
+        destination: '/services/video-production-morocco',
+        permanent: true,
+      },
+      {
+        source: '/black-wood-video',
+        destination: '/services/video-production-morocco',
+        permanent: true,
+      },
 
       // Photography misspellings
       { source: '/blackwood-photo', destination: '/services/photography', permanent: true },

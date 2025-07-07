@@ -1,124 +1,170 @@
 /**
  * Content Integration Infrastructure
  *
- * Centralized exports for the content management system
+ * Centralized exports for the simplified content management system
  */
 
 // Import for internal use
 import { logger } from '../utils/logger';
 
+import { MigrationHelper } from './migration-helper';
 import {
-  contentManager,
-  Content,
-  ContentStatus,
-  PlaceholderConfig
+  contentManager as legacyContentManager,
+  type Content
 } from './placeholder-system';
+import { initializeBasicContent } from './simple-content';
 
-// Core system exports
+// SIMPLIFIED CONTENT SYSTEM (NEW)
+// Export the new simplified content system
 export {
-  ContentPlaceholderManager,
-  contentManager,
+  type ContentItem,
+  type PortfolioItem,
+  type TestimonialItem,
+  type ServiceItem,
+  type TeamMember,
+  contentStore,
   ContentUtils,
-  type Content,
-  type ContentType,
-  type ContentStatus,
-  type ContentMetadata,
-  type BaseContent,
-  type TextContent,
-  type ImageContent,
-  type VideoContent,
-  type PortfolioContent,
-  type TestimonialContent,
-  type ServiceContent,
-  type TeamContent,
-  type BlogContent,
-  type PageContent,
-  type ComponentContent,
-  type PlaceholderConfig,
-  type ContentSource,
-} from './placeholder-system';
+  ContentMigration,
+  initializeBasicContent,
+} from './simple-content';
 
-// Import removed - now at top of file
-
-// Hooks exports
 export {
   useContent,
   useContentByType,
-  useContentByStatus,
-  useContentSearch,
-  useContentStats,
   useTextContent,
   useImageContent,
-  useVideoContent,
-  usePortfolioContent,
-  useTestimonialContent,
-  useServiceContent,
-  useTeamContent,
-  useBlogContent,
-  usePageContent,
-  type UseContentOptions,
-  type UseContentResult,
-} from './hooks';
+  usePortfolioItems,
+  usePortfolioItem,
+  useTestimonials,
+  useTestimonial,
+  useServices,
+  useService,
+  useTeamMembers,
+  useTeamMember,
+  useContentStats,
+  useContentSearch,
+  usePortfolioByCategory,
+  useFeaturedPortfolio,
+  useContentManagement,
+} from './simple-hooks';
 
-// Placeholder data exports
 export {
-  PlaceholderGenerators,
-  initializePlaceholderContent,
-} from './placeholder-data';
+  MigrationHelper,
+  DevUtils,
+} from './migration-helper';
 
-// Component exports
+
+
 export {
-  ContentRenderer,
+  ContentPlaceholderManager,
+  contentManager as legacyContentManager,
+  ContentUtils as LegacyContentUtils,
+  type Content as LegacyContent,
+  type ContentType as LegacyContentType,
+  type ContentStatus as LegacyContentStatus,
+  type ContentMetadata as LegacyContentMetadata,
+  type BaseContent as LegacyBaseContent,
+  type TextContent as LegacyTextContent,
+  type ImageContent as LegacyImageContent,
+  type VideoContent as LegacyVideoContent,
+  type PortfolioContent as LegacyPortfolioContent,
+  type TestimonialContent as LegacyTestimonialContent,
+  type ServiceContent as LegacyServiceContent,
+  type TeamContent as LegacyTeamContent,
+  type BlogContent as LegacyBlogContent,
+  type PageContent as LegacyPageContent,
+  type ComponentContent as LegacyComponentContent,
+  type PlaceholderConfig as LegacyPlaceholderConfig,
+  type ContentSource as LegacyContentSource,
+} from './placeholder-system';
+
+// SIMPLIFIED COMPONENT EXPORTS
+export {
   TextRenderer,
   ImageRenderer,
-  VideoRenderer,
-  PortfolioRenderer,
-  TestimonialRenderer,
-  ServiceRenderer,
-  TeamRenderer,
+  PortfolioGrid,
+  TestimonialsGrid,
+  ServicesGrid,
+  TeamGrid,
+  ContentRenderer,
+} from '../../components/content/SimpleContentRenderer';
+
+// LEGACY HOOKS (DEPRECATED - use simple hooks instead)
+export {
+  useContent as legacyUseContent,
+  useContentByType as legacyUseContentByType,
+  useContentByStatus as legacyUseContentByStatus,
+  useContentSearch as legacyUseContentSearch,
+  useContentStats as legacyUseContentStats,
+  useTextContent as legacyUseTextContent,
+  useImageContent as legacyUseImageContent,
+  useVideoContent as legacyUseVideoContent,
+  usePortfolioContent as legacyUsePortfolioContent,
+  useTestimonialContent as legacyUseTestimonialContent,
+  useServiceContent as legacyUseServiceContent,
+  useTeamContent as legacyUseTeamContent,
+  useBlogContent as legacyUseBlogContent,
+  usePageContent as legacyUsePageContent,
+  type UseContentOptions as LegacyUseContentOptions,
+  type UseContentResult as LegacyUseContentResult,
+} from './hooks';
+
+// LEGACY PLACEHOLDER DATA (DEPRECATED)
+export { PlaceholderGenerators, initializePlaceholderContent } from './placeholder-data';
+
+// LEGACY COMPONENT EXPORTS (DEPRECATED)
+export {
+  ContentRenderer as LegacyContentRenderer,
+  TextRenderer as LegacyTextRenderer,
+  ImageRenderer as LegacyImageRenderer,
+  VideoRenderer as LegacyVideoRenderer,
+  PortfolioRenderer as LegacyPortfolioRenderer,
+  TestimonialRenderer as LegacyTestimonialRenderer,
+  ServiceRenderer as LegacyServiceRenderer,
+  TeamRenderer as LegacyTeamRenderer,
 } from '../../components/content/ContentRenderer';
 
-// Migration utilities
-export const ContentMigration = {
+// SIMPLIFIED CONTENT SYSTEM INITIALIZATION
+export const ContentSystem = {
+  // Initialize the simplified content system
+  initialize: () => {
+    logger.info('Initializing simplified content system');
+    initializeBasicContent();
+
+    if (process.env.NODE_ENV === 'development') {
+      MigrationHelper.logContentStatus();
+    }
+  },
+
+  // Get system status
+  getStatus: () => {
+    return MigrationHelper.getContentStats();
+  },
+
+  // Get readiness report
+  getReadinessReport: () => {
+    return MigrationHelper.getReadinessReport();
+  },
+};
+
+// LEGACY CONTENT MIGRATION (DEPRECATED - use ContentMigration from simple-content instead)
+export const LegacyContentMigration = {
   // Export current content for backup
   exportContent: () => {
-    return contentManager.export();
+    return legacyContentManager.export();
   },
 
   // Import content from backup
   importContent: (data: Record<string, Content>) => {
-    contentManager.import(data);
-  },
-
-  // Migrate placeholder to real content
-  migratePlaceholder: (id: string, realContent: Partial<Content>) => {
-    const existing = contentManager.get(id);
-    if (!existing) return false;
-
-    const updated = {
-      ...existing,
-      ...realContent,
-      status: 'published' as ContentStatus,
-      lastUpdated: new Date(),
-    } as Content;
-
-    return contentManager.update(id, updated);
-  },
-
-  // Batch migrate multiple content items
-  batchMigrate: (migrations: Array<{ id: string; content: Partial<Content> }>) => {
-    const results = migrations.map(({ id, content }) => 
-      ContentMigration.migratePlaceholder(id, content)
-    );
-    return results.every(result => result);
+    legacyContentManager.import(data);
   },
 
   // Get migration status
   getMigrationStatus: () => {
-    const all = contentManager.getAll();
+    const all = legacyContentManager.getAll();
     const placeholders = all.filter(content => content.status === 'placeholder');
     const published = all.filter(content => content.status === 'published');
-    
+
     return {
       total: all.length,
       placeholders: placeholders.length,
@@ -128,199 +174,10 @@ export const ContentMigration = {
   },
 };
 
-// Content validation utilities
-export const ContentValidation = {
-  // Validate content structure
-  validateContent: (content: Content): { valid: boolean; errors: string[] } => {
-    const errors: string[] = [];
-
-    if (!content.id) errors.push('Missing content ID');
-    if (!content.type) errors.push('Missing content type');
-    if (!content.status) errors.push('Missing content status');
-    if (!content.lastUpdated) errors.push('Missing last updated date');
-    if (!content.version) errors.push('Missing version');
-
-    // Type-specific validation
-    switch (content.type) {
-      case 'text':
-        if (!content.content) errors.push('Text content is required');
-        break;
-      
-      case 'image':
-        if (!content.src) errors.push('Image source is required');
-        if (!content.alt) errors.push('Image alt text is required');
-        break;
-      
-      case 'portfolio':
-        if (!content.title) errors.push('Portfolio title is required');
-        if (!content.description) errors.push('Portfolio description is required');
-        if (!content.category) errors.push('Portfolio category is required');
-        break;
-      
-      case 'testimonial':
-        if (!content.name) errors.push('Testimonial name is required');
-        if (!content.content) errors.push('Testimonial content is required');
-        if (!content.company) errors.push('Testimonial company is required');
-        break;
-    }
-
-    return {
-      valid: errors.length === 0,
-      errors,
-    };
-  },
-
-  // Validate all content
-  validateAllContent: () => {
-    const all = contentManager.getAll();
-    const results = all.map(content => ({
-      id: content.id,
-      ...ContentValidation.validateContent(content),
-    }));
-
-    const invalid = results.filter(result => !result.valid);
-    
-    return {
-      total: all.length,
-      valid: results.length - invalid.length,
-      invalid: invalid.length,
-      errors: invalid,
-    };
-  },
-};
-
-// Content analytics utilities
-export const ContentAnalytics = {
-  // Get content statistics
-  getStats: () => {
-    const all = contentManager.getAll();
-    
-    const byType: Record<string, number> = {};
-    const byStatus: Record<string, number> = {};
-    
-    all.forEach(content => {
-      byType[content.type] = (byType[content.type] ?? 0) + 1;
-      byStatus[content.status] = (byStatus[content.status] ?? 0) + 1;
-    });
-
-    return {
-      total: all.length,
-      byType,
-      byStatus,
-      placeholderPercentage: (byStatus.placeholder ?? 0) / all.length,
-      publishedPercentage: (byStatus.published ?? 0) / all.length,
-    };
-  },
-
-  // Get content health score
-  getHealthScore: () => {
-    const stats = ContentAnalytics.getStats();
-    const validation = ContentValidation.validateAllContent();
-    
-    let score = 100;
-    
-    // Deduct points for placeholders
-    score -= (stats.placeholderPercentage * 30);
-    
-    // Deduct points for invalid content
-    score -= ((validation.invalid / validation.total) * 40);
-    
-    // Deduct points for missing metadata
-    const all = contentManager.getAll();
-    const withoutMetadata = all.filter(content => !content.metadata).length;
-    score -= ((withoutMetadata / all.length) * 20);
-    
-    return Math.max(0, Math.round(score));
-  },
-
-  // Get content recommendations
-  getRecommendations: () => {
-    const recommendations: string[] = [];
-    const stats = ContentAnalytics.getStats();
-    const validation = ContentValidation.validateAllContent();
-    
-    if (stats.placeholderPercentage > 0.5) {
-      recommendations.push('High percentage of placeholder content - consider migrating to real content');
-    }
-    
-    if (validation.invalid > 0) {
-      recommendations.push(`${validation.invalid} content items have validation errors`);
-    }
-    
-    const all = contentManager.getAll();
-    const withoutMetadata = all.filter(content => !content.metadata).length;
-    if (withoutMetadata > 0) {
-      recommendations.push(`${withoutMetadata} content items missing metadata`);
-    }
-    
-    if ((stats.byStatus.draft ?? 0) > 5) {
-      recommendations.push('Multiple draft content items - consider reviewing and publishing');
-    }
-    
-    if (recommendations.length === 0) {
-      recommendations.push('Content system is healthy - no immediate actions needed');
-    }
-    
-    return recommendations;
-  },
-};
-
-// Development utilities
-export const ContentDev = {
-  // Log content system status
-  logStatus: () => {
-    if (process.env.NODE_ENV !== 'development') return;
-    
-    const stats = ContentAnalytics.getStats();
-    const health = ContentAnalytics.getHealthScore();
-    const recommendations = ContentAnalytics.getRecommendations();
-    
-    logger.info('Content System Status', {
-      totalContent: stats.total,
-      byType: stats.byType,
-      byStatus: stats.byStatus,
-      healthScore: `${health}/100`,
-      recommendations
-    });
-  },
-
-  // Reset all content (development only)
-  reset: () => {
-    if (process.env.NODE_ENV !== 'development') {
-      logger.warn('Content reset is only available in development mode');
-      return;
-    }
-
-    contentManager.clear();
-    logger.info('Content system reset');
-  },
-
-  // Seed with placeholder data
-  seed: () => {
-    if (process.env.NODE_ENV !== 'development') {
-      logger.warn('Content seeding is only available in development mode');
-      return;
-    }
-
-    // Initialize placeholder content (implementation would go here)
-    logger.info('Content system seeded with placeholder data');
-  },
-};
-
-// Initialize content system
-export function initializeContentSystem(config?: Partial<PlaceholderConfig>) {
-  // Update configuration if provided
-  if (config) {
-    contentManager.updateConfig(config);
-  }
-
-  // Initialize placeholder content in development
-  if (process.env.NODE_ENV === 'development') {
-    // Placeholder content initialization would go here
-    ContentDev.logStatus();
-  }
-
-  logger.info('Content integration system initialized');
+// SIMPLIFIED INITIALIZATION AND AUTO-SETUP
+export function initializeContentSystem() {
+  logger.info('Initializing simplified content system');
+  ContentSystem.initialize();
 }
 
 // Auto-initialize in development
@@ -330,3 +187,5 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     initializeContentSystem();
   }, 100);
 }
+
+

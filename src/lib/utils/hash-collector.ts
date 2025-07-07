@@ -43,13 +43,13 @@ class FramerMotionHashCollector {
     this.scanExistingElements();
 
     // Set up mutation observer for dynamic changes
-    this.observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
+    this.observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           const target = mutation.target as HTMLElement;
           this.collectFromElement(target);
         } else if (mutation.type === 'childList') {
-          mutation.addedNodes.forEach((node) => {
+          mutation.addedNodes.forEach(node => {
             if (node.nodeType === Node.ELEMENT_NODE) {
               this.scanElement(node as HTMLElement);
             }
@@ -77,12 +77,12 @@ class FramerMotionHashCollector {
 
     // Stopping hash collection - logged internally
     this.isCollecting = false;
-    
+
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
     }
-    
+
     this.saveHashes();
   }
 
@@ -91,7 +91,7 @@ class FramerMotionHashCollector {
    */
   private scanExistingElements(): void {
     const elements = document.querySelectorAll('[style]');
-    elements.forEach((element) => {
+    elements.forEach(element => {
       this.collectFromElement(element as HTMLElement);
     });
   }
@@ -103,9 +103,9 @@ class FramerMotionHashCollector {
     if (element.hasAttribute('style')) {
       this.collectFromElement(element);
     }
-    
+
     const children = element.querySelectorAll('[style]');
-    children.forEach((child) => {
+    children.forEach(child => {
       this.collectFromElement(child as HTMLElement);
     });
   }
@@ -187,7 +187,7 @@ class FramerMotionHashCollector {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return `sha256-simple-${Math.abs(hash).toString(36)}`;
@@ -280,9 +280,7 @@ class FramerMotionHashCollector {
       byComponent[component] = (byComponent[component] ?? 0) + 1;
     });
 
-    const mostFrequent = allHashes
-      .sort((a, b) => b.frequency - a.frequency)
-      .slice(0, 10);
+    const mostFrequent = allHashes.sort((a, b) => b.frequency - a.frequency).slice(0, 10);
 
     return {
       totalHashes: this.collectedHashes.size,

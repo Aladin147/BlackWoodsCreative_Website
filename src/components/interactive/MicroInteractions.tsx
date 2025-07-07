@@ -259,7 +259,7 @@ export function RippleEffect({
     <div
       className={`relative overflow-hidden ${className}`}
       onClick={handleClick}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleClick(e as unknown as React.MouseEvent<HTMLDivElement>);

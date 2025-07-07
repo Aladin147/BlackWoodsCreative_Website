@@ -32,6 +32,9 @@ export function MagneticCursor() {
   const smoothScale = useSpring(cursorScale, springConfig);
 
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
     const handleMouseMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -105,6 +108,9 @@ export function MagneticCursor() {
 
   // Hide default cursor on desktop
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
     const style = document.createElement('style');
     style.innerHTML = `
       * {
@@ -129,6 +135,9 @@ export function MagneticCursor() {
   // Don't render on mobile
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+
     setIsMobile(window.innerWidth <= 768);
 
     const handleResize = () => {

@@ -43,7 +43,11 @@ function createMotionComponent(element: keyof typeof motion) {
       const styleElements = document.querySelectorAll('style:not([nonce])');
       styleElements.forEach(styleEl => {
         const content = styleEl.textContent ?? '';
-        if (content.includes('transform') || content.includes('opacity') || content.includes('scale')) {
+        if (
+          content.includes('transform') ||
+          content.includes('opacity') ||
+          content.includes('scale')
+        ) {
           styleEl.setAttribute('nonce', nonce);
         }
       });
@@ -65,7 +69,9 @@ function createMotionComponent(element: keyof typeof motion) {
             }
 
             // Create a style element with nonce
-            let styleElement = document.querySelector(`style[data-motion-id="${elementId}"]`) as HTMLStyleElement;
+            let styleElement = document.querySelector(
+              `style[data-motion-id="${elementId}"]`
+            ) as HTMLStyleElement;
             if (!styleElement) {
               styleElement = document.createElement('style');
               styleElement.setAttribute('nonce', nonce);
@@ -88,8 +94,8 @@ function createMotionComponent(element: keyof typeof motion) {
       applyNonceToStyles();
 
       // Set up mutation observer for dynamic style changes
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
           if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
             applyNonceToStyles();
           }
@@ -99,7 +105,7 @@ function createMotionComponent(element: keyof typeof motion) {
       if (elementRef) {
         observer.observe(elementRef, {
           attributes: true,
-          attributeFilter: ['style']
+          attributeFilter: ['style'],
         });
       }
 
@@ -159,5 +165,3 @@ MotionA.displayName = 'MotionA';
 
 export const MotionSection = createMotionComponent('section');
 MotionSection.displayName = 'MotionSection';
-
-

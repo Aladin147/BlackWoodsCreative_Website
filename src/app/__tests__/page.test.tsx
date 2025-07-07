@@ -3,11 +3,12 @@ import React, { lazy, forwardRef, Suspense } from 'react';
 
 import HomePage from '../page';
 
-// Mock the dynamic imports
-jest.mock('@/components/sections', () => ({
-  AboutSection: () => <div data-testid="about-section">About Section</div>,
-  ContactSection: () => <div data-testid="contact-section">Contact Section</div>,
+// Mock the individual section components
+jest.mock('@/components/sections/HeroSection', () => ({
   HeroSection: () => <div data-testid="hero-section">Hero Section</div>,
+}));
+
+jest.mock('@/components/sections/PortfolioSection', () => ({
   PortfolioSection: () => <div data-testid="portfolio-section">Portfolio Section</div>,
 }));
 
@@ -15,8 +16,24 @@ jest.mock('@/components/sections/VisionSection', () => ({
   VisionSection: () => <div data-testid="vision-section">Vision Section</div>,
 }));
 
+jest.mock('@/components/sections/AboutSection', () => ({
+  AboutSection: () => <div data-testid="about-section">About Section</div>,
+}));
+
+jest.mock('@/components/sections/ContactSection', () => ({
+  ContactSection: () => <div data-testid="contact-section">Contact Section</div>,
+}));
+
 jest.mock('@/components/layout', () => ({
   Footer: () => <div data-testid="footer">Footer</div>,
+}));
+
+jest.mock('@/components/business/LeadGeneration', () => ({
+  QuickQuoteRequest: () => <div data-testid="quick-quote">Quick Quote</div>,
+}));
+
+jest.mock('@/components/seo/SimpleStructuredData', () => ({
+  SimpleFAQSchema: () => <script data-testid="faq-schema" type="application/ld+json" />,
 }));
 
 // Mock Next.js dynamic import

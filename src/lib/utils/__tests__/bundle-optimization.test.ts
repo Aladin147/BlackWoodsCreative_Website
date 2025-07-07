@@ -149,9 +149,7 @@ describe('Bundle Optimization Utils', () => {
       await preloader.preload('UnregisteredComponent');
 
       // Logger outputs formatted warning messages as a single string
-      expect(console.warn).toHaveBeenCalledWith(
-        expect.stringContaining('⚠️')
-      );
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('⚠️'));
     });
 
     it('handles preload errors gracefully', async () => {
@@ -165,7 +163,7 @@ describe('Bundle Optimization Utils', () => {
         expect.stringContaining('❌'),
         expect.objectContaining({
           componentName: 'FailingComponent',
-          error: expect.any(Error)
+          error: expect.any(Error),
         })
       );
     });

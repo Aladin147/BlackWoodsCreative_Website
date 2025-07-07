@@ -115,7 +115,11 @@ export class DeviceCapabilityDetector {
       return this.capabilities;
     }
 
-    if (typeof window === 'undefined' || typeof navigator === 'undefined' || typeof document === 'undefined') {
+    if (
+      typeof window === 'undefined' ||
+      typeof navigator === 'undefined' ||
+      typeof document === 'undefined'
+    ) {
       this.capabilities = this.getServerSideDefaults();
       return this.capabilities;
     }

@@ -72,8 +72,8 @@ export class ImagePerformanceMonitor {
 
     try {
       // Resource timing observer for image loads
-      const resourceObserver = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
+      const resourceObserver = new PerformanceObserver(list => {
+        list.getEntries().forEach(entry => {
           const resourceEntry = entry as PerformanceResourceTiming;
           if (resourceEntry.initiatorType === 'img' || resourceEntry.initiatorType === 'image') {
             this.recordImageLoad(resourceEntry);
@@ -85,8 +85,8 @@ export class ImagePerformanceMonitor {
       this.observers.push(resourceObserver);
 
       // Element timing observer for image rendering
-      const elementObserver = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
+      const elementObserver = new PerformanceObserver(list => {
+        list.getEntries().forEach(entry => {
           const elementEntry = entry as ElementTimingEntry;
           if (elementEntry.identifier?.includes('image')) {
             this.recordImageRender(elementEntry);
@@ -98,7 +98,10 @@ export class ImagePerformanceMonitor {
       this.observers.push(elementObserver);
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
-        logger.warn('Failed to initialize image performance observers', error as Record<string, unknown>);
+        logger.warn(
+          'Failed to initialize image performance observers',
+          error as Record<string, unknown>
+        );
       }
     }
   }
@@ -254,32 +257,42 @@ export class ImagePerformanceMonitor {
 
     // Check average load time
     if (analytics.averageLoadTime > 2000) {
-      recommendations.push('Average image load time is high (>2s). Consider optimizing image sizes and formats.');
+      recommendations.push(
+        'Average image load time is high (>2s). Consider optimizing image sizes and formats.'
+      );
     }
 
     // Check cache hit rate
     if (analytics.cacheHitRate < 0.7) {
-      recommendations.push('Low cache hit rate (<70%). Consider implementing better caching strategies.');
+      recommendations.push(
+        'Low cache hit rate (<70%). Consider implementing better caching strategies.'
+      );
     }
 
     // Check format distribution
     const { formatDistribution } = analytics;
     const modernFormats = (formatDistribution.webp ?? 0) + (formatDistribution.avif ?? 0);
     const totalFormats = Object.values(formatDistribution).reduce((sum, count) => sum + count, 0);
-    
+
     if (modernFormats / totalFormats < 0.5) {
-      recommendations.push('Consider using modern image formats (WebP, AVIF) for better compression.');
+      recommendations.push(
+        'Consider using modern image formats (WebP, AVIF) for better compression.'
+      );
     }
 
     // Check size distribution
     const { sizeDistribution } = analytics;
     if (sizeDistribution.xlarge > sizeDistribution.small) {
-      recommendations.push('Many large images detected. Consider implementing responsive images and lazy loading.');
+      recommendations.push(
+        'Many large images detected. Consider implementing responsive images and lazy loading.'
+      );
     }
 
     // Check failed loads
     if (analytics.failedImages > 0) {
-      recommendations.push(`${analytics.failedImages} images failed to load. Check image URLs and availability.`);
+      recommendations.push(
+        `${analytics.failedImages} images failed to load. Check image URLs and availability.`
+      );
     }
 
     return recommendations;
@@ -316,7 +329,7 @@ export class ImageOptimizationAnalyzer {
       // Create image element to get dimensions
       const img = new Image();
       img.src = URL.createObjectURL(blob);
-      
+
       await new Promise((resolve, reject) => {
         img.onload = resolve;
         img.onerror = reject;
@@ -337,18 +350,24 @@ export class ImageOptimizationAnalyzer {
       // Check format optimization
       const format = blob.type;
       if (format === 'image/png' && !url.includes('logo') && !url.includes('icon')) {
-        recommendations.push('PNG format detected. Consider using WebP or AVIF for better compression.');
+        recommendations.push(
+          'PNG format detected. Consider using WebP or AVIF for better compression.'
+        );
         optimizedSize *= 0.7; // Estimate 30% reduction from format change
       }
 
       if (format === 'image/jpeg' && currentSize > 500000) {
-        recommendations.push('Large JPEG detected. Consider reducing quality or using modern formats.');
+        recommendations.push(
+          'Large JPEG detected. Consider reducing quality or using modern formats.'
+        );
         optimizedSize *= 0.8; // Estimate 20% reduction from quality optimization
       }
 
       // Check if image needs responsive variants
       if (currentSize > 200000) {
-        recommendations.push('Large image size. Consider implementing responsive images with multiple sizes.');
+        recommendations.push(
+          'Large image size. Consider implementing responsive images with multiple sizes.'
+        );
       }
 
       const savings = currentSize - optimizedSize;

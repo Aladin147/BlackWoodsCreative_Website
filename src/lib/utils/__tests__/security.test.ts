@@ -322,9 +322,7 @@ describe('Security Utilities', () => {
 
       logSecurityEvent(event);
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Security Event')
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('Security Event'));
     });
 
     it('includes timestamp in log entries', () => {
@@ -335,9 +333,7 @@ describe('Security Utilities', () => {
 
       logSecurityEvent(event);
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Security Event')
-      );
+      expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('Security Event'));
     });
 
     it('handles events without optional fields', () => {

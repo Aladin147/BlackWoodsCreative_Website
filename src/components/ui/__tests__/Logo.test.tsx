@@ -4,7 +4,16 @@ import { Logo } from '../Logo';
 
 // Mock Next.js Image component
 jest.mock('next/image', () => {
-  return function MockImage({ src, alt, onError, onLoad, className, 'data-testid': testId, priority, ...props }: any) {
+  return function MockImage({
+    src,
+    alt,
+    onError,
+    onLoad,
+    className,
+    'data-testid': testId,
+    priority,
+    ...props
+  }: any) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
@@ -52,16 +61,16 @@ describe('Logo Component', () => {
 
   it('calls onClick handler when clicked', () => {
     render(<Logo onClick={mockOnClick} />);
-    
+
     const button = screen.getByRole('button');
     fireEvent.click(button);
-    
+
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
 
   it('has proper accessibility attributes', () => {
     render(<Logo onClick={mockOnClick} />);
-    
+
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('aria-label', 'BlackWoods Creative - Go to homepage');
     expect(button).toHaveAttribute('title', 'BlackWoods Creative - Go to homepage');
@@ -69,7 +78,7 @@ describe('Logo Component', () => {
 
   it('shows loading state initially', () => {
     render(<Logo />);
-    
+
     // Should show loading placeholder
     const loadingElement = screen.getByText('BWC');
     expect(loadingElement).toBeInTheDocument();

@@ -4,13 +4,15 @@ import {
   ContentPageTemplate,
   type ContentPageData,
   type SEOMetadata,
-  generatePageMetadata
+  generatePageMetadata,
 } from '@/components/templates';
 
 // SEO metadata for comprehensive services overview
 const seoMetadata: SEOMetadata = {
-  title: 'Services | BlackWoods Creative - Video Production, Photography & 3D Visualization Morocco',
-  description: 'Comprehensive visual content services in Morocco. Professional video production, photography, 3D visualization, and brand films. Serving Casablanca, Rabat, Mohammedia and beyond.',
+  title:
+    'Services | BlackWoods Creative - Video Production, Photography & 3D Visualization Morocco',
+  description:
+    'Comprehensive visual content services in Morocco. Professional video production, photography, 3D visualization, and brand films. Serving Casablanca, Rabat, Mohammedia and beyond.',
   keywords: [
     'BlackWoods services',
     'BlackWoods Creative services',
@@ -33,58 +35,62 @@ const seoMetadata: SEOMetadata = {
     'Morocco creative studio',
     'professional video Morocco',
     'commercial photography Morocco',
-    'architectural visualization Morocco'
+    'architectural visualization Morocco',
   ],
   canonicalUrl: '/services',
   openGraph: {
     title: 'Professional Visual Content Services | BlackWoods Creative Morocco',
-    description: 'Complete visual storytelling solutions: video production, photography, 3D visualization. Morocco\'s premier creative agency.',
-    type: 'website'
+    description:
+      "Complete visual storytelling solutions: video production, photography, 3D visualization. Morocco's premier creative agency.",
+    type: 'website',
   },
   structuredData: {
     '@type': 'Service',
-    'provider': {
+    provider: {
       '@type': 'Organization',
-      'name': 'BlackWoods Creative',
-      'address': {
+      name: 'BlackWoods Creative',
+      address: {
         '@type': 'PostalAddress',
-        'addressLocality': 'Mohammedia',
-        'addressCountry': 'Morocco'
-      }
+        addressLocality: 'Mohammedia',
+        addressCountry: 'Morocco',
+      },
     },
-    'serviceType': 'Visual Content Production',
-    'areaServed': ['Morocco', 'Casablanca', 'Rabat', 'Mohammedia'],
-    'hasOfferCatalog': {
+    serviceType: 'Visual Content Production',
+    areaServed: ['Morocco', 'Casablanca', 'Rabat', 'Mohammedia'],
+    hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      'name': 'Visual Content Services',
-      'itemListElement': [
+      name: 'Visual Content Services',
+      itemListElement: [
         {
           '@type': 'Offer',
-          'itemOffered': {
+          itemOffered: {
             '@type': 'Service',
-            'name': 'Video Production',
-            'description': 'Professional video production services including corporate videos, brand films, and commercial content'
-          }
+            name: 'Video Production',
+            description:
+              'Professional video production services including corporate videos, brand films, and commercial content',
+          },
         },
         {
           '@type': 'Offer',
-          'itemOffered': {
+          itemOffered: {
             '@type': 'Service',
-            'name': 'Photography',
-            'description': 'Professional photography services for products, corporate events, and brand imagery'
-          }
+            name: 'Photography',
+            description:
+              'Professional photography services for products, corporate events, and brand imagery',
+          },
         },
         {
           '@type': 'Offer',
-          'itemOffered': {
+          itemOffered: {
             '@type': 'Service',
-            'name': '3D Visualization',
-            'description': 'Advanced 3D modeling, rendering, and architectural visualization services'
-          }
-        }
-      ]
-    }
-  }
+            name: '3D Visualization',
+            description:
+              'Advanced 3D modeling, rendering, and architectural visualization services',
+          },
+        },
+      ],
+    },
+  },
 };
 
 // Page content data
@@ -92,11 +98,12 @@ const pageData: ContentPageData = {
   hero: {
     title: 'Our Services',
     subtitle: 'Comprehensive visual content solutions for modern businesses',
-    description: 'From concept to completion, we provide end-to-end visual storytelling services that drive results. Discover how our expertise can transform your brand\'s communication.',
+    description:
+      "From concept to completion, we provide end-to-end visual storytelling services that drive results. Discover how our expertise can transform your brand's communication.",
     breadcrumbs: [
       { label: 'Home', href: '/' },
-      { label: 'Services', href: '/services' }
-    ]
+      { label: 'Services', href: '/services' },
+    ],
   },
   sections: [
     {
@@ -109,12 +116,12 @@ const pageData: ContentPageData = {
           
           <p>Based in Mohammedia and serving clients across Morocco, we combine international production standards with deep local market knowledge to deliver content that resonates with your audience and drives measurable results.</p>
         `,
-        highlight: true
+        highlight: true,
       },
       styling: {
         background: 'primary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'core-services',
@@ -125,40 +132,46 @@ const pageData: ContentPageData = {
         values: [
           {
             title: 'Video Production',
-            description: 'From corporate videos to brand films, we create compelling video content that engages audiences and drives action. Professional equipment, experienced crew, and proven results.',
-            icon: 'FilmIcon'
+            description:
+              'From corporate videos to brand films, we create compelling video content that engages audiences and drives action. Professional equipment, experienced crew, and proven results.',
+            icon: 'FilmIcon',
           },
           {
             title: 'Photography',
-            description: 'Professional photography services for products, corporate events, team portraits, and brand imagery. High-quality visuals that enhance your professional image.',
-            icon: 'CameraIcon'
+            description:
+              'Professional photography services for products, corporate events, team portraits, and brand imagery. High-quality visuals that enhance your professional image.',
+            icon: 'CameraIcon',
           },
           {
             title: '3D Visualization',
-            description: 'Advanced 3D modeling, rendering, and architectural visualization. Transform concepts into photorealistic visuals for presentations, marketing, and development.',
-            icon: 'CubeIcon'
+            description:
+              'Advanced 3D modeling, rendering, and architectural visualization. Transform concepts into photorealistic visuals for presentations, marketing, and development.',
+            icon: 'CubeIcon',
           },
           {
             title: 'Brand Films',
-            description: 'Cinematic brand storytelling that captures your company\'s essence and values. Emotional connections that build lasting customer relationships.',
-            icon: 'StarIcon'
+            description:
+              "Cinematic brand storytelling that captures your company's essence and values. Emotional connections that build lasting customer relationships.",
+            icon: 'StarIcon',
           },
           {
             title: 'Corporate Training',
-            description: 'Educational and training videos that improve employee engagement and knowledge retention. Clear, professional content for internal communications.',
-            icon: 'BriefcaseIcon'
+            description:
+              'Educational and training videos that improve employee engagement and knowledge retention. Clear, professional content for internal communications.',
+            icon: 'BriefcaseIcon',
           },
           {
             title: 'Digital Marketing',
-            description: 'Social media content, promotional videos, and digital campaigns optimized for online platforms and audience engagement.',
-            icon: 'ChartBarIcon'
-          }
-        ]
+            description:
+              'Social media content, promotional videos, and digital campaigns optimized for online platforms and audience engagement.',
+            icon: 'ChartBarIcon',
+          },
+        ],
       },
       styling: {
         background: 'secondary',
-        spacing: 'loose'
-      }
+        spacing: 'loose',
+      },
     },
     {
       id: 'detailed-services',
@@ -240,13 +253,13 @@ const pageData: ContentPageData = {
               </div>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'primary',
         spacing: 'normal',
-        maxWidth: 'wide'
-      }
+        maxWidth: 'wide',
+      },
     },
     {
       id: 'why-choose-us',
@@ -271,12 +284,12 @@ const pageData: ContentPageData = {
               <p class="text-sm">Latest equipment and techniques ensuring professional, future-proof content.</p>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'service-areas',
@@ -306,38 +319,34 @@ const pageData: ContentPageData = {
               </ul>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'secondary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'call-to-action',
       type: 'cta',
       data: {
         title: 'Ready to Transform Your Visual Content?',
-        description: 'Let\'s discuss your project and show you how our services can help achieve your business objectives. Get a custom consultation and detailed proposal.',
+        description:
+          "Let's discuss your project and show you how our services can help achieve your business objectives. Get a custom consultation and detailed proposal.",
         text: 'Get Started Today',
-        href: '/contact'
+        href: '/contact',
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
-    }
-  ]
+        spacing: 'normal',
+      },
+    },
+  ],
 };
 
 // Generate Next.js metadata using type-safe helper
 export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function ServicesPage() {
-  return (
-    <ContentPageTemplate
-      metadata={seoMetadata}
-      data={pageData}
-    />
-  );
+  return <ContentPageTemplate metadata={seoMetadata} data={pageData} />;
 }

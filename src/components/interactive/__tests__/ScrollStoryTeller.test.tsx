@@ -76,7 +76,9 @@ describe('ScrollStoryTeller', () => {
 
     // Look for progress indicators by finding elements that have both w-2 and h-8 classes
     // Use a more flexible selector that works regardless of class order
-    const progressIndicators = document.querySelectorAll('[class*="w-2"][class*="h-8"][class*="rounded-full"]');
+    const progressIndicators = document.querySelectorAll(
+      '[class*="w-2"][class*="h-8"][class*="rounded-full"]'
+    );
     expect(progressIndicators.length).toBe(mockSections.length);
   });
 
@@ -87,7 +89,9 @@ describe('ScrollStoryTeller', () => {
 
     render(<ScrollStoryTeller sections={mockSections} />);
 
-    const progressIndicators = document.querySelectorAll('[class*="w-2"][class*="h-8"][class*="rounded-full"]');
+    const progressIndicators = document.querySelectorAll(
+      '[class*="w-2"][class*="h-8"][class*="rounded-full"]'
+    );
 
     if (progressIndicators.length > 0) {
       fireEvent.click(progressIndicators[0]!);

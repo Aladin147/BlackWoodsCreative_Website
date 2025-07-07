@@ -5,7 +5,7 @@
  */
 
 // Import for internal use
-import { contentManager, Content } from '../content';
+import { legacyContentManager, type LegacyContent } from '../content';
 import { logger } from '../utils/logger';
 
 import { SEOUtils, seoOptimizer, PageSEO } from './optimization';
@@ -19,11 +19,19 @@ export {
   type SEOConfig,
   type PageSEO,
   type SEOAnalysis,
-  type SEOIssue,
   type HeadingStructure,
   type ImageSEOMetrics,
   type PerformanceSEOMetrics,
 } from './optimization';
+
+// Centralized types exports
+export {
+  type SEOIssue,
+  type ContentAnalysisResult,
+  type SEOMetrics,
+  ensureFixProperty,
+  ensureFixProperties,
+} from './types';
 
 // Hooks exports
 export {
@@ -60,7 +68,7 @@ export {
 // Content-aware SEO optimization
 export const ContentSEOIntegration = {
   // Generate SEO for content item
-  generateContentSEO: (content: Content): PageSEO => {
+  generateContentSEO: (content: LegacyContent): PageSEO => {
     const baseSEO: PageSEO = {
       title: content.metadata?.seoTitle ?? content.metadata?.title ?? '',
       description: content.metadata?.seoDescription ?? content.metadata?.description ?? '',
@@ -122,13 +130,13 @@ export const ContentSEOIntegration = {
 
   // Bulk update SEO for all content
   updateAllContentSEO: (): void => {
-    const allContent = contentManager.getAll();
-    
+    const allContent = legacyContentManager.getAll();
+
     allContent.forEach(content => {
       const seoData = ContentSEOIntegration.generateContentSEO(content);
-      
+
       // Update content metadata with SEO data
-      contentManager.update(content.id, {
+      legacyContentManager.update(content.id, {
         metadata: {
           ...content.metadata,
           seoTitle: seoData.title ?? '',
@@ -149,14 +157,14 @@ export const ContentSEOIntegration = {
     changefreq: string;
     priority: number;
   }> => {
-    const allContent = contentManager.getAll();
+    const allContent = legacyContentManager.getAll();
     const config = seoOptimizer.getConfig();
-    
+
     return allContent
       .filter(content => content.status === 'published')
       .map(content => {
         const seoData = ContentSEOIntegration.generateContentSEO(content);
-        
+
         const isoString = content.lastUpdated?.toISOString() || new Date().toISOString();
         const datePart = isoString.split('T')[0];
 
@@ -179,7 +187,7 @@ export const ContentSEOIntegration = {
   generateSitemap: (): string => {
     const sitemapContent = ContentSEOIntegration.getSitemapContent();
     const config = seoOptimizer.getConfig();
-    
+
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
@@ -209,7 +217,14 @@ export const ContentSEOIntegration = {
     sitemapContent.forEach(item => {
       sitemap += SEOUtils.generateSitemapEntry(item.url, {
         priority: item.priority,
-        changefreq: item.changefreq as 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never',
+        changefreq: item.changefreq as
+          | 'always'
+          | 'hourly'
+          | 'daily'
+          | 'weekly'
+          | 'monthly'
+          | 'yearly'
+          | 'never',
         lastmod: item.lastmod,
       });
     });
@@ -230,14 +245,14 @@ export const SEOPerformanceOptimization = {
     if (process.env.NODE_ENV === 'development') {
       logger.info('SEO optimization system initialized');
 
-      const allContent = contentManager.getAll();
-      const contentWithSEO = allContent.filter(content =>
-        content.metadata?.seoTitle ?? content.metadata?.seoDescription
+      const allContent = legacyContentManager.getAll();
+      const contentWithSEO = allContent.filter(
+        content => content.metadata?.seoTitle ?? content.metadata?.seoDescription
       );
 
       logger.info('SEO Coverage analysis', {
         optimizedContent: contentWithSEO.length,
-        totalContent: allContent.length
+        totalContent: allContent.length,
       });
     }
   },
@@ -249,27 +264,27 @@ export const SEOPerformanceOptimization = {
     averageScore: number;
     commonIssues: string[];
   } => {
-    const allContent = contentManager.getAll();
+    const allContent = legacyContentManager.getAll();
     let totalScore = 0;
     const issues: string[] = [];
 
     const optimizedContent = allContent.filter(content => {
       const seoData = ContentSEOIntegration.generateContentSEO(content);
-      
+
       // Simple scoring
       let score = 0;
       if (seoData.title) score += 25;
       if (seoData.description) score += 25;
       if (seoData.keywords && seoData.keywords.length > 0) score += 25;
       if (content.metadata?.seoTitle) score += 25;
-      
+
       totalScore += score;
-      
+
       // Track common issues
       if (!seoData.title) issues.push('Missing title');
       if (!seoData.description) issues.push('Missing description');
       if (!seoData.keywords || seoData.keywords.length === 0) issues.push('Missing keywords');
-      
+
       return score >= 50; // Consider optimized if score >= 50%
     });
 
@@ -334,24 +349,24 @@ export const SEODevUtils = {
   // Log SEO system status
   logStatus: () => {
     if (process.env.NODE_ENV !== 'development') return;
-    
+
     const analysis = SEOPerformanceOptimization.analyzeAllContent();
     const recommendations = SEOPerformanceOptimization.getRecommendations();
-    
+
     logger.info('SEO System Status', {
       totalContent: analysis.totalContent,
       optimizedContent: analysis.optimizedContent,
       averageScore: `${analysis.averageScore.toFixed(1)}/100`,
       commonIssues: analysis.commonIssues,
-      recommendations: recommendations
+      recommendations: recommendations,
     });
   },
 
   // Test SEO for specific content
   testContentSEO: (contentId: string) => {
     if (process.env.NODE_ENV !== 'development') return;
-    
-    const content = contentManager.get(contentId);
+
+    const content = legacyContentManager.get(contentId);
     if (!content) {
       logger.error('Content not found for SEO test', { contentId });
       return;
@@ -364,7 +379,7 @@ export const SEODevUtils = {
   // Generate test sitemap
   generateTestSitemap: () => {
     if (process.env.NODE_ENV !== 'development') return;
-    
+
     const sitemap = ContentSEOIntegration.generateSitemap();
     logger.info('Generated test sitemap', { sitemap });
     return sitemap;

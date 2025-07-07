@@ -1,6 +1,6 @@
 /**
  * Cross-Browser Compatibility Testing
- * 
+ *
  * Tools and utilities for testing browser compatibility and feature support
  */
 
@@ -76,7 +76,7 @@ export class BrowserCompatibilityChecker {
 
     const userAgent = navigator.userAgent;
     const platform = navigator.platform;
-    
+
     // Browser detection
     let name = 'Unknown';
     let version = 'Unknown';
@@ -236,9 +236,11 @@ export class BrowserCompatibilityChecker {
       }
 
       // Check for async/await support by testing function type
-      return typeof (async () => {
-        // Empty function for type checking only
-      }) === 'function';
+      return (
+        typeof (async () => {
+          // Empty function for type checking only
+        }) === 'function'
+      );
     } catch {
       return false;
     }
@@ -288,7 +290,9 @@ export class BrowserCompatibilityChecker {
       }
 
       // Check for dynamic import support by checking if it's available
-      return typeof (window as Window & { import?: unknown }).import === 'function' || 'import' in window;
+      return (
+        typeof (window as Window & { import?: unknown }).import === 'function' || 'import' in window
+      );
     } catch {
       return false;
     }

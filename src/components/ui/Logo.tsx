@@ -24,12 +24,12 @@ const logoUrls = {
   png: '/assets/icons/BLKWDS Creative Logo_inverted.png',
 };
 
-export function Logo({ 
-  className = '', 
-  size = 'md', 
+export function Logo({
+  className = '',
+  size = 'md',
   variant = 'full',
   onClick,
-  priority = false 
+  priority = false,
 }: LogoProps) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,16 +53,21 @@ export function Logo({
       >
         <button
           onClick={onClick}
-          className="text-bw-text-primary hover:text-bw-accent-gold transition-colors duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 rounded-md"
+          className="cursor-pointer rounded-md text-bw-text-primary transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
           aria-label="BlackWoods Creative - Go to homepage"
           title="BlackWoods Creative - Go to homepage"
         >
-          <span className={`font-display text-bw-accent-gold ${
-            size === 'sm' ? 'text-lg' :
-            size === 'md' ? 'text-xl' :
-            size === 'lg' ? 'text-2xl' :
-            'text-3xl'
-          }`}>
+          <span
+            className={`font-display text-bw-accent-gold ${
+              size === 'sm'
+                ? 'text-lg'
+                : size === 'md'
+                  ? 'text-xl'
+                  : size === 'lg'
+                    ? 'text-2xl'
+                    : 'text-3xl'
+            }`}
+          >
             {variant === 'icon' ? 'BWC' : 'BlackWoods Creative'}
           </span>
         </button>
@@ -78,15 +83,17 @@ export function Logo({
     >
       {/* Loading state */}
       {isLoading && (
-        <div className={`${sizeClasses[size]} bg-bw-accent-gold/10 animate-pulse rounded flex items-center justify-center`}>
-          <div className="text-bw-accent-gold text-xs font-medium">BWC</div>
+        <div
+          className={`${sizeClasses[size]} flex animate-pulse items-center justify-center rounded bg-bw-accent-gold/10`}
+        >
+          <div className="text-xs font-medium text-bw-accent-gold">BWC</div>
         </div>
       )}
-      
+
       {/* Main logo image */}
       <button
         onClick={onClick}
-        className={`${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 rounded-md`}
+        className={`${isLoading ? 'opacity-0' : 'opacity-100'} cursor-pointer rounded-md transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50`}
         aria-label="BlackWoods Creative - Go to homepage"
         title="BlackWoods Creative - Go to homepage"
         data-testid="logo-button"

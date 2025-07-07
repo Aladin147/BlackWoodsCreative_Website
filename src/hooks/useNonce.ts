@@ -8,6 +8,9 @@ export function useNonce(): string | null {
   const [nonce, setNonce] = useState<string | null>(null);
 
   useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof document === 'undefined') return;
+
     // Try to get nonce from meta tag (set by middleware)
     const metaNonce = document.querySelector('meta[name="csp-nonce"]')?.getAttribute('content');
     if (metaNonce) {

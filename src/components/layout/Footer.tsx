@@ -54,7 +54,7 @@ const getQuickLinks = () => {
 
     return {
       name: item.name,
-      href: href
+      href: href,
     };
   });
 };

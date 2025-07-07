@@ -36,7 +36,8 @@ export function generatePageMetadata(seoData: SEOMetadata): Metadata {
     openGraph: {
       title: seoData.openGraph?.title ?? seoData.title,
       description: seoData.openGraph?.description ?? seoData.description,
-      type: seoData.openGraph?.type === 'service' ? 'website' : (seoData.openGraph?.type ?? 'website'),
+      type:
+        seoData.openGraph?.type === 'service' ? 'website' : (seoData.openGraph?.type ?? 'website'),
       locale: 'en_US',
       siteName: 'BlackWoods Creative',
       ...(seoData.openGraph?.image && { images: [{ url: seoData.openGraph.image }] }),
@@ -47,7 +48,9 @@ export function generatePageMetadata(seoData: SEOMetadata): Metadata {
       description: seoData.description,
     },
     alternates: {
-      canonical: seoData.canonicalUrl ? `https://blackwoodscreative.com${seoData.canonicalUrl}` : null,
+      canonical: seoData.canonicalUrl
+        ? `https://blackwoodscreative.com${seoData.canonicalUrl}`
+        : null,
     },
     robots: {
       index: true,

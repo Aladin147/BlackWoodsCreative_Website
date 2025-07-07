@@ -1,6 +1,6 @@
 /**
  * SEO React Components
- * 
+ *
  * Reusable components for SEO optimization
  */
 
@@ -15,18 +15,12 @@ import {
   useBreadcrumbs,
   useStructuredData,
   useSocialMeta,
-  useLocalSEO 
+  useLocalSEO,
 } from '@/lib/seo/hooks';
 import { PageSEO } from '@/lib/seo/optimization';
 
 // SEO Head component
-export function SEOHead({ 
-  pageSEO = {},
-  children 
-}: { 
-  pageSEO?: PageSEO;
-  children?: ReactNode;
-}) {
+export function SEOHead({ pageSEO = {}, children }: { pageSEO?: PageSEO; children?: ReactNode }) {
   const { metadata } = usePageSEO(pageSEO);
   const socialMeta = useSocialMeta(pageSEO);
 
@@ -35,13 +29,18 @@ export function SEOHead({
       {/* Basic meta tags */}
       <title>{metadata.title as string}</title>
       <meta name="description" content={metadata.description as string} />
-      {metadata.keywords && (
-        <meta name="keywords" content={metadata.keywords as string} />
-      )}
+      {metadata.keywords && <meta name="keywords" content={metadata.keywords as string} />}
 
       {/* Canonical URL */}
       {metadata.alternates?.canonical && (
-        <link rel="canonical" href={typeof metadata.alternates.canonical === 'string' ? metadata.alternates.canonical : metadata.alternates.canonical.toString()} />
+        <link
+          rel="canonical"
+          href={
+            typeof metadata.alternates.canonical === 'string'
+              ? metadata.alternates.canonical
+              : metadata.alternates.canonical.toString()
+          }
+        />
       )}
 
       {/* Open Graph tags */}
@@ -59,7 +58,11 @@ export function SEOHead({
       {metadata.robots && (
         <meta
           name="robots"
-          content={typeof metadata.robots === 'string' ? metadata.robots : `${metadata.robots.index ? 'index' : 'noindex'}, ${metadata.robots.follow ? 'follow' : 'nofollow'}`}
+          content={
+            typeof metadata.robots === 'string'
+              ? metadata.robots
+              : `${metadata.robots.index ? 'index' : 'noindex'}, ${metadata.robots.follow ? 'follow' : 'nofollow'}`
+          }
         />
       )}
 
@@ -71,9 +74,13 @@ export function SEOHead({
       {/* Alternate languages */}
       {metadata.alternates?.languages &&
         Object.entries(metadata.alternates.languages).map(([locale, url]) => (
-          <link key={locale} rel="alternate" hrefLang={locale} href={typeof url === 'string' ? url : url?.toString() ?? ''} />
-        ))
-      }
+          <link
+            key={locale}
+            rel="alternate"
+            hrefLang={locale}
+            href={typeof url === 'string' ? url : (url?.toString() ?? '')}
+          />
+        ))}
 
       {children}
     </Head>
@@ -81,13 +88,7 @@ export function SEOHead({
 }
 
 // Structured data component
-export function StructuredData({ 
-  type, 
-  data 
-}: { 
-  type: string; 
-  data: Record<string, unknown>;
-}) {
+export function StructuredData({ type, data }: { type: string; data: Record<string, unknown> }) {
   useStructuredData(type, data);
 
   return (
@@ -100,10 +101,10 @@ export function StructuredData({
 }
 
 // Breadcrumbs component
-export function Breadcrumbs({ 
+export function Breadcrumbs({
   customBreadcrumbs,
   className = '',
-  showStructuredData = true 
+  showStructuredData = true,
 }: {
   customBreadcrumbs?: Array<{ name: string; url: string }>;
   className?: string;
@@ -113,26 +114,19 @@ export function Breadcrumbs({
 
   return (
     <>
-      {showStructuredData && (
-        <StructuredData type="BreadcrumbList" data={structuredData} />
-      )}
-      
+      {showStructuredData && <StructuredData type="BreadcrumbList" data={structuredData} />}
+
       <nav className={`breadcrumbs ${className}`} aria-label="Breadcrumb">
         <ol className="flex items-center space-x-2 text-sm text-gray-600">
           {breadcrumbs.map((crumb, index) => (
             <li key={crumb.url} className="flex items-center">
-              {index > 0 && (
-                <span className="mx-2 text-gray-400">/</span>
-              )}
+              {index > 0 && <span className="mx-2 text-gray-400">/</span>}
               {index === breadcrumbs.length - 1 ? (
-                <span className="text-gray-900 font-medium" aria-current="page">
+                <span className="font-medium text-gray-900" aria-current="page">
                   {crumb.name}
                 </span>
               ) : (
-                <a 
-                  href={crumb.url}
-                  className="hover:text-blue-600 transition-colors"
-                >
+                <a href={crumb.url} className="transition-colors hover:text-blue-600">
                   {crumb.name}
                 </a>
               )}
@@ -150,7 +144,8 @@ export function OrganizationStructuredData() {
     name: 'BlackWoods Creative',
     url: 'https://blackwoodscreative.com',
     logo: 'https://blackwoodscreative.com/images/logo.png',
-    description: 'Professional visual storytelling agency specializing in filmmaking, photography, 3D visualization, and scene creation.',
+    description:
+      'Professional visual storytelling agency specializing in filmmaking, photography, 3D visualization, and scene creation.',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Mohammedia',
@@ -180,7 +175,8 @@ export function WebsiteStructuredData() {
   const websiteData = {
     name: 'BlackWoods Creative',
     url: 'https://blackwoodscreative.com',
-    description: 'Professional visual storytelling services including filmmaking, photography, 3D visualization, and scene creation.',
+    description:
+      'Professional visual storytelling services including filmmaking, photography, 3D visualization, and scene creation.',
     inLanguage: 'en-US',
     potentialAction: {
       '@type': 'SearchAction',
@@ -209,10 +205,10 @@ export function LocalBusinessStructuredData() {
 }
 
 // Service structured data
-export function ServiceStructuredData({ 
+export function ServiceStructuredData({
   serviceName,
   description,
-  price 
+  price,
 }: {
   serviceName: string;
   description: string;
@@ -231,11 +227,13 @@ export function ServiceStructuredData({
       name: 'Morocco',
     },
     serviceType: 'Creative Services',
-    ...(price && { offers: {
-      '@type': 'Offer',
-      price,
-      priceCurrency: 'USD',
-    }}),
+    ...(price && {
+      offers: {
+        '@type': 'Offer',
+        price,
+        priceCurrency: 'USD',
+      },
+    }),
   };
 
   return <StructuredData type="Service" data={serviceData} />;
@@ -289,11 +287,7 @@ export function ArticleStructuredData({
 }
 
 // FAQ structured data
-export function FAQStructuredData({ 
-  faqs 
-}: {
-  faqs: Array<{ question: string; answer: string }>;
-}) {
+export function FAQStructuredData({ faqs }: { faqs: Array<{ question: string; answer: string }> }) {
   const faqData = {
     mainEntity: faqs.map(faq => ({
       '@type': 'Question',
@@ -345,24 +339,18 @@ export function CreativeWorkStructuredData({
 }
 
 // SEO analytics component (for development)
-export function SEOAnalytics({ 
-  showInProduction = false 
-}: {
-  showInProduction?: boolean;
-}) {
+export function SEOAnalytics({ showInProduction = false }: { showInProduction?: boolean }) {
   if (process.env.NODE_ENV === 'production' && !showInProduction) {
     return null;
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black text-white p-4 rounded-lg text-xs max-w-sm z-50">
-      <h4 className="font-bold mb-2">SEO Debug Info</h4>
+    <div className="fixed bottom-4 right-4 z-50 max-w-sm rounded-lg bg-black p-4 text-xs text-white">
+      <h4 className="mb-2 font-bold">SEO Debug Info</h4>
       <div className="space-y-1">
         <div>Environment: {process.env.NODE_ENV}</div>
         <div>Page loaded: {new Date().toLocaleTimeString()}</div>
-        <div className="text-yellow-300">
-          ⚠️ Remove in production
-        </div>
+        <div className="text-yellow-300">⚠️ Remove in production</div>
       </div>
     </div>
   );

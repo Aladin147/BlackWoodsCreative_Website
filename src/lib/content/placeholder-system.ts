@@ -1,6 +1,6 @@
 /**
  * Content Placeholder System
- * 
+ *
  * Provides a flexible system for managing placeholder content that can be easily
  * replaced with real content when it becomes available. Supports multiple content
  * types, localization, and seamless content migration.
@@ -18,24 +18,24 @@ export interface BaseContent {
   metadata?: ContentMetadata;
 }
 
-export type ContentType = 
-  | 'text' 
-  | 'image' 
-  | 'video' 
-  | 'portfolio' 
-  | 'testimonial' 
-  | 'service' 
-  | 'team' 
-  | 'blog' 
-  | 'page' 
+export type ContentType =
+  | 'text'
+  | 'image'
+  | 'video'
+  | 'portfolio'
+  | 'testimonial'
+  | 'service'
+  | 'team'
+  | 'blog'
+  | 'page'
   | 'component';
 
-export type ContentStatus = 
-  | 'placeholder' 
-  | 'draft' 
-  | 'review' 
-  | 'approved' 
-  | 'published' 
+export type ContentStatus =
+  | 'placeholder'
+  | 'draft'
+  | 'review'
+  | 'approved'
+  | 'published'
   | 'archived';
 
 export interface ContentMetadata {
@@ -193,16 +193,16 @@ export interface ComponentContent extends BaseContent {
 }
 
 // Union type for all content
-export type Content = 
-  | TextContent 
-  | ImageContent 
-  | VideoContent 
-  | PortfolioContent 
-  | TestimonialContent 
-  | ServiceContent 
-  | TeamContent 
-  | BlogContent 
-  | PageContent 
+export type Content =
+  | TextContent
+  | ImageContent
+  | VideoContent
+  | PortfolioContent
+  | TestimonialContent
+  | ServiceContent
+  | TeamContent
+  | BlogContent
+  | PageContent
   | ComponentContent;
 
 // Content placeholder configuration
@@ -239,7 +239,9 @@ export class ContentPlaceholderManager {
       fallbackToPlaceholder: true,
       showPlaceholderIndicators: process.env.NODE_ENV === 'development',
       locale: 'en',
-      environment: (process.env.NODE_ENV as 'development' | 'staging' | 'production' | 'test') ?? 'development',
+      environment:
+        (process.env.NODE_ENV as 'development' | 'staging' | 'production' | 'test') ??
+        'development',
       ...config,
     };
   }
@@ -261,14 +263,12 @@ export class ContentPlaceholderManager {
 
   // Get content by type
   getByType<T extends Content>(type: ContentType): T[] {
-    return Array.from(this.content.values())
-      .filter(content => content.type === type) as T[];
+    return Array.from(this.content.values()).filter(content => content.type === type) as T[];
   }
 
   // Get content by status
   getByStatus(status: ContentStatus): Content[] {
-    return Array.from(this.content.values())
-      .filter(content => content.status === status);
+    return Array.from(this.content.values()).filter(content => content.status === status);
   }
 
   // Update content
@@ -345,7 +345,11 @@ export const contentManager = new ContentPlaceholderManager();
 // Utility functions for content management
 export const ContentUtils = {
   // Create placeholder text content
-  createTextPlaceholder: (id: string, placeholder: string, metadata?: ContentMetadata): TextContent => ({
+  createTextPlaceholder: (
+    id: string,
+    placeholder: string,
+    metadata?: ContentMetadata
+  ): TextContent => ({
     id,
     type: 'text',
     status: 'placeholder',
@@ -363,15 +367,23 @@ export const ContentUtils = {
   }),
 
   // Create placeholder image content
-  createImagePlaceholder: (id: string, alt: string, metadata?: ContentMetadata, src?: string): ImageContent => ({
+  createImagePlaceholder: (
+    id: string,
+    alt: string,
+    metadata?: ContentMetadata,
+    src?: string
+  ): ImageContent => ({
     id,
     type: 'image',
     status: 'placeholder',
     lastUpdated: new Date(),
     version: '1.0.0',
-    src: src ?? `https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=600&fit=crop&crop=center`,
+    src:
+      src ??
+      `https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=600&fit=crop&crop=center`,
     alt,
-    placeholder: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIFBsYWNlaG9sZGVyPC90ZXh0Pjwvc3ZnPg==',
+    placeholder:
+      'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIFBsYWNlaG9sZGVyPC90ZXh0Pjwvc3ZnPg==',
     metadata: metadata ?? {
       title: `Image Content - ${id}`,
       description: `Placeholder image content for ${id}`,
@@ -382,13 +394,30 @@ export const ContentUtils = {
 
   // Validate content structure
   validateContent: (content: Content): boolean => {
-    return !!(content.id && content.type && content.status && content.lastUpdated && content.version);
+    return !!(
+      content.id &&
+      content.type &&
+      content.status &&
+      content.lastUpdated &&
+      content.version
+    );
   },
 
-  // Generate content ID
+  // Generate content ID - safe for SSR
   generateId: (type: ContentType, suffix?: string): string => {
     const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 8);
+
+    // Use crypto.getRandomValues if available (client-side), fallback to deterministic approach
+    let random: string;
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const array = new Uint8Array(4);
+      crypto.getRandomValues(array);
+      random = Array.from(array, byte => byte.toString(36)).join('').substring(0, 6);
+    } else {
+      // Deterministic fallback based on timestamp for SSR compatibility
+      random = (timestamp % 1000000).toString(36).substring(0, 6);
+    }
+
     return `${type}-${timestamp}-${random}${suffix ? `-${suffix}` : ''}`;
   },
 

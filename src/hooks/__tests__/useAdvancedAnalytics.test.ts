@@ -398,10 +398,6 @@ describe('useComponentAnalytics', () => {
   it('tracks component mount and unmount', () => {
     const { unmount } = renderHook(() => useComponentAnalytics('TestComponent'));
 
-    act(() => {
-      jest.runOnlyPendingTimers();
-    });
-
     // Should have tracking functions available
     expect(unmount).toBeInstanceOf(Function);
 

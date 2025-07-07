@@ -4,13 +4,14 @@ import {
   ContentPageTemplate,
   type ContentPageData,
   type SEOMetadata,
-  generatePageMetadata
+  generatePageMetadata,
 } from '@/components/templates';
 
 // SEO metadata optimized for entity recognition
 const seoMetadata: SEOMetadata = {
   title: 'Our Story | BlackWoods Creative - Morocco&apos;s Premier Visual Storytelling Company',
-  description: 'Discover the story behind BlackWoods Creative, Morocco&apos;s leading video production and visual storytelling company. Founded in Mohammedia, serving clients across Morocco since 2019.',
+  description:
+    'Discover the story behind BlackWoods Creative, Morocco&apos;s leading video production and visual storytelling company. Founded in Mohammedia, serving clients across Morocco since 2019.',
   keywords: [
     'BlackWoods Creative story',
     'video production company Morocco history',
@@ -18,37 +19,38 @@ const seoMetadata: SEOMetadata = {
     'Morocco visual storytelling',
     'company history Morocco',
     'video production team Morocco',
-    'BlackWoods Creative founding'
+    'BlackWoods Creative founding',
   ],
   canonicalUrl: '/about/our-story',
   openGraph: {
     title: 'Our Story | BlackWoods Creative - Morocco&apos;s Visual Storytelling Pioneers',
-    description: 'The story of how BlackWoods Creative became Morocco&apos;s premier video production company, serving clients across Casablanca, Rabat, and beyond.',
-    type: 'article'
+    description:
+      'The story of how BlackWoods Creative became Morocco&apos;s premier video production company, serving clients across Casablanca, Rabat, and beyond.',
+    type: 'article',
   },
   structuredData: {
     '@type': 'AboutPage',
-    'mainEntity': {
+    mainEntity: {
       '@type': 'Organization',
-      'name': 'BlackWoods Creative',
-      'foundingDate': '2019',
-      'foundingLocation': {
+      name: 'BlackWoods Creative',
+      foundingDate: '2019',
+      foundingLocation: {
         '@type': 'Place',
-        'name': 'Mohammedia, Morocco'
+        name: 'Mohammedia, Morocco',
       },
-      'description': 'Morocco&apos;s premier video production and visual storytelling company',
-      'address': {
+      description: 'Morocco&apos;s premier video production and visual storytelling company',
+      address: {
         '@type': 'PostalAddress',
-        'addressLocality': 'Mohammedia',
-        'addressCountry': 'Morocco'
+        addressLocality: 'Mohammedia',
+        addressCountry: 'Morocco',
       },
-      'areaServed': ['Morocco', 'Casablanca', 'Rabat', 'Mohammedia', 'Marrakech'],
-      'serviceType': ['Video Production', 'Photography', '3D Visualization', 'Brand Films'],
-      'url': 'https://blackwoodscreative.com',
-      'telephone': '+212 625 55 37 68',
-      'email': 'hello@blackwoodscreative.com'
-    }
-  }
+      areaServed: ['Morocco', 'Casablanca', 'Rabat', 'Mohammedia', 'Marrakech'],
+      serviceType: ['Video Production', 'Photography', '3D Visualization', 'Brand Films'],
+      url: 'https://blackwoodscreative.com',
+      telephone: '+212 625 55 37 68',
+      email: 'hello@blackwoodscreative.com',
+    },
+  },
 };
 
 // Page content data
@@ -56,12 +58,13 @@ const pageData: ContentPageData = {
   hero: {
     title: 'Our Story',
     subtitle: 'The journey of Morocco&apos;s premier visual storytelling company',
-    description: 'From a vision in Mohammedia to serving clients across Morocco, discover how BlackWoods Creative became the trusted partner for businesses seeking exceptional video content.',
+    description:
+      'From a vision in Mohammedia to serving clients across Morocco, discover how BlackWoods Creative became the trusted partner for businesses seeking exceptional video content.',
     breadcrumbs: [
       { label: 'Home', href: '/' },
       { label: 'About', href: '/about' },
-      { label: 'Our Story', href: '/about/our-story' }
-    ]
+      { label: 'Our Story', href: '/about/our-story' },
+    ],
   },
   sections: [
     {
@@ -76,13 +79,13 @@ const pageData: ContentPageData = {
           
           <p>From our first corporate video project to becoming the go-to partner for businesses across Casablanca, Rabat, and beyond, every step of our journey has been guided by one principle: exceptional quality that drives real results for our clients.</p>
         `,
-        highlight: true
+        highlight: true,
       },
       styling: {
         background: 'primary',
         spacing: 'normal',
-        maxWidth: 'normal'
-      }
+        maxWidth: 'normal',
+      },
     },
     {
       id: 'company-timeline',
@@ -93,47 +96,54 @@ const pageData: ContentPageData = {
           {
             year: '2019',
             title: 'BlackWoods Creative Founded',
-            description: 'Established in Mohammedia with a vision to revolutionize video production in Morocco. First studio setup with professional equipment.',
-            highlight: true
+            description:
+              'Established in Mohammedia with a vision to revolutionize video production in Morocco. First studio setup with professional equipment.',
+            highlight: true,
           },
           {
             year: '2020',
             title: 'First Major Corporate Clients',
-            description: 'Secured partnerships with leading Moroccan businesses, establishing our reputation for quality and reliability in the corporate sector.'
+            description:
+              'Secured partnerships with leading Moroccan businesses, establishing our reputation for quality and reliability in the corporate sector.',
           },
           {
             year: '2021',
             title: 'Expansion Across Morocco',
-            description: 'Extended services to Casablanca, Rabat, and other major cities. Invested in advanced 4K production equipment and drone technology.'
+            description:
+              'Extended services to Casablanca, Rabat, and other major cities. Invested in advanced 4K production equipment and drone technology.',
           },
           {
             year: '2022',
             title: '3D Visualization Services Launch',
-            description: 'Added cutting-edge 3D visualization and architectural rendering services, becoming a full-service visual content provider.'
+            description:
+              'Added cutting-edge 3D visualization and architectural rendering services, becoming a full-service visual content provider.',
           },
           {
             year: '2023',
             title: 'International Recognition',
-            description: 'Received industry recognition for innovative video production techniques and exceptional client service standards.'
+            description:
+              'Received industry recognition for innovative video production techniques and exceptional client service standards.',
           },
           {
             year: '2024',
             title: 'AI-First Content Strategy',
-            description: 'Pioneered AI-optimized content creation, helping clients dominate search results and digital presence.',
-            highlight: true
+            description:
+              'Pioneered AI-optimized content creation, helping clients dominate search results and digital presence.',
+            highlight: true,
           },
           {
             year: '2025',
             title: 'Market Leadership',
-            description: 'Established as Morocco&apos;s premier video production company, serving 100+ satisfied clients with proven ROI results.',
-            highlight: true
-          }
-        ]
+            description:
+              'Established as Morocco&apos;s premier video production company, serving 100+ satisfied clients with proven ROI results.',
+            highlight: true,
+          },
+        ],
       },
       styling: {
         background: 'secondary',
-        spacing: 'loose'
-      }
+        spacing: 'loose',
+      },
     },
     {
       id: 'mission-vision',
@@ -151,13 +161,13 @@ const pageData: ContentPageData = {
               <p>To be the definitive leader in visual content creation across North Africa, setting the standard for quality, innovation, and client success in the digital age.</p>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'primary',
         spacing: 'normal',
-        maxWidth: 'wide'
-      }
+        maxWidth: 'wide',
+      },
     },
     {
       id: 'core-values',
@@ -168,40 +178,46 @@ const pageData: ContentPageData = {
         values: [
           {
             title: 'Excellence',
-            description: 'We never compromise on quality. Every project receives our full attention and expertise, regardless of size or budget.',
-            icon: 'StarIcon'
+            description:
+              'We never compromise on quality. Every project receives our full attention and expertise, regardless of size or budget.',
+            icon: 'StarIcon',
           },
           {
             title: 'Innovation',
-            description: 'We stay ahead of industry trends, constantly investing in new technology and techniques to deliver cutting-edge results.',
-            icon: 'RocketLaunchIcon'
+            description:
+              'We stay ahead of industry trends, constantly investing in new technology and techniques to deliver cutting-edge results.',
+            icon: 'RocketLaunchIcon',
           },
           {
             title: 'Collaboration',
-            description: 'We work as true partners with our clients, ensuring their vision is realized while bringing our creative expertise to every project.',
-            icon: 'HandRaisedIcon'
+            description:
+              'We work as true partners with our clients, ensuring their vision is realized while bringing our creative expertise to every project.',
+            icon: 'HandRaisedIcon',
           },
           {
             title: 'Integrity',
-            description: 'Transparent communication, honest timelines, and fair pricing. We build lasting relationships based on trust and reliability.',
-            icon: 'ShieldCheckIcon'
+            description:
+              'Transparent communication, honest timelines, and fair pricing. We build lasting relationships based on trust and reliability.',
+            icon: 'ShieldCheckIcon',
           },
           {
             title: 'Local Expertise',
-            description: 'Deep understanding of the Moroccan market, culture, and business landscape enables us to create content that truly resonates.',
-            icon: 'GlobeAltIcon'
+            description:
+              'Deep understanding of the Moroccan market, culture, and business landscape enables us to create content that truly resonates.',
+            icon: 'GlobeAltIcon',
           },
           {
             title: 'Results-Driven',
-            description: 'Every piece of content we create is designed with specific business objectives in mind, ensuring measurable impact for our clients.',
-            icon: 'ArrowTrendingUpIcon'
-          }
-        ]
+            description:
+              'Every piece of content we create is designed with specific business objectives in mind, ensuring measurable impact for our clients.',
+            icon: 'ArrowTrendingUpIcon',
+          },
+        ],
       },
       styling: {
         background: 'accent',
-        spacing: 'loose'
-      }
+        spacing: 'loose',
+      },
     },
     {
       id: 'morocco-expertise',
@@ -219,13 +235,13 @@ const pageData: ContentPageData = {
           
           <p><strong>Proven Track Record:</strong> Over 100 successful projects with measurable results, from increased brand awareness to direct sales impact.</p>
         `,
-        columns: 1
+        columns: 1,
       },
       styling: {
         background: 'primary',
         spacing: 'normal',
-        maxWidth: 'normal'
-      }
+        maxWidth: 'normal',
+      },
     },
     {
       id: 'related-pages',
@@ -250,39 +266,35 @@ const pageData: ContentPageData = {
               <a href="/about/location" class="btn-secondary">Visit Our Studio</a>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'secondary',
         spacing: 'normal',
-        maxWidth: 'wide'
-      }
+        maxWidth: 'wide',
+      },
     },
     {
       id: 'call-to-action',
       type: 'cta',
       data: {
         title: 'Ready to Write Your Story?',
-        description: 'Join the growing list of successful businesses that trust BlackWoods Creative with their visual storytelling needs.',
+        description:
+          'Join the growing list of successful businesses that trust BlackWoods Creative with their visual storytelling needs.',
         text: 'Start Your Project',
-        href: '#contact'
+        href: '#contact',
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
-    }
-  ]
+        spacing: 'normal',
+      },
+    },
+  ],
 };
 
 // Generate Next.js metadata using type-safe helper
 export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function OurStoryPage() {
-  return (
-    <ContentPageTemplate
-      metadata={seoMetadata}
-      data={pageData}
-    />
-  );
+  return <ContentPageTemplate metadata={seoMetadata} data={pageData} />;
 }

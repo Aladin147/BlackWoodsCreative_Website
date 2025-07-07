@@ -17,16 +17,20 @@ class Logger {
   private isDevelopment = process.env.NODE_ENV === 'development';
   private isTest = process.env.NODE_ENV === 'test';
 
-  private formatMessage(level: LogLevel, message: string, context?: Record<string, unknown>): string {
+  private formatMessage(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, unknown>
+  ): string {
     const timestamp = new Date().toISOString();
     const prefix = this.getLogPrefix(level);
-    
+
     let formattedMessage = `${prefix} [${timestamp}] ${message}`;
-    
+
     if (context && Object.keys(context).length > 0) {
       formattedMessage += ` | Context: ${JSON.stringify(context)}`;
     }
-    
+
     return formattedMessage;
   }
 
@@ -89,7 +93,7 @@ class Logger {
   error(message: string, error?: Error | unknown, context?: Record<string, unknown>): void {
     if (this.shouldLog('error')) {
       const formattedMessage = this.formatMessage('error', message, context);
-      
+
       if (error instanceof Error) {
         // eslint-disable-next-line no-console
         console.error(formattedMessage, error);
@@ -131,20 +135,19 @@ export const log = {
   debug: (message: string, context?: Record<string, unknown>) => logger.debug(message, context),
   info: (message: string, context?: Record<string, unknown>) => logger.info(message, context),
   warn: (message: string, context?: Record<string, unknown>) => logger.warn(message, context),
-  error: (message: string, error?: Error | unknown, context?: Record<string, unknown>) => 
+  error: (message: string, error?: Error | unknown, context?: Record<string, unknown>) =>
     logger.error(message, error, context),
-  
+
   // Specialized logging
   api: {
-    success: (endpoint: string, context?: Record<string, unknown>) => 
+    success: (endpoint: string, context?: Record<string, unknown>) =>
       logger.apiSuccess(endpoint, context),
-    error: (endpoint: string, error?: Error | unknown, context?: Record<string, unknown>) => 
+    error: (endpoint: string, error?: Error | unknown, context?: Record<string, unknown>) =>
       logger.apiError(endpoint, error, context),
   },
-  
-  security: (event: string, context?: Record<string, unknown>) => 
-    logger.security(event, context),
-    
-  performance: (metric: string, value: number, context?: Record<string, unknown>) => 
+
+  security: (event: string, context?: Record<string, unknown>) => logger.security(event, context),
+
+  performance: (metric: string, value: number, context?: Record<string, unknown>) =>
     logger.performance(metric, value, context),
 };

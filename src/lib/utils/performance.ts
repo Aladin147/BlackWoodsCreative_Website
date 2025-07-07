@@ -179,7 +179,7 @@ export function withPerformanceMonitoring<P extends object>(
             logger.warn('Component render performance warning', {
               componentName,
               renderTime: `${renderTime.toFixed(2)}ms`,
-              threshold: '16ms'
+              threshold: '16ms',
             });
           }
         }

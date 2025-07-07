@@ -51,8 +51,23 @@ module.exports = {
         },
       },
       fontFamily: {
-        primary: ['var(--font-primary)', 'Inter', 'SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        display: ['var(--font-display)', 'Urbanist', 'Inter', 'SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        primary: [
+          'var(--font-primary)',
+          'Inter',
+          'SF Pro Display',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'sans-serif',
+        ],
+        display: [
+          'var(--font-display)',
+          'Urbanist',
+          'Inter',
+          'SF Pro Display',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'sans-serif',
+        ],
         mono: ['var(--font-mono)', 'JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       fontSize: {

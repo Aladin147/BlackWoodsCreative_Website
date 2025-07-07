@@ -56,17 +56,17 @@ class HashManager {
           "'sha256-tTgjrFAQDNcRW/9ebtwfDewCTgZMFnKpGa9tcHFyvcs='",
           "'sha256-E+XKxe8E3U03Zx3+QBwIsPqhP7hTQb0/u8HHYp6Kmoo='",
           "'sha256-yjeIWbfkHCqakGNfgINzQek4xBo2zW5+69GgakTPbVY='",
-          "'sha256-HGYbL7c7YTMNrtcUQBvASpkCpnhcLdlW/2pKHJ8sJ98='"
+          "'sha256-HGYbL7c7YTMNrtcUQBvASpkCpnhcLdlW/2pKHJ8sJ98='",
         ],
         collected: [],
-        manual: []
+        manual: [],
       },
       components: {},
       stats: {
         totalCollected: 0,
         lastCollectionRun: 0,
-        collectionDuration: 0
-      }
+        collectionDuration: 0,
+      },
     };
   }
 
@@ -87,9 +87,10 @@ class HashManager {
    */
   updateCollectedHashes(collectedHashes: string[]): void {
     const uniqueHashes = Array.from(new Set(collectedHashes));
-    const newHashes = uniqueHashes.filter(hash => 
-      !this.hashData.hashes.collected.includes(hash) &&
-      !this.hashData.hashes.common.includes(hash)
+    const newHashes = uniqueHashes.filter(
+      hash =>
+        !this.hashData.hashes.collected.includes(hash) &&
+        !this.hashData.hashes.common.includes(hash)
     );
 
     if (newHashes.length > 0) {
@@ -107,7 +108,7 @@ class HashManager {
    */
   addManualHash(hash: string, _description?: string): void {
     const formattedHash = hash.startsWith("'") ? hash : `'${hash}'`;
-    
+
     if (!this.hashData.hashes.manual.includes(formattedHash)) {
       this.hashData.hashes.manual.push(formattedHash);
       this.hashData.lastUpdated = Date.now();
@@ -121,14 +122,15 @@ class HashManager {
    */
   removeHash(hash: string): void {
     const formattedHash = hash.startsWith("'") ? hash : `'${hash}'`;
-    
+
     ['collected', 'manual'].forEach(category => {
-      const index = this.hashData.hashes[category as keyof typeof this.hashData.hashes].indexOf(formattedHash);
+      const index =
+        this.hashData.hashes[category as keyof typeof this.hashData.hashes].indexOf(formattedHash);
       if (index > -1) {
         this.hashData.hashes[category as keyof typeof this.hashData.hashes].splice(index, 1);
       }
     });
-    
+
     this.hashData.lastUpdated = Date.now();
     this.saveHashData();
   }
@@ -155,7 +157,7 @@ class HashManager {
       common: this.hashData.hashes.common.slice(),
       collected: this.hashData.hashes.collected.slice(),
       manual: this.hashData.hashes.manual.slice(),
-      total: this.getAllHashes().length
+      total: this.getAllHashes().length,
     };
   }
 
@@ -170,7 +172,7 @@ class HashManager {
     ['common', 'collected', 'manual'].forEach(category => {
       const categoryHashes = this.hashData.hashes[category as keyof typeof this.hashData.hashes];
       const uniqueHashes: string[] = [];
-      
+
       categoryHashes.forEach(hash => {
         if (!allHashes.has(hash)) {
           allHashes.add(hash);
@@ -179,7 +181,7 @@ class HashManager {
           removedCount++;
         }
       });
-      
+
       this.hashData.hashes[category as keyof typeof this.hashData.hashes] = uniqueHashes;
     });
 
@@ -201,14 +203,14 @@ class HashManager {
     const byCategory = {
       common: this.hashData.hashes.common.length,
       collected: this.hashData.hashes.collected.length,
-      manual: this.hashData.hashes.manual.length
+      manual: this.hashData.hashes.manual.length,
     };
 
     return {
       totalHashes: this.getAllHashes().length,
       byCategory,
       lastUpdated: new Date(this.hashData.lastUpdated),
-      lastCollectionRun: new Date(this.hashData.stats.lastCollectionRun)
+      lastCollectionRun: new Date(this.hashData.stats.lastCollectionRun),
     };
   }
 
@@ -227,7 +229,7 @@ class HashManager {
     return {
       hashData: this.hashData,
       formattedHashes,
-      cspDirective
+      cspDirective,
     };
   }
 
@@ -265,7 +267,7 @@ class HashManager {
         }
         return isValid;
       });
-      
+
       this.hashData.hashes[category as keyof typeof this.hashData.hashes] = validHashes;
     });
 

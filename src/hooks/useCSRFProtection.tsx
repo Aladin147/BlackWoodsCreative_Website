@@ -58,10 +58,7 @@ export function useCSRFProtection() {
   }, []);
 
   // Helper function to make CSRF-protected API calls
-  const makeProtectedRequest = (
-    url: string,
-    options: RequestInit = {}
-  ): Promise<Response> => {
+  const makeProtectedRequest = (url: string, options: RequestInit = {}): Promise<Response> => {
     if (!csrfToken) {
       throw new Error('CSRF token not available');
     }

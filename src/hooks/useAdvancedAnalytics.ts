@@ -61,11 +61,24 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
   const eventsQueueRef = useRef<AnalyticsEvent[]>([]);
   const interactionsQueueRef = useRef<UserInteraction[]>([]);
   const performanceQueueRef = useRef<PerformanceMetric[]>([]);
-  const flushTimerRef = useRef<NodeJS.Timeout>();
+  const flushTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  // Generate session ID
+  // Generate session ID - client-side only to prevent hydration issues
   const generateSessionId = useCallback(() => {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Only generate on client side
+    if (typeof window === 'undefined') return '';
+
+    // Use crypto.getRandomValues if available, fallback to Math.random
+    let randomPart: string;
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const array = new Uint8Array(6);
+      crypto.getRandomValues(array);
+      randomPart = Array.from(array, byte => byte.toString(36)).join('').substr(0, 9);
+    } else {
+      randomPart = Math.random().toString(36).substr(2, 9);
+    }
+
+    return `session_${Date.now()}_${randomPart}`;
   }, []);
 
   // Generate or retrieve user ID

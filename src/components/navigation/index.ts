@@ -4,14 +4,7 @@
  */
 
 // Page Navigation Components
-export {
-  PageNavigation,
-  CompactPageNavigation,
-  SectionNavigation
-} from './PageNavigation';
+export { PageNavigation, CompactPageNavigation, SectionNavigation } from './PageNavigation';
 
 // Mobile Navigation Components
-export {
-  MobileNavigation,
-  MobileNavigationFAB
-} from './MobileNavigation';
+export { MobileNavigation, MobileNavigationFAB } from './MobileNavigation';

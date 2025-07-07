@@ -22,7 +22,7 @@ export interface NavigationContext {
  */
 export function useNavigationContext(): NavigationContext {
   const pathname = usePathname();
-  
+
   return useMemo(() => {
     // Handle null pathname
     if (!pathname) {
@@ -35,7 +35,7 @@ export function useNavigationContext(): NavigationContext {
         relatedLinks: [],
         breadcrumbVariant: 'minimal' as const,
         showPageNavigation: false,
-        showRelatedLinks: false
+        showRelatedLinks: false,
       };
     }
 
@@ -59,17 +59,16 @@ export function useNavigationContext(): NavigationContext {
     } else if (pathname.startsWith('/contact')) {
       pageType = 'contact';
     }
-    
+
     // Determine if this is a subpage
     const isSubpage = pathname.split('/').length > 2;
-    
+
     // Get related links for current page
     const linkingStrategy = getInternalLinksForPage(pathname);
-    const relatedLinks = linkingStrategy ? [
-      ...linkingStrategy.relatedPages,
-      ...linkingStrategy.contextualLinks
-    ] : [];
-    
+    const relatedLinks = linkingStrategy
+      ? [...linkingStrategy.relatedPages, ...linkingStrategy.contextualLinks]
+      : [];
+
     // Determine breadcrumb variant based on page type
     let breadcrumbVariant: NavigationContext['breadcrumbVariant'] = 'default';
     if (pageType === 'about' || pageType === 'services') {
@@ -77,11 +76,11 @@ export function useNavigationContext(): NavigationContext {
     } else if (pageType === 'home') {
       breadcrumbVariant = 'minimal';
     }
-    
+
     // Determine navigation features to show
     const showPageNavigation = isSubpage && (pageType === 'about' || pageType === 'services');
     const showRelatedLinks = relatedLinks.length > 0 && pageType !== 'home';
-    
+
     return {
       currentPath: pathname,
       pageType,
@@ -91,7 +90,7 @@ export function useNavigationContext(): NavigationContext {
       relatedLinks,
       breadcrumbVariant,
       showPageNavigation,
-      showRelatedLinks
+      showRelatedLinks,
     };
   }, [pathname]);
 }
@@ -101,24 +100,24 @@ export function useNavigationContext(): NavigationContext {
  */
 export function usePageNavigation() {
   const context = useNavigationContext();
-  
+
   return useMemo(() => {
     const config = {
       showBreadcrumbs: context.currentPath !== '/',
       breadcrumbProps: {
         variant: context.breadcrumbVariant,
         showCurrentPage: true,
-        maxItems: context.isSubpage ? 6 : 4
+        maxItems: context.isSubpage ? 6 : 4,
       },
       showPageNavigation: context.showPageNavigation,
       pageNavigationProps: {
         showPrevNext: context.pageType === 'about' || context.pageType === 'services',
         showRelated: context.showRelatedLinks,
-        maxRelated: 3
+        maxRelated: 3,
       },
-      showRelatedLinks: context.showRelatedLinks && !context.showPageNavigation
+      showRelatedLinks: context.showRelatedLinks && !context.showPageNavigation,
     };
-    
+
     return config;
   }, [context]);
 }
@@ -128,34 +127,34 @@ export function usePageNavigation() {
  */
 export function useActiveNavigation() {
   const pathname = usePathname();
-  
+
   return useMemo(() => {
     const isActive = (href: string, exact = false) => {
       if (exact) {
         return pathname === href;
       }
-      
+
       // Handle hash links on homepage
       if (pathname === '/' && href.startsWith('#')) {
         return false; // Let scroll position determine active state
       }
-      
+
       // Handle regular page links
       if (href === '/') {
         return pathname === '/';
       }
-      
+
       return pathname.startsWith(href);
     };
-    
+
     const getActiveClass = (href: string, exact = false) => {
       return isActive(href, exact) ? 'text-bw-accent-gold' : '';
     };
-    
+
     return {
       isActive,
       getActiveClass,
-      currentPath: pathname
+      currentPath: pathname,
     };
   }, [pathname]);
 }
@@ -179,7 +178,7 @@ export function useMobileNavigation() {
       showBackButton: context.isSubpage,
       backButtonHref,
       showRelatedInSidebar: context.showRelatedLinks,
-      maxRelatedMobile: 2
+      maxRelatedMobile: 2,
     };
 
     return mobileConfig;

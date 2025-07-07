@@ -20,6 +20,18 @@ Object.defineProperty(window, 'open', {
   value: mockWindowOpen,
 });
 
+// Mock window.location.href to prevent navigation errors
+const mockLocation = {
+  href: 'http://localhost:3000',
+  assign: jest.fn(),
+  replace: jest.fn(),
+  reload: jest.fn(),
+};
+Object.defineProperty(window, 'location', {
+  writable: true,
+  value: mockLocation,
+});
+
 // Mock document.querySelector
 const mockQuerySelector = jest.fn();
 Object.defineProperty(document, 'querySelector', {

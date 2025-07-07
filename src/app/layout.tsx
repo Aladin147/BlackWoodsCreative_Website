@@ -1,78 +1,18 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { Inter, Urbanist, JetBrains_Mono } from 'next/font/google';
 import { headers } from 'next/headers';
 
+import { GoogleAnalytics, CookieConsentBanner } from '@/components/analytics/GoogleAnalytics';
+import DevelopmentMonitors from '@/components/development/DevelopmentMonitors';
+// Test direct imports to bypass barrel export issues
+import { AtmosphericParticles } from '@/components/interactive/AtmosphericParticles';
+import { MagneticCursor } from '@/components/interactive/MagneticCursor';
 import { Header, ScrollProgress } from '@/components/layout';
 import { ContextAwareBreadcrumbs } from '@/components/layout/ContextAwareBreadcrumbs';
-import { StructuredData } from '@/components/seo';
+import { CoreWebVitalsOptimizer } from '@/components/optimization/CoreWebVitalsOptimizer';
+import { SimpleStructuredData } from '@/components/seo/SimpleStructuredData';
 import { ThemeProvider } from '@/context/ThemeContext';
 import './globals.css';
-
-// Optimized dynamic imports with retry logic and preloading
-const MagneticCursor = dynamic(
-  () => import('@/components/interactive').then(mod => ({ default: mod.MagneticCursor })),
-  {
-    ssr: false,
-    loading: () => null,
-  }
-);
-
-const AtmosphericParticles = dynamic(
-  () => import('@/components/interactive').then(mod => ({ default: mod.AtmosphericParticles })),
-  {
-    ssr: false,
-    loading: () => null,
-  }
-);
-
-// Performance monitoring (production only, smaller bundle)
-const PerformanceReporter = dynamic(
-  () => {
-    if (process.env.NODE_ENV !== 'production') {
-      return Promise.resolve({ default: () => null });
-    }
-    return import('@/lib/utils/performance-monitor').then(mod => ({
-      default: function PerformanceReporter() {
-        if (typeof window !== 'undefined') {
-          const monitor = mod.getPerformanceMonitor();
-          // Report metrics after page load
-          setTimeout(() => monitor.reportMetrics(), 3000);
-        }
-        return null;
-      },
-    }));
-  },
-  { ssr: false }
-);
-
-// Development monitoring components (development only)
-const DevelopmentMonitors = dynamic(
-  () => {
-    if (process.env.NODE_ENV !== 'development') {
-      return Promise.resolve({ default: () => null });
-    }
-    return Promise.all([
-      import('@/hooks/useAnimationPerformance'),
-      import('@/hooks/useDeviceAdaptation'),
-      import('@/hooks/useHashCollection'),
-    ]).then(([animMod, deviceMod, hashMod]) => ({
-      default: function DevelopmentMonitors() {
-        const AnimationMonitor = animMod.AnimationPerformanceMonitor;
-        const DeviceMonitor = deviceMod.DeviceAdaptationMonitor;
-        const HashCollectionDebug = hashMod.HashCollectionDebug;
-        return (
-          <>
-            <AnimationMonitor />
-            <DeviceMonitor />
-            <HashCollectionDebug />
-          </>
-        );
-      },
-    }));
-  },
-  { ssr: false }
-);
 
 const inter = Inter({
   subsets: ['latin'],
@@ -206,9 +146,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Get nonce and CSRF token from middleware headers
-  const headersList = headers();
+  const headersList = await headers();
   const nonce = headersList.get('x-nonce') ?? undefined;
   const csrfToken = headersList.get('x-csrf-token') ?? undefined;
 
@@ -217,6 +157,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {nonce && <meta name="csp-nonce" content={nonce} />}
         {csrfToken && <meta name="csrf-token" content={csrfToken} />}
+        <SimpleStructuredData metadata={metadata} />
       </head>
       <body className="bg-bw-bg-primary font-primary text-bw-text-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
         <ThemeProvider>
@@ -228,6 +169,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             >
               Skip to main content
             </a>
+            <CoreWebVitalsOptimizer />
             <AtmosphericParticles />
             <MagneticCursor />
             <ScrollProgress />
@@ -239,12 +181,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main id="main-content" className="relative">
               {children}
             </main>
-            <PerformanceReporter />
             <DevelopmentMonitors />
+
+            {/* Analytics and Business Features */}
+            <GoogleAnalytics />
+            <CookieConsentBanner />
           </div>
         </ThemeProvider>
       </body>
-      <StructuredData metadata={metadata} />
     </html>
   );
 }

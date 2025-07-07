@@ -1,13 +1,13 @@
 /**
  * SEO React Hooks
- * 
+ *
  * React hooks for SEO optimization and content integration
  */
 
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 
-import { contentManager } from '../content';
+import { legacyContentManager } from '../content';
 import { logger } from '../utils/logger';
 
 import { seoOptimizer, PageSEO, SEOAnalysis } from './optimization';
@@ -81,8 +81,8 @@ export function useContentSEO(contentId: string) {
   useEffect(() => {
     const loadContentSEO = () => {
       setLoading(true);
-      
-      const content = contentManager.get(contentId);
+
+      const content = legacyContentManager.get(contentId);
       if (!content) {
         setSeoData(null);
         setLoading(false);
@@ -148,9 +148,9 @@ export function useSEOMonitoring() {
 
   const updateMetrics = () => {
     // In a real implementation, this would collect data from all pages
-    const allContent = contentManager.getAll();
-    const contentWithSEO = allContent.filter(content => 
-      content.metadata?.seoTitle ?? content.metadata?.seoDescription
+    const allContent = legacyContentManager.getAll();
+    const contentWithSEO = allContent.filter(
+      content => content.metadata?.seoTitle ?? content.metadata?.seoDescription
     );
 
     setMetrics({
@@ -167,7 +167,7 @@ export function useSEOMonitoring() {
 
   useEffect(() => {
     updateMetrics();
-    
+
     // Update metrics periodically
     const interval = setInterval(updateMetrics, 30000);
     return () => clearInterval(interval);
@@ -224,12 +224,12 @@ export function useBreadcrumbs(customBreadcrumbs?: Array<{ name: string; url: st
 // Hook for canonical URLs
 export function useCanonicalUrl(customCanonical?: string) {
   const pathname = usePathname();
-  
+
   const canonicalUrl = useMemo(() => {
     if (customCanonical) {
       return customCanonical;
     }
-    
+
     const config = seoOptimizer.getConfig();
     return `${config.siteUrl}${pathname}`;
   }, [pathname, customCanonical]);
@@ -255,8 +255,13 @@ export function useSocialMeta(pageSEO: PageSEO) {
 
       // Twitter
       'twitter:card': pageSEO.twitterCard ?? 'summary_large_image',
-      'twitter:title': pageSEO.twitterTitle ?? pageSEO.ogTitle ?? pageSEO.title ?? config.defaultTitle,
-      'twitter:description': pageSEO.twitterDescription ?? pageSEO.ogDescription ?? pageSEO.description ?? config.defaultDescription,
+      'twitter:title':
+        pageSEO.twitterTitle ?? pageSEO.ogTitle ?? pageSEO.title ?? config.defaultTitle,
+      'twitter:description':
+        pageSEO.twitterDescription ??
+        pageSEO.ogDescription ??
+        pageSEO.description ??
+        config.defaultDescription,
       'twitter:image': pageSEO.twitterImage ?? pageSEO.ogImage ?? config.defaultImage,
       'twitter:site': config.twitterHandle,
       'twitter:creator': config.twitterHandle,

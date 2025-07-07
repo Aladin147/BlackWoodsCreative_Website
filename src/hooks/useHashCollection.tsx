@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { 
-  getHashCollector, 
-  startHashCollection, 
-  stopHashCollection, 
+import {
+  getHashCollector,
+  startHashCollection,
+  stopHashCollection,
   exportHashesForCSP,
-  getCollectionStats 
+  getCollectionStats,
 } from '@/lib/utils/hash-collector';
 
 type CollectionStats = ReturnType<typeof getCollectionStats>;
@@ -101,11 +101,11 @@ export function useHashCollection() {
         hashes,
         stats: getCollectionStats(),
       };
-      
-      const blob = new Blob([JSON.stringify(data, null, 2)], { 
-        type: 'application/json' 
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
       });
-      
+
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -114,7 +114,6 @@ export function useHashCollection() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-
     } catch {
       // Failed to download hashes
     }
@@ -165,18 +164,14 @@ export function HashCollectionDebug() {
 
   return (
     <div style={debugStyle}>
-      <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>
-        🔍 Hash Collection
-      </div>
-      
+      <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>🔍 Hash Collection</div>
+
       <div style={{ marginBottom: '8px' }}>
         Status: {isCollecting ? '🟢 Active' : '🔴 Inactive'}
       </div>
-      
-      <div style={{ marginBottom: '8px' }}>
-        Hashes: {stats.totalHashes}
-      </div>
-      
+
+      <div style={{ marginBottom: '8px' }}>Hashes: {stats.totalHashes}</div>
+
       {Object.keys(stats.byComponent).length > 0 && (
         <div style={{ marginBottom: '8px' }}>
           <div>By Component:</div>
@@ -187,35 +182,35 @@ export function HashCollectionDebug() {
           ))}
         </div>
       )}
-      
+
       <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
         <button
           onClick={isCollecting ? stopCollection : startCollection}
-          className="text-white border-none rounded cursor-pointer text-xs px-2 py-1"
+          className="cursor-pointer rounded border-none px-2 py-1 text-xs text-white"
           style={{
             background: isCollecting ? '#dc3545' : '#28a745',
           }}
         >
           {isCollecting ? 'Stop' : 'Start'}
         </button>
-        
+
         <button
           onClick={downloadHashes}
-          className="text-white border-none rounded cursor-pointer text-xs px-2 py-1"
+          className="cursor-pointer rounded border-none px-2 py-1 text-xs text-white"
           style={{ background: '#007bff' }}
         >
           Export
         </button>
-        
+
         <button
           onClick={clearHashes}
-          className="text-black border-none rounded cursor-pointer text-xs px-2 py-1"
+          className="cursor-pointer rounded border-none px-2 py-1 text-xs text-black"
           style={{ background: '#ffc107' }}
         >
           Clear
         </button>
       </div>
-      
+
       <div style={{ marginTop: '8px', fontSize: '10px', opacity: 0.7 }}>
         💡 Interact with the page to collect motion hashes
       </div>

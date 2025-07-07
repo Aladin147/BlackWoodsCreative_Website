@@ -198,10 +198,11 @@ describe('ContactSection', () => {
             () =>
               resolve({
                 ok: true,
-                json: () => Promise.resolve({
-                  success: true,
-                  message: "Thank you for your message! We'll get back to you within 24 hours.",
-                }),
+                json: () =>
+                  Promise.resolve({
+                    success: true,
+                    message: "Thank you for your message! We'll get back to you within 24 hours.",
+                  }),
               }),
             100
           )

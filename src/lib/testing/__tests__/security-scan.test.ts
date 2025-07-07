@@ -2,10 +2,7 @@
  * Security Scanner Tests
  */
 
-import {
-  SecurityScanner,
-  SecurityUtils,
-} from '../security-scan';
+import { SecurityScanner, SecurityUtils } from '../security-scan';
 
 describe('SecurityScanner', () => {
   let scanner: SecurityScanner;
@@ -17,7 +14,7 @@ describe('SecurityScanner', () => {
   describe('Configuration', () => {
     it('should use default security configuration', () => {
       const config = scanner.getConfig();
-      
+
       expect(config.checkDependencies).toBe(true);
       expect(config.checkConfiguration).toBe(true);
       expect(config.checkHeaders).toBe(true);
@@ -29,9 +26,9 @@ describe('SecurityScanner', () => {
         checkDependencies: false,
         severityThreshold: 'high',
       });
-      
+
       const config = customScanner.getConfig();
-      
+
       expect(config.checkDependencies).toBe(false);
       expect(config.severityThreshold).toBe('high');
       expect(config.checkConfiguration).toBe(true); // Should keep default
@@ -42,9 +39,9 @@ describe('SecurityScanner', () => {
         checkHeaders: false,
         severityThreshold: 'critical',
       });
-      
+
       const config = scanner.getConfig();
-      
+
       expect(config.checkHeaders).toBe(false);
       expect(config.severityThreshold).toBe('critical');
     });
@@ -54,16 +51,16 @@ describe('SecurityScanner', () => {
     it('should pass when no vulnerable dependencies are found', async () => {
       const packageJson = SecurityUtils.generateMockPackageJson({
         dependencies: {
-          'next': '^13.0.0',
-          'react': '^18.0.0',
+          next: '^13.0.0',
+          react: '^18.0.0',
         },
         devDependencies: {
-          'typescript': '^4.9.0',
+          typescript: '^4.9.0',
         },
       });
-      
+
       const result = await scanner.scanSecurity(packageJson);
-      
+
       // Note: This test might find vulnerabilities due to mock data
       // In a real implementation, this would check against actual vulnerability databases
       expect(result.vulnerabilities.filter(v => v.category === 'dependency')).toBeDefined();
@@ -72,12 +69,12 @@ describe('SecurityScanner', () => {
     it('should detect vulnerable dependencies', async () => {
       const packageJson = SecurityUtils.generateMockPackageJson({
         dependencies: {
-          'lodash': '^4.17.20', // Known vulnerable version in mock
+          lodash: '^4.17.20', // Known vulnerable version in mock
         },
       });
-      
+
       const result = await scanner.scanSecurity(packageJson);
-      
+
       const depVulns = result.vulnerabilities.filter(v => v.category === 'dependency');
       expect(depVulns.length).toBeGreaterThan(0);
       expect(depVulns[0]?.severity).toBe('high');
@@ -92,15 +89,13 @@ describe('SecurityScanner', () => {
         headers: () => [
           {
             source: '/(.*)',
-            headers: [
-              { key: 'X-Frame-Options', value: 'DENY' },
-            ],
+            headers: [{ key: 'X-Frame-Options', value: 'DENY' }],
           },
         ],
       });
-      
+
       const result = await scanner.scanSecurity(undefined, nextConfig);
-      
+
       const configVulns = result.vulnerabilities.filter(v => v.category === 'configuration');
       expect(configVulns).toHaveLength(0);
     });
@@ -109,9 +104,9 @@ describe('SecurityScanner', () => {
       const nextConfig = SecurityUtils.generateMockNextConfig({
         productionBrowserSourceMaps: true, // Insecure setting
       });
-      
+
       const result = await scanner.scanSecurity(undefined, nextConfig);
-      
+
       const sourceMapVulns = result.vulnerabilities.filter(
         v => v.category === 'configuration' && v.id === 'NEXT-001'
       );
@@ -123,9 +118,9 @@ describe('SecurityScanner', () => {
       const nextConfig = SecurityUtils.generateMockNextConfig({
         // Missing headers - don't pass undefined with exactOptionalPropertyTypes
       });
-      
+
       const result = await scanner.scanSecurity(undefined, nextConfig);
-      
+
       const headerWarnings = result.warnings.filter(w => w.id === 'NEXT-002');
       expect(headerWarnings).toHaveLength(1);
     });
@@ -134,9 +129,9 @@ describe('SecurityScanner', () => {
   describe('Security Headers Scanning', () => {
     it('should pass for complete security headers', async () => {
       const headers = SecurityUtils.generateMockHeaders();
-      
+
       const result = await scanner.scanSecurity(undefined, undefined, headers);
-      
+
       const headerVulns = result.vulnerabilities.filter(v => v.category === 'headers');
       expect(headerVulns).toHaveLength(0);
     });
@@ -146,9 +141,9 @@ describe('SecurityScanner', () => {
         'X-Frame-Options': undefined as any,
       });
       delete headers['X-Frame-Options'];
-      
+
       const result = await scanner.scanSecurity(undefined, undefined, headers);
-      
+
       const frameOptionsVulns = result.vulnerabilities.filter(
         v => v.category === 'headers' && v.title.includes('X-Frame-Options')
       );
@@ -161,9 +156,9 @@ describe('SecurityScanner', () => {
         'Content-Security-Policy': undefined as any,
       });
       delete headers['Content-Security-Policy'];
-      
+
       const result = await scanner.scanSecurity(undefined, undefined, headers);
-      
+
       const cspVulns = result.vulnerabilities.filter(
         v => v.category === 'headers' && v.title.includes('Content-Security-Policy')
       );
@@ -184,7 +179,9 @@ describe('SecurityScanner', () => {
 
       const result = await scanner.scanSecurity(undefined, undefined, undefined, environment);
 
-      const envVulns = result.vulnerabilities.filter(v => v.category === 'configuration' && v.id === 'ENV-001');
+      const envVulns = result.vulnerabilities.filter(
+        v => v.category === 'configuration' && v.id === 'ENV-001'
+      );
       expect(envVulns).toHaveLength(0);
     });
 
@@ -193,9 +190,9 @@ describe('SecurityScanner', () => {
         JWT_SECRET: 'actual-secret-value-123', // Real secret value
         API_KEY: 'sk-1234567890abcdef', // Real API key
       });
-      
+
       const result = await scanner.scanSecurity(undefined, undefined, undefined, environment);
-      
+
       const secretVulns = result.vulnerabilities.filter(v => v.id === 'ENV-001');
       expect(secretVulns.length).toBeGreaterThan(0);
       expect(secretVulns[0]?.severity).toBe('high');
@@ -208,9 +205,9 @@ describe('SecurityScanner', () => {
       const nextConfig = SecurityUtils.generateMockNextConfig();
       const headers = SecurityUtils.generateMockHeaders();
       const environment = SecurityUtils.generateMockEnvironment();
-      
+
       const result = await scanner.scanSecurity(packageJson, nextConfig, headers, environment);
-      
+
       expect(result.score).toBeGreaterThanOrEqual(0);
       expect(result.score).toBeLessThanOrEqual(100);
       expect(result.summary.totalChecks).toBeGreaterThan(0);
@@ -219,13 +216,15 @@ describe('SecurityScanner', () => {
     it('should pass when no critical vulnerabilities exist', async () => {
       const headers = SecurityUtils.generateMockHeaders();
       const environment = SecurityUtils.generateMockEnvironment();
-      
+
       const result = await scanner.scanSecurity(undefined, undefined, headers, environment);
-      
+
       // Filter out dependency vulnerabilities for this test
       const nonDepVulns = result.vulnerabilities.filter(v => v.category !== 'dependency');
-      const hasCriticalOrHigh = nonDepVulns.some(v => v.severity === 'critical' || v.severity === 'high');
-      
+      const hasCriticalOrHigh = nonDepVulns.some(
+        v => v.severity === 'critical' || v.severity === 'high'
+      );
+
       if (!hasCriticalOrHigh) {
         expect(result.passed).toBe(true);
       }
@@ -233,11 +232,11 @@ describe('SecurityScanner', () => {
 
     it('should fail when critical vulnerabilities exist', async () => {
       scanner.updateConfig({ severityThreshold: 'critical' });
-      
+
       const headers = {}; // Missing all security headers
-      
+
       const result = await scanner.scanSecurity(undefined, undefined, headers);
-      
+
       const criticalVulns = result.vulnerabilities.filter(v => v.severity === 'critical');
       if (criticalVulns.length > 0) {
         expect(result.passed).toBe(false);
@@ -247,18 +246,20 @@ describe('SecurityScanner', () => {
     it('should generate appropriate recommendations', async () => {
       const packageJson = SecurityUtils.generateMockPackageJson();
       const headers = {}; // Missing headers to trigger recommendations
-      
+
       const result = await scanner.scanSecurity(packageJson, undefined, headers);
-      
+
       expect(result.recommendations.length).toBeGreaterThan(0);
-      
-      const hasHeaderRecommendation = result.recommendations.some(r => r.includes('security headers'));
+
+      const hasHeaderRecommendation = result.recommendations.some(r =>
+        r.includes('security headers')
+      );
       const hasDepRecommendation = result.recommendations.some(r => r.includes('dependencies'));
-      
+
       if (result.vulnerabilities.some(v => v.category === 'headers')) {
         expect(hasHeaderRecommendation).toBe(true);
       }
-      
+
       if (result.vulnerabilities.some(v => v.category === 'dependency')) {
         expect(hasDepRecommendation).toBe(true);
       }
@@ -269,7 +270,7 @@ describe('SecurityScanner', () => {
     it('should return the same instance', () => {
       const instance1 = SecurityScanner.getInstance();
       const instance2 = SecurityScanner.getInstance();
-      
+
       expect(instance1).toBe(instance2);
     });
   });
@@ -311,7 +312,7 @@ describe('SecurityUtils', () => {
         { severity: 'medium' } as any,
         { severity: 'low' } as any,
       ];
-      
+
       const riskScore = SecurityUtils.calculateRiskScore(vulnerabilities);
       expect(riskScore).toBe(22); // 10 + 7 + 4 + 1
     });
@@ -320,7 +321,7 @@ describe('SecurityUtils', () => {
       const criticalVuln = { severity: 'critical' } as any;
       const highVuln = { severity: 'high' } as any;
       const mediumVuln = { severity: 'medium' } as any;
-      
+
       expect(SecurityUtils.isExploitable(criticalVuln)).toBe(true);
       expect(SecurityUtils.isExploitable(highVuln)).toBe(true);
       expect(SecurityUtils.isExploitable(mediumVuln)).toBe(false);
@@ -330,15 +331,15 @@ describe('SecurityUtils', () => {
       const resultWithCritical = {
         summary: { criticalIssues: 1, highIssues: 0 },
       } as any;
-      
+
       const resultWithManyHigh = {
         summary: { criticalIssues: 0, highIssues: 3 },
       } as any;
-      
+
       const resultSafe = {
         summary: { criticalIssues: 0, highIssues: 1 },
       } as any;
-      
+
       expect(SecurityUtils.shouldBlockDeployment(resultWithCritical)).toBe(true);
       expect(SecurityUtils.shouldBlockDeployment(resultWithManyHigh)).toBe(true);
       expect(SecurityUtils.shouldBlockDeployment(resultSafe)).toBe(false);
@@ -352,9 +353,9 @@ describe('SecurityUtils', () => {
         { category: 'headers', title: 'Vuln 2' } as any,
         { category: 'dependency', title: 'Vuln 3' } as any,
       ];
-      
+
       const grouped = SecurityUtils.groupVulnerabilitiesByCategory(vulnerabilities);
-      
+
       expect(grouped.dependency).toHaveLength(2);
       expect(grouped.headers).toHaveLength(1);
     });
@@ -366,9 +367,9 @@ describe('SecurityUtils', () => {
         { severity: 'medium', title: 'Medium Vuln' } as any,
         { severity: 'high', title: 'High Vuln' } as any,
       ];
-      
+
       const top = SecurityUtils.getTopVulnerabilities(vulnerabilities, 2);
-      
+
       expect(top).toHaveLength(2);
       expect(top[0]?.severity).toBe('critical');
       expect(top[1]?.severity).toBe('high');
@@ -378,7 +379,7 @@ describe('SecurityUtils', () => {
   describe('Mock Data Generation', () => {
     it('should generate mock package.json', () => {
       const packageJson = SecurityUtils.generateMockPackageJson();
-      
+
       expect(packageJson.name).toBe('test-app');
       expect(packageJson.dependencies).toBeDefined();
       expect(packageJson.devDependencies).toBeDefined();
@@ -387,7 +388,7 @@ describe('SecurityUtils', () => {
 
     it('should generate mock Next.js config', () => {
       const nextConfig = SecurityUtils.generateMockNextConfig();
-      
+
       expect(nextConfig.reactStrictMode).toBe(true);
       expect(nextConfig.productionBrowserSourceMaps).toBe(false);
       expect(nextConfig.headers).toBeDefined();
@@ -395,7 +396,7 @@ describe('SecurityUtils', () => {
 
     it('should generate mock security headers', () => {
       const headers = SecurityUtils.generateMockHeaders();
-      
+
       expect(headers['X-Frame-Options']).toBe('DENY');
       expect(headers['X-Content-Type-Options']).toBe('nosniff');
       expect(headers['Content-Security-Policy']).toBe("default-src 'self'");
@@ -406,7 +407,7 @@ describe('SecurityUtils', () => {
         name: 'custom-app',
         dependencies: {
           'custom-lib': '^1.0.0',
-          'next': '^13.0.0', // Explicitly include to test merging
+          next: '^13.0.0', // Explicitly include to test merging
         },
       });
 
@@ -422,9 +423,9 @@ describe('SecurityUtils', () => {
         checkDependencies: true,
         severityThreshold: 'medium' as const,
       };
-      
+
       const result = SecurityUtils.validateSecurityConfig(validConfig);
-      
+
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
@@ -434,9 +435,9 @@ describe('SecurityUtils', () => {
         checkDependencies: 'yes' as any, // Should be boolean
         severityThreshold: 'invalid' as any, // Invalid severity
       };
-      
+
       const result = SecurityUtils.validateSecurityConfig(invalidConfig);
-      
+
       expect(result.valid).toBe(false);
       expect(result.errors.length).toBeGreaterThan(0);
     });
@@ -447,10 +448,10 @@ describe('SecurityUtils', () => {
       const scanner = new SecurityScanner();
       const packageJson = SecurityUtils.generateMockPackageJson();
       const headers = SecurityUtils.generateMockHeaders();
-      
+
       const result = await scanner.scanSecurity(packageJson, undefined, headers);
       const report = SecurityUtils.generateSecurityReport(result);
-      
+
       expect(report).toContain('# Security Scan Report');
       expect(report).toContain('## Summary');
       expect(report).toContain('Status:');
@@ -459,11 +460,11 @@ describe('SecurityUtils', () => {
 
     it('should generate security checklist', () => {
       const checklist = SecurityUtils.generateSecurityChecklist();
-      
+
       expect(checklist.length).toBeGreaterThan(0);
       expect(checklist[0]?.category).toBe('Dependencies');
       expect(checklist[0]?.items.length).toBeGreaterThan(0);
-      
+
       const categories = checklist.map(c => c.category);
       expect(categories).toContain('Configuration');
       expect(categories).toContain('Authentication & Authorization');

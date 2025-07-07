@@ -36,7 +36,7 @@ export function useAnimationPerformance(config: Partial<AnimationPerformanceConf
 
   const frameTimesRef = useRef<number[]>([]);
   const lastFrameTimeRef = useRef<number>(performance.now());
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
   const animationCountRef = useRef<number>(0);
 
   const measureFrame = useCallback(() => {

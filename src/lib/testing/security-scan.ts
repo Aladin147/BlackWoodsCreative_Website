@@ -1,6 +1,6 @@
 /**
  * Security Vulnerability Scanner
- * 
+ *
  * Tools for scanning and validating security vulnerabilities and best practices
  */
 
@@ -51,7 +51,7 @@ export interface SecurityWarning {
 }
 
 // Security categories
-export type SecurityCategory = 
+export type SecurityCategory =
   | 'dependency'
   | 'configuration'
   | 'authentication'
@@ -230,7 +230,7 @@ export class SecurityScanner {
     let passedChecks = 0;
 
     const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
-    
+
     // Mock vulnerability database (in real implementation, this would query actual vulnerability databases)
     const knownVulnerabilities = [
       {
@@ -239,7 +239,8 @@ export class SecurityScanner {
         vulnerability: {
           id: 'CVE-2021-23337',
           title: 'Command Injection in lodash',
-          description: 'lodash versions prior to 4.17.21 are vulnerable to Command Injection via template.',
+          description:
+            'lodash versions prior to 4.17.21 are vulnerable to Command Injection via template.',
           severity: 'high' as SecuritySeverity,
           cwe: 'CWE-77',
           cvss: 7.2,
@@ -262,12 +263,12 @@ export class SecurityScanner {
     // Check each dependency
     Object.entries(dependencies).forEach(([packageName, version]) => {
       totalChecks++;
-      
+
       const vulnMatch = knownVulnerabilities.find(v => v.package === packageName);
       if (vulnMatch) {
         // Simplified version checking (in real implementation, use semver)
         const isVulnerable = true; // Mock: assume vulnerable for demo
-        
+
         if (isVulnerable) {
           vulnerabilities.push({
             id: vulnMatch.vulnerability.id,
@@ -341,7 +342,12 @@ export class SecurityScanner {
 
     // Check for HTTPS redirect
     totalChecks++;
-    if (!nextConfig.redirects?.some(r => r.source === '/' && r.has?.some(h => h.type === 'header' && h.key === 'x-forwarded-proto'))) {
+    if (
+      !nextConfig.redirects?.some(
+        r =>
+          r.source === '/' && r.has?.some(h => h.type === 'header' && h.key === 'x-forwarded-proto')
+      )
+    ) {
       warnings.push({
         id: 'NEXT-003',
         title: 'Missing HTTPS Redirect',
@@ -406,7 +412,7 @@ export class SecurityScanner {
     requiredHeaders.forEach(header => {
       totalChecks++;
       const headerValue = headers[header.name] ?? headers[header.name.toLowerCase()];
-      
+
       if (!headerValue) {
         vulnerabilities.push({
           id: `HEADER-${header.name.replace(/[^A-Z]/g, '')}`,
@@ -462,7 +468,7 @@ export class SecurityScanner {
 
     Object.entries(environment).forEach(([key, value]) => {
       totalChecks++;
-      
+
       const sensitiveMatch = sensitivePatterns.find(p => p.pattern.test(key));
       if (sensitiveMatch && value && value.length > 0) {
         // Check if it looks like a real secret (not a placeholder)
@@ -475,9 +481,10 @@ export class SecurityScanner {
           'test',
         ];
 
-        const isPlaceholder = placeholderPatterns.some(pattern =>
-          value.toLowerCase().includes(pattern.toLowerCase())
-        ) || value.startsWith('$');
+        const isPlaceholder =
+          placeholderPatterns.some(pattern =>
+            value.toLowerCase().includes(pattern.toLowerCase())
+          ) || value.startsWith('$');
 
         if (!isPlaceholder) {
           vulnerabilities.push({
@@ -536,10 +543,18 @@ export class SecurityScanner {
     // Deduct additional points for severity
     vulnerabilities.forEach(vuln => {
       switch (vuln.severity) {
-        case 'critical': score -= 20; break;
-        case 'high': score -= 15; break;
-        case 'medium': score -= 10; break;
-        case 'low': score -= 5; break;
+        case 'critical':
+          score -= 20;
+          break;
+        case 'high':
+          score -= 15;
+          break;
+        case 'medium':
+          score -= 10;
+          break;
+        case 'low':
+          score -= 5;
+          break;
       }
     });
 
@@ -550,16 +565,12 @@ export class SecurityScanner {
   private determinePassStatus(vulnerabilities: SecurityVulnerability[]): boolean {
     const severityLevels = ['critical', 'high', 'medium', 'low', 'info'];
     const thresholdIndex = severityLevels.indexOf(this.config.severityThreshold);
-    
-    return !vulnerabilities.some(vuln => 
-      severityLevels.indexOf(vuln.severity) <= thresholdIndex
-    );
+
+    return !vulnerabilities.some(vuln => severityLevels.indexOf(vuln.severity) <= thresholdIndex);
   }
 
   // Generate security recommendations
-  private generateRecommendations(
-    vulnerabilities: SecurityVulnerability[]
-  ): string[] {
+  private generateRecommendations(vulnerabilities: SecurityVulnerability[]): string[] {
     const recommendations: string[] = [];
 
     const criticalVulns = vulnerabilities.filter(v => v.severity === 'critical');
@@ -623,12 +634,18 @@ export const SecurityUtils = {
   // Get severity color
   getSeverityColor: (severity: SecuritySeverity): string => {
     switch (severity) {
-      case 'critical': return '#dc2626'; // red-600
-      case 'high': return '#ea580c'; // orange-600
-      case 'medium': return '#ca8a04'; // yellow-600
-      case 'low': return '#16a34a'; // green-600
-      case 'info': return '#3b82f6'; // blue-500
-      default: return '#6b7280'; // gray-500
+      case 'critical':
+        return '#dc2626'; // red-600
+      case 'high':
+        return '#ea580c'; // orange-600
+      case 'medium':
+        return '#ca8a04'; // yellow-600
+      case 'low':
+        return '#16a34a'; // green-600
+      case 'info':
+        return '#3b82f6'; // blue-500
+      default:
+        return '#6b7280'; // gray-500
     }
   },
 
@@ -663,7 +680,7 @@ export const SecurityUtils = {
         report += `**Affected:** ${vuln.affected.join(', ')}\n`;
         report += `**Fix:** ${vuln.fix}\n`;
         report += `**References:**\n`;
-        vuln.references.forEach(ref => report += `- ${ref}\n`);
+        vuln.references.forEach(ref => (report += `- ${ref}\n`));
         report += `\n`;
       });
     }
@@ -677,7 +694,7 @@ export const SecurityUtils = {
         report += `**Description:** ${warning.description}\n`;
         report += `**Suggestion:** ${warning.suggestion}\n`;
         report += `**References:**\n`;
-        warning.references.forEach(ref => report += `- ${ref}\n`);
+        warning.references.forEach(ref => (report += `- ${ref}\n`));
         report += `\n`;
       });
     }
@@ -686,21 +703,23 @@ export const SecurityUtils = {
   },
 
   // Mock package.json for testing
-  generateMockPackageJson: (overrides: Partial<PackageJsonStructure> = {}): PackageJsonStructure => {
+  generateMockPackageJson: (
+    overrides: Partial<PackageJsonStructure> = {}
+  ): PackageJsonStructure => {
     const defaultPackageJson = {
       name: 'test-app',
       version: '1.0.0',
       dependencies: {
-        'next': '^13.0.0',
-        'react': '^18.0.0',
+        next: '^13.0.0',
+        react: '^18.0.0',
         'react-dom': '^18.0.0',
-        'lodash': '^4.17.20', // Vulnerable version for testing
+        lodash: '^4.17.20', // Vulnerable version for testing
       },
       devDependencies: {
-        'typescript': '^4.9.0',
-        'eslint': '^8.0.0',
-        'jest': '^29.0.0',
-        'axios': '^0.21.1', // Vulnerable version for testing
+        typescript: '^4.9.0',
+        eslint: '^8.0.0',
+        jest: '^29.0.0',
+        axios: '^0.21.1', // Vulnerable version for testing
       },
     };
 
@@ -760,27 +779,44 @@ export const SecurityUtils = {
   },
 
   // Validate security configuration
-  validateSecurityConfig: (config: Partial<SecurityConfig>): { valid: boolean; errors: string[] } => {
+  validateSecurityConfig: (
+    config: Partial<SecurityConfig>
+  ): { valid: boolean; errors: string[] } => {
     const errors: string[] = [];
 
     // Check severity threshold
     if (config.severityThreshold) {
       const validSeverities: SecuritySeverity[] = ['critical', 'high', 'medium', 'low', 'info'];
       if (!validSeverities.includes(config.severityThreshold)) {
-        errors.push('Invalid severity threshold. Must be one of: critical, high, medium, low, info');
+        errors.push(
+          'Invalid severity threshold. Must be one of: critical, high, medium, low, info'
+        );
       }
     }
 
     // Check boolean flags
     const booleanFlags = [
-      'checkDependencies', 'checkConfiguration', 'checkHeaders', 'checkCORS',
-      'checkCSP', 'checkHTTPS', 'checkXSS', 'checkCSRF', 'checkInjection',
-      'checkAuthentication', 'checkAuthorization', 'checkCryptography',
-      'checkErrorHandling', 'checkLogging'
+      'checkDependencies',
+      'checkConfiguration',
+      'checkHeaders',
+      'checkCORS',
+      'checkCSP',
+      'checkHTTPS',
+      'checkXSS',
+      'checkCSRF',
+      'checkInjection',
+      'checkAuthentication',
+      'checkAuthorization',
+      'checkCryptography',
+      'checkErrorHandling',
+      'checkLogging',
     ];
 
     booleanFlags.forEach(flag => {
-      if (config[flag as keyof SecurityConfig] !== undefined && typeof config[flag as keyof SecurityConfig] !== 'boolean') {
+      if (
+        config[flag as keyof SecurityConfig] !== undefined &&
+        typeof config[flag as keyof SecurityConfig] !== 'boolean'
+      ) {
         errors.push(`${flag} must be a boolean value`);
       }
     });
@@ -813,11 +849,21 @@ export const SecurityUtils = {
 
     vulnerabilities.forEach(vuln => {
       switch (vuln.severity) {
-        case 'critical': riskScore += 10; break;
-        case 'high': riskScore += 7; break;
-        case 'medium': riskScore += 4; break;
-        case 'low': riskScore += 1; break;
-        case 'info': riskScore += 0; break;
+        case 'critical':
+          riskScore += 10;
+          break;
+        case 'high':
+          riskScore += 7;
+          break;
+        case 'medium':
+          riskScore += 4;
+          break;
+        case 'low':
+          riskScore += 1;
+          break;
+        case 'info':
+          riskScore += 0;
+          break;
       }
     });
 
@@ -825,7 +871,9 @@ export const SecurityUtils = {
   },
 
   // Group vulnerabilities by category
-  groupVulnerabilitiesByCategory: (vulnerabilities: SecurityVulnerability[]): Record<SecurityCategory, SecurityVulnerability[]> => {
+  groupVulnerabilitiesByCategory: (
+    vulnerabilities: SecurityVulnerability[]
+  ): Record<SecurityCategory, SecurityVulnerability[]> => {
     const grouped: Record<string, SecurityVulnerability[]> = {};
 
     vulnerabilities.forEach(vuln => {
@@ -840,7 +888,10 @@ export const SecurityUtils = {
   },
 
   // Get top vulnerabilities by severity
-  getTopVulnerabilities: (vulnerabilities: SecurityVulnerability[], limit = 5): SecurityVulnerability[] => {
+  getTopVulnerabilities: (
+    vulnerabilities: SecurityVulnerability[],
+    limit = 5
+  ): SecurityVulnerability[] => {
     const severityOrder: Record<SecuritySeverity, number> = {
       critical: 5,
       high: 4,
@@ -876,7 +927,7 @@ export const SecurityUtils = {
         items: [
           'Source maps are disabled in production',
           'Debug mode is disabled in production',
-          'Error messages don\'t expose sensitive information',
+          "Error messages don't expose sensitive information",
           'Secure headers are configured',
         ],
       },

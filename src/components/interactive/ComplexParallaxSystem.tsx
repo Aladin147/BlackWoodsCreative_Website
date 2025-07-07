@@ -326,6 +326,13 @@ export function AtmosphericLayer({
 }) {
   const baseClasses = `absolute inset-0 pointer-events-none ${className}`;
 
+  // Deterministic values based on type and intensity to prevent hydration issues
+  const getDeterministicValue = (seed: number, min: number, max: number): number => {
+    // Simple deterministic pseudo-random based on seed
+    const x = Math.sin(seed) * 10000;
+    return min + (x - Math.floor(x)) * (max - min);
+  };
+
   switch (type) {
     case 'mist':
       return (
@@ -348,26 +355,34 @@ export function AtmosphericLayer({
     case 'particles':
       return (
         <div className={baseClasses}>
-          {Array.from({ length: Math.round(80 * intensity) }).map((_, i) => (
-            <motion.div
-              key={i}
-              className={`absolute h-1 w-1 bg-${color} rounded-full opacity-60`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -100, 0],
-                opacity: [0, intensity, 0],
-              }}
-              transition={{
-                duration: 10 + Math.random() * 10,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-                ease: 'linear',
-              }}
-            />
-          ))}
+          {Array.from({ length: Math.round(80 * intensity) }).map((_, i) => {
+            // Use deterministic positioning based on index
+            const leftPos = getDeterministicValue(i * 7, 0, 100);
+            const topPos = getDeterministicValue(i * 11, 0, 100);
+            const duration = getDeterministicValue(i * 13, 10, 20);
+            const delay = getDeterministicValue(i * 17, 0, 5);
+
+            return (
+              <motion.div
+                key={i}
+                className={`absolute h-1 w-1 bg-${color} rounded-full opacity-60`}
+                style={{
+                  left: `${leftPos}%`,
+                  top: `${topPos}%`,
+                }}
+                animate={{
+                  y: [0, -100, 0],
+                  opacity: [0, intensity, 0],
+                }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  delay,
+                  ease: 'linear',
+                }}
+              />
+            );
+          })}
         </div>
       );
 
@@ -383,30 +398,43 @@ export function AtmosphericLayer({
     case 'orbs':
       return (
         <div className={baseClasses}>
-          {Array.from({ length: Math.round(5 * intensity) }).map((_, i) => (
-            <motion.div
-              key={i}
-              className={`absolute rounded-full bg-${color} blur-xl`}
-              style={{
-                width: `${100 + Math.random() * 200}px`,
-                height: `${100 + Math.random() * 200}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: intensity * 0.3,
-              }}
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [intensity * 0.2, intensity * 0.4, intensity * 0.2],
-                x: [0, Math.random() * 50 - 25, 0],
-                y: [0, Math.random() * 50 - 25, 0],
-              }}
-              transition={{
-                duration: 15 + Math.random() * 10,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-          ))}
+          {Array.from({ length: Math.round(5 * intensity) }).map((_, i) => {
+            // Use deterministic values based on index
+            const width = 100 + getDeterministicValue(i * 19, 0, 200);
+            const height = 100 + getDeterministicValue(i * 23, 0, 200);
+            const leftPos = getDeterministicValue(i * 29, 0, 100);
+            const topPos = getDeterministicValue(i * 31, 0, 100);
+            const xMovement = getDeterministicValue(i * 37, -25, 25);
+            const yMovement = getDeterministicValue(i * 41, -15, 15);
+            const duration = getDeterministicValue(i * 43, 12, 20);
+            const delay = getDeterministicValue(i * 47, 0, 3);
+
+            return (
+              <motion.div
+                key={i}
+                className={`absolute rounded-full bg-${color} blur-xl`}
+                style={{
+                  width: `${width}px`,
+                  height: `${height}px`,
+                  left: `${leftPos}%`,
+                  top: `${topPos}%`,
+                  opacity: intensity * 0.3,
+                }}
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [intensity * 0.2, intensity * 0.4, intensity * 0.2],
+                  x: [0, xMovement, 0],
+                  y: [0, yMovement, 0],
+                }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay,
+                }}
+              />
+            );
+          })}
         </div>
       );
 

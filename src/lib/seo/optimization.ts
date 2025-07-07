@@ -1,12 +1,14 @@
 /**
  * SEO Optimization Framework
- * 
+ *
  * Comprehensive SEO system with content-based optimization and analytics
  */
 
 import { Metadata } from 'next';
 
-import { contentManager, ImageContent } from '../content';
+import { legacyContentManager, type LegacyImageContent } from '../content';
+
+import { SEOIssue } from './types';
 
 // SEO configuration
 export interface SEOConfig {
@@ -72,14 +74,7 @@ export interface SEOAnalysis {
   };
 }
 
-// SEO issue
-export interface SEOIssue {
-  type: 'error' | 'warning' | 'info';
-  category: 'title' | 'description' | 'keywords' | 'images' | 'structure' | 'performance';
-  message: string;
-  impact: 'high' | 'medium' | 'low';
-  fix?: string;
-}
+// SEO issue type is now imported from centralized types
 
 // Heading structure
 export interface HeadingStructure {
@@ -111,7 +106,8 @@ export const DEFAULT_SEO_CONFIG: SEOConfig = {
   siteName: 'BlackWoods Creative',
   siteUrl: 'https://blackwoodscreative.com',
   defaultTitle: 'BlackWoods Creative - Premium Visual Storytelling',
-  defaultDescription: 'Professional filmmaking, photography, 3D visualization, and scene creation services. Transform your vision into compelling visual narratives.',
+  defaultDescription:
+    'Professional filmmaking, photography, 3D visualization, and scene creation services. Transform your vision into compelling visual narratives.',
   defaultKeywords: [
     'filmmaking',
     'photography',
@@ -176,9 +172,7 @@ export class SEOOptimizer {
       nofollow = false,
     } = pageSEO;
 
-    const finalTitle = title 
-      ? `${title} | ${this.config.siteName}`
-      : this.config.defaultTitle;
+    const finalTitle = title ? `${title} | ${this.config.siteName}` : this.config.defaultTitle;
 
     const finalDescription = description ?? this.config.defaultDescription;
     const finalKeywords = keywords ?? this.config.defaultKeywords;
@@ -189,7 +183,7 @@ export class SEOOptimizer {
       title: finalTitle,
       description: finalDescription,
       keywords: finalKeywords.join(', '),
-      
+
       // Canonical URL
       alternates: {
         canonical: finalCanonical,
@@ -243,10 +237,13 @@ export class SEOOptimizer {
     if (this.config.alternateLocales) {
       metadata.alternates = {
         ...metadata.alternates,
-        languages: this.config.alternateLocales.reduce((acc, locale) => {
-          acc[locale] = `${this.config.siteUrl}/${locale}${path}`;
-          return acc;
-        }, {} as Record<string, string>),
+        languages: this.config.alternateLocales.reduce(
+          (acc, locale) => {
+            acc[locale] = `${this.config.siteUrl}/${locale}${path}`;
+            return acc;
+          },
+          {} as Record<string, string>
+        ),
       };
     }
 
@@ -397,9 +394,15 @@ export class SEOOptimizer {
     let score = 100;
     issues.forEach(issue => {
       switch (issue.impact) {
-        case 'high': score -= 15; break;
-        case 'medium': score -= 10; break;
-        case 'low': score -= 5; break;
+        case 'high':
+          score -= 15;
+          break;
+        case 'medium':
+          score -= 10;
+          break;
+        case 'low':
+          score -= 5;
+          break;
       }
     });
 
@@ -476,18 +479,21 @@ export class SEOOptimizer {
 
   // Analyze image SEO
   private analyzeImageSEO(): ImageSEOMetrics {
-    const images = contentManager.getByType<ImageContent>('image');
-    
+    const images = legacyContentManager.getByType<LegacyImageContent>('image');
+
     return {
       totalImages: images.length,
       imagesWithAlt: images.filter(img => img.alt && img.alt.trim().length > 0).length,
       imagesWithTitle: images.filter(img => img.metadata?.title).length,
       averageFileSize: 0, // File size not tracked in metadata
-      formatDistribution: images.reduce((acc, img) => {
-        const format = img.src.split('.').pop()?.toLowerCase() ?? 'unknown';
-        acc[format] = (acc[format] ?? 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
+      formatDistribution: images.reduce(
+        (acc, img) => {
+          const format = img.src.split('.').pop()?.toLowerCase() ?? 'unknown';
+          acc[format] = (acc[format] ?? 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      ),
     };
   }
 
@@ -577,7 +583,9 @@ export const SEOUtils = {
   },
 
   // Generate breadcrumb structured data
-  generateBreadcrumbStructuredData: (breadcrumbs: Array<{ name: string; url: string }>): Record<string, unknown> => {
+  generateBreadcrumbStructuredData: (
+    breadcrumbs: Array<{ name: string; url: string }>
+  ): Record<string, unknown> => {
     return {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',

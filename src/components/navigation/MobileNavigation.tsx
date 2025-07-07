@@ -46,14 +46,10 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
         <MagneticField strength={0.3} distance={80}>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-bw-border-subtle bg-bw-bg-secondary text-bw-text-primary transition-all duration-300 hover:border-bw-accent-gold hover:bg-bw-accent-gold hover:text-bw-bg-primary"
+            className="bg-bw-bg-secondary flex h-10 w-10 items-center justify-center rounded-lg border border-bw-border-subtle text-bw-text-primary transition-all duration-300 hover:border-bw-accent-gold hover:bg-bw-accent-gold hover:text-bw-bg-primary"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
           >
-            {isOpen ? (
-              <XMarkIcon className="h-5 w-5" />
-            ) : (
-              <Bars3Icon className="h-5 w-5" />
-            )}
+            {isOpen ? <XMarkIcon className="h-5 w-5" /> : <Bars3Icon className="h-5 w-5" />}
           </button>
         </MagneticField>
       </div>
@@ -74,14 +70,12 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="absolute right-0 top-0 h-full w-80 bg-bw-bg-primary shadow-xl"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <div className="flex h-full flex-col">
                 {/* Menu Header */}
                 <div className="flex items-center justify-between border-b border-bw-border-subtle p-4">
-                  <h3 className="font-display text-display-sm text-bw-text-primary">
-                    Navigation
-                  </h3>
+                  <h3 className="text-display-sm font-display text-bw-text-primary">Navigation</h3>
                   <button
                     onClick={() => setIsOpen(false)}
                     className="flex h-8 w-8 items-center justify-center rounded-lg text-bw-text-secondary transition-colors hover:text-bw-accent-gold"
@@ -93,7 +87,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
                 {/* Menu Content */}
                 <div className="flex-1 overflow-y-auto p-4">
                   {/* Current Page Info */}
-                  <div className="mb-6 rounded-lg bg-bw-bg-secondary p-4">
+                  <div className="bg-bw-bg-secondary mb-6 rounded-lg p-4">
                     <div className="text-sm text-bw-text-secondary">Current page</div>
                     <div className="font-medium text-bw-text-primary">
                       {getCurrentPageTitle(context.currentPath)}
@@ -107,7 +101,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
                         Related Pages
                       </h4>
                       <div className="space-y-2">
-                        {context.relatedLinks.slice(0, mobileConfig.maxRelatedMobile).map((link) => (
+                        {context.relatedLinks.slice(0, mobileConfig.maxRelatedMobile).map(link => (
                           <Link
                             key={link.href}
                             href={link.href}
@@ -128,9 +122,7 @@ export function MobileNavigation({ className = '' }: MobileNavigationProps) {
 
                   {/* Quick Actions */}
                   <div>
-                    <h4 className="mb-3 text-sm font-medium text-bw-text-primary">
-                      Quick Actions
-                    </h4>
+                    <h4 className="mb-3 text-sm font-medium text-bw-text-primary">Quick Actions</h4>
                     <div className="space-y-2">
                       <Link
                         href="/"
@@ -184,10 +176,10 @@ function getCurrentPageTitle(pathname: string): string {
 export function MobileNavigationFAB({ className = '' }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const context = useNavigationContext();
-  
+
   // Only show on subpages
   if (!context.isSubpage) return null;
-  
+
   return (
     <div className={`fixed bottom-4 right-4 z-40 lg:hidden ${className}`}>
       <MagneticField strength={0.4} distance={100}>
@@ -199,7 +191,7 @@ export function MobileNavigationFAB({ className = '' }: { className?: string }) 
           <Bars3Icon className="h-6 w-6" />
         </button>
       </MagneticField>
-      
+
       {/* Quick menu overlay */}
       <AnimatePresence>
         {isOpen && (

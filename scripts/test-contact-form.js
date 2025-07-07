@@ -25,11 +25,11 @@ async function testContactForm() {
     // First, get a CSRF token
     console.log('1. Fetching CSRF token...');
     const csrfResponse = await fetch(`${API_URL}/csrf`);
-    
+
     if (!csrfResponse.ok) {
       throw new Error(`Failed to get CSRF token: ${csrfResponse.status}`);
     }
-    
+
     const { token } = await csrfResponse.json();
     console.log('✅ CSRF token obtained successfully\n');
 
@@ -55,7 +55,6 @@ async function testContactForm() {
       console.log(`Status: ${response.status}`);
       console.log(`Response:`, result);
     }
-
   } catch (error) {
     console.error('❌ Test failed with error:', error.message);
     console.log('\n💡 Make sure the development server is running on http://localhost:3001');

@@ -368,8 +368,7 @@ describe('Performance Utils', () => {
 
   describe('withPerformanceMonitoring', () => {
     it('wraps component with performance monitoring', () => {
-      const TestComponent = (props: { name: string }) =>
-        createElement('div', null, props.name);
+      const TestComponent = (props: { name: string }) => createElement('div', null, props.name);
       const MonitoredComponent = withPerformanceMonitoring(TestComponent, 'TestComponent');
 
       expect(typeof MonitoredComponent).toBe('function');
@@ -395,11 +394,7 @@ describe('Performance Utils', () => {
 
       expect(
         isValidElement(
-          createElement(
-            Suspense,
-            { fallback: 'Loading...' },
-            createElement(LazyComponent)
-          )
+          createElement(Suspense, { fallback: 'Loading...' }, createElement(LazyComponent))
         )
       ).toBe(true);
     });

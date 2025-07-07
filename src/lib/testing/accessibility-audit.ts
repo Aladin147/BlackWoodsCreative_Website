@@ -1,6 +1,6 @@
 /**
  * Accessibility Compliance Audit
- * 
+ *
  * WCAG 2.1 compliance testing and accessibility validation tools
  */
 
@@ -221,7 +221,7 @@ export class AccessibilityChecker {
       const imgMatches = content.match(/<img[^>]*>/g) ?? [];
       imgMatches.forEach((match, index) => {
         const altMatch = match.match(/alt="([^"]*)"/);
-        const alt = altMatch ? altMatch[1] : (match.includes('alt=') ? '' : undefined);
+        const alt = altMatch ? altMatch[1] : match.includes('alt=') ? '' : undefined;
         const src = match.match(/src="([^"]*)"/)?.[1] ?? '';
         elements.push({ tag: 'img', alt, src, index });
       });
@@ -229,7 +229,8 @@ export class AccessibilityChecker {
 
     if (pattern === 'h[1-6]') {
       for (let level = 1; level <= 6; level++) {
-        const headingMatches = content.match(new RegExp(`<h${level}[^>]*>([^<]*)</h${level}>`, 'g')) ?? [];
+        const headingMatches =
+          content.match(new RegExp(`<h${level}[^>]*>([^<]*)</h${level}>`, 'g')) ?? [];
         headingMatches.forEach((match, index) => {
           const text = match.replace(/<[^>]*>/g, '');
           elements.push({ tag: `h${level}`, level, text, index });
@@ -261,7 +262,7 @@ export class AccessibilityChecker {
   private extractLandmarks(content: string): AccessibilityElement[] {
     const landmarks: AccessibilityElement[] = [];
     const landmarkTags = ['main', 'nav', 'header', 'footer', 'aside', 'section'];
-    
+
     landmarkTags.forEach(tag => {
       const matches = content.match(new RegExp(`<${tag}[^>]*>`, 'g')) ?? [];
       matches.forEach((_, index) => {
@@ -389,10 +390,10 @@ export class AccessibilityChecker {
     let passedChecks = 0;
 
     inputs.forEach((input: AccessibilityElement) => {
-      const hasLabel = labels.some((label: AccessibilityElement) =>
-        label.for === input.id || label.contains === input.id
+      const hasLabel = labels.some(
+        (label: AccessibilityElement) => label.for === input.id || label.contains === input.id
       );
-      
+
       if (!hasLabel && input.type !== 'hidden' && input.type !== 'submit') {
         violations.push({
           rule: 'label',
@@ -491,7 +492,7 @@ export class AccessibilityChecker {
   } {
     const violations: AccessibilityViolation[] = [];
     const warnings: AccessibilityWarning[] = [];
-    
+
     // In a real implementation, this would analyze actual colors
     // For now, we'll assume good contrast and return a passing result
     return {
@@ -514,13 +515,18 @@ export class AccessibilityChecker {
   }
 
   // Generate accessibility recommendations
-  private generateRecommendations(violations: AccessibilityViolation[], warnings: AccessibilityWarning[]): string[] {
+  private generateRecommendations(
+    violations: AccessibilityViolation[],
+    warnings: AccessibilityWarning[]
+  ): string[] {
     const recommendations: string[] = [];
 
     if (violations.length > 0) {
       recommendations.push('Fix all accessibility violations before deployment');
-      
-      const criticalViolations = violations.filter(v => v.severity === 'critical' || v.severity === 'serious');
+
+      const criticalViolations = violations.filter(
+        v => v.severity === 'critical' || v.severity === 'serious'
+      );
       if (criticalViolations.length > 0) {
         recommendations.push('Prioritize fixing critical and serious accessibility issues');
       }
@@ -663,7 +669,7 @@ export const AccessibilityUtils = {
     focusableElements: number;
     issues: string[];
   }> => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (typeof document === 'undefined') {
         resolve({ passed: true, focusableElements: 0, issues: [] });
         return;
@@ -685,7 +691,9 @@ export const AccessibilityUtils = {
         const hasBoxShadow = computedStyle.boxShadow !== 'none';
 
         if (!hasOutline && !hasBoxShadow) {
-          issues.push(`Element ${index + 1} (${htmlElement.tagName}) lacks visible focus indicator`);
+          issues.push(
+            `Element ${index + 1} (${htmlElement.tagName}) lacks visible focus indicator`
+          );
         }
       });
 
@@ -698,7 +706,9 @@ export const AccessibilityUtils = {
   },
 
   // Screen reader test (simplified)
-  testScreenReaderCompatibility: (content: string): {
+  testScreenReaderCompatibility: (
+    content: string
+  ): {
     passed: boolean;
     issues: string[];
     suggestions: string[];
@@ -732,7 +742,9 @@ export const AccessibilityUtils = {
   },
 
   // ARIA validation
-  validateARIA: (content: string): {
+  validateARIA: (
+    content: string
+  ): {
     passed: boolean;
     issues: string[];
   } => {
@@ -741,9 +753,18 @@ export const AccessibilityUtils = {
     // Check for invalid ARIA attributes (simplified)
     const ariaAttributes = content.match(/aria-\w+/g) ?? [];
     const validAriaAttributes = [
-      'aria-label', 'aria-labelledby', 'aria-describedby', 'aria-hidden',
-      'aria-expanded', 'aria-current', 'aria-live', 'aria-atomic',
-      'aria-relevant', 'aria-busy', 'aria-disabled', 'aria-readonly',
+      'aria-label',
+      'aria-labelledby',
+      'aria-describedby',
+      'aria-hidden',
+      'aria-expanded',
+      'aria-current',
+      'aria-live',
+      'aria-atomic',
+      'aria-relevant',
+      'aria-busy',
+      'aria-disabled',
+      'aria-readonly',
     ];
 
     ariaAttributes.forEach(attr => {
@@ -759,7 +780,9 @@ export const AccessibilityUtils = {
   },
 
   // Color accessibility check
-  checkColorAccessibility: (colors: Array<{ foreground: string; background: string; isLargeText?: boolean }>): {
+  checkColorAccessibility: (
+    colors: Array<{ foreground: string; background: string; isLargeText?: boolean }>
+  ): {
     passed: boolean;
     results: Array<{
       foreground: string;

@@ -24,32 +24,36 @@ export interface ServicePageData {
     answer: string; // 40-55 words for featured snippet
     details?: string[];
   };
-  services?: {
-    title: string;
-    description: string;
-    offerings?: Array<{
-      name: string;
-      features: string[];
-      popular?: boolean;
-    }>;
-  } | Array<{
-    title: string;
-    description: string;
-    features: string[];
-    benefits?: string[];
-  }>;
-  process?: {
-    title: string;
-    steps: Array<{
-      number: string;
-      title: string;
-      description: string;
-    }>;
-  } | Array<{
-    step: number;
-    title: string;
-    description: string;
-  }>;
+  services?:
+    | {
+        title: string;
+        description: string;
+        offerings?: Array<{
+          name: string;
+          features: string[];
+          popular?: boolean;
+        }>;
+      }
+    | Array<{
+        title: string;
+        description: string;
+        features: string[];
+        benefits?: string[];
+      }>;
+  process?:
+    | {
+        title: string;
+        steps: Array<{
+          number: string;
+          title: string;
+          description: string;
+        }>;
+      }
+    | Array<{
+        step: number;
+        title: string;
+        description: string;
+      }>;
   testimonials?: Array<{
     quote: string;
     author: string;
@@ -70,21 +74,13 @@ export interface ServicePageTemplateProps {
 
 /**
  * Service Page Template
- * 
+ *
  * Specialized template for money question pages and service landing pages.
  * Optimized for featured snippets and local SEO.
  */
-export function ServicePageTemplate({
-  metadata,
-  data,
-  className = '',
-}: ServicePageTemplateProps) {
+export function ServicePageTemplate({ metadata, data, className = '' }: ServicePageTemplateProps) {
   return (
-    <BasePageTemplate
-      metadata={metadata}
-      layout="service"
-      className={className}
-    >
+    <BasePageTemplate metadata={metadata} layout="service" className={className}>
       {/* Hero Section */}
       <HeroSection data={data.hero} />
 
@@ -114,28 +110,24 @@ export function ServicePageTemplate({
  */
 function HeroSection({ data }: { data: ServicePageData['hero'] }) {
   return (
-    <section className="relative bg-bw-bg-primary py-32 px-6">
+    <section className="relative bg-bw-bg-primary px-6 py-32">
       <div className="mx-auto max-w-7xl text-center">
         <ScrollReveal direction="up" distance={60}>
-          <h1 className="mb-6 font-display text-display-xl">
-            {data.title}
-          </h1>
+          <h1 className="mb-6 font-display text-display-xl">{data.title}</h1>
         </ScrollReveal>
-        
+
         <ScrollReveal direction="up" distance={40} delay={0.2}>
-          <p className="mb-8 text-body-xl text-bw-text-secondary max-w-3xl mx-auto">
+          <p className="mx-auto mb-8 max-w-3xl text-body-xl text-bw-text-secondary">
             {data.subtitle}
           </p>
         </ScrollReveal>
 
         <ScrollReveal direction="up" distance={40} delay={0.3}>
-          <p className="mb-12 text-body-lg max-w-4xl mx-auto">
-            {data.description}
-          </p>
+          <p className="mx-auto mb-12 max-w-4xl text-body-lg">{data.description}</p>
         </ScrollReveal>
 
         <ScrollReveal direction="up" distance={30} delay={0.4}>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <MagneticField strength={0.2} distance={100}>
               <motion.a
                 href={data.cta.primary.href}
@@ -146,7 +138,7 @@ function HeroSection({ data }: { data: ServicePageData['hero'] }) {
                 {data.cta.primary.text}
               </motion.a>
             </MagneticField>
-            
+
             {data.cta.secondary && (
               <MagneticField strength={0.15} distance={80}>
                 <motion.a
@@ -171,19 +163,15 @@ function HeroSection({ data }: { data: ServicePageData['hero'] }) {
  */
 function FeaturedAnswerSection({ data }: { data: ServicePageData['featuredAnswer'] }) {
   return (
-    <section className="relative bg-bw-bg-primary py-24 px-6">
+    <section className="relative bg-bw-bg-primary px-6 py-24">
       <div className="mx-auto max-w-4xl">
         <ScrollReveal direction="up" distance={40}>
-          <div className="bg-bw-border-subtle/20 rounded-2xl p-8 lg:p-12">
-            <h2 className="mb-6 font-display text-display-lg text-center">
-              {data.question}
-            </h2>
-            
+          <div className="rounded-2xl bg-bw-border-subtle/20 p-8 lg:p-12">
+            <h2 className="mb-6 text-center font-display text-display-lg">{data.question}</h2>
+
             {/* Featured snippet optimized answer */}
             <div className="mb-8 text-center">
-              <p className="text-body-xl leading-relaxed font-medium">
-                {data.answer}
-              </p>
+              <p className="text-body-xl font-medium leading-relaxed">{data.answer}</p>
             </div>
 
             {/* Additional details */}
@@ -192,7 +180,7 @@ function FeaturedAnswerSection({ data }: { data: ServicePageData['featuredAnswer
                 {data.details.map((detail, index) => (
                   <ScrollReveal key={index} direction="up" distance={20} delay={index * 0.1}>
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-2 h-2 bg-bw-accent-gold rounded-full mt-3" />
+                      <div className="mt-3 h-2 w-2 flex-shrink-0 rounded-full bg-bw-accent-gold" />
                       <p className="text-body-lg">{detail}</p>
                     </div>
                   </ScrollReveal>
@@ -215,19 +203,19 @@ function ServicesSection({ data }: { data: ServicePageData['services'] }) {
   // Handle array format (legacy)
   if (Array.isArray(data)) {
     return (
-      <section className="relative bg-bw-bg-primary py-24 px-6">
+      <section className="relative bg-bw-bg-primary px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {data.map((service, index) => (
               <ScrollReveal key={service.title} direction="up" distance={40} delay={index * 0.1}>
-                <div className="p-8 rounded-2xl border border-bw-border-subtle bg-bw-border-subtle/10">
-                  <h3 className="text-display-md font-display mb-4">{service.title}</h3>
-                  <p className="text-body-lg text-bw-text-secondary mb-6">{service.description}</p>
+                <div className="rounded-2xl border border-bw-border-subtle bg-bw-border-subtle/10 p-8">
+                  <h3 className="mb-4 font-display text-display-md">{service.title}</h3>
+                  <p className="mb-6 text-body-lg text-bw-text-secondary">{service.description}</p>
                   {service.features && (
                     <ul className="space-y-2">
                       {service.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-bw-accent-gold rounded-full flex-shrink-0" />
+                          <div className="h-2 w-2 flex-shrink-0 rounded-full bg-bw-accent-gold" />
                           <span className="text-body-lg">{feature}</span>
                         </li>
                       ))}
@@ -244,50 +232,50 @@ function ServicesSection({ data }: { data: ServicePageData['services'] }) {
 
   // Handle object format (new)
   return (
-    <section className="relative bg-bw-bg-primary py-24 px-6">
+    <section className="relative bg-bw-bg-primary px-6 py-24">
       <div className="mx-auto max-w-7xl">
-        <ScrollReveal direction="up" distance={40} className="text-center mb-16">
-          <h2 className="mb-6 font-display text-display-lg">
-            {data.title}
-          </h2>
-          <p className="text-body-xl text-bw-text-secondary max-w-3xl mx-auto">
+        <ScrollReveal direction="up" distance={40} className="mb-16 text-center">
+          <h2 className="mb-6 font-display text-display-lg">{data.title}</h2>
+          <p className="mx-auto max-w-3xl text-body-xl text-bw-text-secondary">
             {data.description}
           </p>
         </ScrollReveal>
 
         {data.offerings && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {data.offerings.map((offering, index) => (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {data.offerings.map((offering, index) => (
               <ScrollReveal key={offering.name} direction="up" distance={40} delay={index * 0.1}>
                 <MagneticField strength={0.1} distance={120}>
-                  <div className={`relative p-8 rounded-2xl border ${
-                    offering.popular
-                      ? 'border-bw-accent-gold bg-bw-accent-gold/5'
-                      : 'border-bw-border-subtle bg-bw-border-subtle/10'
-                  }`}>
+                  <div
+                    className={`relative rounded-2xl border p-8 ${
+                      offering.popular
+                        ? 'border-bw-accent-gold bg-bw-accent-gold/5'
+                        : 'border-bw-border-subtle bg-bw-border-subtle/10'
+                    }`}
+                  >
                     {offering.popular && (
-                      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                        <span className="bg-bw-accent-gold text-bw-bg-primary px-4 py-2 rounded-full text-sm font-medium">
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 transform">
+                        <span className="rounded-full bg-bw-accent-gold px-4 py-2 text-sm font-medium text-bw-bg-primary">
                           Most Popular
                         </span>
                       </div>
                     )}
 
-                    <div className="text-center mb-8">
-                      <h3 className="text-display-md font-display mb-4">{offering.name}</h3>
+                    <div className="mb-8 text-center">
+                      <h3 className="mb-4 font-display text-display-md">{offering.name}</h3>
                     </div>
 
-                    <ul className="space-y-3 mb-8">
+                    <ul className="mb-8 space-y-3">
                       {offering.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-bw-accent-gold rounded-full flex-shrink-0" />
+                          <div className="h-2 w-2 flex-shrink-0 rounded-full bg-bw-accent-gold" />
                           <span className="text-body-lg">{feature}</span>
                         </li>
                       ))}
                     </ul>
 
                     <motion.button
-                      className="w-full py-3 px-6 rounded-lg font-medium transition-colors bg-bw-border-subtle text-bw-text-primary hover:bg-bw-accent-gold hover:text-bw-bg-primary"
+                      className="w-full rounded-lg bg-bw-border-subtle px-6 py-3 font-medium text-bw-text-primary transition-colors hover:bg-bw-accent-gold hover:text-bw-bg-primary"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
@@ -313,18 +301,18 @@ function ProcessSection({ data }: { data: ServicePageData['process'] }) {
   // Handle array format (legacy)
   if (Array.isArray(data)) {
     return (
-      <section className="relative bg-bw-bg-primary py-24 px-6">
+      <section className="relative bg-bw-bg-primary px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {data.map((step, index) => (
               <ScrollReveal key={step.step} direction="up" distance={40} delay={index * 0.1}>
                 <div className="text-center">
-                  <div className="mb-6 mx-auto w-16 h-16 bg-bw-accent-gold/20 rounded-full flex items-center justify-center">
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-bw-accent-gold/20">
                     <span className="text-display-md font-bold text-bw-accent-gold">
                       {step.step}
                     </span>
                   </div>
-                  <h3 className="mb-4 font-display text-display-sm">{step.title}</h3>
+                  <h3 className="text-display-sm mb-4 font-display">{step.title}</h3>
                   <p className="text-body-lg text-bw-text-secondary">{step.description}</p>
                 </div>
               </ScrollReveal>
@@ -337,24 +325,22 @@ function ProcessSection({ data }: { data: ServicePageData['process'] }) {
 
   // Handle object format (new)
   return (
-    <section className="relative bg-bw-bg-primary py-24 px-6">
+    <section className="relative bg-bw-bg-primary px-6 py-24">
       <div className="mx-auto max-w-7xl">
-        <ScrollReveal direction="up" distance={40} className="text-center mb-16">
-          <h2 className="mb-6 font-display text-display-lg">
-            {data.title}
-          </h2>
+        <ScrollReveal direction="up" distance={40} className="mb-16 text-center">
+          <h2 className="mb-6 font-display text-display-lg">{data.title}</h2>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {data.steps.map((step, index) => (
             <ScrollReveal key={step.number} direction="up" distance={40} delay={index * 0.1}>
               <div className="text-center">
-                <div className="mb-6 mx-auto w-16 h-16 bg-bw-accent-gold/20 rounded-full flex items-center justify-center">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-bw-accent-gold/20">
                   <span className="text-display-md font-bold text-bw-accent-gold">
                     {step.number}
                   </span>
                 </div>
-                <h3 className="mb-4 font-display text-display-sm">{step.title}</h3>
+                <h3 className="text-display-sm mb-4 font-display">{step.title}</h3>
                 <p className="text-body-lg text-bw-text-secondary">{step.description}</p>
               </div>
             </ScrollReveal>
@@ -372,7 +358,7 @@ function TestimonialsSection({ data }: { data: ServicePageData['testimonials'] }
   if (!data) return null;
 
   return (
-    <section className="relative bg-bw-bg-primary py-24 px-6">
+    <section className="relative bg-bw-bg-primary px-6 py-24">
       <div className="mx-auto max-w-7xl text-center">
         <h2 className="mb-12 font-display text-display-lg">What Our Clients Say</h2>
         {/* Testimonials implementation - data available: {JSON.stringify(data)} */}
@@ -385,9 +371,11 @@ function FAQSection({ data }: { data: ServicePageData['faq'] }) {
   if (!data) return null;
 
   return (
-    <section className="relative bg-bw-bg-primary py-24 px-6">
+    <section className="relative bg-bw-bg-primary px-6 py-24">
       <div className="mx-auto max-w-4xl">
-        <h2 className="mb-12 font-display text-display-lg text-center">Frequently Asked Questions</h2>
+        <h2 className="mb-12 text-center font-display text-display-lg">
+          Frequently Asked Questions
+        </h2>
         {/* FAQ implementation - data available: {JSON.stringify(data)} */}
       </div>
     </section>
@@ -396,7 +384,7 @@ function FAQSection({ data }: { data: ServicePageData['faq'] }) {
 
 function CTASection() {
   return (
-    <section className="relative bg-bw-bg-primary py-24 px-6">
+    <section className="relative bg-bw-bg-primary px-6 py-24">
       <div className="mx-auto max-w-4xl text-center">
         <h2 className="mb-6 font-display text-display-lg">Ready to Get Started?</h2>
         <p className="mb-8 text-body-xl text-bw-text-secondary">

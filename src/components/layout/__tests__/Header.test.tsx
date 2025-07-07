@@ -62,16 +62,20 @@ jest.mock('@/lib/constants/siteConfig', () => ({
         href: '/services',
         submenu: [
           { name: 'All Services', href: '/services', description: 'Complete overview' },
-          { name: 'Video Production', href: '/services/video-production-morocco', description: 'Professional video' }
-        ]
+          {
+            name: 'Video Production',
+            href: '/services/video-production-morocco',
+            description: 'Professional video',
+          },
+        ],
       },
       {
         name: 'About',
         href: '/about/our-story',
         submenu: [
           { name: 'Our Story', href: '/about/our-story', description: 'Company journey' },
-          { name: 'Team', href: '/about/team', description: 'Meet our team' }
-        ]
+          { name: 'Team', href: '/about/team', description: 'Meet our team' },
+        ],
       },
       { name: 'Portfolio', href: '/portfolio' },
       { name: 'Contact', href: '/contact' },
@@ -83,8 +87,12 @@ jest.mock('@/lib/constants/siteConfig', () => ({
         homeHref: '#portfolio',
         submenu: [
           { name: 'All Services', href: '/services', description: 'Complete overview' },
-          { name: 'Video Production', href: '/services/video-production-morocco', description: 'Professional video' }
-        ]
+          {
+            name: 'Video Production',
+            href: '/services/video-production-morocco',
+            description: 'Professional video',
+          },
+        ],
       },
       {
         name: 'About',
@@ -92,8 +100,8 @@ jest.mock('@/lib/constants/siteConfig', () => ({
         homeHref: '#about',
         submenu: [
           { name: 'Our Story', href: '/about/our-story', description: 'Company journey' },
-          { name: 'Team', href: '/about/team', description: 'Meet our team' }
-        ]
+          { name: 'Team', href: '/about/team', description: 'Meet our team' },
+        ],
       },
       { name: 'Portfolio', href: '/portfolio', homeHref: '#portfolio' },
       { name: 'Contact', href: '/contact', homeHref: '#contact' },

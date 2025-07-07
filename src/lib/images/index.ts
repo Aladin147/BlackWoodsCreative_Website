@@ -1,11 +1,11 @@
 /**
  * Image Loading Pipeline - Main Export
- * 
+ *
  * Centralized exports for the image optimization and loading system
  */
 
 // Import types for internal use
-import { contentManager, type ImageContent } from '@/lib/content';
+import { legacyContentManager, type LegacyImageContent } from '@/lib/content';
 
 import { logger } from '../utils/logger';
 
@@ -60,21 +60,16 @@ export const ContentImageIntegration = {
     height?: number,
     config: Partial<ImageOptimizationConfig> = {}
   ): string | null => {
-    const imageContent = contentManager.get<ImageContent>(imageId);
+    const imageContent = legacyContentManager.get<LegacyImageContent>(imageId);
     if (!imageContent || imageContent.type !== 'image') return null;
 
-    return imageOptimizer.generateOptimizedUrl(
-      imageContent.src,
-      width,
-      height,
-      config
-    );
+    return imageOptimizer.generateOptimizedUrl(imageContent.src, width, height, config);
   },
 
   // Preload content images
   preloadContentImages: async (imageIds: string[]): Promise<void> => {
-    const imagePromises = imageIds.map(async (id) => {
-      const imageContent = contentManager.get<ImageContent>(id);
+    const imagePromises = imageIds.map(async id => {
+      const imageContent = legacyContentManager.get<LegacyImageContent>(id);
       if (imageContent && imageContent.type === 'image') {
         try {
           await imageOptimizer.preloadImage(imageContent.src);
@@ -88,14 +83,16 @@ export const ContentImageIntegration = {
   },
 
   // Get all portfolio images for preloading
-  getPortfolioImages: (): ImageContent[] => {
-    return contentManager.getByType<ImageContent>('image')
+  getPortfolioImages: (): LegacyImageContent[] => {
+    return legacyContentManager
+      .getByType<LegacyImageContent>('image')
       .filter(img => img.metadata?.category === 'portfolio');
   },
 
   // Get hero images for preloading
-  getHeroImages: (): ImageContent[] => {
-    return contentManager.getByType<ImageContent>('image')
+  getHeroImages: (): LegacyImageContent[] => {
+    return legacyContentManager
+      .getByType<LegacyImageContent>('image')
       .filter(img => img.metadata?.category === 'hero');
   },
 
@@ -109,10 +106,10 @@ export const ContentImageIntegration = {
       srcSet?: string;
     }
   ): boolean => {
-    const imageContent = contentManager.get<ImageContent>(imageId);
+    const imageContent = legacyContentManager.get<LegacyImageContent>(imageId);
     if (!imageContent || imageContent.type !== 'image') return false;
 
-    return contentManager.update(imageId, {
+    return legacyContentManager.update(imageId, {
       ...optimizationData,
       metadata: {
         ...imageContent.metadata,
@@ -229,7 +226,7 @@ export const ImagePerformanceOptimization = {
     // Initialize performance monitoring
     if (process.env.NODE_ENV === 'development') {
       logger.info('Image optimization system initialized', {
-        heroImagesFound: heroImages.length
+        heroImagesFound: heroImages.length,
       });
 
       // Log performance recommendations after a delay
@@ -245,8 +242,8 @@ export const ImagePerformanceOptimization = {
 
   // Optimize images for production
   optimizeForProduction: (): void => {
-    const allImages = contentManager.getByType<ImageContent>('image');
-    
+    const allImages = legacyContentManager.getByType<LegacyImageContent>('image');
+
     if (process.env.NODE_ENV === 'development') {
       logger.info('Optimizing images for production', { imageCount: allImages.length });
     }
@@ -254,12 +251,10 @@ export const ImagePerformanceOptimization = {
     for (const image of allImages) {
       try {
         // Generate optimized variants
-        const optimizedSrc = imageOptimizer.generateOptimizedUrl(
-          image.src,
-          1920,
-          undefined,
-          { quality: QUALITY_PRESETS.high, format: 'webp' }
-        );
+        const optimizedSrc = imageOptimizer.generateOptimizedUrl(image.src, 1920, undefined, {
+          quality: QUALITY_PRESETS.high,
+          format: 'webp',
+        });
 
         // Generate blur placeholder
         const blurDataURL = imageOptimizer.generateBlurPlaceholder();
@@ -287,7 +282,7 @@ export const ImagePerformanceOptimization = {
   getOptimizationReport: () => {
     const analytics = imagePerformanceMonitor.getAnalytics();
     const recommendations = imagePerformanceMonitor.getRecommendations();
-    
+
     return {
       analytics,
       recommendations,
@@ -318,20 +313,20 @@ export const ImageDevUtils = {
   // Log image system status
   logStatus: () => {
     if (process.env.NODE_ENV !== 'development') return;
-    
+
     const report = ImagePerformanceOptimization.getOptimizationReport();
-    
+
     logger.info('Image System Status', {
       analytics: report.analytics,
       summary: report.summary,
-      recommendations: report.recommendations
+      recommendations: report.recommendations,
     });
   },
 
   // Test image optimization
   testOptimization: (imageUrl: string) => {
     if (process.env.NODE_ENV !== 'development') return;
-    
+
     logger.info('Testing optimization', { imageUrl });
 
     try {
@@ -346,7 +341,7 @@ export const ImageDevUtils = {
   // Clear all caches
   clearCaches: () => {
     if (process.env.NODE_ENV !== 'development') return;
-    
+
     imageOptimizer.clearCache();
     imagePerformanceMonitor.clearMetrics();
     logger.info('Image caches cleared');

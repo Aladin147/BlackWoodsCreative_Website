@@ -167,7 +167,7 @@ class PerformanceMonitor {
           chunkCount: metrics.chunkCount,
         },
         budgetCheck: budgetCheck.passed ? 'PASSED' : 'FAILED',
-        violations: budgetCheck.passed ? undefined : budgetCheck.violations
+        violations: budgetCheck.passed ? undefined : budgetCheck.violations,
       });
 
       // Also return for programmatic access
@@ -219,7 +219,10 @@ export function trackComponentLoad(componentName: string) {
 
     // Log in development/test for debugging (not in production)
     if (process.env.NODE_ENV !== 'production') {
-      logger.debug('Component rendered', { componentName, renderTime: `${renderTime.toFixed(2)}ms` });
+      logger.debug('Component rendered', {
+        componentName,
+        renderTime: `${renderTime.toFixed(2)}ms`,
+      });
     }
 
     // Track in performance monitor
@@ -231,9 +234,12 @@ export function trackComponentLoad(componentName: string) {
 // Hook for React components to track render performance
 export function usePerformanceTracking(componentName: string) {
   const trackEnd = useMemo(
-    () => (typeof window !== 'undefined' ? trackComponentLoad(componentName) : () => {
-      // Server-side rendering - no performance tracking needed
-    }),
+    () =>
+      typeof window !== 'undefined'
+        ? trackComponentLoad(componentName)
+        : () => {
+            // Server-side rendering - no performance tracking needed
+          },
     [componentName]
   );
 

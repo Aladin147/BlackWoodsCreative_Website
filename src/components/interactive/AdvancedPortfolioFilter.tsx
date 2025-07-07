@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence, LayoutGroup, Variants } from 'framer-motion';
 import { useState, useMemo } from 'react';
 
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
@@ -96,7 +96,7 @@ export function AdvancedPortfolioFilter({
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: {
       opacity: 0,
       scale: 0.8,
@@ -111,7 +111,7 @@ export function AdvancedPortfolioFilter({
       transition: {
         duration: 0.5,
         delay: index * 0.1,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as const,
       },
     }),
     exit: {
@@ -121,7 +121,7 @@ export function AdvancedPortfolioFilter({
       filter: 'blur(4px)',
       transition: {
         duration: 0.3,
-        ease: 'easeInOut',
+        ease: 'easeInOut' as const,
       },
     },
   };

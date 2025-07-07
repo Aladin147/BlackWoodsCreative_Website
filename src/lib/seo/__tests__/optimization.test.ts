@@ -21,11 +21,14 @@ describe('SEOOptimizer', () => {
 
   describe('Metadata Generation', () => {
     it('should generate basic metadata', () => {
-      const metadata = optimizer.generateMetadata({
-        title: 'Test Page',
-        description: 'Test description',
-        keywords: ['test', 'seo'],
-      }, '/test');
+      const metadata = optimizer.generateMetadata(
+        {
+          title: 'Test Page',
+          description: 'Test description',
+          keywords: ['test', 'seo'],
+        },
+        '/test'
+      );
 
       expect(metadata.title).toBe('Test Page | BlackWoods Creative');
       expect(metadata.description).toBe('Test description');
@@ -52,7 +55,9 @@ describe('SEOOptimizer', () => {
       expect(metadata.openGraph?.description).toBe('OG Test description');
       const images = Array.isArray(metadata.openGraph?.images)
         ? metadata.openGraph.images
-        : metadata.openGraph?.images ? [metadata.openGraph.images] : [];
+        : metadata.openGraph?.images
+          ? [metadata.openGraph.images]
+          : [];
       const firstImage = images[0];
       if (firstImage && typeof firstImage === 'object' && 'url' in firstImage) {
         expect(firstImage.url).toBe('/test-image.jpg');
@@ -86,9 +91,12 @@ describe('SEOOptimizer', () => {
     });
 
     it('should generate canonical URL', () => {
-      const metadata = optimizer.generateMetadata({
-        canonical: 'https://example.com/custom',
-      }, '/test');
+      const metadata = optimizer.generateMetadata(
+        {
+          canonical: 'https://example.com/custom',
+        },
+        '/test'
+      );
 
       expect(metadata.alternates?.canonical).toBe('https://example.com/custom');
     });
@@ -148,7 +156,8 @@ describe('SEOOptimizer', () => {
   describe('SEO Analysis', () => {
     it('should analyze page content', () => {
       const content = '<h1>Test Heading</h1><p>This is test content with some keywords.</p>';
-      const description = 'Test page description that is long enough to be considered good for SEO purposes.';
+      const description =
+        'Test page description that is long enough to be considered good for SEO purposes.';
       const analysis = optimizer.analyzePage(content, {
         title: 'Test Page Title',
         description,
@@ -168,8 +177,8 @@ describe('SEOOptimizer', () => {
         description: 'Valid description that meets the minimum length requirements for good SEO.',
       });
 
-      const titleIssue = analysis.issues.find(issue => 
-        issue.category === 'title' && issue.message.includes('too short')
+      const titleIssue = analysis.issues.find(
+        issue => issue.category === 'title' && issue.message.includes('too short')
       );
       expect(titleIssue).toBeDefined();
     });
@@ -180,8 +189,8 @@ describe('SEOOptimizer', () => {
         description: 'Short desc',
       });
 
-      const descriptionIssue = analysis.issues.find(issue => 
-        issue.category === 'description' && issue.message.includes('too short')
+      const descriptionIssue = analysis.issues.find(
+        issue => issue.category === 'description' && issue.message.includes('too short')
       );
       expect(descriptionIssue).toBeDefined();
     });
@@ -190,8 +199,8 @@ describe('SEOOptimizer', () => {
       const content = '<p>Content without headings</p>';
       const analysis = optimizer.analyzePage(content);
 
-      const headingIssue = analysis.issues.find(issue => 
-        issue.category === 'structure' && issue.message.includes('No headings')
+      const headingIssue = analysis.issues.find(
+        issue => issue.category === 'structure' && issue.message.includes('No headings')
       );
       expect(headingIssue).toBeDefined();
     });
@@ -239,7 +248,7 @@ describe('SEOOptimizer', () => {
 
     it('should return current configuration', () => {
       const config = optimizer.getConfig();
-      
+
       expect(config.siteName).toBe(DEFAULT_SEO_CONFIG.siteName);
       expect(config.siteUrl).toBe(DEFAULT_SEO_CONFIG.siteUrl);
       expect(config.defaultTitle).toBe(DEFAULT_SEO_CONFIG.defaultTitle);
@@ -305,7 +314,8 @@ describe('SEOUtils', () => {
     });
 
     it('should identify description length errors', () => {
-      const longDescription = 'This is a very long description that exceeds the recommended 160 character limit for meta descriptions which can cause issues with search engine display and should be shortened';
+      const longDescription =
+        'This is a very long description that exceeds the recommended 160 character limit for meta descriptions which can cause issues with search engine display and should be shortened';
       const result = SEOUtils.validateSEO({
         description: longDescription,
       });
@@ -365,13 +375,16 @@ describe('SEOUtils', () => {
 
   describe('Meta Tags Generation', () => {
     it('should generate meta tags HTML', () => {
-      const metaTags = SEOUtils.generateMetaTags({
-        title: 'Test Page',
-        description: 'Test description',
-        keywords: ['test', 'seo'],
-        ogTitle: 'OG Test Page',
-        twitterCard: 'summary',
-      }, DEFAULT_SEO_CONFIG);
+      const metaTags = SEOUtils.generateMetaTags(
+        {
+          title: 'Test Page',
+          description: 'Test description',
+          keywords: ['test', 'seo'],
+          ogTitle: 'OG Test Page',
+          twitterCard: 'summary',
+        },
+        DEFAULT_SEO_CONFIG
+      );
 
       expect(metaTags).toContain('<title>Test Page | BlackWoods Creative</title>');
       expect(metaTags).toContain('<meta name="description" content="Test description"');
@@ -381,10 +394,13 @@ describe('SEOUtils', () => {
     });
 
     it('should handle robots meta tags', () => {
-      const metaTags = SEOUtils.generateMetaTags({
-        noindex: true,
-        nofollow: false,
-      }, DEFAULT_SEO_CONFIG);
+      const metaTags = SEOUtils.generateMetaTags(
+        {
+          noindex: true,
+          nofollow: false,
+        },
+        DEFAULT_SEO_CONFIG
+      );
 
       expect(metaTags).toContain('<meta name="robots" content="noindex, follow"');
     });

@@ -18,7 +18,7 @@ jest.mock('next/headers', () => ({
 jest.mock('next/dynamic', () => {
   return function mockDynamic(
     _importFunc: () => Promise<{ default: React.ComponentType<Record<string, unknown>> }>,
-    options?: { loading?: () => JSX.Element }
+    options?: { loading?: () => React.ReactElement }
   ) {
     const Component = () => {
       if (options?.loading) {
@@ -208,9 +208,15 @@ describe('Actual RootLayout Component', () => {
     delete process.env.GOOGLE_VERIFICATION_CODE;
   });
 
+  // Helper function to render async component
+  const renderRootLayout = async (children: React.ReactNode) => {
+    const LayoutComponent = await RootLayout({ children });
+    return render(LayoutComponent);
+  };
+
   describe('Rendering', () => {
-    it('renders the complete layout structure', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+    it('renders the complete layout structure', async () => {
+      await renderRootLayout(mockChildren);
 
       // Check main structure elements
       expect(screen.getByRole('main')).toBeInTheDocument();
@@ -220,8 +226,8 @@ describe('Actual RootLayout Component', () => {
       expect(screen.getByTestId('page-content')).toBeInTheDocument();
     });
 
-    it('renders accessibility skip link', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+    it('renders accessibility skip link', async () => {
+      await renderRootLayout(mockChildren);
 
       const skipLink = screen.getByText('Skip to main content');
       expect(skipLink).toBeInTheDocument();
@@ -229,16 +235,16 @@ describe('Actual RootLayout Component', () => {
       expect(skipLink).toHaveClass('sr-only');
     });
 
-    it('renders main content with proper attributes', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+    it('renders main content with proper attributes', async () => {
+      await renderRootLayout(mockChildren);
 
       const main = screen.getByRole('main');
       expect(main).toHaveAttribute('id', 'main-content');
       expect(main).toHaveClass('relative');
     });
 
-    it('renders structured data component', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+    it('renders structured data component', async () => {
+      await renderRootLayout(mockChildren);
 
       const structuredData = screen.getByTestId('structured-data');
       expect(structuredData).toBeInTheDocument();
@@ -247,8 +253,8 @@ describe('Actual RootLayout Component', () => {
   });
 
   describe('Dynamic Components', () => {
-    it('renders dynamic components with proper fallbacks', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+    it('renders dynamic components with proper fallbacks', async () => {
+      await renderRootLayout(mockChildren);
 
       // Dynamic components should be rendered (mocked)
       const dynamicComponents = screen.getAllByTestId('dynamic-component');
@@ -257,8 +263,8 @@ describe('Actual RootLayout Component', () => {
   });
 
   describe('Theme and Styling', () => {
-    it('applies font variables to html element', () => {
-      const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
+    it('applies font variables to html element', async () => {
+      const { container } = await renderRootLayout(mockChildren);
 
       const htmlElement = container.querySelector('html');
       expect(htmlElement).toHaveClass('--font-primary');
@@ -266,8 +272,8 @@ describe('Actual RootLayout Component', () => {
       expect(htmlElement).toHaveClass('--font-mono');
     });
 
-    it('applies proper body classes', () => {
-      const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
+    it('applies proper body classes', async () => {
+      const { container } = await renderRootLayout(mockChildren);
 
       const bodyElement = container.querySelector('body');
       expect(bodyElement).toHaveClass('bg-bw-bg-primary');
@@ -276,8 +282,8 @@ describe('Actual RootLayout Component', () => {
       expect(bodyElement).toHaveClass('antialiased');
     });
 
-    it('applies theme transition classes', () => {
-      const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
+    it('applies theme transition classes', async () => {
+      const { container } = await renderRootLayout(mockChildren);
 
       // Theme classes are now applied to body element
       const bodyElement = container.querySelector('body');
@@ -292,15 +298,15 @@ describe('Actual RootLayout Component', () => {
   });
 
   describe('Accessibility', () => {
-    it('has proper language attribute', () => {
-      const { container } = render(<RootLayout>{mockChildren}</RootLayout>);
+    it('has proper language attribute', async () => {
+      const { container } = await renderRootLayout(mockChildren);
 
       const htmlElement = container.querySelector('html');
       expect(htmlElement).toHaveAttribute('lang', 'en');
     });
 
-    it('has proper skip link focus styles', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+    it('has proper skip link focus styles', async () => {
+      await renderRootLayout(mockChildren);
 
       const skipLink = screen.getByText('Skip to main content');
       expect(skipLink).toHaveClass('focus:not-sr-only');
@@ -316,8 +322,8 @@ describe('Actual RootLayout Component', () => {
       expect(skipLink).toHaveClass('focus:font-medium');
     });
 
-    it('provides proper main landmark', () => {
-      render(<RootLayout>{mockChildren}</RootLayout>);
+    it('provides proper main landmark', async () => {
+      await renderRootLayout(mockChildren);
 
       const main = screen.getByRole('main');
       expect(main).toBeInTheDocument();

@@ -4,13 +4,14 @@ import {
   ContentPageTemplate,
   type ContentPageData,
   type SEOMetadata,
-  generatePageMetadata
+  generatePageMetadata,
 } from '@/components/templates';
 
 // SEO metadata optimized for process and methodology searches
 const seoMetadata: SEOMetadata = {
   title: 'Our Workflow | BlackWoods Creative - Professional Video Production Process',
-  description: 'Discover BlackWoods Creative\'s proven video production workflow. From concept to delivery, learn about our systematic approach that ensures exceptional results for every project in Morocco.',
+  description:
+    "Discover BlackWoods Creative's proven video production workflow. From concept to delivery, learn about our systematic approach that ensures exceptional results for every project in Morocco.",
   keywords: [
     'video production workflow Morocco',
     'film production process',
@@ -18,34 +19,35 @@ const seoMetadata: SEOMetadata = {
     'professional video workflow',
     'BlackWoods Creative process',
     'video production steps Morocco',
-    'corporate video workflow'
+    'corporate video workflow',
   ],
   canonicalUrl: '/about/our-workflow',
   openGraph: {
     title: 'Our Workflow | Professional Video Production Process in Morocco',
-    description: 'Systematic, proven workflow that delivers exceptional video content. Quality standards and methodology that sets BlackWoods Creative apart.',
-    type: 'article'
+    description:
+      'Systematic, proven workflow that delivers exceptional video content. Quality standards and methodology that sets BlackWoods Creative apart.',
+    type: 'article',
   },
   structuredData: {
     '@type': 'HowTo',
-    'name': 'Professional Video Production Workflow',
-    'description': 'BlackWoods Creative\'s systematic approach to video production',
-    'totalTime': 'PT2W',
-    'supply': [
+    name: 'Professional Video Production Workflow',
+    description: "BlackWoods Creative's systematic approach to video production",
+    totalTime: 'PT2W',
+    supply: [
       'Professional 4K/8K cameras',
       'Advanced lighting equipment',
       'Professional audio recording',
       'Drone technology',
-      'Post-production software'
+      'Post-production software',
     ],
-    'tool': [
+    tool: [
       'Sony FX6 cameras',
       'DJI drones',
       'Adobe Creative Suite',
       'DaVinci Resolve',
-      'Professional lighting kits'
-    ]
-  }
+      'Professional lighting kits',
+    ],
+  },
 };
 
 // Page content data
@@ -53,12 +55,13 @@ const pageData: ContentPageData = {
   hero: {
     title: 'Our Workflow',
     subtitle: 'The systematic approach that delivers exceptional results',
-    description: 'Every great video starts with a great process. Discover the proven methodology that has made BlackWoods Creative Morocco\'s most trusted video production partner.',
+    description:
+      "Every great video starts with a great process. Discover the proven methodology that has made BlackWoods Creative Morocco's most trusted video production partner.",
     breadcrumbs: [
       { label: 'Home', href: '/' },
       { label: 'About', href: '/about' },
-      { label: 'Our Workflow', href: '/about/our-workflow' }
-    ]
+      { label: 'Our Workflow', href: '/about/our-workflow' },
+    ],
   },
   sections: [
     {
@@ -71,12 +74,12 @@ const pageData: ContentPageData = {
           
           <p>Our systematic approach combines creative excellence with operational efficiency, delivering projects on time, on budget, and beyond expectations. From initial consultation to final delivery, every step is designed to maximize value and minimize stress for our clients.</p>
         `,
-        highlight: true
+        highlight: true,
       },
       styling: {
         background: 'primary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'detailed-process',
@@ -87,46 +90,53 @@ const pageData: ContentPageData = {
           {
             year: '01',
             title: 'Discovery & Strategy',
-            description: 'We begin with an in-depth consultation to understand your objectives, target audience, brand guidelines, and success metrics. This foundation ensures every creative decision aligns with your business goals.',
-            highlight: true
+            description:
+              'We begin with an in-depth consultation to understand your objectives, target audience, brand guidelines, and success metrics. This foundation ensures every creative decision aligns with your business goals.',
+            highlight: true,
           },
           {
             year: '02',
             title: 'Concept Development',
-            description: 'Our creative team develops multiple concept options, complete with visual references, tone guidelines, and strategic rationale. We collaborate closely to refine the concept until it perfectly captures your vision.'
+            description:
+              'Our creative team develops multiple concept options, complete with visual references, tone guidelines, and strategic rationale. We collaborate closely to refine the concept until it perfectly captures your vision.',
           },
           {
             year: '03',
             title: 'Pre-Production Planning',
-            description: 'Detailed planning phase including script development, storyboarding, location scouting, casting, equipment selection, and scheduling. Every detail is confirmed before production begins.'
+            description:
+              'Detailed planning phase including script development, storyboarding, location scouting, casting, equipment selection, and scheduling. Every detail is confirmed before production begins.',
           },
           {
             year: '04',
             title: 'Production Execution',
-            description: 'Professional filming with our experienced crew using state-of-the-art equipment. We maintain the highest quality standards while ensuring minimal disruption to your business operations.'
+            description:
+              'Professional filming with our experienced crew using state-of-the-art equipment. We maintain the highest quality standards while ensuring minimal disruption to your business operations.',
           },
           {
             year: '05',
             title: 'Post-Production',
-            description: 'Expert editing, color grading, sound design, and motion graphics. We provide regular updates and incorporate your feedback throughout the post-production process.'
+            description:
+              'Expert editing, color grading, sound design, and motion graphics. We provide regular updates and incorporate your feedback throughout the post-production process.',
           },
           {
             year: '06',
             title: 'Review & Refinement',
-            description: 'Structured review process with multiple revision rounds. We ensure the final product exceeds your expectations and meets all technical specifications.'
+            description:
+              'Structured review process with multiple revision rounds. We ensure the final product exceeds your expectations and meets all technical specifications.',
           },
           {
             year: '07',
             title: 'Delivery & Support',
-            description: 'Final delivery in all required formats, complete with usage guidelines and ongoing support. We provide training on content distribution and optimization strategies.',
-            highlight: true
-          }
-        ]
+            description:
+              'Final delivery in all required formats, complete with usage guidelines and ongoing support. We provide training on content distribution and optimization strategies.',
+            highlight: true,
+          },
+        ],
       },
       styling: {
         background: 'secondary',
-        spacing: 'loose'
-      }
+        spacing: 'loose',
+      },
     },
     {
       id: 'quality-standards',
@@ -137,40 +147,46 @@ const pageData: ContentPageData = {
         values: [
           {
             title: 'Technical Excellence',
-            description: 'Professional-grade equipment, proper lighting, crystal-clear audio, and meticulous attention to technical details.',
-            icon: 'FilmIcon'
+            description:
+              'Professional-grade equipment, proper lighting, crystal-clear audio, and meticulous attention to technical details.',
+            icon: 'FilmIcon',
           },
           {
             title: 'Creative Innovation',
-            description: 'Fresh perspectives, creative problem-solving, and innovative approaches that make your content stand out.',
-            icon: 'StarIcon'
+            description:
+              'Fresh perspectives, creative problem-solving, and innovative approaches that make your content stand out.',
+            icon: 'StarIcon',
           },
           {
             title: 'Brand Consistency',
-            description: 'Every element aligns with your brand guidelines, ensuring consistent messaging across all touchpoints.',
-            icon: 'CubeIcon'
+            description:
+              'Every element aligns with your brand guidelines, ensuring consistent messaging across all touchpoints.',
+            icon: 'CubeIcon',
           },
           {
             title: 'Deadline Reliability',
-            description: 'Rigorous project management ensures on-time delivery without compromising quality standards.',
-            icon: 'BriefcaseIcon'
+            description:
+              'Rigorous project management ensures on-time delivery without compromising quality standards.',
+            icon: 'BriefcaseIcon',
           },
           {
             title: 'Client Collaboration',
-            description: 'Regular communication, transparent progress updates, and collaborative decision-making throughout the process.',
-            icon: 'HandRaisedIcon'
+            description:
+              'Regular communication, transparent progress updates, and collaborative decision-making throughout the process.',
+            icon: 'HandRaisedIcon',
           },
           {
             title: 'Results Focus',
-            description: 'Every creative decision is evaluated against your business objectives and success metrics.',
-            icon: 'ArrowTrendingUpIcon'
-          }
-        ]
+            description:
+              'Every creative decision is evaluated against your business objectives and success metrics.',
+            icon: 'ArrowTrendingUpIcon',
+          },
+        ],
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'technology-equipment',
@@ -216,13 +232,13 @@ const pageData: ContentPageData = {
               </ul>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'primary',
         spacing: 'normal',
-        maxWidth: 'wide'
-      }
+        maxWidth: 'wide',
+      },
     },
     {
       id: 'client-collaboration',
@@ -239,38 +255,34 @@ const pageData: ContentPageData = {
           <p><strong>Flexible Feedback:</strong> Structured review processes that accommodate your schedule and decision-making requirements.</p>
           
           <p><strong>Strategic Guidance:</strong> We don't just execute your vision – we contribute strategic insights to help you achieve better results.</p>
-        `
+        `,
       },
       styling: {
         background: 'secondary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'call-to-action',
       type: 'cta',
       data: {
         title: 'Experience Our Process',
-        description: 'Ready to see how our proven workflow can transform your next video project? Let\'s discuss your objectives and show you exactly how we\'ll bring your vision to life.',
+        description:
+          "Ready to see how our proven workflow can transform your next video project? Let's discuss your objectives and show you exactly how we'll bring your vision to life.",
         text: 'Start Your Project',
-        href: '/contact'
+        href: '/contact',
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
-    }
-  ]
+        spacing: 'normal',
+      },
+    },
+  ],
 };
 
 // Generate Next.js metadata using type-safe helper
 export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function OurWorkflowPage() {
-  return (
-    <ContentPageTemplate
-      metadata={seoMetadata}
-      data={pageData}
-    />
-  );
+  return <ContentPageTemplate metadata={seoMetadata} data={pageData} />;
 }

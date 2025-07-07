@@ -19,6 +19,9 @@ export function ScrollProgress({ className }: ScrollProgressProps) {
   });
 
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+
     const handleScroll = () => {
       // Show progress bar after scrolling past hero section
       const scrollPosition = window.scrollY;

@@ -4,13 +4,14 @@ import {
   ContentPageTemplate,
   type ContentPageData,
   type SEOMetadata,
-  generatePageMetadata
+  generatePageMetadata,
 } from '@/components/templates';
 
 // SEO metadata
 const seoMetadata: SEOMetadata = {
   title: 'Portfolio | BlackWoods Creative - Our Best Video Production Work in Morocco',
-  description: 'Explore BlackWoods Creative\'s portfolio of exceptional video production, photography, and 3D visualization projects. See our work for clients across Morocco.',
+  description:
+    "Explore BlackWoods Creative's portfolio of exceptional video production, photography, and 3D visualization projects. See our work for clients across Morocco.",
   keywords: [
     'BlackWoods Creative portfolio',
     'video production portfolio Morocco',
@@ -18,14 +19,15 @@ const seoMetadata: SEOMetadata = {
     'photography portfolio Morocco',
     '3D visualization examples',
     'creative work Morocco',
-    'video production showcase'
+    'video production showcase',
   ],
   canonicalUrl: '/portfolio',
   openGraph: {
     title: 'Portfolio | BlackWoods Creative - Our Best Work in Morocco',
-    description: 'Discover our exceptional video production, photography, and 3D visualization work for clients across Morocco.',
-    type: 'website'
-  }
+    description:
+      'Discover our exceptional video production, photography, and 3D visualization work for clients across Morocco.',
+    type: 'website',
+  },
 };
 
 // Page content data
@@ -33,11 +35,12 @@ const pageData: ContentPageData = {
   hero: {
     title: 'Our Portfolio',
     subtitle: 'Showcasing exceptional visual storytelling across Morocco',
-    description: 'Explore our diverse portfolio of video production, photography, and 3D visualization projects that have helped businesses across Morocco achieve their goals.',
+    description:
+      'Explore our diverse portfolio of video production, photography, and 3D visualization projects that have helped businesses across Morocco achieve their goals.',
     breadcrumbs: [
       { label: 'Home', href: '/' },
-      { label: 'Portfolio', href: '/portfolio' }
-    ]
+      { label: 'Portfolio', href: '/portfolio' },
+    ],
   },
   sections: [
     {
@@ -50,56 +53,63 @@ const pageData: ContentPageData = {
           
           <p>Each project showcases our commitment to quality, creativity, and strategic thinking that drives real business outcomes.</p>
         `,
-        highlight: true
+        highlight: true,
       },
       styling: {
         background: 'primary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'featured-projects',
       type: 'values',
       data: {
         title: 'Featured Projects',
-        description: 'Highlighting our most impactful work across different industries and services',
+        description:
+          'Highlighting our most impactful work across different industries and services',
         values: [
           {
             title: 'Corporate Brand Films',
-            description: 'Cinematic brand storytelling for leading Moroccan companies. These films capture company culture, values, and vision while engaging audiences emotionally.',
-            icon: 'FilmIcon'
+            description:
+              'Cinematic brand storytelling for leading Moroccan companies. These films capture company culture, values, and vision while engaging audiences emotionally.',
+            icon: 'FilmIcon',
           },
           {
             title: 'Product Launch Campaigns',
-            description: 'Complete visual campaigns for product launches, including video content, photography, and 3D visualizations that drive market success.',
-            icon: 'RocketLaunchIcon'
+            description:
+              'Complete visual campaigns for product launches, including video content, photography, and 3D visualizations that drive market success.',
+            icon: 'RocketLaunchIcon',
           },
           {
             title: 'Executive Interviews',
-            description: 'Professional interview productions featuring C-level executives, thought leaders, and industry experts across Morocco.',
-            icon: 'UserIcon'
+            description:
+              'Professional interview productions featuring C-level executives, thought leaders, and industry experts across Morocco.',
+            icon: 'UserIcon',
           },
           {
             title: 'Architectural Visualizations',
-            description: 'Photorealistic 3D renderings and virtual tours for real estate developments and architectural projects throughout Morocco.',
-            icon: 'CubeIcon'
+            description:
+              'Photorealistic 3D renderings and virtual tours for real estate developments and architectural projects throughout Morocco.',
+            icon: 'CubeIcon',
           },
           {
             title: 'Event Documentation',
-            description: 'Comprehensive coverage of corporate events, conferences, and celebrations with both video and photography services.',
-            icon: 'CameraIcon'
+            description:
+              'Comprehensive coverage of corporate events, conferences, and celebrations with both video and photography services.',
+            icon: 'CameraIcon',
           },
           {
             title: 'Training & Educational Content',
-            description: 'Engaging educational videos and training materials that improve employee performance and knowledge retention.',
-            icon: 'BriefcaseIcon'
-          }
-        ]
+            description:
+              'Engaging educational videos and training materials that improve employee performance and knowledge retention.',
+            icon: 'BriefcaseIcon',
+          },
+        ],
       },
       styling: {
         background: 'secondary',
-        spacing: 'loose'
-      }
+        spacing: 'loose',
+      },
     },
     {
       id: 'industries-served',
@@ -123,13 +133,13 @@ const pageData: ContentPageData = {
               <p class="mb-4">Medical institutions and educational organizations creating informative content that educates and builds trust with their audiences.</p>
             </div>
           </div>
-        `
+        `,
       },
       styling: {
         background: 'primary',
         spacing: 'normal',
-        maxWidth: 'wide'
-      }
+        maxWidth: 'wide',
+      },
     },
     {
       id: 'client-results',
@@ -140,25 +150,28 @@ const pageData: ContentPageData = {
         values: [
           {
             title: '300% Increase in Engagement',
-            description: 'A Casablanca tech company saw 300% higher engagement rates after implementing our video content strategy across their digital platforms.',
-            icon: 'ArrowTrendingUpIcon'
+            description:
+              'A Casablanca tech company saw 300% higher engagement rates after implementing our video content strategy across their digital platforms.',
+            icon: 'ArrowTrendingUpIcon',
           },
           {
             title: '50% Faster Sales Cycles',
-            description: 'A real estate developer in Rabat reduced their sales cycle by 50% using our 3D visualizations and virtual tour technology.',
-            icon: 'RocketLaunchIcon'
+            description:
+              'A real estate developer in Rabat reduced their sales cycle by 50% using our 3D visualizations and virtual tour technology.',
+            icon: 'RocketLaunchIcon',
           },
           {
             title: '85% Improved Brand Recognition',
-            description: 'A manufacturing company achieved 85% improvement in brand recognition after our comprehensive brand film and photography campaign.',
-            icon: 'StarIcon'
-          }
-        ]
+            description:
+              'A manufacturing company achieved 85% improvement in brand recognition after our comprehensive brand film and photography campaign.',
+            icon: 'StarIcon',
+          },
+        ],
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'portfolio-note',
@@ -173,38 +186,34 @@ const pageData: ContentPageData = {
             Contact us for a personalized portfolio presentation and project consultation.
           </p>
         `,
-        highlight: true
+        highlight: true,
       },
       styling: {
         background: 'secondary',
-        spacing: 'normal'
-      }
+        spacing: 'normal',
+      },
     },
     {
       id: 'call-to-action',
       type: 'cta',
       data: {
         title: 'Ready to Create Something Amazing?',
-        description: 'Let\'s discuss your project and show you how our creative expertise can help achieve your business objectives.',
+        description:
+          "Let's discuss your project and show you how our creative expertise can help achieve your business objectives.",
         text: 'Start Your Project',
-        href: '#contact'
+        href: '#contact',
       },
       styling: {
         background: 'accent',
-        spacing: 'normal'
-      }
-    }
-  ]
+        spacing: 'normal',
+      },
+    },
+  ],
 };
 
 // Generate Next.js metadata using type-safe helper
 export const metadata: Metadata = generatePageMetadata(seoMetadata);
 
 export default function PortfolioPage() {
-  return (
-    <ContentPageTemplate
-      metadata={seoMetadata}
-      data={pageData}
-    />
-  );
+  return <ContentPageTemplate metadata={seoMetadata} data={pageData} />;
 }

@@ -74,7 +74,7 @@ describe('RequestLogger', () => {
       expect(logEntry.method).toBe('POST');
       expect(logEntry.path).toBe('/api/test');
       expect(logEntry.query).toEqual({ param: 'value' });
-      expect(logEntry.ip).toBe('192.168.1.1');
+      expect(logEntry.ip).toBe('127.0.0.1');
       expect(logEntry.userAgent).toBe('Test Browser');
       expect(logEntry.headers['content-type']).toBe('application/json');
     });
@@ -224,12 +224,16 @@ describe('RequestLogger', () => {
       testData.forEach(({ path, status, error, securityFlags }) => {
         const request = createMockRequest({ url: `https://example.com${path}` });
         const response = createMockResponse(status);
-        const additionalData = securityFlags ? { securityFlags: {
-          suspiciousActivity: securityFlags.suspiciousActivity,
-          rateLimited: false,
-          csrfFailure: false,
-          invalidInput: false,
-        } } : {};
+        const additionalData = securityFlags
+          ? {
+              securityFlags: {
+                suspiciousActivity: securityFlags.suspiciousActivity,
+                rateLimited: false,
+                csrfFailure: false,
+                invalidInput: false,
+              },
+            }
+          : {};
         const requestId = logger.logRequest(request, additionalData);
         logger.updateRequestResponse(requestId, response, 100, error);
       });

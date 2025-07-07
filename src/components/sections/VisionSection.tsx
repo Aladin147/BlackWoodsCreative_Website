@@ -162,7 +162,7 @@ export function VisionSection({ className }: VisionSectionProps) {
       intensity={0.3}
       className={`relative ${className}`}
     >
-      <section className="relative bg-bw-bg-primary/80">
+      <section data-testid="vision-section" className="relative bg-bw-bg-primary/80">
         {/* Simplified Scroll-Based Storytelling */}
         <div className="relative min-h-[300vh]">
           <SimpleScrollStoryTeller sections={visionStoryData} />
@@ -221,8 +221,10 @@ function SimpleScrollStoryTeller({ sections }: { sections: typeof visionStoryDat
               }`}
               whileHover={{ scale: 1.02, x: 1 }}
               onClick={() => {
-                const element = document.getElementById(section.id);
-                element?.scrollIntoView({ behavior: 'smooth' });
+                if (typeof document !== 'undefined') {
+                  const element = document.getElementById(section.id);
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
             />
           ))}

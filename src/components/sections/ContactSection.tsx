@@ -189,7 +189,7 @@ export function ContactSection({ className }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className={`relative bg-bw-bg-primary px-4 py-24 ${className}`}>
+    <section id="contact" data-testid="contact-section" className={`relative bg-bw-bg-primary px-4 py-24 ${className}`}>
       {/* Atmospheric Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <AtmosphericLayer type="mist" intensity={0.4} color="bw-aurora-teal" />
@@ -235,7 +235,14 @@ export function ContactSection({ className }: ContactSectionProps) {
                     <p className="mb-4 font-primary text-body-text opacity-85">
                       Unable to initialize secure form. Please refresh the page.
                     </p>
-                    <button onClick={() => window.location.reload()} className="btn-secondary">
+                    <button
+                      onClick={() => {
+                        if (typeof window !== 'undefined') {
+                          window.location.reload();
+                        }
+                      }}
+                      className="btn-secondary"
+                    >
                       Refresh Page
                     </button>
                   </div>

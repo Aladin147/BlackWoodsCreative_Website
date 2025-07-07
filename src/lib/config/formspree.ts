@@ -6,16 +6,16 @@
 export const formspreeConfig = {
   // Form endpoint
   endpoint: 'https://formspree.io/f/mzzgagbb',
-  
+
   // Form hash ID
   hashId: 'mzzgagbb',
-  
+
   // API endpoints for programmatic access
   api: {
     base: 'https://formspree.io/api/0',
     submissions: 'https://formspree.io/api/0/forms/mzzgagbb/submissions',
   },
-  
+
   // API keys - MUST be provided via environment variables
   keys: {
     // Master API key for full access - REQUIRED environment variable
@@ -24,18 +24,18 @@ export const formspreeConfig = {
     // Read-only API key for accessing submissions - REQUIRED environment variable
     readonly: process.env.FORMSPREE_READONLY_KEY,
   },
-  
+
   // Form configuration to avoid spam detection
   settings: {
     // Use JSON format (default) instead of plain text
     format: 'json',
-    
+
     // Enable spam protection
     spamProtection: true,
-    
+
     // Custom subject line template
     subjectTemplate: 'New Contact Form Submission from {name}',
-    
+
     // Thank you page redirect
     thankYouUrl: 'https://blackwoodscreative.com/thank-you',
   },
@@ -54,9 +54,9 @@ export function getFormspreeHeaders(useReadonly = false): Record<string, string>
   }
 
   return {
-    'Authorization': `Bearer ${apiKey}`,
+    Authorization: `Bearer ${apiKey}`,
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   };
 }
 

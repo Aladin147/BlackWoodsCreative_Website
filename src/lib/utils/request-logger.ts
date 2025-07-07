@@ -102,6 +102,10 @@ class RequestLogger {
     });
 
     const referer = request.headers.get('referer');
+    const forwarded = request.headers.get('x-forwarded-for');
+    const realIp = request.headers.get('x-real-ip');
+    const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? '127.0.0.1' : (realIp ?? '127.0.0.1');
+
     const logEntry: RequestLogEntry = {
       id: requestId,
       timestamp,
@@ -110,7 +114,7 @@ class RequestLogger {
       path: url.pathname,
       query,
       headers,
-      ip: request.ip ?? '127.0.0.1',
+      ip,
       userAgent: request.headers.get('user-agent') ?? '',
       ...(referer && { referer }),
       ...additionalData,

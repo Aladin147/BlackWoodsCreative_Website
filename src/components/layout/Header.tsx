@@ -12,7 +12,7 @@ import {
   handleNavigationClick,
   getNavigationItems,
   isNavigationActive,
-  getCurrentPath
+  getCurrentPath,
 } from '@/lib/utils/navigation';
 // import { useUISounds } from '@/hooks/useAudioSystem'; // Temporarily disabled
 
@@ -29,6 +29,9 @@ export function Header({ className }: HeaderProps) {
 
   // Handle scroll effect for header background with throttling
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined') return;
+
     const handleScroll = throttle(() => {
       const scrollPosition = window.scrollY;
       setIsScrolled(scrollPosition > 50);
@@ -50,6 +53,9 @@ export function Header({ className }: HeaderProps) {
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof document === 'undefined') return;
+
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -63,6 +69,9 @@ export function Header({ className }: HeaderProps) {
 
   // Close dropdowns when clicking outside
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof document === 'undefined') return;
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
       if (!target.closest('[data-dropdown]')) {
@@ -117,12 +126,14 @@ export function Header({ className }: HeaderProps) {
                     {item.submenu ? (
                       // Dropdown menu item
                       <motion.button
-                        onClick={() => setOpenDropdown(openDropdown === item.name ? null : item.name)}
+                        onClick={() =>
+                          setOpenDropdown(openDropdown === item.name ? null : item.name)
+                        }
                         onMouseEnter={() => setOpenDropdown(item.name)}
                         onMouseLeave={() => setOpenDropdown(null)}
                         aria-label={`${item.name} menu`}
                         aria-expanded={openDropdown === item.name}
-                        className={`group relative cursor-pointer rounded-md px-2 py-1 font-medium transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 flex items-center gap-1 ${
+                        className={`group relative flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 font-medium transition-colors duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 ${
                           isNavigationActive(item.href, currentPath)
                             ? 'text-bw-accent-gold'
                             : 'text-bw-text-primary/70'
@@ -139,9 +150,11 @@ export function Header({ className }: HeaderProps) {
                             openDropdown === item.name ? 'rotate-180' : ''
                           }`}
                         />
-                        <span className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
-                          isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
-                        }`} />
+                        <span
+                          className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
+                            isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
+                          }`}
+                        />
                       </motion.button>
                     ) : (
                       // Regular menu item
@@ -160,9 +173,11 @@ export function Header({ className }: HeaderProps) {
                         data-cursor="link"
                       >
                         {item.name}
-                        <span className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
-                          isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
-                        }`} />
+                        <span
+                          className={`absolute -bottom-1 left-0 h-0.5 bg-bw-accent-gold transition-all duration-300 group-hover:w-full ${
+                            isNavigationActive(item.href, currentPath) ? 'w-full' : 'w-0'
+                          }`}
+                        />
                       </motion.button>
                     )}
                   </MagneticField>
@@ -171,7 +186,7 @@ export function Header({ className }: HeaderProps) {
                   <AnimatePresence>
                     {item.submenu && openDropdown === item.name && (
                       <motion.div
-                        className="absolute left-0 top-full mt-2 w-64 rounded-lg border border-bw-border-subtle bg-bw-bg-primary/95 backdrop-blur-md shadow-lg z-50"
+                        className="absolute left-0 top-full z-50 mt-2 w-64 rounded-lg border border-bw-border-subtle bg-bw-bg-primary/95 shadow-lg backdrop-blur-md"
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
@@ -187,14 +202,14 @@ export function Header({ className }: HeaderProps) {
                                 handleNavClick(subItem.href);
                                 setOpenDropdown(null);
                               }}
-                              className="w-full text-left px-4 py-3 text-sm text-bw-text-primary hover:bg-bw-accent-gold/10 hover:text-bw-accent-gold transition-colors duration-200 focus:outline-none focus:bg-bw-accent-gold/10"
+                              className="w-full px-4 py-3 text-left text-sm text-bw-text-primary transition-colors duration-200 hover:bg-bw-accent-gold/10 hover:text-bw-accent-gold focus:bg-bw-accent-gold/10 focus:outline-none"
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.2, delay: subIndex * 0.05 }}
                             >
                               <div className="font-medium">{subItem.name}</div>
                               {subItem.description && (
-                                <div className="text-xs text-bw-text-secondary mt-1">
+                                <div className="mt-1 text-xs text-bw-text-secondary">
                                   {subItem.description}
                                 </div>
                               )}
@@ -274,7 +289,7 @@ export function Header({ className }: HeaderProps) {
               transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <nav
-                className="flex flex-col items-center space-y-6 max-h-[70vh] overflow-y-auto"
+                className="flex max-h-[70vh] flex-col items-center space-y-6 overflow-y-auto"
                 role="navigation"
                 aria-label="Mobile navigation"
               >
@@ -289,7 +304,7 @@ export function Header({ className }: HeaderProps) {
                         }
                       }}
                       aria-label={item.submenu ? `${item.name} menu` : `Navigate to ${item.name}`}
-                      className={`rounded-md px-4 py-2 font-display text-display-md transition-all duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 flex items-center gap-2 ${
+                      className={`flex items-center gap-2 rounded-md px-4 py-2 font-display text-display-md transition-all duration-300 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50 ${
                         isNavigationActive(item.href, currentPath)
                           ? 'text-bw-accent-gold'
                           : 'text-bw-text-primary'
@@ -327,7 +342,7 @@ export function Header({ className }: HeaderProps) {
                                 handleNavClick(subItem.href);
                                 setOpenDropdown(null);
                               }}
-                              className="text-sm text-bw-text-secondary hover:text-bw-accent-gold transition-colors duration-200 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
+                              className="rounded-md px-3 py-2 text-sm text-bw-text-secondary transition-colors duration-200 hover:text-bw-accent-gold focus:outline-none focus:ring-2 focus:ring-bw-accent-gold focus:ring-opacity-50"
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.2, delay: subIndex * 0.05 }}

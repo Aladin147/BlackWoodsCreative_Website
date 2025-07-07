@@ -32,7 +32,6 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    // Enhanced strict type checking
     "noImplicitAny": true,
     "noImplicitThis": true,
     "exactOptionalPropertyTypes": true,

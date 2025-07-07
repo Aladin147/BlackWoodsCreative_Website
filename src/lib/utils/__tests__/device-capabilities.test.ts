@@ -244,7 +244,7 @@ describe('Device Capabilities Detection', () => {
         value: {
           ...mockNavigator,
           hardwareConcurrency: 8, // High CPU cores
-          deviceMemory: 8 // High memory
+          deviceMemory: 8, // High memory
         },
         writable: true,
       });
@@ -258,21 +258,21 @@ describe('Device Capabilities Detection', () => {
                 if (type === 'webgl' || type === 'experimental-webgl') {
                   return {
                     getParameter: jest.fn((param: any) => {
-                      if (param === 0x1F00) return 'NVIDIA Corporation'; // VENDOR
-                      if (param === 0x1F01) return 'NVIDIA GeForce RTX 3080'; // RENDERER
-                      if (param === 0x0D33) return 8192; // MAX_TEXTURE_SIZE
+                      if (param === 0x1f00) return 'NVIDIA Corporation'; // VENDOR
+                      if (param === 0x1f01) return 'NVIDIA GeForce RTX 3080'; // RENDERER
+                      if (param === 0x0d33) return 8192; // MAX_TEXTURE_SIZE
                       return 'NVIDIA GeForce RTX 3080'; // Default for any other parameter
                     }),
                     getExtension: jest.fn((extensionName: string) => {
                       if (extensionName === 'WEBGL_debug_renderer_info') {
                         return {
-                          UNMASKED_VENDOR_WEBGL: 0x1F00,
-                          UNMASKED_RENDERER_WEBGL: 0x1F01,
+                          UNMASKED_VENDOR_WEBGL: 0x1f00,
+                          UNMASKED_RENDERER_WEBGL: 0x1f01,
                         };
                       }
                       return {};
                     }),
-                    MAX_TEXTURE_SIZE: 0x0D33,
+                    MAX_TEXTURE_SIZE: 0x0d33,
                   };
                 }
                 if (type === 'webgl2') {

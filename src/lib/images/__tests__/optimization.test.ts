@@ -9,7 +9,7 @@ global.Image = class {
   onload: (() => void) | null = null;
   onerror: (() => void) | null = null;
   src = '';
-  
+
   constructor() {
     // Simulate successful image load after a short delay
     setTimeout(() => {
@@ -113,7 +113,7 @@ describe('ImageOptimizer', () => {
   describe('Responsive Images', () => {
     it('should generate responsive sizes string', () => {
       const sizes = optimizer.generateSizes();
-      
+
       expect(sizes).toContain('(max-width:');
       expect(sizes).toContain('px)');
       expect(typeof sizes).toBe('string');
@@ -142,19 +142,19 @@ describe('ImageOptimizer', () => {
   describe('Image Preloading', () => {
     it('should preload images successfully', async () => {
       const src = '/images/test.jpg';
-      
+
       const result = await optimizer.preloadImage(src);
       expect(result).toBe(src);
     });
 
     it('should cache preload promises', async () => {
       const src = '/images/test.jpg';
-      
+
       const promise1 = optimizer.preloadImage(src);
       const promise2 = optimizer.preloadImage(src);
-      
+
       expect(promise1).toBe(promise2);
-      
+
       await promise1;
       await promise2;
     });
@@ -166,7 +166,7 @@ describe('ImageOptimizer', () => {
         onload: (() => void) | null = null;
         onerror: (() => void) | null = null;
         src = '';
-        
+
         constructor() {
           setTimeout(() => {
             if (this.onerror) this.onerror();
@@ -175,9 +175,9 @@ describe('ImageOptimizer', () => {
       } as any;
 
       const src = '/images/nonexistent.jpg';
-      
+
       await expect(optimizer.preloadImage(src)).rejects.toThrow();
-      
+
       // Restore original Image
       global.Image = originalImage;
     });
@@ -186,14 +186,14 @@ describe('ImageOptimizer', () => {
   describe('Blur Placeholder Generation', () => {
     it('should generate blur placeholder data URL', () => {
       const placeholder = optimizer.generateBlurPlaceholder(10, 10);
-      
+
       expect(placeholder).toMatch(/^data:image\/jpeg;base64,/);
     });
 
     it('should handle different dimensions', () => {
       const placeholder1 = optimizer.generateBlurPlaceholder(5, 5);
       const placeholder2 = optimizer.generateBlurPlaceholder(20, 20);
-      
+
       expect(placeholder1).toBeDefined();
       expect(placeholder2).toBeDefined();
       expect(typeof placeholder1).toBe('string');
@@ -205,10 +205,10 @@ describe('ImageOptimizer', () => {
     it('should track cache statistics', async () => {
       const src1 = '/images/test1.jpg';
       const src2 = '/images/test2.jpg';
-      
+
       await optimizer.preloadImage(src1);
       await optimizer.preloadImage(src2);
-      
+
       const stats = optimizer.getCacheStats();
       expect(stats.size).toBeGreaterThan(0);
       expect(stats.keys.length).toBeGreaterThan(0);
@@ -217,10 +217,10 @@ describe('ImageOptimizer', () => {
     it('should clear cache', async () => {
       const src = '/images/test.jpg';
       await optimizer.preloadImage(src);
-      
+
       let stats = optimizer.getCacheStats();
       expect(stats.size).toBeGreaterThan(0);
-      
+
       optimizer.clearCache();
       stats = optimizer.getCacheStats();
       expect(stats.size).toBe(0);
@@ -277,12 +277,12 @@ describe('Image Optimization Integration', () => {
 
   it('should handle multiple image formats', () => {
     const formats = ['jpeg', 'png', 'webp', 'avif'];
-    
+
     formats.forEach(format => {
       const url = optimizer.generateOptimizedUrl('/test.jpg', 800, 600, {
         format: format as any,
       });
-      
+
       expect(url).toContain(`f=${format}`);
     });
   });
@@ -291,17 +291,17 @@ describe('Image Optimization Integration', () => {
     const url = optimizer.generateOptimizedUrl('/test.jpg', 800, 600, {
       format: 'auto',
     });
-    
+
     // Auto format should not add format parameter
     expect(url).not.toContain('f=auto');
   });
 
   it('should generate different URLs for different parameters', () => {
     const baseUrl = '/images/test.jpg';
-    
+
     const url1 = optimizer.generateOptimizedUrl(baseUrl, 400, 300, { quality: 60 });
     const url2 = optimizer.generateOptimizedUrl(baseUrl, 800, 600, { quality: 90 });
-    
+
     expect(url1).not.toBe(url2);
     expect(url1).toContain('w=400');
     expect(url1).toContain('h=300');
@@ -313,7 +313,7 @@ describe('Image Optimization Integration', () => {
 
   it('should handle missing height parameter', () => {
     const url = optimizer.generateOptimizedUrl('/test.jpg', 800);
-    
+
     expect(url).toContain('w=800');
     expect(url).not.toContain('h=');
   });
@@ -321,10 +321,10 @@ describe('Image Optimization Integration', () => {
   it('should handle edge cases gracefully', () => {
     // Empty source
     expect(() => optimizer.generateOptimizedUrl('', 800)).not.toThrow();
-    
+
     // Zero dimensions
     expect(() => optimizer.generateOptimizedUrl('/test.jpg', 0)).not.toThrow();
-    
+
     // Negative dimensions
     expect(() => optimizer.generateOptimizedUrl('/test.jpg', -100)).not.toThrow();
   });

@@ -70,7 +70,7 @@ export function ScrollStoryTeller({ sections, className }: ScrollStoryTellerProp
               whileHover={{ scale: 1.2 }}
               onClick={() => {
                 const section = sections[index];
-                if (section) {
+                if (section && typeof document !== 'undefined') {
                   const element = document.getElementById(section.id);
                   element?.scrollIntoView({ behavior: 'smooth' });
                 }

@@ -1,6 +1,6 @@
 /**
  * Placeholder Data Generators
- * 
+ *
  * Generates realistic placeholder content for development and testing
  */
 
@@ -68,7 +68,8 @@ export const PlaceholderGenerators = {
   // Generate text content
   text: (id: string, length: 'short' | 'medium' | 'long' = 'medium'): TextContent => {
     const texts = PLACEHOLDER_TEXTS[length];
-    const content = texts[Math.floor(Math.random() * texts.length)] ?? texts[0] ?? 'Placeholder text content';
+    const content =
+      texts[Math.floor(Math.random() * texts.length)] ?? texts[0] ?? 'Placeholder text content';
 
     return ContentUtils.createTextPlaceholder(id, content, {
       title: `Text Content - ${id}`,
@@ -79,23 +80,32 @@ export const PlaceholderGenerators = {
   },
 
   // Generate image content
-  image: (id: string, category: 'hero' | 'portfolio' | 'team' | 'testimonials' = 'portfolio'): ImageContent => {
+  image: (
+    id: string,
+    category: 'hero' | 'portfolio' | 'team' | 'testimonials' = 'portfolio'
+  ): ImageContent => {
     let src: string;
-    
+
     if (category === 'hero') {
       src = PLACEHOLDER_IMAGES.hero;
     } else {
       const images = PLACEHOLDER_IMAGES[category];
-      src = images[Math.floor(Math.random() * images.length)] ?? images[0] ?? '/placeholder-image.jpg';
+      src =
+        images[Math.floor(Math.random() * images.length)] ?? images[0] ?? '/placeholder-image.jpg';
     }
 
-    return ContentUtils.createImagePlaceholder(id, `Placeholder image for ${id}`, {
-      title: `Image Content - ${id}`,
-      description: `Placeholder image content for ${id}`,
-      tags: ['placeholder', 'image', category],
-      category,
-      priority: 'medium',
-    }, src);
+    return ContentUtils.createImagePlaceholder(
+      id,
+      `Placeholder image for ${id}`,
+      {
+        title: `Image Content - ${id}`,
+        description: `Placeholder image content for ${id}`,
+        tags: ['placeholder', 'image', category],
+        category,
+        priority: 'medium',
+      },
+      src
+    );
   },
 
   // Generate video content
@@ -123,17 +133,36 @@ export const PlaceholderGenerators = {
   }),
 
   // Generate portfolio content
-  portfolio: (id: string, category: 'film' | 'photography' | '3d' | 'scenes' = 'film'): PortfolioContent => {
+  portfolio: (
+    id: string,
+    category: 'film' | 'photography' | '3d' | 'scenes' = 'film'
+  ): PortfolioContent => {
     const titles = {
-      film: ['Cinematic Brand Film', 'Corporate Documentary', 'Music Video Production', 'Commercial Spot'],
-      photography: ['Executive Portraits', 'Architectural Photography', 'Event Coverage', 'Product Photography'],
-      '3d': ['Architectural Visualization', 'Product Rendering', 'Character Modeling', 'Environment Design'],
+      film: [
+        'Cinematic Brand Film',
+        'Corporate Documentary',
+        'Music Video Production',
+        'Commercial Spot',
+      ],
+      photography: [
+        'Executive Portraits',
+        'Architectural Photography',
+        'Event Coverage',
+        'Product Photography',
+      ],
+      '3d': [
+        'Architectural Visualization',
+        'Product Rendering',
+        'Character Modeling',
+        'Environment Design',
+      ],
       scenes: ['Fantasy Environment', 'Urban Landscape', 'Interior Design', 'Atmospheric Scene'],
     };
 
     const categoryTitles = titles[category] ?? titles.film;
-    const title = categoryTitles[Math.floor(Math.random() * categoryTitles.length)] ?? 'Portfolio Item';
-    
+    const title =
+      categoryTitles[Math.floor(Math.random() * categoryTitles.length)] ?? 'Portfolio Item';
+
     return {
       id,
       type: 'portfolio',
@@ -141,7 +170,9 @@ export const PlaceholderGenerators = {
       lastUpdated: new Date(),
       version: '1.0.0',
       title,
-      description: PLACEHOLDER_TEXTS.medium[Math.floor(Math.random() * PLACEHOLDER_TEXTS.medium.length)] ?? 'Portfolio description',
+      description:
+        PLACEHOLDER_TEXTS.medium[Math.floor(Math.random() * PLACEHOLDER_TEXTS.medium.length)] ??
+        'Portfolio description',
       category,
       images: [
         PlaceholderGenerators.image(`${id}-image-1`, 'portfolio'),
@@ -163,9 +194,27 @@ export const PlaceholderGenerators = {
 
   // Generate testimonial content
   testimonial: (id: string): TestimonialContent => {
-    const names = ['Sarah Chen', 'Michael Rodriguez', 'Emma Thompson', 'David Park', 'Lisa Anderson'];
-    const companies = ['TechCorp Industries', 'Design Studio', 'Innovation Labs', 'Creative Agency', 'Media Group'];
-    const roles = ['Marketing Director', 'Creative Director', 'Brand Manager', 'CEO', 'Project Manager'];
+    const names = [
+      'Sarah Chen',
+      'Michael Rodriguez',
+      'Emma Thompson',
+      'David Park',
+      'Lisa Anderson',
+    ];
+    const companies = [
+      'TechCorp Industries',
+      'Design Studio',
+      'Innovation Labs',
+      'Creative Agency',
+      'Media Group',
+    ];
+    const roles = [
+      'Marketing Director',
+      'Creative Director',
+      'Brand Manager',
+      'CEO',
+      'Project Manager',
+    ];
     const contents = [
       'BlackWoods Creative exceeded our expectations with their exceptional work. The attention to detail and creative vision was outstanding.',
       'Working with BlackWoods Creative was a fantastic experience. They delivered exactly what we needed and more.',
@@ -201,19 +250,22 @@ export const PlaceholderGenerators = {
     const services = [
       {
         name: 'Filmmaking',
-        description: 'Professional video production services including corporate films, documentaries, and commercials.',
+        description:
+          'Professional video production services including corporate films, documentaries, and commercials.',
         features: ['Script Development', 'Cinematography', 'Post-Production', 'Color Grading'],
         icon: '🎬',
       },
       {
         name: 'Photography',
-        description: 'High-quality photography services for corporate, architectural, and commercial needs.',
+        description:
+          'High-quality photography services for corporate, architectural, and commercial needs.',
         features: ['Studio Photography', 'On-Location Shoots', 'Photo Editing', 'Digital Delivery'],
         icon: '📸',
       },
       {
         name: '3D Visualization',
-        description: 'Photorealistic 3D rendering and visualization for architecture and product design.',
+        description:
+          'Photorealistic 3D rendering and visualization for architecture and product design.',
         features: ['3D Modeling', 'Rendering', 'Animation', 'Virtual Tours'],
         icon: '🎨',
       },
@@ -225,12 +277,13 @@ export const PlaceholderGenerators = {
       },
     ];
 
-    const service = services[Math.floor(Math.random() * services.length)] ?? services[0] ?? {
-      name: 'Service Name',
-      description: 'Service description',
-      features: ['Feature 1', 'Feature 2'],
-      icon: '🎬'
-    };
+    const service = services[Math.floor(Math.random() * services.length)] ??
+      services[0] ?? {
+        name: 'Service Name',
+        description: 'Service description',
+        features: ['Feature 1', 'Feature 2'],
+        icon: '🎬',
+      };
 
     return {
       id,
@@ -287,12 +340,13 @@ export const PlaceholderGenerators = {
       },
     ];
 
-    const member = members[Math.floor(Math.random() * members.length)] ?? members[0] ?? {
-      name: 'Team Member',
-      role: 'Team Role',
-      bio: 'Team member bio',
-      skills: ['Skill 1', 'Skill 2']
-    };
+    const member = members[Math.floor(Math.random() * members.length)] ??
+      members[0] ?? {
+        name: 'Team Member',
+        role: 'Team Role',
+        bio: 'Team member bio',
+        skills: ['Skill 1', 'Skill 2'],
+      };
 
     return {
       id,
@@ -339,15 +393,22 @@ export const PlaceholderGenerators = {
       lastUpdated: new Date(),
       version: '1.0.0',
       title,
-      excerpt: PLACEHOLDER_TEXTS.medium[Math.floor(Math.random() * PLACEHOLDER_TEXTS.medium.length)] ?? 'Blog excerpt',
-      content: PLACEHOLDER_TEXTS.long[Math.floor(Math.random() * PLACEHOLDER_TEXTS.long.length)] ?? 'Blog content',
+      excerpt:
+        PLACEHOLDER_TEXTS.medium[Math.floor(Math.random() * PLACEHOLDER_TEXTS.medium.length)] ??
+        'Blog excerpt',
+      content:
+        PLACEHOLDER_TEXTS.long[Math.floor(Math.random() * PLACEHOLDER_TEXTS.long.length)] ??
+        'Blog content',
       author: 'BlackWoods Creative Team',
       publishDate: new Date(),
       readTime: '5 min read',
       featuredImage: PlaceholderGenerators.image(`${id}-featured`, 'portfolio'),
       category: 'Insights',
       tags: ['visual storytelling', 'creative process', 'industry trends'],
-      slug: title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+      slug: title
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, ''),
       metadata: {
         title: `Blog Post - ${title}`,
         description: 'Placeholder blog content',
@@ -361,7 +422,12 @@ export const PlaceholderGenerators = {
 // Initialize placeholder content
 export function initializePlaceholderContent(): void {
   // Generate portfolio items
-  const portfolioCategories: Array<'film' | 'photography' | '3d' | 'scenes'> = ['film', 'photography', '3d', 'scenes'];
+  const portfolioCategories: Array<'film' | 'photography' | '3d' | 'scenes'> = [
+    'film',
+    'photography',
+    '3d',
+    'scenes',
+  ];
   portfolioCategories.forEach(category => {
     for (let i = 1; i <= 3; i++) {
       const portfolio = PlaceholderGenerators.portfolio(`portfolio-${category}-${i}`, category);

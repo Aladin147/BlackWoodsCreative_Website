@@ -44,7 +44,7 @@ export function PortfolioSection({ className }: PortfolioSectionProps) {
   };
 
   return (
-    <section id="portfolio" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
+    <section id="portfolio" data-testid="portfolio-section" className={`bg-bw-bg-primary px-6 py-32 ${className}`}>
       <div className="mx-auto max-w-7xl">
         {/* Advanced Section Header with Parallax */}
         <ScrollReveal className="mb-20 text-center" direction="up" distance={80} delay={0.2}>

@@ -13,6 +13,26 @@ const mockCancelAnimationFrame = jest.fn();
 global.requestAnimationFrame = mockRequestAnimationFrame;
 global.cancelAnimationFrame = mockCancelAnimationFrame;
 
+// Mock canvas context for device capabilities
+const mockCanvasContext = {
+  getParameter: jest.fn(() => 'WebGL 1.0'),
+  getSupportedExtensions: jest.fn(() => []),
+};
+
+const mockGetContext = jest.fn((contextType: string) => {
+  if (contextType === 'webgl' || contextType === 'experimental-webgl' || contextType === 'webgl2') {
+    return mockCanvasContext;
+  }
+  return null;
+});
+
+// Mock HTMLCanvasElement.prototype.getContext
+Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+  value: mockGetContext,
+  writable: true,
+  configurable: true,
+});
+
 // Mock getBoundingClientRect
 const mockGetBoundingClientRect = jest.fn(() => ({
   width: 800,
