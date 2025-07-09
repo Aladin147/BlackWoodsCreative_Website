@@ -51,7 +51,14 @@
     "react-dom": "^18.3.1",
     "resend": "^4.6.0",
     "sharp": "^0.34.2",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8.5.6",
+    "autoprefixer": "^10.4.20",
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@axe-core/react": "^4.10.2",
@@ -65,9 +72,6 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.14",
-    "@types/node": "^24.0.10",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
     "autoprefixer": "^10.4.21",
@@ -87,11 +91,8 @@
     "jest-environment-jsdom": "^29.0.0",
     "madge": "^8.0.0",
     "playwright": "^1.40.0",
-    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.6.13",
-    "tailwindcss": "^3.4.17",
-    "typescript": "^5.8.3"
+    "prettier-plugin-tailwindcss": "^0.6.13"
   },
   "engines": {
     "node": ">=18.0.0",
