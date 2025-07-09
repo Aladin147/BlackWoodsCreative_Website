@@ -4,7 +4,7 @@ import { headers } from 'next/headers';
 
 import { GoogleAnalytics, CookieConsentBanner } from '@/components/analytics/GoogleAnalytics';
 import DevelopmentMonitors from '@/components/development/DevelopmentMonitors';
-// import { ClientOnlyInteractives } from '@/components/interactive/ClientOnlyInteractives';
+import { ClientOnlyInteractives } from '@/components/interactive/ClientOnlyInteractives';
 import { ContextAwareBreadcrumbs } from '@/components/layout/ContextAwareBreadcrumbs';
 import { Header } from '@/components/layout/Header';
 import { ScrollProgress } from '@/components/layout/ScrollProgress';
@@ -169,8 +169,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               Skip to main content
             </a>
             <CoreWebVitalsOptimizer />
-            {/* ✅ Client-only interactive components temporarily disabled for debugging */}
-            {/* <ClientOnlyInteractives /> */}
+            {/* ✅ Client-only interactive components re-enabled */}
+            <ClientOnlyInteractives />
             <ScrollProgress />
             <Header />
 
