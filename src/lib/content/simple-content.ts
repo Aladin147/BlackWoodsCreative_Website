@@ -212,9 +212,22 @@ export const ContentUtils = {
     isPlaceholder: false,
   }),
 
-  // Generate simple ID
+  // Generate simple ID - SSR-safe
   generateId: (prefix: string): string => {
-    return `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const timestamp = Date.now();
+
+    // Use crypto.getRandomValues if available (client-side), fallback to deterministic approach
+    let random: string;
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const array = new Uint8Array(4);
+      crypto.getRandomValues(array);
+      random = Array.from(array, byte => byte.toString(36)).join('').substring(0, 6);
+    } else {
+      // Deterministic fallback based on timestamp for SSR compatibility
+      random = (timestamp % 1000000).toString(36).substring(0, 6);
+    }
+
+    return `${prefix}-${timestamp}-${random}`;
   },
 };
 

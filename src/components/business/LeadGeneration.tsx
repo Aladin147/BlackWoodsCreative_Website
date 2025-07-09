@@ -7,7 +7,7 @@
 'use client';
 
 import { EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 import { useBusinessTracking } from '@/components/analytics/GoogleAnalytics';
 import { useMobileDevice } from '@/lib/utils/mobile-optimization';
@@ -50,12 +50,12 @@ export function QuickContactButtons() {
 // Newsletter signup component
 export function NewsletterSignup() {
   const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [isPending, startTransition] = useTransition();
   const { trackBusinessGoal } = useBusinessTracking();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email.trim()) {
@@ -63,10 +63,10 @@ export function NewsletterSignup() {
       return;
     }
 
-    setIsSubmitting(true);
     setError('');
 
-    try {
+    startTransition(async () => {
+      try {
       // Simple newsletter signup - can be integrated with email service later
       const response = await fetch('/api/newsletter', {
         method: 'POST',
@@ -82,12 +82,11 @@ export function NewsletterSignup() {
         trackBusinessGoal('newsletter_signup');
       } else {
         setError('Failed to subscribe. Please try again.');
+        }
+      } catch {
+        setError('Something went wrong. Please try again.');
       }
-    } catch {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
   };
 
   if (isSuccess) {
@@ -114,19 +113,19 @@ export function NewsletterSignup() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             className="w-full px-4 py-3 border border-bw-border-subtle rounded-lg focus:ring-2 focus:ring-bw-accent-gold focus:border-bw-accent-gold transition-colors"
-            disabled={isSubmitting}
+            disabled={isPending}
           />
           {error && (
             <p className="text-red-600 text-sm mt-2">{error}</p>
           )}
         </div>
-        
+
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isPending}
           className="w-full px-4 py-3 bg-bw-accent-gold text-black rounded-lg hover:bg-bw-accent-gold/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+          {isPending ? 'Subscribing...' : 'Subscribe'}
         </button>
       </form>
     </div>
@@ -143,13 +142,13 @@ export function QuickQuoteRequest() {
     budget: '',
     message: '',
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [isPending, startTransition] = useTransition();
   const { trackConversion, trackBusinessGoal } = useBusinessTracking();
   const deviceInfo = useMobileDevice();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Simple form validation
@@ -164,9 +163,9 @@ export function QuickQuoteRequest() {
     }
 
     setErrors([]);
-    setIsSubmitting(true);
 
-    try {
+    startTransition(async () => {
+      try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -196,14 +195,13 @@ export function QuickQuoteRequest() {
           });
           setErrors([]);
         }, 3000);
-      } else {
-        setErrors(['Failed to send request. Please try again.']);
+        } else {
+          setErrors(['Failed to send request. Please try again.']);
+        }
+      } catch {
+        setErrors(['Something went wrong. Please try again.']);
       }
-    } catch {
-      setErrors(['Something went wrong. Please try again.']);
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -326,10 +324,10 @@ export function QuickQuoteRequest() {
                 
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isPending}
                   className="w-full px-4 py-3 bg-bw-accent-gold text-black rounded-lg hover:bg-bw-accent-gold/90 transition-colors font-medium disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Sending...' : 'Send Quote Request'}
+                  {isPending ? 'Sending...' : 'Send Quote Request'}
                 </button>
               </form>
               </>

@@ -223,10 +223,13 @@ describe('ContactSection', () => {
 
     await user.click(submitButton);
 
-    // Check for loading state
+    // Check for loading state (React 19 useTransition pattern)
     await waitFor(
       () => {
-        expect(screen.getByText(/Sending/)).toBeInTheDocument();
+        const sendingText = screen.queryByText(/Sending/);
+        const disabledButton = screen.getByRole('button', { name: /send message/i });
+        // Either the button shows "Sending..." or is disabled (indicating pending state)
+        expect(sendingText ?? (disabledButton as HTMLButtonElement).disabled).toBeTruthy();
       },
       { timeout: 1000 }
     );

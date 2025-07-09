@@ -58,23 +58,63 @@ global.ResizeObserver = class ResizeObserver {
 
 // Mock browser APIs only in jsdom environment
 if (typeof window !== 'undefined') {
-  // Mock matchMedia
+  // Mock matchMedia with proper device detection support
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation(query => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(), // deprecated
-      removeListener: jest.fn(), // deprecated
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
+    value: jest.fn().mockImplementation(query => {
+      // Support device detection queries
+      const matches = (() => {
+        if (query.includes('(max-width: 640px)')) return false; // sm
+        if (query.includes('(max-width: 768px)')) return false; // md
+        if (query.includes('(max-width: 1024px)')) return false; // lg
+        if (query.includes('(max-width: 1280px)')) return false; // xl
+        if (query.includes('(prefers-reduced-motion: reduce)')) return false;
+        if (query.includes('(hover: hover)')) return true;
+        if (query.includes('(pointer: coarse)')) return false;
+        return false;
+      })();
+
+      return {
+        matches,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(), // deprecated
+        removeListener: jest.fn(), // deprecated
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      };
+    }),
   });
 
   // Mock scrollTo
   global.scrollTo = jest.fn();
+
+  // Mock window dimensions for device detection
+  Object.defineProperty(window, 'innerWidth', {
+    writable: true,
+    configurable: true,
+    value: 1920,
+  });
+
+  Object.defineProperty(window, 'innerHeight', {
+    writable: true,
+    configurable: true,
+    value: 1080,
+  });
+
+  // Mock navigator for device detection
+  Object.defineProperty(navigator, 'userAgent', {
+    writable: true,
+    configurable: true,
+    value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+  });
+
+  Object.defineProperty(navigator, 'maxTouchPoints', {
+    writable: true,
+    configurable: true,
+    value: 0,
+  });
 }
 
 // Mock document APIs only when document exists
@@ -289,6 +329,83 @@ jest.mock('@/context/ThemeContext', () => ({
   }),
 }));
 
+// Mock layout components to prevent import issues
+jest.mock('@/components/layout/Header', () => ({
+  Header: ({ className, ...props }) => (
+    <header className={className} data-testid="header" {...props}>
+      <div data-testid="logo">BlackWoods Creative</div>
+      <nav data-testid="navigation">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/services">Services</a>
+        <a href="/portfolio">Portfolio</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+  ),
+}));
+
+jest.mock('@/components/layout/ScrollProgress', () => ({
+  ScrollProgress: ({ className, ...props }) => (
+    <div className={className} data-testid="scroll-progress" {...props} />
+  ),
+}));
+
+jest.mock('@/components/layout/Footer', () => ({
+  Footer: ({ className, ...props }) => (
+    <footer className={className} data-testid="footer" {...props}>
+      Footer Content
+    </footer>
+  ),
+}));
+
+// Mock device adaptation hook for consistent testing
+jest.mock('@/hooks/useDeviceAdaptation', () => ({
+  useDeviceAdaptation: () => ({
+    deviceInfo: {
+      isMobile: false,
+      isTablet: false,
+      isDesktop: true,
+      isTouchDevice: false,
+      screenSize: '2xl',
+      orientation: 'landscape',
+      pixelRatio: 1,
+      hasHover: true,
+      prefersReducedMotion: false,
+      capabilities: {
+        webgl: true,
+        webgl2: true,
+        intersectionObserver: true,
+        resizeObserver: true,
+      },
+      optimizationProfile: {
+        rendering: {
+          webgl: true,
+          complexAnimations: true,
+          particles: true,
+        },
+        performance: {
+          level: 'high',
+          enableOptimizations: false,
+        },
+      },
+    },
+    adaptiveConfig: {
+      magneticStrength: 0.3,
+      magneticDistance: 150,
+      animationDuration: 0.6,
+      enableParallax: true,
+      enableMagnetic: true,
+      enableComplexAnimations: true,
+    },
+    shouldEnableFeature: () => true,
+    getAdaptiveMagneticProps: () => ({
+      strength: 0.3,
+      distance: 150,
+    }),
+  }),
+}));
+
 // Mock heroicons
 jest.mock('@heroicons/react/24/outline', () => ({
   ArrowDownIcon: props => <svg data-testid="arrow-down-icon" {...props} />,
@@ -318,7 +435,67 @@ jest.mock('@heroicons/react/24/outline', () => ({
   CheckCircleIcon: props => <svg data-testid="check-circle-icon" {...props} />,
 }));
 
+// React 19 specific mocks
+// Mock useTransition for React 19 form patterns
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useTransition: () => [false, jest.fn()], // [isPending, startTransition]
+}));
+
+// Mock WebGL context for WebGL effects tests
+if (typeof global.HTMLCanvasElement !== 'undefined') {
+  global.HTMLCanvasElement.prototype.getContext = jest.fn((contextType) => {
+    if (contextType === 'webgl' || contextType === 'experimental-webgl') {
+      return {
+        createShader: jest.fn(),
+        shaderSource: jest.fn(),
+        compileShader: jest.fn(),
+        createProgram: jest.fn(),
+        attachShader: jest.fn(),
+        linkProgram: jest.fn(),
+        useProgram: jest.fn(),
+        createBuffer: jest.fn(),
+        bindBuffer: jest.fn(),
+        bufferData: jest.fn(),
+        getAttribLocation: jest.fn(),
+        enableVertexAttribArray: jest.fn(),
+        vertexAttribPointer: jest.fn(),
+        getUniformLocation: jest.fn(),
+        uniform1f: jest.fn(),
+        uniform2f: jest.fn(),
+        uniform3f: jest.fn(),
+        uniform4f: jest.fn(),
+        uniformMatrix4fv: jest.fn(),
+        clear: jest.fn(),
+        clearColor: jest.fn(),
+        drawArrays: jest.fn(),
+        viewport: jest.fn(),
+        getShaderParameter: jest.fn(() => true),
+        getProgramParameter: jest.fn(() => true),
+        getShaderInfoLog: jest.fn(() => ''),
+        getProgramInfoLog: jest.fn(() => ''),
+      };
+    }
+    return null;
+  });
+}
+
 // Setup test environment
 beforeEach(() => {
   jest.clearAllMocks();
+
+  // Reset window dimensions for each test
+  if (typeof window !== 'undefined') {
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: 1920,
+    });
+
+    Object.defineProperty(window, 'innerHeight', {
+      writable: true,
+      configurable: true,
+      value: 1080,
+    });
+  }
 });

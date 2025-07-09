@@ -410,7 +410,7 @@ export function ImageGrid({
   columns?: number;
   gap?: number;
   className?: string;
-  onImageClick?: (image: ImageSource, index: number) => void;
+  onImageClick?: (_image: ImageSource, _index: number) => void;
 }) {
   return (
     <div

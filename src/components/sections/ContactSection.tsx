@@ -8,7 +8,7 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 import {
   ScrollReveal,
@@ -90,8 +90,8 @@ export function ContactSection({ className }: ContactSectionProps) {
     message: '',
   });
   const [formErrors, setFormErrors] = useState<ContactFormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // CSRF Protection
   const { csrfToken, isLoading: csrfLoading, makeProtectedRequest } = useCSRFProtection();
@@ -131,7 +131,7 @@ export function ContactSection({ className }: ContactSectionProps) {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -142,50 +142,48 @@ export function ContactSection({ className }: ContactSectionProps) {
     // Sanitize user inputs to prevent XSS attacks
     const sanitizedData = sanitizeFormData(formData as unknown as Record<string, unknown>);
 
-    setIsSubmitting(true);
-
-    try {
-      // Submit form data to API endpoint with CSRF protection
-      const response = await makeProtectedRequest('/api/contact', {
-        method: 'POST',
-        body: JSON.stringify(sanitizedData),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        if (result.errors) {
-          // Handle validation errors from server
-          setFormErrors(result.errors);
-        } else {
-          // Handle other errors (rate limiting, server errors, etc.)
-        }
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Success
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-
-      // Reset form after 3 seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setFormErrors({});
-        setFormData({
-          name: '',
-          email: '',
-          company: '',
-          projectType: '',
-          budget: '',
-          message: '',
+    // Use React 19 transition for automatic pending state
+    startTransition(async () => {
+      try {
+        // Submit form data to API endpoint with CSRF protection
+        const response = await makeProtectedRequest('/api/contact', {
+          method: 'POST',
+          body: JSON.stringify(sanitizedData),
         });
-      }, 3000);
-    } catch {
-      // Network error - logged internally
-      setIsSubmitting(false);
-      // Could show a user-friendly error message here
-    }
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          if (result.errors) {
+            // Handle validation errors from server
+            setFormErrors(result.errors);
+          } else {
+            // Handle other errors (rate limiting, server errors, etc.)
+          }
+          return;
+        }
+
+        // Success
+        setIsSubmitted(true);
+
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setFormErrors({});
+          setFormData({
+            name: '',
+            email: '',
+            company: '',
+            projectType: '',
+            budget: '',
+            message: '',
+          });
+        }, 3000);
+      } catch {
+        // Network error - logged internally
+        // Could show a user-friendly error message here
+      }
+    });
   };
 
   return (
@@ -445,12 +443,12 @@ export function ContactSection({ className }: ContactSectionProps) {
 
                     <MotionButton
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isPending}
                       className="btn-primary flex w-full items-center justify-center gap-2"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      {isSubmitting ? (
+                      {isPending ? (
                         <>
                           <div className="h-5 w-5 animate-spin rounded-full border-2 border-bw-black border-t-transparent" />
                           Sending...

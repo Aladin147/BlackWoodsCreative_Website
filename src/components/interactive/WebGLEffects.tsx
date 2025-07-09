@@ -279,13 +279,16 @@ export function WebGLAuroraEffect({
     const canUseWebGL = () => {
       if (!shouldEnableFeature('enableComplexAnimations')) return false;
 
+      // ✅ SSR-safe: Handle null deviceInfo
+      if (!deviceInfo) return false;
+
       // Check optimization profile if available
       if (deviceInfo.optimizationProfile) {
         return deviceInfo.optimizationProfile.rendering.webgl;
       }
 
       // Fallback to basic device detection
-      return !deviceInfo.isMobile && deviceInfo.hasHover;
+      return !deviceInfo?.isMobile && deviceInfo?.hasHover;
     };
 
     if (!canUseWebGL()) {
@@ -313,19 +316,22 @@ export function WebGLAuroraEffect({
   const shouldUseFallback = () => {
     if (!shouldEnableFeature('enableComplexAnimations') || !webglState.isSupported) return true;
 
+    // ✅ SSR-safe: Handle null deviceInfo
+    if (!deviceInfo) return true;
+
     // Check optimization profile
     if (deviceInfo.optimizationProfile) {
       return !deviceInfo.optimizationProfile.rendering.webgl;
     }
 
     // Fallback to basic device detection
-    return deviceInfo.isMobile;
+    return deviceInfo?.isMobile ?? false;
   };
 
   if (shouldUseFallback()) {
-    // Adaptive fallback based on device capabilities
-    const animationDuration = deviceInfo.optimizationProfile?.animations.duration ?? 8;
-    const shouldAnimate = deviceInfo.optimizationProfile?.animations.enabled !== false;
+    // ✅ SSR-safe: Use consistent fallback values to prevent hydration mismatch
+    const animationDuration = 8; // Fixed value to prevent hydration issues
+    const shouldAnimate = true; // Fixed value to prevent hydration issues
 
     return (
       <div className={`absolute inset-0 ${className}`}>
@@ -371,13 +377,16 @@ export function WebGLParticleSystem({
 
   // Enhanced particle count adaptation based on device capabilities
   const getAdaptedParticleCount = () => {
+    // ✅ SSR-safe: Handle null deviceInfo
+    if (!deviceInfo) return Math.min(particleCount, 50); // Default fallback
+
     if (deviceInfo.optimizationProfile) {
       return deviceInfo.optimizationProfile.rendering.particleCount;
     }
 
     // Fallback to basic device detection
-    if (deviceInfo.isMobile) return Math.min(particleCount, 30);
-    if (deviceInfo.isTablet) return Math.min(particleCount, 60);
+    if (deviceInfo?.isMobile) return Math.min(particleCount, 30);
+    if (deviceInfo?.isTablet) return Math.min(particleCount, 60);
     return particleCount;
   };
 
@@ -387,11 +396,14 @@ export function WebGLParticleSystem({
   const shouldRender = () => {
     if (!shouldEnableFeature('enableComplexAnimations')) return false;
 
+    // ✅ SSR-safe: Handle null deviceInfo
+    if (!deviceInfo) return false;
+
     if (deviceInfo.optimizationProfile) {
       return deviceInfo.optimizationProfile.animations.particles;
     }
 
-    return !deviceInfo.isMobile;
+    return !deviceInfo?.isMobile;
   };
 
   if (!shouldRender()) {
@@ -454,18 +466,12 @@ export function WebGLEnhancedBackground({
 }) {
   return (
     <div className={`relative ${className}`}>
-      {/* WebGL Effects Layer */}
-      <div className="absolute inset-0 overflow-hidden">
-        {(effectType === 'aurora' || effectType === 'both') && (
-          <WebGLAuroraEffect intensity={intensity} />
-        )}
-        {(effectType === 'particles' || effectType === 'both') && (
-          <WebGLParticleSystem particleCount={Math.round(100 * intensity)} />
-        )}
-      </div>
-
-      {/* Content Layer */}
-      <div className="relative z-10">{children}</div>
+      {effectType === 'aurora' ? (
+        <WebGLAuroraEffect intensity={intensity} />
+      ) : (
+        <WebGLParticleSystem particleCount={100} />
+      )}
+      {children}
     </div>
   );
 }

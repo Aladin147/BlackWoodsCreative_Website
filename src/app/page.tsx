@@ -18,20 +18,22 @@ const LoadingSection = ({ title, subtitle }: { title: string; subtitle: string }
   </div>
 );
 
-// Critical above-the-fold content - load immediately
+// ✅ Critical above-the-fold content - load immediately with SSR
 const HeroSection = dynamic(
   () => import('@/components/sections/HeroSection').then(mod => ({ default: mod.HeroSection })),
   {
+    ssr: true, // ✅ Enable SSR to prevent hydration mismatch
     loading: () => (
       <LoadingSection title="BlackWoods Creative" subtitle="Crafting Visual Stories..." />
     ),
   }
 );
 
-// Below-the-fold sections - can be lazy loaded
+// ✅ Below-the-fold sections - enable SSR to prevent hydration issues
 const PortfolioSection = dynamic(
   () => import('@/components/sections/PortfolioSection').then(mod => ({ default: mod.PortfolioSection })),
   {
+    ssr: true, // ✅ Enable SSR
     loading: () => (
       <LoadingSection title="Our Portfolio" subtitle="Showcasing our finest work..." />
     ),
@@ -41,6 +43,7 @@ const PortfolioSection = dynamic(
 const VisionSection = dynamic(
   () => import('@/components/sections/VisionSection').then(mod => ({ default: mod.VisionSection })),
   {
+    ssr: true, // ✅ Enable SSR
     loading: () => (
       <LoadingSection title="Experience the Difference" subtitle="Discovering our vision..." />
     ),
@@ -50,6 +53,7 @@ const VisionSection = dynamic(
 const AboutSection = dynamic(
   () => import('@/components/sections/AboutSection').then(mod => ({ default: mod.AboutSection })),
   {
+    ssr: true, // ✅ Enable SSR
     loading: () => (
       <LoadingSection title="About Us" subtitle="Learning about our story..." />
     ),
@@ -59,6 +63,7 @@ const AboutSection = dynamic(
 const ContactSection = dynamic(
   () => import('@/components/sections/ContactSection').then(mod => ({ default: mod.ContactSection })),
   {
+    ssr: true, // ✅ Enable SSR
     loading: () => (
       <LoadingSection title="Contact" subtitle="Connecting with our team..." />
     ),

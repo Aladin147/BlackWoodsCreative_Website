@@ -3,6 +3,8 @@
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
+import { useIsHydrated } from './SSRSafeWrapper';
+
 interface CursorState {
   x: number;
   y: number;
@@ -13,6 +15,9 @@ interface CursorState {
 
 export function MagneticCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
+  const isHydrated = useIsHydrated();
+
+  // ✅ SSR-safe: Only initialize state after hydration
   const [cursorState, setCursorState] = useState<CursorState>({
     x: 0,
     y: 0,
@@ -31,9 +36,22 @@ export function MagneticCursor() {
   const smoothY = useSpring(cursorY, springConfig);
   const smoothScale = useSpring(cursorScale, springConfig);
 
+  // ✅ Check if mobile device
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
-    // Only run in browser environment
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    // ✅ Only run after hydration and in browser environment
+    if (!isHydrated || typeof window === 'undefined') return;
+
+    // Check if mobile device
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const mobile = /mobile|android|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      setIsMobile(mobile || window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
 
     const handleMouseMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
@@ -46,112 +64,57 @@ export function MagneticCursor() {
       }));
     };
 
-    const handleMouseEnter = (e: MouseEvent) => {
+    const handleMouseEnter = (e: Event) => {
       const target = e.target as HTMLElement;
-      let hoverType: CursorState['hoverType'] = 'default';
-      let scale = 1.5;
+      const cursorType = target.getAttribute('data-cursor') ?? 'default';
 
-      // Determine cursor type based on element
-      if (target.tagName === 'BUTTON' || target.closest('button')) {
-        hoverType = 'button';
-        scale = 2;
-      } else if (target.tagName === 'A' || target.closest('a')) {
-        hoverType = 'link';
-        scale = 1.8;
-      } else if (target.closest('[data-cursor="portfolio"]')) {
-        hoverType = 'portfolio';
-        scale = 3;
-      } else if (target.closest('h1, h2, h3, h4, h5, h6, p')) {
-        hoverType = 'text';
-        scale = 1.2;
-      }
-
-      cursorScale.set(scale);
       setCursorState(prev => ({
         ...prev,
         isHovering: true,
-        hoverType,
-        scale,
+        hoverType: cursorType as CursorState['hoverType'],
+        scale: cursorType === 'button' ? 1.5 : cursorType === 'portfolio' ? 2 : 1.2,
       }));
+
+      cursorScale.set(cursorState.scale);
     };
 
     const handleMouseLeave = () => {
-      cursorScale.set(1);
       setCursorState(prev => ({
         ...prev,
         isHovering: false,
         hoverType: 'default',
         scale: 1,
       }));
+
+      cursorScale.set(1);
     };
 
-    // Add event listeners to interactive elements
-    const interactiveElements = document.querySelectorAll(
-      'button, a, [data-cursor], input, textarea, select'
-    );
-
+    // Add event listeners
     document.addEventListener('mousemove', handleMouseMove);
-
+    
+    // Add hover listeners to interactive elements
+    const interactiveElements = document.querySelectorAll('[data-cursor]');
     interactiveElements.forEach(element => {
-      element.addEventListener('mouseenter', handleMouseEnter as EventListener);
-      element.addEventListener('mouseleave', handleMouseLeave);
+      (element as HTMLElement).addEventListener('mouseenter', handleMouseEnter as EventListener);
+      (element as HTMLElement).addEventListener('mouseleave', handleMouseLeave as EventListener);
     });
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', checkMobile);
+      
       interactiveElements.forEach(element => {
-        element.removeEventListener('mouseenter', handleMouseEnter as EventListener);
-        element.removeEventListener('mouseleave', handleMouseLeave);
+        (element as HTMLElement).removeEventListener('mouseenter', handleMouseEnter as EventListener);
+        (element as HTMLElement).removeEventListener('mouseleave', handleMouseLeave as EventListener);
       });
     };
-  }, [cursorX, cursorY, cursorScale]);
+  }, [isHydrated, cursorX, cursorY, cursorScale, cursorState.scale]);
 
-  // Hide default cursor on desktop
-  useEffect(() => {
-    // Only run in browser environment
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
-
-    const style = document.createElement('style');
-    style.innerHTML = `
-      * {
-        cursor: none !important;
-      }
-      @media (max-width: 768px) {
-        * {
-          cursor: auto !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      // Safe cleanup - check if style element still exists and has a parent
-      if (style?.parentNode) {
-        style.parentNode.removeChild(style);
-      }
-    };
-  }, []);
-
-  // Don't render on mobile
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    // Only run in browser environment
-    if (typeof window === 'undefined') return;
-
-    setIsMobile(window.innerWidth <= 768);
-
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  if (isMobile) return null;
+  // ✅ Don't render during SSR or on mobile
+  if (!isHydrated || isMobile) return null;
 
   return (
-    <>
+    <div suppressHydrationWarning>
       {/* Main Cursor */}
       <motion.div
         ref={cursorRef}
@@ -187,78 +150,18 @@ export function MagneticCursor() {
 
           {/* Inner Dot */}
           <motion.div
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ${
-              cursorState.hoverType === 'button'
-                ? 'h-2 w-2 bg-bw-accent-gold'
-                : cursorState.hoverType === 'portfolio'
-                  ? 'h-3 w-3 bg-bw-accent-gold'
-                  : 'h-1 w-1 bg-bw-text-primary'
+            className={`absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ${
+              cursorState.hoverType === 'button' || cursorState.hoverType === 'portfolio'
+                ? 'bg-bw-accent-gold'
+                : 'bg-bw-text-primary'
             }`}
             animate={{
-              scale: cursorState.isHovering ? 0 : 1,
+              scale: cursorState.isHovering ? 0.5 : 1,
             }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3 }}
           />
-
-          {/* Hover Text */}
-          {cursorState.isHovering && (
-            <motion.div
-              className="absolute left-1/2 top-full mt-4 -translate-x-1/2 whitespace-nowrap rounded bg-bw-black/80 px-2 py-1 text-xs text-bw-white"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
-              {cursorState.hoverType === 'button' && 'Click'}
-              {cursorState.hoverType === 'link' && 'Navigate'}
-              {cursorState.hoverType === 'portfolio' && 'View Project'}
-              {cursorState.hoverType === 'text' && 'Read'}
-            </motion.div>
-          )}
         </div>
       </motion.div>
-
-      {/* Cursor Trail */}
-      <CursorTrail x={cursorState.x} y={cursorState.y} />
-    </>
-  );
-}
-
-interface CursorTrailProps {
-  x: number;
-  y: number;
-}
-
-function CursorTrail({ x, y }: CursorTrailProps) {
-  const [trail, setTrail] = useState<Array<{ x: number; y: number; id: number }>>([]);
-
-  useEffect(() => {
-    const newPoint = { x, y, id: Date.now() };
-
-    setTrail(prev => {
-      const newTrail = [newPoint, ...prev.slice(0, 8)]; // Keep last 8 points
-      return newTrail;
-    });
-  }, [x, y]);
-
-  return (
-    <>
-      {trail.map((point, index) => (
-        <motion.div
-          key={point.id}
-          className="pointer-events-none fixed left-0 top-0 z-[9998] h-2 w-2 rounded-full bg-bw-gold/30"
-          style={{
-            x: point.x - 4,
-            y: point.y - 4,
-          }}
-          initial={{ opacity: 0.8, scale: 1 }}
-          animate={{
-            opacity: 0.8 - index * 0.1,
-            scale: 1 - index * 0.1,
-          }}
-          transition={{ duration: 0.3 }}
-        />
-      ))}
-    </>
+    </div>
   );
 }

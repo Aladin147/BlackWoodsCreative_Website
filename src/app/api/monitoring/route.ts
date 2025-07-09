@@ -17,7 +17,7 @@ export function GET(request: NextRequest) {
     const performanceMonitor = getPerformanceMonitor();
 
     switch (type) {
-      case 'metrics':
+      case 'metrics': {
         const requestMetrics = requestLogger.getMetrics();
         const performanceMetrics = performanceMonitor.getMetrics();
 
@@ -32,8 +32,9 @@ export function GET(request: NextRequest) {
             platform: process.platform,
           },
         });
+      }
 
-      case 'logs':
+      case 'logs': {
         const logs = requestLogger.getRecentLogs(limit);
 
         if (format === 'csv') {
@@ -51,24 +52,27 @@ export function GET(request: NextRequest) {
           total: logs.length,
           timestamp: new Date().toISOString(),
         });
+      }
 
-      case 'errors':
+      case 'errors': {
         const errorLogs = requestLogger.getErrorLogs(limit);
         return NextResponse.json({
           errors: errorLogs,
           total: errorLogs.length,
           timestamp: new Date().toISOString(),
         });
+      }
 
-      case 'security':
+      case 'security': {
         const securityLogs = requestLogger.getSecurityLogs(limit);
         return NextResponse.json({
           securityEvents: securityLogs,
           total: securityLogs.length,
           timestamp: new Date().toISOString(),
         });
+      }
 
-      case 'health':
+      case 'health': {
         const metrics = requestLogger.getMetrics();
         const isHealthy =
           metrics.totalRequests > 0
@@ -96,6 +100,7 @@ export function GET(request: NextRequest) {
             securityEvents: metrics.securityEvents,
           },
         });
+      }
 
       default:
         return NextResponse.json(
@@ -133,7 +138,7 @@ export async function POST(request: NextRequest) {
           timestamp: new Date().toISOString(),
         });
 
-      case 'export-logs':
+      case 'export-logs': {
         const format = (body.format as 'json' | 'csv') ?? 'json';
         const exportData = requestLogger.exportLogs(format);
 
@@ -143,8 +148,9 @@ export async function POST(request: NextRequest) {
             'Content-Disposition': `attachment; filename="logs-export-${Date.now()}.${format}"`,
           },
         });
+      }
 
-      case 'log-custom-event':
+      case 'log-custom-event': {
         // Allow logging custom monitoring events
         const { event: _event, data: _data } = body;
         // Custom event logged internally
@@ -154,6 +160,7 @@ export async function POST(request: NextRequest) {
           message: 'Custom event logged',
           timestamp: new Date().toISOString(),
         });
+      }
 
       default:
         return NextResponse.json(

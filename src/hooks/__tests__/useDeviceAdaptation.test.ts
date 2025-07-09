@@ -4,6 +4,9 @@ import { getOptimizationProfile, getDeviceCapabilities } from '@/lib/utils/devic
 
 import { useDeviceAdaptation } from '../useDeviceAdaptation';
 
+// Unmock the device adaptation hook for its own tests
+jest.unmock('@/hooks/useDeviceAdaptation');
+
 // Mock the device capabilities module
 jest.mock('@/lib/utils/device-capabilities', () => ({
   getOptimizationProfile: jest.fn(),
@@ -17,20 +20,53 @@ const mockGetDeviceCapabilities = getDeviceCapabilities as jest.MockedFunction<
   typeof getDeviceCapabilities
 >;
 
-// Mock window.matchMedia
-const mockMatchMedia = (matches: boolean) => {
+// Mock window.matchMedia with device-specific queries
+const mockMatchMedia = (deviceType: 'mobile' | 'tablet' | 'desktop' = 'desktop', reducedMotion = false) => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation(query => ({
-      matches,
-      media: query,
-      onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
-    })),
+    value: jest.fn().mockImplementation(query => {
+      let matches = false;
+
+      // Reduced motion preference
+      if (query.includes('(prefers-reduced-motion: reduce)')) {
+        matches = reducedMotion;
+      }
+      // Device detection logic
+      else if (deviceType === 'mobile') {
+        if (query.includes('(max-width: 640px)')) matches = (window.innerWidth || 1920) <= 640;
+        else if (query.includes('(pointer: coarse)')) matches = true;
+        else if (query.includes('(hover: none)')) matches = true;
+        else matches = false;
+      } else if (deviceType === 'tablet') {
+        if (query.includes('(max-width: 1024px)')) matches = (window.innerWidth || 1920) <= 1024;
+        else if (query.includes('(max-width: 640px)')) matches = false;
+        else if (query.includes('(pointer: coarse)')) matches = true;
+        else matches = false;
+      } else {
+        if (query.includes('(hover: hover)')) matches = true;
+        else if (query.includes('(pointer: fine)')) matches = true;
+        else if (query.includes('(max-width:')) matches = false;
+        else matches = false;
+      }
+
+      // Screen size queries - use window.innerWidth for accurate detection
+      const width = window.innerWidth || 1920;
+      if (query.includes('(max-width: 640px)')) matches = width <= 640;
+      if (query.includes('(max-width: 768px)')) matches = width <= 768;
+      if (query.includes('(max-width: 1024px)')) matches = width <= 1024;
+      if (query.includes('(max-width: 1280px)')) matches = width <= 1280;
+
+      return {
+        matches,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      };
+    }),
   });
 };
 
@@ -178,6 +214,7 @@ describe('useDeviceAdaptation', () => {
     it('detects mobile device correctly', async () => {
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
       mockScreen(375, 812);
+      mockMatchMedia('mobile');
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -206,6 +243,7 @@ describe('useDeviceAdaptation', () => {
       // Use a generic tablet user agent that doesn't match mobile patterns
       mockNavigator('Mozilla/5.0 (compatible; Tablet; rv:14.0)', undefined);
       mockScreen(768, 1024);
+      mockMatchMedia('tablet');
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
         configurable: true,
@@ -360,12 +398,26 @@ describe('useDeviceAdaptation', () => {
 
   describe('Adaptive Configuration', () => {
     it('returns mobile config for mobile devices', async () => {
-      // Mock mobile device capabilities - force fallback to simple device detection
-      mockGetOptimizationProfile.mockImplementation(() => {
-        throw new Error('Device capabilities not available');
+      // Mock mobile device capabilities
+      mockGetOptimizationProfile.mockReturnValue({
+        rendering: {
+          webgl: false,
+          complexAnimations: false,
+          particles: false,
+        },
+        performance: {
+          level: 'low',
+          enableOptimizations: true,
+        },
       });
-      mockGetDeviceCapabilities.mockImplementation(() => {
-        throw new Error('Device capabilities not available');
+      mockGetDeviceCapabilities.mockReturnValue({
+        cpu: { cores: 4, architecture: 'arm', performance: 'low' },
+        gpu: { vendor: 'Apple', renderer: 'A14', webglSupported: false, webgl2Supported: false, maxTextureSize: 4096, performance: 'low' },
+        memory: { deviceMemory: 4, jsHeapSizeLimit: 1073741824, performance: 'low' },
+        network: { effectiveType: '4g', downlink: 10, rtt: 50, saveData: false },
+        display: { width: 375, height: 812, pixelRatio: 3, colorDepth: 24, refreshRate: 60 },
+        browser: { name: 'Safari', version: '14.0', engine: 'WebKit' },
+        features: { webgl: false, webgl2: false, intersectionObserver: true, resizeObserver: true },
       });
 
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');
@@ -393,12 +445,26 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('returns tablet config for tablet devices', async () => {
-      // Mock tablet device capabilities - force fallback to simple device detection
-      mockGetOptimizationProfile.mockImplementation(() => {
-        throw new Error('Device capabilities not available');
+      // Mock tablet device capabilities
+      mockGetOptimizationProfile.mockReturnValue({
+        rendering: {
+          webgl: true,
+          complexAnimations: false,
+          particles: false,
+        },
+        performance: {
+          level: 'medium',
+          enableOptimizations: true,
+        },
       });
-      mockGetDeviceCapabilities.mockImplementation(() => {
-        throw new Error('Device capabilities not available');
+      mockGetDeviceCapabilities.mockReturnValue({
+        cpu: { cores: 6, architecture: 'arm', performance: 'medium' },
+        gpu: { vendor: 'Apple', renderer: 'A12Z', webglSupported: true, webgl2Supported: false, maxTextureSize: 8192, performance: 'medium' },
+        memory: { deviceMemory: 6, jsHeapSizeLimit: 2147483648, performance: 'medium' },
+        network: { effectiveType: '4g', downlink: 25, rtt: 30, saveData: false },
+        display: { width: 768, height: 1024, pixelRatio: 2, colorDepth: 24, refreshRate: 60 },
+        browser: { name: 'Safari', version: '14.0', engine: 'WebKit' },
+        features: { webgl: true, webgl2: false, intersectionObserver: true, resizeObserver: true },
       });
 
       // Use a generic tablet user agent that doesn't match mobile patterns
@@ -442,7 +508,7 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('handles reduced motion preference', async () => {
-      mockMatchMedia(true); // prefers-reduced-motion: reduce
+      mockMatchMedia('desktop', true); // prefers-reduced-motion: reduce
 
       const { result } = renderHook(() => useDeviceAdaptation());
 
@@ -465,12 +531,26 @@ describe('useDeviceAdaptation', () => {
     });
 
     it('disables features for mobile devices', async () => {
-      // Mock mobile device capabilities - force fallback to simple device detection
-      mockGetOptimizationProfile.mockImplementation(() => {
-        throw new Error('Device capabilities not available');
+      // Mock mobile device capabilities
+      mockGetOptimizationProfile.mockReturnValue({
+        rendering: {
+          webgl: false,
+          complexAnimations: false,
+          particles: false,
+        },
+        performance: {
+          level: 'low',
+          enableOptimizations: true,
+        },
       });
-      mockGetDeviceCapabilities.mockImplementation(() => {
-        throw new Error('Device capabilities not available');
+      mockGetDeviceCapabilities.mockReturnValue({
+        cpu: { cores: 4, architecture: 'arm', performance: 'low' },
+        gpu: { vendor: 'Apple', renderer: 'A14', webglSupported: false, webgl2Supported: false, maxTextureSize: 4096, performance: 'low' },
+        memory: { deviceMemory: 4, jsHeapSizeLimit: 1073741824, performance: 'low' },
+        network: { effectiveType: '4g', downlink: 10, rtt: 50, saveData: false },
+        display: { width: 375, height: 812, pixelRatio: 3, colorDepth: 24, refreshRate: 60 },
+        browser: { name: 'Safari', version: '14.0', engine: 'WebKit' },
+        features: { webgl: false, webgl2: false, intersectionObserver: true, resizeObserver: true },
       });
 
       mockNavigator('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)');

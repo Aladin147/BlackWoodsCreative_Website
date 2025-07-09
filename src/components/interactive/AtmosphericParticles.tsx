@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+import { useIsHydrated } from './SSRSafeWrapper';
+
 interface AtmosphericParticlesProps {
   className?: string;
   count?: number;
@@ -10,9 +12,11 @@ interface AtmosphericParticlesProps {
 export function AtmosphericParticles({ className = '', count = 50 }: AtmosphericParticlesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | undefined>(undefined);
+  const isHydrated = useIsHydrated();
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    // ✅ Only run after hydration
+    if (!isHydrated || !containerRef.current) return;
 
     const container = containerRef.current;
 
@@ -34,12 +38,16 @@ export function AtmosphericParticles({ className = '', count = 50 }: Atmospheric
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [count]);
+  }, [count, isHydrated]);
+
+  // ✅ Don't render during SSR
+  if (!isHydrated) return null;
 
   return (
     <div
       ref={containerRef}
       className={`pointer-events-none fixed inset-0 z-10 ${className}`}
+      suppressHydrationWarning
     >
       {/* Atmospheric particles would be rendered here */}
     </div>

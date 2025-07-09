@@ -68,8 +68,7 @@ export const PlaceholderGenerators = {
   // Generate text content
   text: (id: string, length: 'short' | 'medium' | 'long' = 'medium'): TextContent => {
     const texts = PLACEHOLDER_TEXTS[length];
-    const content =
-      texts[Math.floor(Math.random() * texts.length)] ?? texts[0] ?? 'Placeholder text content';
+    const content = texts[0] ?? 'Placeholder text content';
 
     return ContentUtils.createTextPlaceholder(id, content, {
       title: `Text Content - ${id}`,
@@ -277,7 +276,7 @@ export const PlaceholderGenerators = {
       },
     ];
 
-    const service = services[Math.floor(Math.random() * services.length)] ??
+    const service = services[0] ??
       services[0] ?? {
         name: 'Service Name',
         description: 'Service description',
@@ -384,7 +383,7 @@ export const PlaceholderGenerators = {
       'The Art of Scene Creation',
     ];
 
-    const title = titles[Math.floor(Math.random() * titles.length)] ?? 'Blog Post Title';
+    const title = titles[0] ?? 'Blog Post Title';
 
     return {
       id,
@@ -394,10 +393,10 @@ export const PlaceholderGenerators = {
       version: '1.0.0',
       title,
       excerpt:
-        PLACEHOLDER_TEXTS.medium[Math.floor(Math.random() * PLACEHOLDER_TEXTS.medium.length)] ??
+        PLACEHOLDER_TEXTS.medium[0] ??
         'Blog excerpt',
       content:
-        PLACEHOLDER_TEXTS.long[Math.floor(Math.random() * PLACEHOLDER_TEXTS.long.length)] ??
+        PLACEHOLDER_TEXTS.long[0] ??
         'Blog content',
       author: 'BlackWoods Creative Team',
       publishDate: new Date(),

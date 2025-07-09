@@ -27,9 +27,20 @@ const customJestConfig = {
       statements: 80,
     },
   },
+  // React 19 and Next.js 15 compatibility
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
   // Suppress punycode deprecation warnings during tests
   silent: false,
   verbose: false,
+  // Enhanced module resolution for React 19
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+    },
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

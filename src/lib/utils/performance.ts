@@ -282,7 +282,8 @@ export function checkPerformanceBudget(budget: PerformanceBudget): Promise<{
   passed: boolean;
   violations: string[];
 }> {
-  return new Promise(async resolve => {
+  return new Promise(resolve => {
+    (async () => {
     const violations: string[] = [];
 
     // Check bundle size
@@ -303,5 +304,6 @@ export function checkPerformanceBudget(budget: PerformanceBudget): Promise<{
       passed: violations.length === 0,
       violations,
     });
+    })();
   });
 }

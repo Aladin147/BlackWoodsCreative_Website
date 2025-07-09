@@ -8,7 +8,7 @@
 
 import Head from 'next/head';
 import Script from 'next/script';
-import { ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 
 import {
   usePageSEO,
@@ -340,6 +340,13 @@ export function CreativeWorkStructuredData({
 
 // SEO analytics component (for development)
 export function SEOAnalytics({ showInProduction = false }: { showInProduction?: boolean }) {
+  const [loadTime, setLoadTime] = useState<string>('');
+
+  useEffect(() => {
+    // Set load time only on client to prevent hydration mismatch
+    setLoadTime(new Date().toLocaleTimeString());
+  }, []);
+
   if (process.env.NODE_ENV === 'production' && !showInProduction) {
     return null;
   }
@@ -349,7 +356,7 @@ export function SEOAnalytics({ showInProduction = false }: { showInProduction?: 
       <h4 className="mb-2 font-bold">SEO Debug Info</h4>
       <div className="space-y-1">
         <div>Environment: {process.env.NODE_ENV}</div>
-        <div>Page loaded: {new Date().toLocaleTimeString()}</div>
+        <div>Page loaded: {loadTime || 'Loading...'}</div>
         <div className="text-yellow-300">⚠️ Remove in production</div>
       </div>
     </div>

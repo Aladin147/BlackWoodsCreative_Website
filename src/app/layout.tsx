@@ -4,11 +4,10 @@ import { headers } from 'next/headers';
 
 import { GoogleAnalytics, CookieConsentBanner } from '@/components/analytics/GoogleAnalytics';
 import DevelopmentMonitors from '@/components/development/DevelopmentMonitors';
-// Test direct imports to bypass barrel export issues
-import { AtmosphericParticles } from '@/components/interactive/AtmosphericParticles';
-import { MagneticCursor } from '@/components/interactive/MagneticCursor';
-import { Header, ScrollProgress } from '@/components/layout';
+// import { ClientOnlyInteractives } from '@/components/interactive/ClientOnlyInteractives';
 import { ContextAwareBreadcrumbs } from '@/components/layout/ContextAwareBreadcrumbs';
+import { Header } from '@/components/layout/Header';
+import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import { CoreWebVitalsOptimizer } from '@/components/optimization/CoreWebVitalsOptimizer';
 import { SimpleStructuredData } from '@/components/seo/SimpleStructuredData';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -170,8 +169,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               Skip to main content
             </a>
             <CoreWebVitalsOptimizer />
-            <AtmosphericParticles />
-            <MagneticCursor />
+            {/* ✅ Client-only interactive components temporarily disabled for debugging */}
+            {/* <ClientOnlyInteractives /> */}
             <ScrollProgress />
             <Header />
 

@@ -324,14 +324,28 @@ export function AtmosphericLayer({
   color?: string;
   className?: string;
 }) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const baseClasses = `absolute inset-0 pointer-events-none ${className}`;
 
-  // Deterministic values based on type and intensity to prevent hydration issues
+  // ✅ Fixed deterministic values using integer-based calculation to prevent hydration issues
   const getDeterministicValue = (seed: number, min: number, max: number): number => {
-    // Simple deterministic pseudo-random based on seed
-    const x = Math.sin(seed) * 10000;
-    return min + (x - Math.floor(x)) * (max - min);
+    // Use a simple linear congruential generator for consistent results
+    const a = 1664525;
+    const c = 1013904223;
+    const m = Math.pow(2, 32);
+    const normalized = ((a * seed + c) % m) / m;
+    return min + normalized * (max - min);
   };
+
+  // ✅ Don't render dynamic components on server to prevent hydration mismatch
+  if (!isClient && (type === 'particles' || type === 'orbs')) {
+    return <div className={baseClasses} />;
+  }
 
   switch (type) {
     case 'mist':
@@ -370,6 +384,7 @@ export function AtmosphericLayer({
                   left: `${leftPos}%`,
                   top: `${topPos}%`,
                 }}
+                suppressHydrationWarning
                 animate={{
                   y: [0, -100, 0],
                   opacity: [0, intensity, 0],
@@ -420,6 +435,7 @@ export function AtmosphericLayer({
                   top: `${topPos}%`,
                   opacity: intensity * 0.3,
                 }}
+                suppressHydrationWarning
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [intensity * 0.2, intensity * 0.4, intensity * 0.2],

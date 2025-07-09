@@ -82,7 +82,7 @@ export function ScrollStoryTeller({ sections, className }: ScrollStoryTellerProp
 
       {/* Story Sections */}
       {sections.map((section, index) => (
-        <ScrollStorySection
+        <ScrollStorySectionComponent
           key={section.id}
           section={section}
           index={index}
@@ -103,7 +103,7 @@ interface ScrollStorySectionProps {
   totalSections: number;
 }
 
-function ScrollStorySection({
+function ScrollStorySectionComponent({
   section,
   index,
   isActive,

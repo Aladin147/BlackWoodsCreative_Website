@@ -157,7 +157,7 @@ export function useAnimationRegistration() {
 }
 
 // Performance monitoring component for development
-export function AnimationPerformanceMonitor({}: {
+export function AnimationPerformanceMonitor(_props: {
   enabled?: boolean;
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }) {

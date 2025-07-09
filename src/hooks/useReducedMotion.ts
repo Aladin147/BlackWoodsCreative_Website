@@ -7,9 +7,11 @@ import { useState, useEffect } from 'react';
  * Returns true if user prefers reduced motion
  */
 export function useReducedMotion(): boolean {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
+  // ✅ SSR-safe: Start with null to prevent hydration mismatch
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean | null>(null);
   useEffect(() => {
+    // ✅ Mark as hydrated first
+
     // Check if we're in a browser environment
     if (typeof window === 'undefined') {
       return;
@@ -32,7 +34,8 @@ export function useReducedMotion(): boolean {
     };
   }, []);
 
-  return prefersReducedMotion;
+  // ✅ Return false during SSR/hydration to prevent mismatch
+  return prefersReducedMotion ?? false;
 }
 
 /**

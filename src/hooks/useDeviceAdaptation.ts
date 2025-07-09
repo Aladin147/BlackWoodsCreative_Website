@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import {
   getDeviceCapabilities,
@@ -8,6 +8,15 @@ import {
   DeviceCapabilities,
   OptimizationProfile,
 } from '@/lib/utils/device-capabilities';
+
+// Helper function to determine screen size category
+function getScreenSize(width: number): 'sm' | 'md' | 'lg' | 'xl' | '2xl' {
+  if (width < 640) return 'sm';
+  if (width < 768) return 'md';
+  if (width < 1024) return 'lg';
+  if (width < 1280) return 'xl';
+  return '2xl';
+}
 
 interface DeviceInfo {
   isMobile: boolean;
@@ -21,7 +30,7 @@ interface DeviceInfo {
   prefersReducedMotion: boolean;
   // Enhanced device information
   capabilities?: DeviceCapabilities;
-  optimizationProfile?: OptimizationProfile;
+  optimizationProfile?: OptimizationProfile | undefined;
 }
 
 interface AdaptiveConfig {
@@ -60,23 +69,112 @@ const defaultDesktopConfig: AdaptiveConfig = {
   enableComplexAnimations: true,
 };
 
+// ✅ Function to get adaptive config based on device info
+function getAdaptiveConfig(deviceInfo: DeviceInfo): AdaptiveConfig {
+  if (deviceInfo.isMobile) {
+    return defaultMobileConfig;
+  } else if (deviceInfo.isTablet) {
+    return defaultTabletConfig;
+  } else {
+    return defaultDesktopConfig;
+  }
+}
+
+// ✅ SSR-safe basic device detection fallback
+function getBasicDeviceInfo(): DeviceInfo {
+  if (typeof window === 'undefined') {
+    // Return safe defaults for SSR
+    return {
+      isMobile: false,
+      isTablet: false,
+      isDesktop: true,
+      isTouchDevice: false,
+      screenSize: 'xl' as const,
+      orientation: 'landscape' as const,
+      pixelRatio: 1,
+      hasHover: true,
+      prefersReducedMotion: false,
+      optimizationProfile: undefined,
+    };
+  }
+
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isMobile = /mobile|android|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+  const isTablet = /tablet|ipad/i.test(userAgent) && !isMobile;
+  const isDesktop = !isMobile && !isTablet;
+
+  // Determine screen size based on window width
+  const width = window.innerWidth;
+  let screenSize: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  if (width < 640) screenSize = 'sm';
+  else if (width < 768) screenSize = 'md';
+  else if (width < 1024) screenSize = 'lg';
+  else if (width < 1280) screenSize = 'xl';
+  else screenSize = '2xl';
+
+  return {
+    isMobile,
+    isTablet,
+    isDesktop,
+    isTouchDevice: 'ontouchstart' in window,
+    screenSize,
+    orientation: window.innerHeight > window.innerWidth ? 'portrait' : 'landscape',
+    pixelRatio: window.devicePixelRatio || 1,
+    hasHover: window.matchMedia('(hover: hover)').matches,
+    prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    optimizationProfile: undefined,
+  };
+}
+
 export function useDeviceAdaptation() {
-  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>({
-    isMobile: false,
-    isTablet: false,
-    isDesktop: true,
-    isTouchDevice: false,
-    screenSize: 'lg',
-    orientation: 'landscape',
-    pixelRatio: 1,
-    hasHover: true,
-    prefersReducedMotion: false,
-  });
-
+  // ✅ SSR-safe: Use null initial state to prevent hydration mismatch
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo | null>(null);
   const [adaptiveConfig, setAdaptiveConfig] = useState<AdaptiveConfig>(defaultDesktopConfig);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  const detectDevice = async () => {
-    if (typeof window === 'undefined') return;
+  // ✅ Track hydration state and initialize device detection
+  useEffect(() => {
+    setIsHydrated(true);
+
+    // ✅ Only run device detection after hydration
+    const detectDevice = async () => {
+      try {
+        const capabilities = await getDeviceCapabilities();
+        const profile = getOptimizationProfile();
+
+        // Map capabilities to DeviceInfo structure
+        const info: DeviceInfo = {
+          isMobile: capabilities.display.width <= 768,
+          isTablet: capabilities.display.width > 768 && capabilities.display.width <= 1024,
+          isDesktop: capabilities.display.width > 1024,
+          isTouchDevice: 'ontouchstart' in window,
+          screenSize: getScreenSize(capabilities.display.width),
+          orientation: capabilities.display.width > capabilities.display.height ? 'landscape' : 'portrait',
+          pixelRatio: capabilities.display.pixelRatio,
+          hasHover: window.matchMedia('(hover: hover)').matches,
+          prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+          capabilities,
+          optimizationProfile: profile,
+        };
+
+        setDeviceInfo(info);
+        setAdaptiveConfig(getAdaptiveConfig(info));
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('Device detection failed, using defaults:', error);
+        // Fallback to basic detection
+        const basicInfo = getBasicDeviceInfo();
+        setDeviceInfo(basicInfo);
+        setAdaptiveConfig(getAdaptiveConfig(basicInfo));
+      }
+    };
+
+    detectDevice();
+  }, []);
+
+  const detectDevice = useCallback(() => {
+    // ✅ Only run on client after hydration
+    if (typeof window === 'undefined' || !isHydrated) return;
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -112,16 +210,17 @@ export function useDeviceAdaptation() {
         ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
         : false;
 
-    // Enhanced device capabilities detection
+    // Enhanced device capabilities detection - temporarily disabled for debugging
     let capabilities: DeviceCapabilities | undefined;
     let optimizationProfile: OptimizationProfile | undefined;
 
-    try {
-      capabilities = await getDeviceCapabilities();
-      optimizationProfile = await getOptimizationProfile();
-    } catch {
-      // Failed to detect device capabilities - logged internally
-    }
+    // Temporarily disable to isolate Chrome runtime error
+    // try {
+    //   capabilities = await getDeviceCapabilities();
+    //   optimizationProfile = await getOptimizationProfile();
+    // } catch {
+    //   // Failed to detect device capabilities - logged internally
+    // }
 
     const newDeviceInfo: DeviceInfo = {
       isMobile,
@@ -180,7 +279,7 @@ export function useDeviceAdaptation() {
     }
 
     setAdaptiveConfig(config);
-  };
+  }, [isHydrated]);
 
   useEffect(() => {
     detectDevice();
@@ -198,7 +297,7 @@ export function useDeviceAdaptation() {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('orientationchange', handleOrientationChange);
     };
-  }, []);
+  }, [detectDevice]);
 
   const getAdaptiveMagneticProps = (baseStrength: number, baseDistance: number) => {
     if (!adaptiveConfig.enableMagnetic) {
@@ -214,7 +313,7 @@ export function useDeviceAdaptation() {
   const getAdaptiveAnimationProps = (baseDuration: number) => {
     return {
       duration: baseDuration * (adaptiveConfig.animationDuration / 0.6), // Normalize to desktop baseline
-      ease: deviceInfo.isMobile ? 'easeOut' : [0.25, 0.46, 0.45, 0.94],
+      ease: deviceInfo?.isMobile ? 'easeOut' : [0.25, 0.46, 0.45, 0.94], // ✅ SSR-safe
     };
   };
 
@@ -222,12 +321,26 @@ export function useDeviceAdaptation() {
     return adaptiveConfig[feature];
   };
 
+  // ✅ Provide safe defaults when deviceInfo is null (during SSR/hydration)
+  const safeDeviceInfo = deviceInfo ?? {
+    isMobile: false,
+    isTablet: false,
+    isDesktop: true,
+    isTouchDevice: false,
+    screenSize: 'lg' as const,
+    orientation: 'landscape' as const,
+    pixelRatio: 1,
+    hasHover: true,
+    prefersReducedMotion: false,
+  };
+
   return {
-    deviceInfo,
+    deviceInfo: safeDeviceInfo,
     adaptiveConfig,
     getAdaptiveMagneticProps,
     getAdaptiveAnimationProps,
     shouldEnableFeature,
+    isHydrated, // ✅ Expose hydration state
   };
 }
 
@@ -238,7 +351,7 @@ export function useAdaptiveMagnetic(baseStrength: number, baseDistance: number) 
   const adaptiveProps = getAdaptiveMagneticProps(baseStrength, baseDistance);
 
   // For touch devices, we might want to use different interaction patterns
-  const touchProps = deviceInfo.isTouchDevice
+  const touchProps = deviceInfo?.isTouchDevice
     ? {
         ...adaptiveProps,
         // Add touch-specific enhancements
