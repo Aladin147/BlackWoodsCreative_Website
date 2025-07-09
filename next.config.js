@@ -85,10 +85,16 @@ const nextConfig = {
   },
 };
 
-// Bundle analyzer configuration
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
+// Bundle analyzer configuration - conditional import for Vercel compatibility
+let withBundleAnalyzer;
+try {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+  });
+} catch (error) {
+  // Fallback if bundle analyzer is not available
+  withBundleAnalyzer = (config) => config;
+}
 
 module.exports = withBundleAnalyzer({
   ...nextConfig,
