@@ -55,7 +55,7 @@
     "collect-hashes:dev": "npm run dev & sleep 10 && npm run collect-hashes && kill %1",
     "production:validate": "node scripts/production-validation.js",
     "production:deploy": "npm run production:validate && npm run build",
-    "prepare": "husky install",
+    "prepare": "node -e \"if (process.env.CI !== 'true') { require('child_process').exec('husky install') }\"",
     "lint-staged": "lint-staged"
   },
   "dependencies": {
