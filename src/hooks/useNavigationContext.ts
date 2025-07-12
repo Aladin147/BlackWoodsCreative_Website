@@ -1,7 +1,8 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
+
+import { usePathname } from 'next/navigation';
 
 import { getInternalLinksForPage, type InternalLink } from '@/lib/utils/internal-linking';
 
@@ -144,7 +145,7 @@ export function useActiveNavigation() {
         return pathname === '/';
       }
 
-      return pathname.startsWith(href);
+      return pathname ? pathname.startsWith(href) : false;
     };
 
     const getActiveClass = (href: string, exact = false) => {

@@ -9,41 +9,93 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // BlackWoods Creative - Deep Forest Haze Theme
+        // Enhanced BlackWoods Creative Design System
+        primary: {
+          50: '#f0f9f4',
+          100: '#dcf4e3',
+          200: '#bbe8cc',
+          300: '#86d5a6',
+          400: '#4ade80',
+          500: '#22c55e',
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
+          950: '#052e16',
+        },
+        secondary: {
+          50: '#fefdf8',
+          100: '#fef7e0',
+          200: '#fdecc8',
+          300: '#fbd89d',
+          400: '#f7c065',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+          950: '#451a03',
+        },
+        neutral: {
+          50: '#fafaf9',
+          100: '#f5f5f4',
+          200: '#e7e5e4',
+          300: '#d6d3d1',
+          400: '#a8a29e',
+          500: '#78716c',
+          600: '#57534e',
+          700: '#44403c',
+          800: '#292524',
+          900: '#1c1917',
+          950: '#0c0a09',
+        },
+        background: {
+          primary: '#fafaf9',
+          secondary: '#f5f5f4',
+          tertiary: '#e7e5e4',
+          dark: '#1c1917',
+          overlay: 'rgba(28, 25, 23, 0.8)',
+        },
+        text: {
+          primary: '#1c1917',
+          secondary: '#44403c',
+          tertiary: '#78716c',
+          inverse: '#fafaf9',
+          muted: '#a8a29e',
+          brand: '#15803d',
+          accent: '#22c55e',
+        },
+        border: {
+          light: '#e7e5e4',
+          medium: '#d6d3d1',
+          dark: '#a8a29e',
+          focus: '#22c55e',
+        },
+
+        // Legacy BlackWoods Creative colors (for backward compatibility)
         bw: {
-          // Core Background Colors
-          'bg-primary': '#101211', // Near Black with green tint
-          'text-primary': '#E8E8E3', // Off-White, warm and soft
-          'text-secondary': '#A8A8A3', // Muted secondary text
-          'accent-gold': '#C3A358', // Muted Gold, rich ochre
-
-          // Aurora Colors for Background Animation - ENHANCED VISIBILITY
-          'aurora-teal': '#0F3530', // Enhanced Dark Teal - more visible
-          'aurora-green': '#1E4A38', // Enhanced Forest Green - more visible
-          'aurora-bright': '#2E6B5E', // Enhanced Brighter accent - more visible
-
-          // Utility Colors
-          'border-subtle': '#2A2E2C', // Low-contrast borders
-
-          // Legacy colors for gradual migration
-          black: '#101211', // Updated to match bg-primary
+          'bg-primary': '#101211',
+          'text-primary': '#E8E8E3',
+          'text-secondary': '#A8A8A3',
+          'accent-gold': '#C3A358',
+          'aurora-teal': '#0F3530',
+          'aurora-green': '#1E4A38',
+          'aurora-bright': '#2E6B5E',
+          'border-subtle': '#2A2E2C',
+          black: '#101211',
           charcoal: '#0f0f0f',
           'dark-gray': '#1a1a1a',
           'medium-gray': '#2a2a2a',
           'light-gray': '#6a6a6a',
-          white: '#E8E8E3', // Updated to match text-primary
+          white: '#E8E8E3',
           silver: '#b8b8b8',
           platinum: '#f0f0f0',
-          gold: '#C3A358', // Fixed to match accent-gold
+          gold: '#C3A358',
           red: '#cc3333',
-
-          // Enhanced atmospheric colors
           pearl: '#f8f8f8',
           smoke: '#8a8a8a',
           obsidian: '#0a0a0a',
           champagne: '#f7e7ce',
-
-          // Semantic colors
           success: '#28a745',
           warning: '#ffc107',
           error: '#dc3545',
@@ -54,11 +106,28 @@ module.exports = {
         primary: [
           'var(--font-primary)',
           'Inter',
-          'SF Pro Display',
           '-apple-system',
           'BlinkMacSystemFont',
+          'Segoe UI',
+          'Roboto',
+          'Oxygen',
+          'Ubuntu',
+          'Cantarell',
           'sans-serif',
         ],
+        secondary: ['var(--font-secondary)', 'Crimson Text', 'Georgia', 'Times New Roman', 'serif'],
+        accent: ['var(--font-accent)', 'Playfair Display', 'Georgia', 'serif'],
+        mono: [
+          'var(--font-mono)',
+          'JetBrains Mono',
+          'Fira Code',
+          'Monaco',
+          'Consolas',
+          'Liberation Mono',
+          'Courier New',
+          'monospace',
+        ],
+        // Legacy font families (for backward compatibility)
         display: [
           'var(--font-display)',
           'Urbanist',
@@ -68,7 +137,6 @@ module.exports = {
           'BlinkMacSystemFont',
           'sans-serif',
         ],
-        mono: ['var(--font-mono)', 'JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       fontSize: {
         // AUTHENTIC THEME GUIDE TYPOGRAPHY SPECIFICATION

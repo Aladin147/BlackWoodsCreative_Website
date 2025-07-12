@@ -7,10 +7,16 @@
 [data-motion-nonce] {
   /* Ensure transform-origin is set for smooth animations */
   transform-origin: center;
-  /* Enable hardware acceleration */
+  /* Enable hardware acceleration with 3D transform */
+  transform: translateZ(0);
+  /* Optimize for animations */
   will-change: transform, opacity;
+  /* Enable hardware compositing */
+  backface-visibility: hidden;
   /* Ensure proper stacking context */
   position: relative;
+  /* Optimize rendering */
+  contain: layout style paint;
 }
 
 /* Apply motion styles from data attributes */

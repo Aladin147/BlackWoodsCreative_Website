@@ -1,6 +1,6 @@
 /**
  * Simplified Performance Budget Configuration
- * 
+ *
  * Essential performance thresholds based on Google's Core Web Vitals
  * and practical web performance standards.
  */
@@ -9,21 +9,21 @@
 export const CORE_WEB_VITALS_BUDGET = {
   // Largest Contentful Paint - measures loading performance
   lcp: {
-    good: 2500,    // < 2.5s
+    good: 2500, // < 2.5s
     needsWork: 4000, // 2.5s - 4s
     // > 4s is poor
   },
-  
+
   // First Input Delay - measures interactivity
   fid: {
-    good: 100,     // < 100ms
+    good: 100, // < 100ms
     needsWork: 300, // 100ms - 300ms
     // > 300ms is poor
   },
-  
+
   // Cumulative Layout Shift - measures visual stability
   cls: {
-    good: 0.1,     // < 0.1
+    good: 0.1, // < 0.1
     needsWork: 0.25, // 0.1 - 0.25
     // > 0.25 is poor
   },
@@ -33,21 +33,21 @@ export const CORE_WEB_VITALS_BUDGET = {
 export const PERFORMANCE_BUDGET = {
   // Page load time (total)
   loadTime: {
-    good: 3000,    // < 3s
+    good: 3000, // < 3s
     needsWork: 5000, // 3s - 5s
     // > 5s is poor
   },
-  
+
   // DOM ready time
   domReady: {
-    good: 1500,    // < 1.5s
+    good: 1500, // < 1.5s
     needsWork: 3000, // 1.5s - 3s
     // > 3s is poor
   },
-  
+
   // Bundle size (total JavaScript)
   bundleSize: {
-    good: 200 * 1024,    // < 200KB
+    good: 200 * 1024, // < 200KB
     needsWork: 500 * 1024, // 200KB - 500KB
     // > 500KB is poor
   },
@@ -67,7 +67,7 @@ export function calculatePerformanceScore(metrics: {
 } {
   const breakdown: Record<string, { score: number; status: 'good' | 'needs-work' | 'poor' }> = {};
   const issues: string[] = [];
-  
+
   // Score LCP (25% of total score)
   let lcpScore = 100;
   let lcpStatus: 'good' | 'needs-work' | 'poor' = 'good';
@@ -81,7 +81,7 @@ export function calculatePerformanceScore(metrics: {
     issues.push(`LCP needs improvement (${(metrics.lcp / 1000).toFixed(1)}s)`);
   }
   breakdown.lcp = { score: lcpScore, status: lcpStatus };
-  
+
   // Score FID (25% of total score)
   let fidScore = 100;
   let fidStatus: 'good' | 'needs-work' | 'poor' = 'good';
@@ -95,7 +95,7 @@ export function calculatePerformanceScore(metrics: {
     issues.push(`FID needs improvement (${metrics.fid.toFixed(0)}ms)`);
   }
   breakdown.fid = { score: fidScore, status: fidStatus };
-  
+
   // Score CLS (25% of total score)
   let clsScore = 100;
   let clsStatus: 'good' | 'needs-work' | 'poor' = 'good';
@@ -109,7 +109,7 @@ export function calculatePerformanceScore(metrics: {
     issues.push(`CLS needs improvement (${metrics.cls.toFixed(3)})`);
   }
   breakdown.cls = { score: clsScore, status: clsStatus };
-  
+
   // Score Load Time (25% of total score)
   let loadScore = 100;
   let loadStatus: 'good' | 'needs-work' | 'poor' = 'good';
@@ -123,10 +123,10 @@ export function calculatePerformanceScore(metrics: {
     issues.push(`Load time needs improvement (${(metrics.loadTime / 1000).toFixed(1)}s)`);
   }
   breakdown.loadTime = { score: loadScore, status: loadStatus };
-  
+
   // Calculate overall score (weighted average)
   const totalScore = Math.round((lcpScore + fidScore + clsScore + loadScore) / 4);
-  
+
   return {
     score: totalScore,
     breakdown,
@@ -137,27 +137,27 @@ export function calculatePerformanceScore(metrics: {
 // Performance recommendations based on issues
 export function getPerformanceRecommendations(issues: string[]): string[] {
   const recommendations: string[] = [];
-  
+
   if (issues.some(issue => issue.includes('LCP'))) {
     recommendations.push('Optimize images and critical resources for faster LCP');
     recommendations.push('Consider using a CDN for static assets');
   }
-  
+
   if (issues.some(issue => issue.includes('FID'))) {
     recommendations.push('Reduce JavaScript execution time');
     recommendations.push('Consider code splitting for better interactivity');
   }
-  
+
   if (issues.some(issue => issue.includes('CLS'))) {
     recommendations.push('Set explicit dimensions for images and videos');
     recommendations.push('Avoid inserting content above existing content');
   }
-  
+
   if (issues.some(issue => issue.includes('Load time'))) {
     recommendations.push('Optimize bundle size and reduce dependencies');
     recommendations.push('Enable compression and caching');
   }
-  
+
   return recommendations;
 }
 
@@ -179,7 +179,7 @@ export const PerformanceBudgetUtils = {
       recommendations: getPerformanceRecommendations(result.issues),
     };
   },
-  
+
   // Log performance budget status
   logBudgetStatus: (metrics: {
     lcp: number;

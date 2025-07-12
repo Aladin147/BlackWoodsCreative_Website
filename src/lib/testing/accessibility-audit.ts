@@ -228,14 +228,23 @@ export class AccessibilityChecker {
     }
 
     if (pattern === 'h[1-6]') {
-      for (let level = 1; level <= 6; level++) {
-        const headingMatches =
-          content.match(new RegExp(`<h${level}[^>]*>([^<]*)</h${level}>`, 'g')) ?? [];
+      // Use pre-defined regex patterns for security
+      const headingRegexes = [
+        /<h1[^>]*>([^<]*)<\/h1>/g,
+        /<h2[^>]*>([^<]*)<\/h2>/g,
+        /<h3[^>]*>([^<]*)<\/h3>/g,
+        /<h4[^>]*>([^<]*)<\/h4>/g,
+        /<h5[^>]*>([^<]*)<\/h5>/g,
+        /<h6[^>]*>([^<]*)<\/h6>/g,
+      ];
+
+      headingRegexes.forEach((regex, level) => {
+        const headingMatches = content.match(regex) ?? [];
         headingMatches.forEach((match, index) => {
           const text = match.replace(/<[^>]*>/g, '');
-          elements.push({ tag: `h${level}`, level, text, index });
+          elements.push({ tag: `h${level + 1}`, level: level + 1, text, index });
         });
-      }
+      });
     }
 
     if (pattern === 'input') {
@@ -263,11 +272,26 @@ export class AccessibilityChecker {
     const landmarks: AccessibilityElement[] = [];
     const landmarkTags = ['main', 'nav', 'header', 'footer', 'aside', 'section'];
 
+    // Use pre-defined regex patterns for landmark tags
+    const landmarkRegexes: Record<string, RegExp> = {
+      header: /<header[^>]*>/g,
+      nav: /<nav[^>]*>/g,
+      main: /<main[^>]*>/g,
+      aside: /<aside[^>]*>/g,
+      footer: /<footer[^>]*>/g,
+      section: /<section[^>]*>/g,
+      article: /<article[^>]*>/g,
+    };
+
     landmarkTags.forEach(tag => {
-      const matches = content.match(new RegExp(`<${tag}[^>]*>`, 'g')) ?? [];
-      matches.forEach((_, index) => {
-        landmarks.push({ tag, index });
-      });
+      const regexMap: Record<string, RegExp> = landmarkRegexes;
+      const regex = regexMap[tag];
+      if (regex) {
+        const matches = content.match(regex) ?? [];
+        matches.forEach((_, index) => {
+          landmarks.push({ tag, index });
+        });
+      }
     });
 
     return landmarks;

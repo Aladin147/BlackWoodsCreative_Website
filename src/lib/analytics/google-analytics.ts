@@ -1,6 +1,6 @@
 /**
  * Simplified Google Analytics Integration
- * 
+ *
  * A practical implementation of Google Analytics 4 for business tracking
  */
 
@@ -84,7 +84,7 @@ export const trackEvent = (
       window.gtag('event', action, {
         event_category: category,
         event_label: label,
-        value: value,
+        value,
       });
     }
 
@@ -137,12 +137,18 @@ export const BusinessInsights = {
   },
 
   // Track content performance
-  trackContentPerformance: (contentType: 'blog' | 'portfolio' | 'service', contentId: string, action: 'view' | 'share' | 'download') => {
+  trackContentPerformance: (
+    contentType: 'blog' | 'portfolio' | 'service',
+    contentId: string,
+    action: 'view' | 'share' | 'download'
+  ) => {
     trackEvent(`content_${action}`, contentType, contentId);
   },
 
   // Track business goals
-  trackBusinessGoal: (goal: 'newsletter_signup' | 'quote_request' | 'phone_click' | 'email_click') => {
+  trackBusinessGoal: (
+    goal: 'newsletter_signup' | 'quote_request' | 'phone_click' | 'email_click'
+  ) => {
     trackEvent('business_goal', 'conversions', goal);
   },
 };
@@ -158,9 +164,9 @@ export const ConsentManager = {
   // Grant consent
   grantConsent: (): void => {
     if (typeof window === 'undefined') return;
-    
+
     localStorage.setItem('ga_consent', 'granted');
-    
+
     if (isGAEnabled() && window.gtag) {
       window.gtag('consent', 'update', {
         analytics_storage: 'granted',
@@ -176,9 +182,9 @@ export const ConsentManager = {
   // Deny consent
   denyConsent: (): void => {
     if (typeof window === 'undefined') return;
-    
+
     localStorage.setItem('ga_consent', 'denied');
-    
+
     if (isGAEnabled() && window.gtag) {
       window.gtag('consent', 'update', {
         analytics_storage: 'denied',

@@ -2,7 +2,7 @@
 
 /**
  * Performance Check Script
- * 
+ *
  * Comprehensive performance analysis and optimization recommendations
  */
 
@@ -38,7 +38,7 @@ const PERFORMANCE_BUDGETS = {
     vendorSize: 1.5 * 1024 * 1024, // 1.5MB
     totalSize: 3 * 1024 * 1024, // 3MB
     gzippedSize: 800 * 1024, // 800KB
-  }
+  },
 };
 
 function formatBytes(bytes) {
@@ -51,10 +51,10 @@ function formatBytes(bytes) {
 
 function checkBundleSize() {
   log('\n📦 Checking Bundle Size...', 'blue');
-  
+
   const buildDir = path.join(process.cwd(), '.next');
   const staticDir = path.join(buildDir, 'static');
-  
+
   if (!fs.existsSync(buildDir)) {
     log('❌ Build directory not found. Run "npm run build" first.', 'red');
     return false;
@@ -69,7 +69,7 @@ function checkBundleSize() {
   if (fs.existsSync(path.join(staticDir, 'chunks'))) {
     const chunksDir = path.join(staticDir, 'chunks');
     const files = fs.readdirSync(chunksDir, { recursive: true });
-    
+
     files.forEach(file => {
       if (typeof file === 'string' && file.endsWith('.js')) {
         const filePath = path.join(chunksDir, file);
@@ -84,7 +84,7 @@ function checkBundleSize() {
   if (fs.existsSync(path.join(staticDir, 'css'))) {
     const cssDir = path.join(staticDir, 'css');
     const files = fs.readdirSync(cssDir);
-    
+
     files.forEach(file => {
       if (file.endsWith('.css')) {
         const filePath = path.join(cssDir, file);
@@ -95,20 +95,25 @@ function checkBundleSize() {
     });
   }
 
-  const budget = PERFORMANCE_BUDGETS[process.env.NODE_ENV === 'production' ? 'production' : 'development'];
-  
+  const budget =
+    PERFORMANCE_BUDGETS[process.env.NODE_ENV === 'production' ? 'production' : 'development'];
+
   log(`📊 Bundle Analysis:`, 'cyan');
   log(`  JavaScript: ${formatBytes(jsSize)}`);
   log(`  CSS: ${formatBytes(cssSize)}`);
   log(`  Total: ${formatBytes(totalSize)}`);
-  
+
   // Check against budgets
   if (jsSize > budget.bundleSize) {
-    violations.push(`JavaScript bundle (${formatBytes(jsSize)}) exceeds budget (${formatBytes(budget.bundleSize)})`);
+    violations.push(
+      `JavaScript bundle (${formatBytes(jsSize)}) exceeds budget (${formatBytes(budget.bundleSize)})`
+    );
   }
-  
+
   if (totalSize > budget.totalSize) {
-    violations.push(`Total bundle (${formatBytes(totalSize)}) exceeds budget (${formatBytes(budget.totalSize)})`);
+    violations.push(
+      `Total bundle (${formatBytes(totalSize)}) exceeds budget (${formatBytes(budget.totalSize)})`
+    );
   }
 
   if (violations.length > 0) {
@@ -123,7 +128,7 @@ function checkBundleSize() {
 
 function checkImageOptimization() {
   log('\n🖼️  Checking Image Optimization...', 'blue');
-  
+
   const publicDir = path.join(process.cwd(), 'public');
   let totalImages = 0;
   let largeImages = [];
@@ -131,35 +136,35 @@ function checkImageOptimization() {
 
   function scanDirectory(dir) {
     if (!fs.existsSync(dir)) return;
-    
+
     const files = fs.readdirSync(dir, { withFileTypes: true });
-    
+
     files.forEach(file => {
       const fullPath = path.join(dir, file.name);
-      
+
       if (file.isDirectory()) {
         scanDirectory(fullPath);
       } else if (file.isFile()) {
         const ext = path.extname(file.name).toLowerCase();
-        
+
         if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif'].includes(ext)) {
           totalImages++;
           const stats = fs.statSync(fullPath);
-          
+
           // Check for large images (>500KB)
           if (stats.size > 500 * 1024) {
             largeImages.push({
               path: path.relative(process.cwd(), fullPath),
-              size: formatBytes(stats.size)
+              size: formatBytes(stats.size),
             });
           }
-          
+
           // Check for unoptimized formats
           if (['.jpg', '.jpeg', '.png'].includes(ext)) {
             unoptimizedFormats.push({
               path: path.relative(process.cwd(), fullPath),
               format: ext,
-              size: formatBytes(stats.size)
+              size: formatBytes(stats.size),
             });
           }
         }
@@ -168,14 +173,14 @@ function checkImageOptimization() {
   }
 
   scanDirectory(publicDir);
-  
+
   log(`📊 Image Analysis:`, 'cyan');
   log(`  Total images: ${totalImages}`);
   log(`  Large images (>500KB): ${largeImages.length}`);
   log(`  Unoptimized formats: ${unoptimizedFormats.length}`);
-  
+
   let hasIssues = false;
-  
+
   if (largeImages.length > 0) {
     log('\n⚠️  Large Images Found:', 'yellow');
     largeImages.slice(0, 5).forEach(img => {
@@ -186,23 +191,23 @@ function checkImageOptimization() {
     }
     hasIssues = true;
   }
-  
+
   if (unoptimizedFormats.length > 0) {
     log('\n💡 Optimization Opportunities:', 'yellow');
     log(`  • Consider converting ${unoptimizedFormats.length} images to WebP/AVIF format`);
     hasIssues = true;
   }
-  
+
   if (!hasIssues) {
     log('\n✅ Image optimization looks good!', 'green');
   }
-  
+
   return !hasIssues;
 }
 
 function generateRecommendations() {
   log('\n💡 Performance Optimization Recommendations:', 'magenta');
-  
+
   const recommendations = [
     'Use dynamic imports for non-critical components',
     'Implement component preloading based on user interaction',
@@ -211,9 +216,9 @@ function generateRecommendations() {
     'Implement proper lazy loading for below-the-fold content',
     'Use Next.js Image component for automatic optimization',
     'Consider implementing a service worker for caching',
-    'Monitor Core Web Vitals in production'
+    'Monitor Core Web Vitals in production',
   ];
-  
+
   recommendations.forEach((rec, index) => {
     log(`  ${index + 1}. ${rec}`, 'cyan');
   });
@@ -222,17 +227,14 @@ function generateRecommendations() {
 function main() {
   log('🚀 Performance Check Starting...', 'bright');
   log('==========================================', 'blue');
-  
-  const checks = [
-    checkBundleSize(),
-    checkImageOptimization()
-  ];
-  
+
+  const checks = [checkBundleSize(), checkImageOptimization()];
+
   const allPassed = checks.every(Boolean);
-  
+
   log('\n📊 Performance Check Summary:', 'bright');
   log('==========================================', 'blue');
-  
+
   if (allPassed) {
     log('✅ All performance checks passed!', 'green');
     log('🎉 Your application is well optimized.', 'green');
@@ -240,9 +242,9 @@ function main() {
     log('⚠️  Some performance issues found.', 'yellow');
     log('📋 Review the recommendations below.', 'yellow');
   }
-  
+
   generateRecommendations();
-  
+
   process.exit(allPassed ? 0 : 1);
 }
 

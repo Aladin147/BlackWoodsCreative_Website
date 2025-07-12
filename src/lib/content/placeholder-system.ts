@@ -412,7 +412,9 @@ export const ContentUtils = {
     if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
       const array = new Uint8Array(4);
       crypto.getRandomValues(array);
-      random = Array.from(array, byte => byte.toString(36)).join('').substring(0, 6);
+      random = Array.from(array, byte => byte.toString(36))
+        .join('')
+        .substring(0, 6);
     } else {
       // Deterministic fallback based on timestamp for SSR compatibility
       random = (timestamp % 1000000).toString(36).substring(0, 6);

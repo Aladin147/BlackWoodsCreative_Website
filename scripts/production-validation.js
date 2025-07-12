@@ -2,7 +2,7 @@
 
 /**
  * Production Environment Validation Script
- * 
+ *
  * Comprehensive validation of production readiness including:
  * - Environment variables
  * - Build configuration
@@ -62,10 +62,7 @@ function validateEnvironmentVariables() {
     log('✅ Loaded environment variables from .env.local', 'green');
   }
 
-  const requiredEnvVars = [
-    'NEXT_PUBLIC_SITE_URL',
-    'NEXT_PUBLIC_SITE_NAME',
-  ];
+  const requiredEnvVars = ['NEXT_PUBLIC_SITE_URL', 'NEXT_PUBLIC_SITE_NAME'];
 
   const optionalEnvVars = [
     'FORMSPREE_FORM_ID',
@@ -121,7 +118,7 @@ function validateEnvironmentVariables() {
 // Build Configuration Validation
 function validateBuildConfiguration() {
   log('\n🏗️  Validating Build Configuration...', 'blue');
-  
+
   let buildValid = true;
 
   // Check Next.js configuration
@@ -132,7 +129,7 @@ function validateBuildConfiguration() {
 
     try {
       const nextConfig = require(nextConfigPath);
-      
+
       // Check production optimizations
       if (nextConfig.swcMinify) {
         log('✅ SWC minification enabled', 'green');
@@ -157,7 +154,6 @@ function validateBuildConfiguration() {
         log('⚠️  X-Powered-By header not disabled', 'yellow');
         addResult('warnings', 'X-Powered-By header not disabled');
       }
-
     } catch (error) {
       log('❌ Error reading next.config.js', 'red');
       addResult('failed', 'Error reading Next.js configuration');
@@ -186,7 +182,7 @@ function validateBuildConfiguration() {
 // Security Configuration Validation
 function validateSecurityConfiguration() {
   log('\n🔒 Validating Security Configuration...', 'blue');
-  
+
   let securityValid = true;
 
   // Check middleware exists
@@ -197,7 +193,7 @@ function validateSecurityConfiguration() {
 
     try {
       const middlewareContent = fs.readFileSync(middlewarePath, 'utf8');
-      
+
       // Check for security features
       if (middlewareContent.includes('withSecurityHeaders')) {
         log('✅ Security headers middleware configured', 'green');
@@ -222,7 +218,6 @@ function validateSecurityConfiguration() {
         log('⚠️  CSRF protection not found', 'yellow');
         addResult('warnings', 'CSRF protection not found');
       }
-
     } catch (error) {
       log('❌ Error reading middleware file', 'red');
       addResult('failed', 'Error reading security middleware');
@@ -240,7 +235,7 @@ function validateSecurityConfiguration() {
 // Performance Validation
 function validatePerformance() {
   log('\n⚡ Validating Performance Configuration...', 'blue');
-  
+
   let performanceValid = true;
 
   // Check if build exists
@@ -265,7 +260,13 @@ function validatePerformance() {
   }
 
   // Check performance budget configuration
-  const performanceBudgetPath = path.join(process.cwd(), 'src', 'lib', 'config', 'performance-budgets.ts');
+  const performanceBudgetPath = path.join(
+    process.cwd(),
+    'src',
+    'lib',
+    'config',
+    'performance-budgets.ts'
+  );
   if (fs.existsSync(performanceBudgetPath)) {
     log('✅ Performance budgets configured', 'green');
     addResult('passed', 'Performance budgets are configured');
@@ -280,14 +281,14 @@ function validatePerformance() {
 // Deployment Readiness Validation
 function validateDeploymentReadiness() {
   log('\n🚀 Validating Deployment Readiness...', 'blue');
-  
+
   let deploymentReady = true;
 
   // Check package.json scripts
   const packageJsonPath = path.join(process.cwd(), 'package.json');
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    
+
     const requiredScripts = ['build', 'start', 'dev'];
     requiredScripts.forEach(script => {
       if (packageJson.scripts && packageJson.scripts[script]) {
@@ -332,7 +333,7 @@ function validateDeploymentReadiness() {
 // Test Production Build
 function testProductionBuild() {
   log('\n🧪 Testing Production Build...', 'blue');
-  
+
   try {
     log('Running production build test...', 'cyan');
     execSync('npm run build', { stdio: 'pipe' });
@@ -350,22 +351,22 @@ function testProductionBuild() {
 function generateReport() {
   log('\n📊 Production Readiness Report', 'magenta');
   log('=====================================', 'magenta');
-  
+
   const total = validationResults.passed + validationResults.failed + validationResults.warnings;
   const successRate = ((validationResults.passed / total) * 100).toFixed(1);
-  
+
   log(`✅ Passed: ${validationResults.passed}`, 'green');
   log(`❌ Failed: ${validationResults.failed}`, 'red');
   log(`⚠️  Warnings: ${validationResults.warnings}`, 'yellow');
   log(`📈 Success Rate: ${successRate}%`, 'cyan');
-  
+
   if (validationResults.failed === 0) {
     log('\n🎉 Production Ready!', 'green');
     log('The application is ready for production deployment.', 'green');
   } else {
     log('\n🔧 Issues Found', 'red');
     log('Please address the following issues before deployment:', 'red');
-    
+
     validationResults.issues.forEach(issue => {
       if (issue.type === 'failed') {
         log(`❌ ${issue.message}`, 'red');
@@ -375,7 +376,7 @@ function generateReport() {
       }
     });
   }
-  
+
   if (validationResults.warnings > 0) {
     log('\n⚠️  Warnings (Optional Improvements):', 'yellow');
     validationResults.issues.forEach(issue => {
@@ -390,7 +391,7 @@ function generateReport() {
 function main() {
   log('🚀 Production Environment Validation', 'blue');
   log('=====================================', 'blue');
-  
+
   const validations = [
     validateEnvironmentVariables(),
     validateBuildConfiguration(),
@@ -399,11 +400,11 @@ function main() {
     validateDeploymentReadiness(),
     testProductionBuild(),
   ];
-  
+
   const allValid = validations.every(Boolean);
-  
+
   generateReport();
-  
+
   // Exit with appropriate code
   process.exit(validationResults.failed === 0 ? 0 : 1);
 }

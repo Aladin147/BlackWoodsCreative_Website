@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+
+import { motion } from 'framer-motion';
 
 import { Footer, Header } from '@/components/layout';
 import { SEOMetadata } from '@/lib/utils/metadata';

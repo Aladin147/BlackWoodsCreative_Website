@@ -1,6 +1,6 @@
 /**
  * Analytics Provider Component
- * 
+ *
  * Provides analytics integration for Google Analytics and Vercel Analytics
  */
 
@@ -8,9 +8,10 @@
 
 // Optional Vercel Analytics - disabled until packages are installed
 // TODO: Install @vercel/analytics and @vercel/speed-insights packages
+import { useEffect } from 'react';
+
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
-import { useEffect } from 'react';
 
 import {
   initializeGoogleAnalytics,
@@ -60,11 +61,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       {/* Google Analytics Scripts */}
       {isGoogleAnalyticsConfigured && googleAnalyticsScriptUrl && (
         <>
-          <Script
-            src={googleAnalyticsScriptUrl}
-            strategy="afterInteractive"
-            async
-          />
+          <Script src={googleAnalyticsScriptUrl} strategy="afterInteractive" async />
           <Script
             id="google-analytics-init"
             strategy="afterInteractive"
@@ -115,7 +112,7 @@ export function useAnalytics() {
 
   const trackPageView = (url: string, title?: string) => {
     if (isGoogleAnalyticsConfigured && typeof window !== 'undefined' && window.gtag) {
-      const measurementId = ANALYTICS_CONFIG.googleAnalytics.measurementId;
+      const { measurementId } = ANALYTICS_CONFIG.googleAnalytics;
       if (measurementId) {
         window.gtag('config', measurementId, {
           page_path: url,
@@ -140,7 +137,7 @@ export function AnalyticsStatus() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black/80 text-white p-2 rounded text-xs z-50">
+    <div className="fixed bottom-4 right-4 z-50 rounded bg-black/80 p-2 text-xs text-white">
       <div>GA4: {isGoogleAnalyticsConfigured ? '✅' : '❌'}</div>
       <div>Vercel: {isVercelAnalyticsConfigured ? '✅' : '❌'}</div>
       {isGoogleAnalyticsConfigured && (

@@ -9,12 +9,7 @@ import { verifyCSRFToken, logSecurityEvent } from '@/lib/utils/security';
 // Use Node.js runtime for crypto operations
 export const runtime = 'nodejs';
 
-// Rate limiting configuration
-const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutes
-const RATE_LIMIT_MAX_REQUESTS = 5; // Max 5 submissions per 10 minutes per IP
-
-// In-memory rate limiting store (in production, use Redis or similar)
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+// Note: Rate limiting is now handled by middleware with Redis/in-memory fallback
 
 interface ContactFormData {
   name: string;
@@ -29,37 +24,6 @@ interface ContactFormResponse {
   success: boolean;
   message: string;
   errors?: Record<string, string>;
-}
-
-function getRateLimitKey(request: NextRequest): string {
-  // Use IP address for rate limiting
-  const forwarded = request.headers.get('x-forwarded-for');
-  const realIp = request.headers.get('x-real-ip');
-  const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? 'unknown' : (realIp ?? 'unknown');
-  return `contact_${ip}`;
-}
-
-function checkRateLimit(key: string): { allowed: boolean; resetTime?: number } {
-  const now = Date.now();
-  const record = rateLimitStore.get(key);
-
-  if (!record || now > record.resetTime) {
-    // Reset or create new record
-    rateLimitStore.set(key, {
-      count: 1,
-      resetTime: now + RATE_LIMIT_WINDOW,
-    });
-    return { allowed: true };
-  }
-
-  if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return { allowed: false, resetTime: record.resetTime };
-  }
-
-  // Increment count
-  record.count += 1;
-  rateLimitStore.set(key, record);
-  return { allowed: true };
 }
 
 async function sendToFormspree(formData: ContactFormData): Promise<boolean> {
@@ -106,34 +70,16 @@ async function sendToFormspree(formData: ContactFormData): Promise<boolean> {
 
 export async function POST(request: NextRequest): Promise<NextResponse<ContactFormResponse>> {
   try {
-    // Check rate limiting
-    const rateLimitKey = getRateLimitKey(request);
-    const rateLimit = checkRateLimit(rateLimitKey);
-
-    if (!rateLimit.allowed) {
-      const resetTime = rateLimit.resetTime ?? Date.now();
-      const waitTime = Math.ceil((resetTime - Date.now()) / 1000 / 60); // minutes
-
-      return NextResponse.json(
-        {
-          success: false,
-          message: `Too many requests. Please try again in ${waitTime} minutes.`,
-        },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': String(Math.ceil((resetTime - Date.now()) / 1000)),
-          },
-        }
-      );
-    }
+    // Note: Rate limiting is now handled by middleware
 
     // Verify CSRF token
     const csrfToken = request.headers.get('x-csrf-token');
     const sessionToken = request.cookies.get('csrf-token')?.value;
     const forwarded = request.headers.get('x-forwarded-for');
     const realIp = request.headers.get('x-real-ip');
-    const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? '127.0.0.1' : (realIp ?? '127.0.0.1');
+    const ip = forwarded
+      ? (forwarded.split(',')[0]?.trim() ?? '127.0.0.1')
+      : (realIp ?? '127.0.0.1');
     const userAgent = request.headers.get('user-agent') ?? '';
 
     if (!csrfToken || !sessionToken || !verifyCSRFToken(csrfToken, sessionToken)) {

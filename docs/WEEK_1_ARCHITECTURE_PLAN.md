@@ -35,7 +35,6 @@ src/
 ### Phase 1: Page Template System (Days 1-2)
 
 1. **Create Base Page Templates**
-
    - `BasePageTemplate` - Common layout structure
    - `ServicePageTemplate` - For money question pages
    - `ContentPageTemplate` - For FAQ, about, etc.
@@ -82,7 +81,6 @@ src/
 ### Phase 3: Content Management (Days 5-6)
 
 1. **Data Structure for Pages**
-
    - Page content definitions
    - SEO metadata management
    - Dynamic content loading
@@ -96,7 +94,6 @@ src/
 ### Phase 4: Integration & Testing (Day 7)
 
 1. **Navigation Updates**
-
    - Update header navigation
    - Implement breadcrumbs
    - Add internal linking

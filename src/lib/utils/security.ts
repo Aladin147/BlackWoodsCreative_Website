@@ -50,48 +50,160 @@ const FRAMER_MOTION_CSP_HASHES: string[] = getFramerMotionHashes();
 // Additional hashes can be added here if needed (Edge Runtime compatible)
 const additionalHashes: string[] = [];
 
-// Generate cryptographically secure nonce for CSP
+// Enhanced cryptographically secure nonce generation for CSP
 export function generateNonce(): string {
-  // Use Web Crypto API for Edge Runtime compatibility
-  const array = new Uint8Array(16);
-  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-    crypto.getRandomValues(array);
-  } else {
-    // Fallback for environments without crypto
-    for (let i = 0; i < array.length; i++) {
-      array[i] = Math.floor(Math.random() * 256);
-    }
-  }
-  return btoa(String.fromCharCode.apply(null, Array.from(array)));
-}
-
-// Generate CSRF token
-export function generateCSRFToken(): string {
-  // Use Web Crypto API for Edge Runtime compatibility
-  const array = new Uint8Array(32);
-  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-    crypto.getRandomValues(array);
-  } else {
-    // Fallback for environments without crypto
-    for (let i = 0; i < array.length; i++) {
-      array[i] = Math.floor(Math.random() * 256);
-    }
-  }
-  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-}
-
-// Verify CSRF token
-export function verifyCSRFToken(token: string, sessionToken: string): boolean {
-  if (!token || !sessionToken) return false;
-
   try {
-    // Simple string comparison for Edge Runtime compatibility
-    // In a production environment, you might want to use a more sophisticated comparison
-    return token === sessionToken;
-  } catch {
-    // Handle any comparison errors
+    // Use Web Crypto API for Edge Runtime compatibility (preferred)
+    if (typeof globalThis !== 'undefined' && globalThis.crypto?.getRandomValues) {
+      const array = new Uint8Array(32); // Increased to 32 bytes for better security
+      globalThis.crypto.getRandomValues(array);
+      return btoa(String.fromCharCode.apply(null, Array.from(array)));
+    }
+
+    // Fallback to crypto global if available
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const array = new Uint8Array(32);
+      crypto.getRandomValues(array);
+      return btoa(String.fromCharCode.apply(null, Array.from(array)))
+        .replace(/[+/]/g, char => (char === '+' ? '-' : '_'))
+        .replace(/=/g, '');
+    }
+
+    // Last resort fallback (not cryptographically secure - warn in development)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(
+        'CSP Nonce: Using non-cryptographic random generation - not suitable for production'
+      );
+    }
+    const fallbackArray = new Uint8Array(32);
+    for (let i = 0; i < fallbackArray.length; i++) {
+      fallbackArray[i] = Math.floor(Math.random() * 256);
+    }
+    return btoa(String.fromCharCode.apply(null, Array.from(fallbackArray)))
+      .replace(/[+/]/g, char => (char === '+' ? '-' : '_'))
+      .replace(/=/g, '');
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('CSP nonce generation failed:', error);
+    }
+    throw new Error('Failed to generate secure CSP nonce');
+  }
+}
+
+// Generate CSRF token using cryptographically secure random bytes
+export function generateCSRFToken(): string {
+  try {
+    // Check if we're in Edge Runtime (middleware) or Node.js runtime
+    const isEdgeRuntime =
+      typeof globalThis !== 'undefined' &&
+      typeof globalThis.crypto !== 'undefined' &&
+      typeof require === 'undefined';
+
+    if (!isEdgeRuntime && typeof require !== 'undefined') {
+      // Use Node.js crypto for secure random generation (API routes)
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+        const crypto = require('crypto');
+        return crypto.randomBytes(32).toString('hex');
+      } catch {
+        // Fall through to Web Crypto API if Node.js crypto fails
+      }
+    }
+
+    // Use Web Crypto API for Edge Runtime (middleware) or as fallback
+    if (globalThis.crypto?.getRandomValues) {
+      const array = new Uint8Array(32);
+      globalThis.crypto.getRandomValues(array);
+      return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Fallback to crypto global if available
+    if (crypto?.getRandomValues) {
+      const array = new Uint8Array(32);
+      crypto.getRandomValues(array);
+      return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Last resort fallback (not cryptographically secure)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('CSRF: Using non-cryptographic random generation - not suitable for production');
+    }
+    const fallbackArray = new Uint8Array(32);
+    for (let i = 0; i < fallbackArray.length; i++) {
+      fallbackArray[i] = Math.floor(Math.random() * 256);
+    }
+    return Array.from(fallbackArray, byte => byte.toString(16).padStart(2, '0')).join('');
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('CSRF token generation failed:', error);
+    }
+    throw new Error('Failed to generate secure CSRF token');
+  }
+}
+
+// Verify CSRF token using cryptographically secure comparison
+export function verifyCSRFToken(token: string, sessionToken: string): boolean {
+  if (!token || !sessionToken) {
     return false;
   }
+
+  try {
+    // Ensure both tokens are strings and have the same length
+    if (typeof token !== 'string' || typeof sessionToken !== 'string') {
+      return false;
+    }
+
+    if (token.length !== sessionToken.length) {
+      return false;
+    }
+
+    // Check if we're in Edge Runtime or Node.js runtime
+    const isEdgeRuntime =
+      typeof globalThis !== 'undefined' &&
+      typeof globalThis.crypto !== 'undefined' &&
+      typeof require === 'undefined';
+
+    if (!isEdgeRuntime && typeof require !== 'undefined') {
+      // Use Node.js crypto.timingSafeEqual for secure comparison (API routes)
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+        const crypto = require('crypto');
+        const tokenBuffer = Buffer.from(token, 'utf8');
+        const sessionBuffer = Buffer.from(sessionToken, 'utf8');
+
+        // Ensure buffers are the same length for timingSafeEqual
+        if (tokenBuffer.length !== sessionBuffer.length) {
+          return false;
+        }
+
+        return crypto.timingSafeEqual(tokenBuffer, sessionBuffer);
+      } catch {
+        // Fall through to manual timing-safe comparison
+      }
+    }
+
+    // Fallback to manual timing-safe comparison for Edge Runtime
+    return timingSafeEqual(token, sessionToken);
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('CSRF token verification failed:', error);
+    }
+    return false;
+  }
+}
+
+// Manual timing-safe comparison for environments without crypto.timingSafeEqual
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+
+  return result === 0;
 }
 
 // Content Security Policy configuration
@@ -103,7 +215,7 @@ export interface CSPConfig {
 export function buildCSP(config: CSPConfig = {}): string {
   const { nonce, isDevelopment = false } = config;
 
-  // Base CSP directives
+  // Base CSP directives with enhanced nonce-based approach
   const directives: Record<string, string[]> = {
     'default-src': ["'self'"],
     'script-src': [
@@ -119,16 +231,30 @@ export function buildCSP(config: CSPConfig = {}): string {
     ],
     'style-src': [
       "'self'",
+      // ENHANCED: Prioritize nonce-based approach for better Framer Motion compatibility
       ...(nonce ? [`'nonce-${nonce}'`] : []),
       'https://fonts.googleapis.com',
       // Allow hashed styles for critical CSS
       "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='", // Empty string hash for safety
-      // CRITICAL: Allow unsafe-hashes for style attributes (required for Framer Motion)
+      // ENHANCED: Use unsafe-hashes for Framer Motion inline style attributes
       "'unsafe-hashes'",
-      // PRODUCTION READY: Comprehensive Framer Motion hashes (800+ collected from development)
-      ...FRAMER_MOTION_CSP_HASHES,
+      // Add specific hashes for common Framer Motion transform patterns
+      "'sha256-znj0NEVhwILfxeu7V7vtJVK6DtTBhxUVS49mgpuCsZs='", // transform:scaleX(0)
+      "'sha256-BnHSOvWj9O4ysF9r1Q6ru0Op368yhiH77C12DzT2jJI='", // transform:translateY(-100px)
+      "'sha256-Hqbhl3Qt3fKlgqSGL3zO2zdErWAMYaCV4kyM1eMEQs8='", // opacity:0;transform:translateY(-10px)
+      "'sha256-68ahHyH65aqS202beKyu22MkdAEr0fBCN3eHnbYX+wg='", // opacity:0;transform:translateY(20px)
+      "'sha256-4IpjyPW3T1vEyCZLF8hGr7A9zNijDZPldrwecZUymac='", // opacity:0;transform:translateY(10px)
+      "'sha256-sCpxwgBU/nAP9Dq207PeuDiLWxKtbAbdTK0xFQ8WvW0='", // opacity:0;transform:translateY(80px)
+      "'sha256-4q8EqNZohqIz4uYNhQm4inUf9vSzRZfyewHF8wuTSY8='", // opacity:0;transform:translateY(40px)
+      "'sha256-xc3Z6FlGcSw3eD/UUqzsUCCHMxhr9zyueta2gHlPiX8='", // opacity:0;transform:translateY(30px)
+      "'sha256-y8go9YvXQI44VfiCb0Mp8/u2HJNdFxHoGHdMU5TaeLw='", // opacity:0;transform:translateY(60px)
+      "'sha256-rEffuu38Fju0kqQrafaTlxU78KAFkS/nkDM1V69umMk='", // opacity:0;transform:translateY(50px)
+      "'sha256-/hiza+UgOYUlmZu/gJ2LL4WNI+kpbzWkjSEKF6vZgqQ='", // opacity:0;transform:translateX(50px)
+      "'sha256-hp3Id+Sc9ou+oehRAM0YuDGCJ1K3YW0FAXD7iGsXy0c='", // opacity:0;transform:translateX(30px)
+      // MIGRATION: Keep hash-based approach as fallback for compatibility
+      ...(isDevelopment || !nonce ? FRAMER_MOTION_CSP_HASHES : []),
       // Optional: Additional dynamically loaded hashes (fallback)
-      ...additionalHashes,
+      ...(isDevelopment || !nonce ? additionalHashes : []),
       // Development only: Allow unsafe-inline for easier development
       ...(isDevelopment ? ["'unsafe-inline'"] : []),
     ],
@@ -137,6 +263,26 @@ export function buildCSP(config: CSPConfig = {}): string {
       ...(nonce ? [`'nonce-${nonce}'`] : []),
       'https://fonts.googleapis.com',
       // Allow inline styles for Framer Motion with nonce
+      ...(isDevelopment ? ["'unsafe-inline'"] : []),
+    ],
+    'style-src-attr': [
+      "'self'",
+      // ENHANCED: Allow unsafe-hashes for Framer Motion inline style attributes
+      "'unsafe-hashes'",
+      // Add specific hashes for common Framer Motion transform patterns
+      "'sha256-znj0NEVhwILfxeu7V7vtJVK6DtTBhxUVS49mgpuCsZs='", // transform:scaleX(0)
+      "'sha256-BnHSOvWj9O4ysF9r1Q6ru0Op368yhiH77C12DzT2jJI='", // transform:translateY(-100px)
+      "'sha256-Hqbhl3Qt3fKlgqSGL3zO2zdErWAMYaCV4kyM1eMEQs8='", // opacity:0;transform:translateY(-10px)
+      "'sha256-68ahHyH65aqS202beKyu22MkdAEr0fBCN3eHnbYX+wg='", // opacity:0;transform:translateY(20px)
+      "'sha256-4IpjyPW3T1vEyCZLF8hGr7A9zNijDZPldrwecZUymac='", // opacity:0;transform:translateY(10px)
+      "'sha256-sCpxwgBU/nAP9Dq207PeuDiLWxKtbAbdTK0xFQ8WvW0='", // opacity:0;transform:translateY(80px)
+      "'sha256-4q8EqNZohqIz4uYNhQm4inUf9vSzRZfyewHF8wuTSY8='", // opacity:0;transform:translateY(40px)
+      "'sha256-xc3Z6FlGcSw3eD/UUqzsUCCHMxhr9zyueta2gHlPiX8='", // opacity:0;transform:translateY(30px)
+      "'sha256-y8go9YvXQI44VfiCb0Mp8/u2HJNdFxHoGHdMU5TaeLw='", // opacity:0;transform:translateY(60px)
+      "'sha256-rEffuu38Fju0kqQrafaTlxU78KAFkS/nkDM1V69umMk='", // opacity:0;transform:translateY(50px)
+      "'sha256-/hiza+UgOYUlmZu/gJ2LL4WNI+kpbzWkjSEKF6vZgqQ='", // opacity:0;transform:translateX(50px)
+      "'sha256-hp3Id+Sc9ou+oehRAM0YuDGCJ1K3YW0FAXD7iGsXy0c='", // opacity:0;transform:translateX(30px)
+      // Development only: Allow unsafe-inline for easier development
       ...(isDevelopment ? ["'unsafe-inline'"] : []),
     ],
     'img-src': [
@@ -218,7 +364,7 @@ export function getSecurityHeaders(nonce?: string): Record<string, string> {
     // HSTS (HTTP Strict Transport Security)
     'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
 
-    // Permissions Policy (formerly Feature Policy)
+    // Permissions Policy (formerly Feature Policy) - Enhanced
     'Permissions-Policy': [
       'camera=()',
       'microphone=()',
@@ -226,7 +372,22 @@ export function getSecurityHeaders(nonce?: string): Record<string, string> {
       'interest-cohort=()',
       'payment=()',
       'usb=()',
+      'magnetometer=()',
+      'accelerometer=()',
+      'gyroscope=()',
+      'fullscreen=(self)',
+      'picture-in-picture=()',
+      'web-share=()',
+      'clipboard-read=()',
+      'clipboard-write=(self)',
     ].join(', '),
+
+    // Additional security headers
+    'X-DNS-Prefetch-Control': 'off',
+    'X-Download-Options': 'noopen',
+    'X-Permitted-Cross-Domain-Policies': 'none',
+    'Expect-CT': 'max-age=86400, enforce',
+    'X-Robots-Tag': 'noindex, nofollow, nosnippet, noarchive',
 
     // Cross-Origin Policies
     'Cross-Origin-Embedder-Policy': 'require-corp',
@@ -241,6 +402,8 @@ export interface RateLimitConfig {
   maxRequests: number;
   skipSuccessfulRequests?: boolean;
   skipFailedRequests?: boolean;
+  burstLimit?: number; // Allow burst requests
+  blockDuration?: number; // Block duration after limit exceeded
 }
 
 export const rateLimitConfigs: Record<string, RateLimitConfig> = {
@@ -250,6 +413,8 @@ export const rateLimitConfigs: Record<string, RateLimitConfig> = {
     maxRequests: 100,
     skipSuccessfulRequests: false,
     skipFailedRequests: false,
+    burstLimit: 20, // Allow 20 burst requests
+    blockDuration: 5 * 60 * 1000, // 5 minute block
   },
 
   // Contact form specific (more restrictive)
@@ -258,6 +423,8 @@ export const rateLimitConfigs: Record<string, RateLimitConfig> = {
     maxRequests: 5,
     skipSuccessfulRequests: false,
     skipFailedRequests: false,
+    burstLimit: 2, // Allow 2 burst requests
+    blockDuration: 15 * 60 * 1000, // 15 minute block
   },
 
   // Authentication endpoints (very restrictive)
@@ -266,20 +433,178 @@ export const rateLimitConfigs: Record<string, RateLimitConfig> = {
     maxRequests: 5,
     skipSuccessfulRequests: true,
     skipFailedRequests: false,
+    burstLimit: 1, // No burst for auth
+    blockDuration: 30 * 60 * 1000, // 30 minute block
+  },
+
+  // Performance monitoring endpoints
+  monitoring: {
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    maxRequests: 50,
+    skipSuccessfulRequests: false,
+    skipFailedRequests: false,
+    burstLimit: 10,
+    blockDuration: 2 * 60 * 1000, // 2 minute block
+  },
+
+  // Newsletter signup (restrictive to prevent spam)
+  newsletter: {
+    windowMs: 60 * 60 * 1000, // 1 hour
+    maxRequests: 3,
+    skipSuccessfulRequests: false,
+    skipFailedRequests: false,
+    burstLimit: 1, // No burst for newsletter
+    blockDuration: 60 * 60 * 1000, // 1 hour block
   },
 };
 
-// Input sanitization utilities
-export function sanitizeInput(input: string): string {
+// In-memory rate limiting store for fallback
+interface RateLimitRecord {
+  count: number;
+  resetTime: number;
+  blocked?: boolean;
+  blockUntil?: number;
+}
+
+class InMemoryRateLimiter {
+  private store = new Map<string, RateLimitRecord>();
+  private cleanupInterval: NodeJS.Timeout | null = null;
+
+  constructor() {
+    // Clean up expired records every 5 minutes
+    this.cleanupInterval = setInterval(
+      () => {
+        this.cleanup();
+      },
+      5 * 60 * 1000
+    );
+  }
+
+  private cleanup(): void {
+    const now = Date.now();
+    const entries = Array.from(this.store.entries());
+    for (const [key, record] of entries) {
+      if (now > record.resetTime && (!record.blockUntil || now > record.blockUntil)) {
+        this.store.delete(key);
+      }
+    }
+  }
+
+  limit(
+    key: string,
+    config: RateLimitConfig
+  ): Promise<{
+    success: boolean;
+    limit: number;
+    remaining: number;
+    reset: number;
+    blocked?: boolean;
+  }> {
+    return Promise.resolve(
+      (() => {
+        const now = Date.now();
+        const record = this.store.get(key);
+
+        // Check if currently blocked
+        if (record?.blocked && record.blockUntil && now < record.blockUntil) {
+          return {
+            success: false,
+            limit: config.maxRequests,
+            remaining: 0,
+            reset: record.blockUntil,
+            blocked: true,
+          };
+        }
+
+        // Reset or create new record if window expired
+        if (!record || now > record.resetTime) {
+          const newRecord: RateLimitRecord = {
+            count: 1,
+            resetTime: now + config.windowMs,
+          };
+          this.store.set(key, newRecord);
+
+          return {
+            success: true,
+            limit: config.maxRequests,
+            remaining: config.maxRequests - 1,
+            reset: newRecord.resetTime,
+          };
+        }
+
+        // Check if limit exceeded
+        if (record.count >= config.maxRequests) {
+          // Block the key if block duration is configured
+          if (config.blockDuration) {
+            record.blocked = true;
+            record.blockUntil = now + config.blockDuration;
+            this.store.set(key, record);
+          }
+
+          return {
+            success: false,
+            limit: config.maxRequests,
+            remaining: 0,
+            reset: record.resetTime,
+            blocked: !!config.blockDuration,
+          };
+        }
+
+        // Increment count
+        record.count += 1;
+        this.store.set(key, record);
+
+        return {
+          success: true,
+          limit: config.maxRequests,
+          remaining: config.maxRequests - record.count,
+          reset: record.resetTime,
+        };
+      })()
+    );
+  }
+
+  destroy(): void {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval);
+      this.cleanupInterval = null;
+    }
+    this.store.clear();
+  }
+}
+
+// Singleton in-memory rate limiter for fallback
+let inMemoryLimiter: InMemoryRateLimiter | null = null;
+
+export function getInMemoryRateLimiter(): InMemoryRateLimiter {
+  inMemoryLimiter ??= new InMemoryRateLimiter();
+  return inMemoryLimiter;
+}
+
+// Note: DOMPurify initialization moved to security-server.ts for Edge Runtime compatibility
+
+// Basic input sanitization for Edge Runtime compatibility
+export function sanitizeInput(input: string, options: { maxLength?: number } = {}): string {
   if (typeof input !== 'string') return '';
 
-  return input
+  const { maxLength = 1000 } = options;
+
+  const sanitized = input
     .trim()
     .replace(/<[^>]*>/g, '') // Remove HTML tags
     .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/vbscript:/gi, '') // Remove vbscript: protocol
+    .replace(/data:/gi, '') // Remove data: protocol (potential XSS)
     .replace(/on\w+\s*=/gi, '') // Remove event handlers
-    .slice(0, 1000); // Limit length
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Remove control characters
+    .replace(/[\u2000-\u200F\u2028-\u202F\u205F-\u206F\uFEFF]/g, ''); // Remove Unicode spaces
+
+  return sanitized.slice(0, maxLength);
 }
+
+// Alias for backward compatibility
+export const sanitizeInputSync = sanitizeInput;
 
 export function sanitizeEmail(email: string): string {
   if (typeof email !== 'string') return '';
@@ -298,11 +623,166 @@ export function sanitizeEmail(email: string): string {
     return '';
   }
 
-  // Validate email format (more strict)
-  const emailRegex =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  // Validate email format (ReDoS-safe) - simplified regex to avoid catastrophic backtracking
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   return emailRegex.test(sanitized) ? sanitized : '';
+}
+
+// SQL Injection prevention utilities
+export function sanitizeForDatabase(input: string): string {
+  if (typeof input !== 'string') return '';
+
+  // Remove common SQL injection patterns
+  return input
+    .replace(/['";\\]/g, '') // Remove quotes and backslashes
+    .replace(/--/g, '') // Remove SQL comments
+    .replace(/\/\*/g, '') // Remove block comment start
+    .replace(/\*\//g, '') // Remove block comment end
+    .replace(/\bUNION\s+/gi, '') // Remove UNION keyword with space
+    .replace(/\bSELECT\s+/gi, '') // Remove SELECT keyword with space
+    .replace(/\bINSERT\s+/gi, '') // Remove INSERT keyword with space
+    .replace(/\bUPDATE\s+/gi, '') // Remove UPDATE keyword with space
+    .replace(/\bDELETE\s+/gi, '') // Remove DELETE keyword with space
+    .replace(/\bDROP\s+/gi, '') // Remove DROP keyword with space
+    .replace(/\bCREATE\s+/gi, '') // Remove CREATE keyword with space
+    .replace(/\bALTER\s+/gi, '') // Remove ALTER keyword with space
+    .replace(/\bEXEC\s+/gi, '') // Remove EXEC keyword with space
+    .replace(/\bEXECUTE\s+/gi, '') // Remove EXECUTE keyword with space
+    .replace(/\bSCRIPT\s+/gi, '') // Remove SCRIPT keyword with space
+    .replace(/\bWHERE\s+/gi, '') // Remove WHERE keyword with space
+    .replace(/\bFROM\s+/gi, '') // Remove FROM keyword with space
+    .trim();
+}
+
+// NoSQL Injection prevention utilities
+export function sanitizeForNoSQL(input: unknown): unknown {
+  if (typeof input === 'string') {
+    return sanitizeInput(input);
+  }
+
+  if (Array.isArray(input)) {
+    return input.map(sanitizeForNoSQL);
+  }
+
+  if (input && typeof input === 'object') {
+    const sanitized: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(input)) {
+      // Prevent MongoDB operator injection
+      if (key.startsWith('$') || key.includes('.')) {
+        continue; // Skip potentially dangerous keys
+      }
+      // Safe object assignment with validation
+      const sanitizedKey = sanitizeInput(key);
+      if (typeof sanitizedKey === 'string' && sanitizedKey.length > 0 && sanitizedKey.length < 100) {
+        sanitized[sanitizedKey] = sanitizeForNoSQL(value);
+      }
+    }
+    return sanitized;
+  }
+
+  return input;
+}
+
+// Request size validation
+export interface RequestSizeLimits {
+  maxBodySize: number; // in bytes
+  maxFieldSize: number; // in bytes
+  maxFields: number;
+  maxFileSize: number; // in bytes
+  maxFiles: number;
+}
+
+export const DEFAULT_SIZE_LIMITS: RequestSizeLimits = {
+  maxBodySize: 1024 * 1024, // 1MB
+  maxFieldSize: 1024 * 100, // 100KB
+  maxFields: 20,
+  maxFileSize: 1024 * 1024 * 5, // 5MB
+  maxFiles: 5,
+};
+
+export function validateRequestSize(
+  request: Request,
+  limits: RequestSizeLimits = DEFAULT_SIZE_LIMITS
+): { valid: boolean; error?: string } {
+  const contentLength = request.headers.get('content-length');
+
+  if (contentLength) {
+    const size = parseInt(contentLength, 10);
+    if (size > limits.maxBodySize) {
+      return {
+        valid: false,
+        error: `Request body too large. Maximum allowed: ${limits.maxBodySize} bytes`,
+      };
+    }
+  }
+
+  return { valid: true };
+}
+
+// Enhanced password validation (for future auth implementation)
+export interface PasswordPolicy {
+  minLength: number;
+  maxLength: number;
+  requireUppercase: boolean;
+  requireLowercase: boolean;
+  requireNumbers: boolean;
+  requireSpecialChars: boolean;
+  forbiddenPatterns: string[];
+}
+
+export const DEFAULT_PASSWORD_POLICY: PasswordPolicy = {
+  minLength: 12,
+  maxLength: 128,
+  requireUppercase: true,
+  requireLowercase: true,
+  requireNumbers: true,
+  requireSpecialChars: true,
+  forbiddenPatterns: ['password', '123456', 'qwerty', 'admin'],
+};
+
+export function validatePassword(
+  password: string,
+  policy: PasswordPolicy = DEFAULT_PASSWORD_POLICY
+): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+
+  if (password.length < policy.minLength) {
+    errors.push(`Password must be at least ${policy.minLength} characters long`);
+  }
+
+  if (password.length > policy.maxLength) {
+    errors.push(`Password must be no more than ${policy.maxLength} characters long`);
+  }
+
+  if (policy.requireUppercase && !/[A-Z]/.test(password)) {
+    errors.push('Password must contain at least one uppercase letter');
+  }
+
+  if (policy.requireLowercase && !/[a-z]/.test(password)) {
+    errors.push('Password must contain at least one lowercase letter');
+  }
+
+  if (policy.requireNumbers && !/\d/.test(password)) {
+    errors.push('Password must contain at least one number');
+  }
+
+  if (policy.requireSpecialChars && !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+    errors.push('Password must contain at least one special character');
+  }
+
+  // Check for forbidden patterns
+  const lowerPassword = password.toLowerCase();
+  for (const pattern of policy.forbiddenPatterns) {
+    if (lowerPassword.includes(pattern.toLowerCase())) {
+      errors.push(`Password cannot contain "${pattern}"`);
+    }
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
 }
 
 // Security audit utilities
@@ -397,31 +877,101 @@ export function withSecurityHeaders(response: NextResponse, nonce?: string): Nex
   return response;
 }
 
-// CSRF protection middleware
+// CSRF protection middleware implementing double submit cookie pattern
 export function withCSRFProtection(request: NextRequest, response: NextResponse): NextResponse {
-  // Skip CSRF for GET, HEAD, OPTIONS requests
+  // Skip CSRF for safe HTTP methods
   if (['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
     return response;
   }
 
-  const csrfToken = request.headers.get('x-csrf-token');
-  const sessionToken = request.cookies.get('csrf-token')?.value;
+  try {
+    // Get CSRF token from header (client-side token)
+    const headerToken = request.headers.get('x-csrf-token') ?? request.headers.get('X-CSRF-Token');
 
-  if (!csrfToken || !sessionToken || !verifyCSRFToken(csrfToken, sessionToken)) {
-    return new NextResponse('CSRF token validation failed', {
-      status: 403,
+    // Get CSRF token from cookie (server-side token)
+    const cookieToken = request.cookies.get('csrf-token')?.value;
+
+    // Validate both tokens exist
+    if (!headerToken || !cookieToken) {
+      logSecurityEvent({
+        type: 'csrf_missing_tokens',
+        ip: request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown',
+        userAgent: request.headers.get('user-agent') ?? 'unknown',
+        details: {
+          hasHeaderToken: !!headerToken,
+          hasCookieToken: !!cookieToken,
+          method: request.method,
+          url: request.url,
+        },
+      });
+
+      return new NextResponse('CSRF token missing', {
+        status: 403,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    // Verify tokens match using secure comparison
+    if (!verifyCSRFToken(headerToken, cookieToken)) {
+      logSecurityEvent({
+        type: 'csrf_token_mismatch',
+        ip: request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown',
+        userAgent: request.headers.get('user-agent') ?? 'unknown',
+        details: {
+          method: request.method,
+          url: request.url,
+          headerTokenLength: headerToken.length,
+          cookieTokenLength: cookieToken.length,
+        },
+      });
+
+      return new NextResponse('CSRF token validation failed', {
+        status: 403,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    // CSRF validation successful
+    return response;
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('CSRF protection middleware error:', error);
+    }
+
+    logSecurityEvent({
+      type: 'csrf_middleware_error',
+      ip: request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown',
+      userAgent: request.headers.get('user-agent') ?? 'unknown',
+      details: {
+        error: error instanceof Error ? error.message : 'Unknown error',
+        method: request.method,
+        url: request.url,
+      },
+    });
+
+    return new NextResponse('CSRF protection error', {
+      status: 500,
       headers: {
-        'Content-Type': 'text/plain',
+        'Content-Type': 'application/json',
       },
     });
   }
-
-  return response;
 }
 
 // Security logging
 export function logSecurityEvent(event: {
-  type: 'csp_violation' | 'rate_limit' | 'csrf_failure' | 'suspicious_activity';
+  type:
+    | 'csp_violation'
+    | 'rate_limit'
+    | 'csrf_failure'
+    | 'csrf_missing_tokens'
+    | 'csrf_token_mismatch'
+    | 'csrf_middleware_error'
+    | 'suspicious_activity';
   ip?: string;
   userAgent?: string;
   details?: Record<string, unknown>;

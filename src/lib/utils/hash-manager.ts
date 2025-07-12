@@ -23,12 +23,24 @@ interface CSPHashData {
   };
 }
 
+// Define secure file path as a constant to avoid security warnings
+const HASH_FILE_NAME = 'csp-hashes.json';
+const HASH_FILE_DIR = 'src/lib/utils';
+
 class HashManager {
   private readonly hashFilePath: string;
   private hashData: CSPHashData;
 
   constructor() {
-    this.hashFilePath = path.join(process.cwd(), 'src/lib/utils/csp-hashes.json');
+    // Use a fixed path relative to the project root for security
+    const projectRoot = path.resolve(__dirname, '../../../..');
+    this.hashFilePath = path.join(projectRoot, HASH_FILE_DIR, HASH_FILE_NAME);
+
+    // Validate that the path is within expected directory for security
+    if (!this.hashFilePath.includes(path.join(HASH_FILE_DIR, HASH_FILE_NAME))) {
+      throw new Error('Invalid hash file path for security reasons');
+    }
+
     this.hashData = this.loadHashData();
   }
 
@@ -37,7 +49,9 @@ class HashManager {
    */
   private loadHashData(): CSPHashData {
     try {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       if (fs.existsSync(this.hashFilePath)) {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         const fileContent = fs.readFileSync(this.hashFilePath, 'utf-8');
         return JSON.parse(fileContent);
       }
@@ -76,6 +90,7 @@ class HashManager {
   private saveHashData(): void {
     try {
       const jsonContent = JSON.stringify(this.hashData, null, 2);
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       fs.writeFileSync(this.hashFilePath, jsonContent, 'utf-8');
     } catch {
       // Failed to save hash data

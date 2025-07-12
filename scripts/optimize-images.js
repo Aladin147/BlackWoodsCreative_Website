@@ -41,9 +41,9 @@ async function optimizeImages() {
 
   try {
     // Get list of PNG files to optimize
-    const files = fs.readdirSync(inputDir).filter(file => 
-      file.endsWith('.png') && !file.includes('optimized')
-    );
+    const files = fs
+      .readdirSync(inputDir)
+      .filter(file => file.endsWith('.png') && !file.includes('optimized'));
 
     if (files.length === 0) {
       log('ℹ️  No PNG files found to optimize', 'yellow');
@@ -71,9 +71,7 @@ async function optimizeImages() {
       const inputPath = path.join(inputDir, file);
       const outputPath = path.join(outputDir, file.replace('.png', '.webp'));
 
-      await sharp(inputPath)
-        .webp({ quality: 85, effort: 6 })
-        .toFile(outputPath);
+      await sharp(inputPath).webp({ quality: 85, effort: 6 }).toFile(outputPath);
 
       const stats = fs.statSync(outputPath);
       totalWebpSize += stats.size;
@@ -86,9 +84,7 @@ async function optimizeImages() {
       const inputPath = path.join(inputDir, file);
       const outputPath = path.join(outputDir, file.replace('.png', '.avif'));
 
-      await sharp(inputPath)
-        .avif({ quality: 80, effort: 6 })
-        .toFile(outputPath);
+      await sharp(inputPath).avif({ quality: 80, effort: 6 }).toFile(outputPath);
 
       const stats = fs.statSync(outputPath);
       totalAvifSize += stats.size;
@@ -101,12 +97,22 @@ async function optimizeImages() {
     log(`WebP files: ${formatBytes(totalWebpSize)}`, 'cyan');
     log(`AVIF files: ${formatBytes(totalAvifSize)}`, 'cyan');
 
-    const webpSavings = ((totalOriginalSize - totalWebpSize) / totalOriginalSize * 100).toFixed(1);
-    const avifSavings = ((totalOriginalSize - totalAvifSize) / totalOriginalSize * 100).toFixed(1);
+    const webpSavings = (((totalOriginalSize - totalWebpSize) / totalOriginalSize) * 100).toFixed(
+      1
+    );
+    const avifSavings = (((totalOriginalSize - totalAvifSize) / totalOriginalSize) * 100).toFixed(
+      1
+    );
 
     log(`\n💾 Space Savings:`, 'green');
-    log(`  WebP: ${webpSavings}% smaller (${formatBytes(totalOriginalSize - totalWebpSize)} saved)`, 'green');
-    log(`  AVIF: ${avifSavings}% smaller (${formatBytes(totalOriginalSize - totalAvifSize)} saved)`, 'green');
+    log(
+      `  WebP: ${webpSavings}% smaller (${formatBytes(totalOriginalSize - totalWebpSize)} saved)`,
+      'green'
+    );
+    log(
+      `  AVIF: ${avifSavings}% smaller (${formatBytes(totalOriginalSize - totalAvifSize)} saved)`,
+      'green'
+    );
 
     // Generate usage recommendations
     log('\n💡 Usage Recommendations:', 'yellow');
@@ -117,16 +123,18 @@ async function optimizeImages() {
 
     // Generate example code
     log('\n📝 Example Implementation:', 'cyan');
-    log(`
+    log(
+      `
 <picture>
   <source srcSet="/assets/icons/optimized/logo.avif" type="image/avif" />
   <source srcSet="/assets/icons/optimized/logo.webp" type="image/webp" />
   <img src="/assets/icons/logo.png" alt="Logo" />
 </picture>
-    `.trim(), 'cyan');
+    `.trim(),
+      'cyan'
+    );
 
     log('\n✅ Image optimization completed successfully!', 'green');
-
   } catch (error) {
     log(`\n❌ Error during optimization: ${error.message}`, 'red');
     process.exit(1);

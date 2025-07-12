@@ -127,7 +127,6 @@ export function GET(_request: NextRequest) {
       },
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error generating image sitemap:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }

@@ -54,7 +54,7 @@ function validateSitemapStructure() {
     const sitemapPath = 'src/app/sitemap.ts';
     if (fs.existsSync(sitemapPath)) {
       const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
-      
+
       // Check for required elements
       const checks = [
         { pattern: /priority:\s*1\.0/, name: 'Homepage priority' },
@@ -79,7 +79,7 @@ function validateSitemapStructure() {
     const imageSitemapPath = 'src/app/sitemap-images.xml/route.ts';
     if (fs.existsSync(imageSitemapPath)) {
       const imageSitemapContent = fs.readFileSync(imageSitemapPath, 'utf8');
-      
+
       const imageChecks = [
         { pattern: /portfolioImages/, name: 'Portfolio images' },
         { pattern: /serviceImages/, name: 'Service images' },
@@ -96,7 +96,6 @@ function validateSitemapStructure() {
         }
       });
     }
-
   } catch (error) {
     log(`❌ Error validating sitemap: ${error.message}`, 'red');
     return false;
@@ -114,7 +113,7 @@ function validateRobotsConfiguration() {
     const robotsPath = 'src/app/robots.ts';
     if (fs.existsSync(robotsPath)) {
       const robotsContent = fs.readFileSync(robotsPath, 'utf8');
-      
+
       const robotsChecks = [
         { pattern: /userAgent:\s*['*']/, name: 'User agent wildcard' },
         { pattern: /allow:\s*['/']/, name: 'Allow root' },
@@ -137,7 +136,6 @@ function validateRobotsConfiguration() {
     if (fs.existsSync(staticRobotsPath)) {
       log(`✅ Static robots.txt: Found (fallback)`, 'green');
     }
-
   } catch (error) {
     log(`❌ Error validating robots.txt: ${error.message}`, 'red');
     return false;
@@ -210,7 +208,7 @@ function generateSEOReport() {
   const completionPercentage = ((passedChecks / totalChecks) * 100).toFixed(1);
 
   log(`\n📈 SEO Implementation Status: ${completionPercentage}%`, 'cyan');
-  
+
   if (completionPercentage >= 90) {
     log('🎉 Excellent! SEO implementation is comprehensive', 'green');
   } else if (completionPercentage >= 75) {

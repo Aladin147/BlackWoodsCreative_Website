@@ -166,7 +166,7 @@ export const ContentSEOIntegration = {
         const seoData = ContentSEOIntegration.generateContentSEO(content);
 
         const isoString = content.lastUpdated?.toISOString() || new Date().toISOString();
-        const datePart = isoString.split('T')[0];
+        const datePart = isoString.split('T')[0] ?? isoString;
 
         return {
           url: `${config.siteUrl}${seoData.canonical ?? `/${content.type}/${content.id}`}`,
@@ -291,7 +291,10 @@ export const SEOPerformanceOptimization = {
     // Count common issues
     const issueCount: Record<string, number> = {};
     issues.forEach(issue => {
-      issueCount[issue] = (issueCount[issue] ?? 0) + 1;
+      // Safe object assignment with validation
+      if (typeof issue === 'string' && issue.length > 0 && issue.length < 200) {
+        issueCount[issue] = (issueCount[issue] ?? 0) + 1;
+      }
     });
 
     const commonIssues = Object.entries(issueCount)
@@ -358,7 +361,7 @@ export const SEODevUtils = {
       optimizedContent: analysis.optimizedContent,
       averageScore: `${analysis.averageScore.toFixed(1)}/100`,
       commonIssues: analysis.commonIssues,
-      recommendations: recommendations,
+      recommendations,
     });
   },
 

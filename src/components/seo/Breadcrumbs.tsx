@@ -1,8 +1,9 @@
 'use client';
 
-import { ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 import { MagneticField } from '@/components/interactive';
 import { generateBreadcrumbs } from '@/lib/utils/internal-linking';
@@ -25,7 +26,7 @@ export function Breadcrumbs({
   const pathname = usePathname();
 
   // Don't show breadcrumbs on homepage
-  if (pathname === '/') return null;
+  if (pathname === '/' || !pathname) return null;
 
   const breadcrumbs = generateBreadcrumbs(pathname);
 
@@ -33,7 +34,7 @@ export function Breadcrumbs({
   const displayBreadcrumbs =
     breadcrumbs.length > maxItems
       ? [
-          breadcrumbs[0], // Always show home
+          breadcrumbs[0] ?? { name: 'Home', href: '/' }, // Always show home
           { name: '...', href: '#' }, // Ellipsis
           ...breadcrumbs.slice(-2), // Show last 2 items
         ]
@@ -137,10 +138,11 @@ export function Breadcrumbs({
 export function CompactBreadcrumbs({ className = '' }: { className?: string }) {
   const pathname = usePathname();
 
-  if (pathname === '/') return null;
+  if (pathname === '/' || !pathname) return null;
 
   const breadcrumbs = generateBreadcrumbs(pathname);
-  const currentPage = breadcrumbs[breadcrumbs.length - 1];
+  // Safe array access with bounds checking
+  const currentPage = breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1] : null;
   const parentPage = breadcrumbs.length > 1 ? breadcrumbs[breadcrumbs.length - 2] : null;
 
   if (!currentPage) return null;
@@ -178,7 +180,7 @@ export function StyledBreadcrumbs({
 }) {
   const pathname = usePathname();
 
-  if (pathname === '/') return null;
+  if (pathname === '/' || !pathname) return null;
 
   const breadcrumbs = generateBreadcrumbs(pathname);
 
@@ -197,7 +199,7 @@ export function StyledBreadcrumbs({
   return (
     <nav
       aria-label="Styled breadcrumb navigation"
-      className={`flex items-center space-x-1 text-sm ${variantStyles[variant]} ${className}`}
+      className={`flex items-center space-x-1 text-sm ${variantStyles[variant] ?? variantStyles.default} ${className}`}
     >
       <ol className="flex items-center space-x-1">
         {breadcrumbs.map((crumb, index) => {
@@ -215,7 +217,7 @@ export function StyledBreadcrumbs({
               ) : (
                 <Link
                   href={crumb.href}
-                  className={`transition-colors duration-200 ${linkStyles[variant]} focus:outline-none focus:ring-1 focus:ring-bw-accent-gold focus:ring-opacity-50`}
+                  className={`transition-colors duration-200 ${linkStyles[variant] ?? linkStyles.default} focus:outline-none focus:ring-1 focus:ring-bw-accent-gold focus:ring-opacity-50`}
                 >
                   {isHome ? <HomeIcon className="h-4 w-4" aria-label="Home" /> : crumb.name}
                 </Link>

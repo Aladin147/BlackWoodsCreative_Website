@@ -9,21 +9,25 @@ This checklist ensures a smooth and secure deployment of the BlackWoods Creative
 ### ✅ Code Quality & Testing
 
 - [ ] All tests passing (1597+ tests)
+
   ```bash
   npm run test
   ```
 
 - [ ] ESLint validation (0 violations)
+
   ```bash
   npm run lint
   ```
 
 - [ ] TypeScript compilation
+
   ```bash
   npm run type-check
   ```
 
 - [ ] Production build successful
+
   ```bash
   npm run build
   ```
@@ -80,6 +84,7 @@ This checklist ensures a smooth and secure deployment of the BlackWoods Creative
 - [ ] Automatic deployments enabled
 
 **Vercel Configuration**:
+
 ```json
 {
   "version": 2,
@@ -93,12 +98,14 @@ This checklist ensures a smooth and secure deployment of the BlackWoods Creative
 ### Alternative Platforms
 
 #### Netlify
+
 - [ ] Build command: `npm run build`
 - [ ] Publish directory: `.next`
 - [ ] Environment variables configured
 - [ ] Custom domain configured
 
 #### Docker
+
 - [ ] Dockerfile configured
 - [ ] Container builds successfully
 - [ ] Environment variables passed to container
@@ -198,10 +205,11 @@ This checklist ensures a smooth and secure deployment of the BlackWoods Creative
 If issues occur after deployment:
 
 1. **Immediate Rollback**
+
    ```bash
    # Vercel
    vercel rollback [deployment-url]
-   
+
    # Git-based
    git revert [commit-hash]
    git push origin main

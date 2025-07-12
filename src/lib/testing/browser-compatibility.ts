@@ -74,8 +74,8 @@ export class BrowserCompatibilityChecker {
       return this.getServerSideBrowserInfo();
     }
 
-    const userAgent = navigator.userAgent;
-    const platform = navigator.platform;
+    const { userAgent } = navigator;
+    const { platform } = navigator;
 
     // Browser detection
     let name = 'Unknown';

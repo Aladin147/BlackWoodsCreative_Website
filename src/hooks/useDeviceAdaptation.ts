@@ -7,7 +7,7 @@ import {
   getOptimizationProfile,
   DeviceCapabilities,
   OptimizationProfile,
-} from '@/lib/utils/device-capabilities';
+} from '../lib/utils/device-capabilities';
 
 // Helper function to determine screen size category
 function getScreenSize(width: number): 'sm' | 'md' | 'lg' | 'xl' | '2xl' {
@@ -149,7 +149,8 @@ export function useDeviceAdaptation() {
           isDesktop: capabilities.display.width > 1024,
           isTouchDevice: 'ontouchstart' in window,
           screenSize: getScreenSize(capabilities.display.width),
-          orientation: capabilities.display.width > capabilities.display.height ? 'landscape' : 'portrait',
+          orientation:
+            capabilities.display.width > capabilities.display.height ? 'landscape' : 'portrait',
           pixelRatio: capabilities.display.pixelRatio,
           hasHover: window.matchMedia('(hover: hover)').matches,
           prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -160,7 +161,6 @@ export function useDeviceAdaptation() {
         setDeviceInfo(info);
         setAdaptiveConfig(getAdaptiveConfig(info));
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.warn('Device detection failed, using defaults:', error);
         // Fallback to basic detection
         const basicInfo = getBasicDeviceInfo();
@@ -318,7 +318,8 @@ export function useDeviceAdaptation() {
   };
 
   const shouldEnableFeature = (feature: keyof AdaptiveConfig) => {
-    return adaptiveConfig[feature];
+    // Safe object access with validation
+    return adaptiveConfig[feature] ?? false;
   };
 
   // ✅ Provide safe defaults when deviceInfo is null (during SSR/hydration)

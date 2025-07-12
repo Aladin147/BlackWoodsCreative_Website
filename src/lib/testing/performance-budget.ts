@@ -613,7 +613,7 @@ export const PerformanceBudgetUtils = {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i] ?? 'B'}`;
   },
 
   // Format duration
@@ -868,7 +868,7 @@ export const PerformanceBudgetUtils = {
 
     // Calculate overall score
     const scores = { good: 100, 'needs-improvement': 75, poor: 50 };
-    const totalScore = (scores[lcp] + scores[fid] + scores[cls]) / 3;
+    const totalScore = ((scores[lcp] ?? 0) + (scores[fid] ?? 0) + (scores[cls] ?? 0)) / 3;
 
     return {
       score: totalScore,

@@ -29,13 +29,16 @@ export function useScrollProgress(options: ScrollProgressOptions = {}): ScrollPr
     let clientHeight: number;
 
     if (element) {
-      currentScrollY = element.scrollTop;
-      scrollHeight = element.scrollHeight;
-      clientHeight = element.clientHeight;
+      const { scrollTop, scrollHeight: elemScrollHeight, clientHeight: elemClientHeight } = element;
+      currentScrollY = scrollTop;
+      scrollHeight = elemScrollHeight;
+      clientHeight = elemClientHeight;
     } else {
+      const { scrollHeight: docScrollHeight } = document.documentElement;
+      const { innerHeight } = window;
       currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
-      scrollHeight = document.documentElement.scrollHeight;
-      clientHeight = window.innerHeight;
+      scrollHeight = docScrollHeight;
+      clientHeight = innerHeight;
     }
 
     const maxScrollValue = scrollHeight - clientHeight;
@@ -228,9 +231,12 @@ export function useScrollProgressIndicator(
 
     const sectionSize = 100 / sections.length;
     const currentSectionIndex = Math.floor(scrollProgress / sectionSize);
-    const currentSection = sections[currentSectionIndex] ?? sections[sections.length - 1] ?? null;
+    // Safe array access with bounds checking
+    const currentSection = (currentSectionIndex >= 0 && currentSectionIndex < sections.length)
+      ? sections[currentSectionIndex]
+      : (sections.length > 0 ? sections[sections.length - 1] : null);
 
-    setActiveSection(currentSection);
+    setActiveSection(currentSection ?? null);
 
     // Calculate progress for each section
     const progress: Record<string, number> = {};
@@ -239,11 +245,18 @@ export function useScrollProgressIndicator(
       const sectionEnd = (index + 1) * sectionSize;
 
       if (scrollProgress >= sectionStart && scrollProgress <= sectionEnd) {
-        progress[section] = ((scrollProgress - sectionStart) / sectionSize) * 100;
+        // Safe object assignment with validation
+        if (typeof section === 'string' && section.length > 0 && section.length < 100) {
+          progress[section] = ((scrollProgress - sectionStart) / sectionSize) * 100;
+        }
       } else if (scrollProgress > sectionEnd) {
-        progress[section] = 100;
+        if (typeof section === 'string' && section.length > 0 && section.length < 100) {
+          progress[section] = 100;
+        }
       } else {
-        progress[section] = 0;
+        if (typeof section === 'string' && section.length > 0 && section.length < 100) {
+          progress[section] = 0;
+        }
       }
     });
 

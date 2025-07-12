@@ -22,7 +22,7 @@ export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerP
       <motion.div
         className={cn(
           'rounded-full border-2 border-bw-border-subtle border-t-bw-accent-gold',
-          sizeClasses[size]
+          sizeClasses[size] ?? sizeClasses.md
         )}
         animate={{ rotate: 360 }}
         transition={{

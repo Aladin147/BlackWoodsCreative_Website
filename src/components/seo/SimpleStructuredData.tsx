@@ -1,6 +1,6 @@
 /**
  * Simple Structured Data Component
- * 
+ *
  * Essential structured data for SEO without over-engineering
  */
 
@@ -49,7 +49,7 @@ export function SimpleStructuredData({
         <script
           key={index}
           type="application/ld+json"
-          data-testid={index === 0 ? "structured-data" : `structured-data-${index}`}
+          data-testid={index === 0 ? 'structured-data' : `structured-data-${index}`}
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(schema),
           }}
@@ -143,14 +143,14 @@ export function SimpleFAQSchema() {
 }
 
 // Simple service schema
-export function SimpleServiceSchema({ 
-  serviceName, 
-  description, 
-  price 
-}: { 
-  serviceName: string; 
-  description: string; 
-  price?: string; 
+export function SimpleServiceSchema({
+  serviceName,
+  description,
+  price,
+}: {
+  serviceName: string;
+  description: string;
+  price?: string;
 }) {
   const serviceSchema = {
     '@context': 'https://schema.org',
@@ -166,11 +166,13 @@ export function SimpleServiceSchema({
       '@type': 'Country',
       name: 'Morocco',
     },
-    ...(price && { offers: {
-      '@type': 'Offer',
-      price,
-      priceCurrency: 'MAD',
-    }}),
+    ...(price && {
+      offers: {
+        '@type': 'Offer',
+        price,
+        priceCurrency: 'MAD',
+      },
+    }),
   };
 
   return (
@@ -184,11 +186,7 @@ export function SimpleServiceSchema({
 }
 
 // Simple breadcrumb schema
-export function SimpleBreadcrumbSchema({ 
-  items 
-}: { 
-  items: Array<{ name: string; url: string }> 
-}) {
+export function SimpleBreadcrumbSchema({ items }: { items: Array<{ name: string; url: string }> }) {
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

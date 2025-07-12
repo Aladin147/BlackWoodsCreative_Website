@@ -130,7 +130,7 @@ function optimizeINP() {
     };
     if (windowWithScheduler.scheduler?.postTask) {
       // Use modern scheduler API for better task scheduling
-      const scheduler = windowWithScheduler.scheduler;
+      const { scheduler } = windowWithScheduler;
 
       // Schedule non-critical tasks with low priority
       const nonCriticalTasks = document.querySelectorAll('[data-task="non-critical"]');

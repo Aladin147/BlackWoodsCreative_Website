@@ -38,20 +38,12 @@ function validateSecurityImplementation() {
     {
       name: 'CSRF Protection',
       path: 'src/lib/utils/security.ts',
-      patterns: [
-        /generateCSRFToken/,
-        /verifyCSRFToken/,
-        /withCSRFProtection/,
-      ],
+      patterns: [/generateCSRFToken/, /verifyCSRFToken/, /withCSRFProtection/],
     },
     {
       name: 'Rate Limiting',
       path: 'src/middleware.ts',
-      patterns: [
-        /Ratelimit/,
-        /rateLimiters/,
-        /slidingWindow/,
-      ],
+      patterns: [/Ratelimit/, /rateLimiters/, /slidingWindow/],
     },
     {
       name: 'Security Headers',
@@ -67,10 +59,7 @@ function validateSecurityImplementation() {
     {
       name: 'Input Sanitization',
       path: 'src/lib/utils/sanitize.ts',
-      patterns: [
-        /sanitizeFormData/,
-        /sanitizeInput/,
-      ],
+      patterns: [/sanitizeFormData/, /sanitizeInput/],
     },
   ];
 
@@ -81,7 +70,7 @@ function validateSecurityImplementation() {
     if (fs.existsSync(check.path)) {
       const content = fs.readFileSync(check.path, 'utf8');
       const allPatternsFound = check.patterns.every(pattern => pattern.test(content));
-      
+
       if (allPatternsFound) {
         log(`✅ ${check.name}: Implemented`, 'green');
         securityScore++;
@@ -104,48 +93,27 @@ function validateAccessibilityImplementation() {
     {
       name: 'Color Contrast Utilities',
       path: 'src/lib/utils/accessibility.ts',
-      patterns: [
-        /getContrastRatio/,
-        /meetsContrastRequirement/,
-        /WCAG/,
-      ],
+      patterns: [/getContrastRatio/, /meetsContrastRequirement/, /WCAG/],
     },
     {
       name: 'Focus Management',
       path: 'src/lib/utils/accessibility.ts',
-      patterns: [
-        /FocusManager/,
-        /trapFocus/,
-        /restoreFocus/,
-      ],
+      patterns: [/FocusManager/, /trapFocus/, /restoreFocus/],
     },
     {
       name: 'Screen Reader Support',
       path: 'src/lib/utils/accessibility.ts',
-      patterns: [
-        /announceToScreenReader/,
-        /aria-live/,
-        /aria-label/,
-      ],
+      patterns: [/announceToScreenReader/, /aria-live/, /aria-label/],
     },
     {
       name: 'Keyboard Navigation',
       path: 'src/lib/utils/accessibility.ts',
-      patterns: [
-        /handleKeyboardNavigation/,
-        /tabindex/,
-        /keydown/,
-      ],
+      patterns: [/handleKeyboardNavigation/, /tabindex/, /keydown/],
     },
     {
       name: 'Accessibility Audit Tools',
       path: 'src/lib/testing/accessibility-audit.ts',
-      patterns: [
-        /AccessibilityAuditor/,
-        /auditPage/,
-        /checkImages/,
-        /checkForms/,
-      ],
+      patterns: [/AccessibilityAuditor/, /auditPage/, /checkImages/, /checkForms/],
     },
   ];
 
@@ -156,7 +124,7 @@ function validateAccessibilityImplementation() {
     if (fs.existsSync(check.path)) {
       const content = fs.readFileSync(check.path, 'utf8');
       const allPatternsFound = check.patterns.every(pattern => pattern.test(content));
-      
+
       if (allPatternsFound) {
         log(`✅ ${check.name}: Implemented`, 'green');
         accessibilityScore++;
@@ -176,14 +144,14 @@ function validateMiddlewareConfiguration() {
   log('==========================================', 'blue');
 
   const middlewarePath = 'src/middleware.ts';
-  
+
   if (!fs.existsSync(middlewarePath)) {
     log('❌ Middleware file missing', 'red');
     return { score: 0, maxScore: 1 };
   }
 
   const middlewareContent = fs.readFileSync(middlewarePath, 'utf8');
-  
+
   const middlewareChecks = [
     { pattern: /generateNonce/, name: 'Nonce generation' },
     { pattern: /withSecurityHeaders/, name: 'Security headers' },
@@ -193,7 +161,7 @@ function validateMiddlewareConfiguration() {
   ];
 
   let middlewareScore = 0;
-  
+
   middlewareChecks.forEach(check => {
     if (check.pattern.test(middlewareContent)) {
       log(`✅ ${check.name}: Configured`, 'green');
@@ -222,13 +190,10 @@ function validateAPISecurityMeasures() {
   apiRoutes.forEach(routePath => {
     if (fs.existsSync(routePath)) {
       const content = fs.readFileSync(routePath, 'utf8');
-      
-      const hasSecurityMeasures = [
-        /sanitize/i,
-        /validate/i,
-        /rate.*limit/i,
-        /csrf/i,
-      ].some(pattern => pattern.test(content));
+
+      const hasSecurityMeasures = [/sanitize/i, /validate/i, /rate.*limit/i, /csrf/i].some(
+        pattern => pattern.test(content)
+      );
 
       if (hasSecurityMeasures) {
         log(`✅ ${path.basename(routePath)}: Security measures implemented`, 'green');
@@ -253,16 +218,25 @@ function generateComplianceReport() {
   const middlewareResult = validateMiddlewareConfiguration();
   const apiSecurityResult = validateAPISecurityMeasures();
 
-  const totalScore = securityResult.score + accessibilityResult.score + 
-                    middlewareResult.score + apiSecurityResult.score;
-  const maxTotalScore = securityResult.maxScore + accessibilityResult.maxScore + 
-                       middlewareResult.maxScore + apiSecurityResult.maxScore;
+  const totalScore =
+    securityResult.score +
+    accessibilityResult.score +
+    middlewareResult.score +
+    apiSecurityResult.score;
+  const maxTotalScore =
+    securityResult.maxScore +
+    accessibilityResult.maxScore +
+    middlewareResult.maxScore +
+    apiSecurityResult.maxScore;
 
   const compliancePercentage = ((totalScore / maxTotalScore) * 100).toFixed(1);
 
   log(`\n📈 Overall Compliance Score: ${compliancePercentage}%`, 'cyan');
   log(`📊 Security Score: ${securityResult.score}/${securityResult.maxScore}`, 'cyan');
-  log(`♿ Accessibility Score: ${accessibilityResult.score}/${accessibilityResult.maxScore}`, 'cyan');
+  log(
+    `♿ Accessibility Score: ${accessibilityResult.score}/${accessibilityResult.maxScore}`,
+    'cyan'
+  );
   log(`⚙️  Middleware Score: ${middlewareResult.score}/${middlewareResult.maxScore}`, 'cyan');
   log(`🛡️  API Security Score: ${apiSecurityResult.score}/${apiSecurityResult.maxScore}`, 'cyan');
 

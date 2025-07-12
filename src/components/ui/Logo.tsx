@@ -1,8 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { useState } from 'react';
+
+import Image from 'next/image';
+
+import { motion } from 'framer-motion';
 
 interface LogoProps {
   className?: string;
@@ -84,7 +86,9 @@ export function Logo({
       {/* Loading state */}
       {isLoading && (
         <div
-          className={`${sizeClasses[size]} flex animate-pulse items-center justify-center rounded bg-bw-accent-gold/10`}
+          className={`${
+            sizeClasses[size] ?? sizeClasses.md
+          } flex animate-pulse items-center justify-center rounded bg-bw-accent-gold/10`}
         >
           <div className="text-xs font-medium text-bw-accent-gold">BWC</div>
         </div>
@@ -103,7 +107,9 @@ export function Logo({
           alt="BlackWoods Creative"
           width={variant === 'icon' ? 40 : 200}
           height={variant === 'icon' ? 40 : 60}
-          className={`${sizeClasses[size]} object-contain`}
+          className={`${
+            sizeClasses[size] ?? sizeClasses.md
+          } object-contain`}
           onError={handleImageError}
           onLoad={handleImageLoad}
           priority={priority}

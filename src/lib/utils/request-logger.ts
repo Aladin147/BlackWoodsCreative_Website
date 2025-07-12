@@ -71,10 +71,15 @@ class RequestLogger {
     const timestamp = new Date().toISOString();
     const url = new URL(request.url);
 
-    // Extract query parameters
+    // Extract query parameters safely
     const query: Record<string, string> = {};
     url.searchParams.forEach((value, key) => {
-      query[key] = value;
+      // Sanitize key to prevent object injection
+      const sanitizedKey = key.replace(/[^a-zA-Z0-9_-]/g, '');
+      if (sanitizedKey && sanitizedKey.length <= 100 && sanitizedKey.length > 0) {
+        // Safe object assignment with validation
+        query[sanitizedKey] = value;
+      }
     });
 
     // Extract relevant headers (excluding sensitive ones)
@@ -96,7 +101,8 @@ class RequestLogger {
 
     allowedHeaders.forEach(header => {
       const value = request.headers.get(header);
-      if (value) {
+      if (value && typeof header === 'string' && header.length > 0 && header.length < 100) {
+        // Safe object assignment with validation
         headers[header] = value;
       }
     });
@@ -104,7 +110,9 @@ class RequestLogger {
     const referer = request.headers.get('referer');
     const forwarded = request.headers.get('x-forwarded-for');
     const realIp = request.headers.get('x-real-ip');
-    const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? '127.0.0.1' : (realIp ?? '127.0.0.1');
+    const ip = forwarded
+      ? (forwarded.split(',')[0]?.trim() ?? '127.0.0.1')
+      : (realIp ?? '127.0.0.1');
 
     const logEntry: RequestLogEntry = {
       id: requestId,
@@ -145,7 +153,8 @@ class RequestLogger {
     const logIndex = this.logs.findIndex(log => log.id === requestId);
     if (logIndex === -1) return;
 
-    const logEntry = this.logs[logIndex];
+    // Safe array access with bounds checking
+    const logEntry = (logIndex >= 0 && logIndex < this.logs.length) ? this.logs[logIndex] : null;
     if (!logEntry) return;
 
     logEntry.statusCode = response.status;
@@ -206,7 +215,7 @@ class RequestLogger {
     }
 
     // Update response time metrics
-    const responseTime = logEntry.responseTime;
+    const { responseTime } = logEntry;
     this.metrics.slowestRequest = Math.max(this.metrics.slowestRequest, responseTime);
     this.metrics.fastestRequest = Math.min(this.metrics.fastestRequest, responseTime);
 

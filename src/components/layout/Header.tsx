@@ -1,8 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
 
 import { MagneticField } from '@/components/interactive';
 import { Logo } from '@/components/ui/Logo';

@@ -6,9 +6,10 @@
 
 'use client';
 
+import { useState, useEffect, ReactNode } from 'react';
+
 import Head from 'next/head';
 import Script from 'next/script';
-import { useState, useEffect, ReactNode } from 'react';
 
 import {
   usePageSEO,

@@ -1,9 +1,10 @@
 'use client';
 
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
 
 import { MagneticField, ScrollReveal } from '@/components/interactive';
 import {
@@ -28,6 +29,9 @@ export function RelatedLinks({
   variant = 'default',
 }: RelatedLinksProps) {
   const pathname = usePathname();
+
+  if (!pathname) return null;
+
   const linkingStrategy = getInternalLinksForPage(pathname);
 
   if (!linkingStrategy) return null;
@@ -173,6 +177,9 @@ export function CTALinks({
   title?: string;
 }) {
   const pathname = usePathname();
+
+  if (!pathname) return null;
+
   const linkingStrategy = getInternalLinksForPage(pathname);
 
   if (!linkingStrategy || linkingStrategy.callToActionLinks.length === 0) return null;
@@ -207,6 +214,9 @@ export function ContextualNavigation({
   className?: string;
 }) {
   const pathname = usePathname();
+
+  if (!pathname) return null;
+
   const linkingStrategy = getInternalLinksForPage(pathname);
 
   if (!linkingStrategy) return null;

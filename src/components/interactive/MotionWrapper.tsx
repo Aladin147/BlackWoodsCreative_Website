@@ -1,9 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React, { forwardRef, useEffect, useCallback, useState } from 'react';
 
-import { useFramerNonce } from '@/hooks/useNonce';
+import { useFramerNonce } from '@/lib/csp/nonce-provider';
+import { motion } from '@/lib/motion';
 import { getHashCollector } from '@/lib/utils/hash-collector';
 
 /**
@@ -17,7 +17,7 @@ import { getHashCollector } from '@/lib/utils/hash-collector';
 function createMotionComponent(element: keyof typeof motion) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MotionComponent = forwardRef<HTMLElement, any>((props, ref) => {
-    const nonce = useFramerNonce();
+    const { nonce } = useFramerNonce();
     const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
     // Initialize hash collection in development mode
@@ -119,8 +119,17 @@ function createMotionComponent(element: keyof typeof motion) {
       };
     }, [applyNonceToStyles, elementRef]);
 
+    // Safe object access for motion components
+    const allowedElements = ['div', 'button', 'p', 'span', 'a', 'section'] as const;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MotionComponent = motion[element] as React.ComponentType<any>;
+    const MotionComponent = (allowedElements.includes(element as any) ? motion[element] : null) as React.ComponentType<any> | undefined;
+
+    if (!MotionComponent) {
+      // Fallback to div if element is not allowed
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const FallbackComponent = motion.div as React.ComponentType<any>;
+      return <FallbackComponent {...props} ref={ref} />;
+    }
 
     return (
       <MotionComponent

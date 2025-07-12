@@ -9,6 +9,30 @@ jest.mock('next/image', () => ({
   },
 }));
 
+// Mock Next.js Google Fonts
+jest.mock('next/font/google', () => ({
+  Inter: () => ({
+    className: 'inter-font',
+    style: { fontFamily: 'Inter, sans-serif' },
+    variable: '--font-primary',
+  }),
+  Crimson_Text: () => ({
+    className: 'crimson-text-font',
+    style: { fontFamily: 'Crimson Text, serif' },
+    variable: '--font-secondary',
+  }),
+  Playfair_Display: () => ({
+    className: 'playfair-display-font',
+    style: { fontFamily: 'Playfair Display, serif' },
+    variable: '--font-tertiary',
+  }),
+  JetBrains_Mono: () => ({
+    className: 'jetbrains-mono-font',
+    style: { fontFamily: 'JetBrains Mono, monospace' },
+    variable: '--font-mono',
+  }),
+}));
+
 // Mock Framer Motion
 jest.mock('framer-motion', () => ({
   motion: {
@@ -107,7 +131,8 @@ if (typeof window !== 'undefined') {
   Object.defineProperty(navigator, 'userAgent', {
     writable: true,
     configurable: true,
-    value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    value:
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
   });
 
   Object.defineProperty(navigator, 'maxTouchPoints', {
@@ -444,7 +469,7 @@ jest.mock('react', () => ({
 
 // Mock WebGL context for WebGL effects tests
 if (typeof global.HTMLCanvasElement !== 'undefined') {
-  global.HTMLCanvasElement.prototype.getContext = jest.fn((contextType) => {
+  global.HTMLCanvasElement.prototype.getContext = jest.fn(contextType => {
     if (contextType === 'webgl' || contextType === 'experimental-webgl') {
       return {
         createShader: jest.fn(),

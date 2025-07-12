@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, ReactElement, useEffect, useState } from 'react';
 
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 import { OptimizationProfile } from '@/lib/utils/device-capabilities';
@@ -43,9 +43,9 @@ export function ProgressiveEnhancement({
       const { capabilities, optimizationProfile } = deviceInfo;
 
       // Check performance requirements
-      const performanceLevels = { low: 0, medium: 1, high: 2 };
-      const requiredLevel = performanceLevels[minPerformance];
-      const deviceLevel = performanceLevels[capabilities.performance.overall];
+      const performanceLevels = { low: 0, medium: 1, high: 2 } as const;
+      const requiredLevel = performanceLevels[minPerformance] ?? performanceLevels.low;
+      const deviceLevel = performanceLevels[capabilities.performance.overall] ?? performanceLevels.low;
 
       if (deviceLevel < requiredLevel) {
         setShouldRender(false);
@@ -82,11 +82,11 @@ export function ProgressiveEnhancement({
 }
 
 // Conditional rendering component
-function ConditionalRender({ condition, children, fallback }: ConditionalRenderProps) {
+function ConditionalRender({ condition, children, fallback }: ConditionalRenderProps): ReactElement {
   if (!condition) {
-    return fallback;
+    return (fallback as ReactElement) ?? <div />;
   }
-  return children;
+  return children as ReactElement;
 }
 
 // Feature support detection functions

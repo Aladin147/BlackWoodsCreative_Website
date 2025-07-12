@@ -33,6 +33,7 @@ This document provides a comprehensive analysis of the structured data implement
 **Location**: `src/components/seo/SimpleStructuredData.tsx`
 
 **Features**:
+
 - Complete business information
 - Contact details and social media links
 - Founding date and employee count
@@ -40,6 +41,7 @@ This document provides a comprehensive analysis of the structured data implement
 - Service area (Morocco)
 
 **Schema Properties**:
+
 ```json
 {
   "@context": "https://schema.org",
@@ -57,6 +59,7 @@ This document provides a comprehensive analysis of the structured data implement
 ### Local Business Schema
 
 **Enhanced Features**:
+
 - Morocco-specific business details
 - Opening hours and payment methods
 - Price range and currencies accepted
@@ -64,6 +67,7 @@ This document provides a comprehensive analysis of the structured data implement
 - Business type classification
 
 **Key Properties**:
+
 - Business Type: Professional Service
 - Price Range: $$
 - Currencies: MAD, EUR, USD
@@ -73,12 +77,14 @@ This document provides a comprehensive analysis of the structured data implement
 ### Service Schema
 
 **Dynamic Service Generation**:
+
 - Video Production services
 - Photography services
 - 3D Visualization services
 - Scene Creation services
 
 **Schema Structure**:
+
 ```json
 {
   "@context": "https://schema.org",
@@ -99,12 +105,14 @@ This document provides a comprehensive analysis of the structured data implement
 ### Creative Work Schema
 
 **Portfolio Integration**:
+
 - Film projects
 - Photography portfolios
 - 3D visualization work
 - Scene creation projects
 
 **Enhanced Properties**:
+
 - Creator information
 - Work examples
 - Client details
@@ -161,7 +169,7 @@ This document provides a comprehensive analysis of the structured data implement
 
 ```typescript
 // Main structured data component
-<SimpleStructuredData 
+<SimpleStructuredData
   includeOrganization={true}
   includeLocalBusiness={true}
   includeWebsite={true}

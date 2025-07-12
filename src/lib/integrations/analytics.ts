@@ -1,6 +1,6 @@
 /**
  * Analytics Integration
- * 
+ *
  * Comprehensive analytics integration for Google Analytics 4 and Vercel Analytics
  */
 
@@ -44,7 +44,10 @@ declare global {
 
 // Initialize Google Analytics
 export function initializeGoogleAnalytics(): void {
-  if (!ANALYTICS_CONFIG.googleAnalytics.enabled || !ANALYTICS_CONFIG.googleAnalytics.measurementId) {
+  if (
+    !ANALYTICS_CONFIG.googleAnalytics.enabled ||
+    !ANALYTICS_CONFIG.googleAnalytics.measurementId
+  ) {
     // Google Analytics not configured - silent return in production
     return;
   }
@@ -78,7 +81,7 @@ export function trackPageView(url: string, title?: string): void {
     return;
   }
 
-  const measurementId = ANALYTICS_CONFIG.googleAnalytics.measurementId;
+  const { measurementId } = ANALYTICS_CONFIG.googleAnalytics;
   if (measurementId) {
     window.gtag?.('config', measurementId, {
       page_path: url,
@@ -113,124 +116,142 @@ export function trackCustomEvent(event: GACustomEvent): void {
 // Predefined event tracking functions
 export const analytics = {
   // Contact form events
-  contactFormStart: () => trackEvent({
-    action: 'form_start',
-    category: 'contact',
-    label: 'contact_form',
-  }),
+  contactFormStart: () =>
+    trackEvent({
+      action: 'form_start',
+      category: 'contact',
+      label: 'contact_form',
+    }),
 
-  contactFormSubmit: () => trackEvent({
-    action: 'form_submit',
-    category: 'contact',
-    label: 'contact_form',
-  }),
+  contactFormSubmit: () =>
+    trackEvent({
+      action: 'form_submit',
+      category: 'contact',
+      label: 'contact_form',
+    }),
 
-  contactFormSuccess: () => trackEvent({
-    action: 'form_success',
-    category: 'contact',
-    label: 'contact_form',
-  }),
+  contactFormSuccess: () =>
+    trackEvent({
+      action: 'form_success',
+      category: 'contact',
+      label: 'contact_form',
+    }),
 
-  contactFormError: (error: string) => trackEvent({
-    action: 'form_error',
-    category: 'contact',
-    label: error,
-  }),
+  contactFormError: (error: string) =>
+    trackEvent({
+      action: 'form_error',
+      category: 'contact',
+      label: error,
+    }),
 
   // Navigation events
-  navigationClick: (destination: string) => trackEvent({
-    action: 'navigation_click',
-    category: 'navigation',
-    label: destination,
-  }),
+  navigationClick: (destination: string) =>
+    trackEvent({
+      action: 'navigation_click',
+      category: 'navigation',
+      label: destination,
+    }),
 
   // Portfolio events
-  portfolioView: (projectId: string) => trackEvent({
-    action: 'portfolio_view',
-    category: 'portfolio',
-    label: projectId,
-  }),
+  portfolioView: (projectId: string) =>
+    trackEvent({
+      action: 'portfolio_view',
+      category: 'portfolio',
+      label: projectId,
+    }),
 
-  portfolioImageClick: (projectId: string, imageIndex: number) => trackEvent({
-    action: 'portfolio_image_click',
-    category: 'portfolio',
-    label: projectId,
-    value: imageIndex,
-  }),
+  portfolioImageClick: (projectId: string, imageIndex: number) =>
+    trackEvent({
+      action: 'portfolio_image_click',
+      category: 'portfolio',
+      label: projectId,
+      value: imageIndex,
+    }),
 
   // Service events
-  serviceView: (serviceName: string) => trackEvent({
-    action: 'service_view',
-    category: 'services',
-    label: serviceName,
-  }),
+  serviceView: (serviceName: string) =>
+    trackEvent({
+      action: 'service_view',
+      category: 'services',
+      label: serviceName,
+    }),
 
-  serviceInquiry: (serviceName: string) => trackEvent({
-    action: 'service_inquiry',
-    category: 'services',
-    label: serviceName,
-  }),
+  serviceInquiry: (serviceName: string) =>
+    trackEvent({
+      action: 'service_inquiry',
+      category: 'services',
+      label: serviceName,
+    }),
 
   // Download events
-  downloadBrochure: () => trackEvent({
-    action: 'download',
-    category: 'engagement',
-    label: 'brochure',
-  }),
+  downloadBrochure: () =>
+    trackEvent({
+      action: 'download',
+      category: 'engagement',
+      label: 'brochure',
+    }),
 
-  downloadPortfolio: () => trackEvent({
-    action: 'download',
-    category: 'engagement',
-    label: 'portfolio',
-  }),
+  downloadPortfolio: () =>
+    trackEvent({
+      action: 'download',
+      category: 'engagement',
+      label: 'portfolio',
+    }),
 
   // Social media events
-  socialMediaClick: (platform: string) => trackEvent({
-    action: 'social_click',
-    category: 'social_media',
-    label: platform,
-  }),
+  socialMediaClick: (platform: string) =>
+    trackEvent({
+      action: 'social_click',
+      category: 'social_media',
+      label: platform,
+    }),
 
   // Video events
-  videoPlay: (videoId: string) => trackEvent({
-    action: 'video_play',
-    category: 'video',
-    label: videoId,
-  }),
+  videoPlay: (videoId: string) =>
+    trackEvent({
+      action: 'video_play',
+      category: 'video',
+      label: videoId,
+    }),
 
-  videoPause: (videoId: string) => trackEvent({
-    action: 'video_pause',
-    category: 'video',
-    label: videoId,
-  }),
+  videoPause: (videoId: string) =>
+    trackEvent({
+      action: 'video_pause',
+      category: 'video',
+      label: videoId,
+    }),
 
-  videoComplete: (videoId: string) => trackEvent({
-    action: 'video_complete',
-    category: 'video',
-    label: videoId,
-  }),
+  videoComplete: (videoId: string) =>
+    trackEvent({
+      action: 'video_complete',
+      category: 'video',
+      label: videoId,
+    }),
 
   // Search events
-  siteSearch: (searchTerm: string) => trackEvent({
-    action: 'search',
-    category: 'site_search',
-    label: searchTerm,
-  }),
+  siteSearch: (searchTerm: string) =>
+    trackEvent({
+      action: 'search',
+      category: 'site_search',
+      label: searchTerm,
+    }),
 
   // Error events
-  pageError: (errorType: string, page: string) => trackEvent({
-    action: 'page_error',
-    category: 'errors',
-    label: `${errorType}_${page}`,
-  }),
+  pageError: (errorType: string, page: string) =>
+    trackEvent({
+      action: 'page_error',
+      category: 'errors',
+      label: `${errorType}_${page}`,
+    }),
 
   // Performance events
-  performanceMetric: (metric: string, value: number) => trackEvent({
-    action: 'performance_metric',
-    category: 'performance',
-    label: metric,
-    value: Math.round(value),
-  }),
+  performanceMetric: (metric: string, value: number) =>
+    trackEvent({
+      action: 'performance_metric',
+      category: 'performance',
+      label: metric,
+      value: Math.round(value),
+    }),
 };
 
 // Enhanced ecommerce tracking (for future use)
@@ -241,8 +262,8 @@ export function trackPurchase(transactionId: string, value: number, currency = '
 
   window.gtag?.('event', 'purchase', {
     transaction_id: transactionId,
-    value: value,
-    currency: currency,
+    value,
+    currency,
   });
 }
 
@@ -274,7 +295,7 @@ export function getGoogleAnalyticsScriptUrl(): string | null {
   if (!ANALYTICS_CONFIG.googleAnalytics.measurementId) {
     return null;
   }
-  
+
   return `https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_CONFIG.googleAnalytics.measurementId}`;
 }
 

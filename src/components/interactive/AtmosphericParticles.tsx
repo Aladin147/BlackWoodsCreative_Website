@@ -99,7 +99,14 @@ export function AtmosphericParticles({ className = '', count = 50 }: Atmospheric
 
         // Reset particle if it's too old
         if (particle.life >= particle.maxLife) {
-          particlesRef.current[index] = createParticle(width, height);
+          // Ensure index is within bounds before assignment
+          if (index >= 0 && index < particlesRef.current.length) {
+            // Safe array assignment with bounds checking
+            const particles = particlesRef.current;
+            if (particles && Array.isArray(particles) && index < particles.length) {
+              particles[index] = createParticle(width, height);
+            }
+          }
           return;
         }
 
@@ -141,13 +148,7 @@ export function AtmosphericParticles({ className = '', count = 50 }: Atmospheric
       suppressHydrationWarning
       style={{ mixBlendMode: 'screen' }}
     >
-      <canvas
-        ref={canvasRef}
-        className="h-full w-full"
-        style={{ mixBlendMode: 'screen' }}
-      />
+      <canvas ref={canvasRef} className="h-full w-full" style={{ mixBlendMode: 'screen' }} />
     </div>
   );
 }
-
-

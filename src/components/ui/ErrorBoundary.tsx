@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import React, { Component } from 'react';
+
+import { motion } from 'framer-motion';
 
 import { log } from '@/lib/utils/logger';
 

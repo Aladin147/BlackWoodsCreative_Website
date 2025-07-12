@@ -150,8 +150,9 @@ export function generateHreflangTags(
   const baseUrl = 'https://blackwoodscreative.com';
 
   const hreflangTags = availableLanguages
+    .filter(lang => Object.prototype.hasOwnProperty.call(SUPPORTED_LANGUAGES, lang))
     .map(lang => {
-      const langConfig = SUPPORTED_LANGUAGES[lang];
+      const langConfig = SUPPORTED_LANGUAGES[lang] ?? SUPPORTED_LANGUAGES.en;
       const url = lang === 'en' ? `${baseUrl}${currentPath}` : `${baseUrl}/${lang}${currentPath}`;
 
       return `<link rel="alternate" hreflang="${langConfig.hreflang}" href="${url}" />`;
@@ -169,8 +170,13 @@ export function generateMultiLanguageMeta(
   content: MultiLanguageContent,
   currentLang: LanguageCode = 'en'
 ) {
-  const langConfig = SUPPORTED_LANGUAGES[currentLang];
-  const langContent = content[currentLang];
+  // Validate language code exists
+  if (!Object.prototype.hasOwnProperty.call(SUPPORTED_LANGUAGES, currentLang)) {
+    throw new Error(`Unsupported language code: ${currentLang}`);
+  }
+
+  const langConfig = SUPPORTED_LANGUAGES[currentLang] ?? SUPPORTED_LANGUAGES.en;
+  const langContent = content[currentLang] ?? content.en;
 
   if (!langContent) {
     throw new Error(`Content not available for language: ${currentLang}`);
@@ -192,8 +198,13 @@ export function generateMultiLanguageSchema(
   currentLang: LanguageCode = 'en',
   schemaType: 'Organization' | 'LocalBusiness' | 'Service' = 'LocalBusiness'
 ) {
-  const langConfig = SUPPORTED_LANGUAGES[currentLang];
-  const langContent = content[currentLang];
+  // Validate language code exists
+  if (!Object.prototype.hasOwnProperty.call(SUPPORTED_LANGUAGES, currentLang)) {
+    throw new Error(`Unsupported language code: ${currentLang}`);
+  }
+
+  const langConfig = SUPPORTED_LANGUAGES[currentLang] ?? SUPPORTED_LANGUAGES.en;
+  const langContent = content[currentLang] ?? content.en;
 
   if (!langContent) {
     throw new Error(`Content not available for language: ${currentLang}`);
@@ -235,7 +246,7 @@ export function generateMultiLanguageSchema(
     },
 
     // Service areas in local language
-    areaServed: MOROCCO_KEYWORDS_MULTILANG[currentLang].locations.map(location => ({
+    areaServed: (MOROCCO_KEYWORDS_MULTILANG[currentLang] ?? MOROCCO_KEYWORDS_MULTILANG.en).locations.map(location => ({
       '@type': 'Place',
       name: location,
     })),
@@ -249,7 +260,7 @@ export function generateMultiLanguageSchema(
           : currentLang === 'fr'
             ? 'Services Créatifs'
             : 'Creative Services',
-      itemListElement: MOROCCO_KEYWORDS_MULTILANG[currentLang].services.map(service => ({
+      itemListElement: (MOROCCO_KEYWORDS_MULTILANG[currentLang] ?? MOROCCO_KEYWORDS_MULTILANG.en).services.map(service => ({
         '@type': 'Offer',
         itemOffered: {
           '@type': 'Service',
@@ -269,7 +280,7 @@ export function detectUserLanguage(): LanguageCode {
 
   // Check localStorage first
   const savedLang = localStorage.getItem('preferred-language') as LanguageCode;
-  if (savedLang && SUPPORTED_LANGUAGES[savedLang]) {
+  if (savedLang && Object.prototype.hasOwnProperty.call(SUPPORTED_LANGUAGES, savedLang)) {
     return savedLang;
   }
 
@@ -304,7 +315,10 @@ export function generateLanguageUrls(
 
   return availableLanguages.reduce(
     (urls, lang) => {
-      urls[lang] = lang === 'en' ? `${baseUrl}${basePath}` : `${baseUrl}/${lang}${basePath}`;
+      // Safe object assignment with validation
+      if (typeof lang === 'string' && lang.length > 0 && lang.length < 10) {
+        urls[lang] = lang === 'en' ? `${baseUrl}${basePath}` : `${baseUrl}/${lang}${basePath}`;
+      }
       return urls;
     },
     {} as Record<LanguageCode, string>
@@ -356,7 +370,7 @@ export const COMMON_TRANSLATIONS = {
 
 // Get translation for a key
 export function getTranslation(key: string, lang: LanguageCode = 'en'): string {
-  return COMMON_TRANSLATIONS[lang][key as keyof typeof COMMON_TRANSLATIONS.en] ?? key;
+  return (COMMON_TRANSLATIONS[lang] ?? COMMON_TRANSLATIONS.en)[key as keyof typeof COMMON_TRANSLATIONS.en] ?? key;
 }
 
 // Generate language switcher data

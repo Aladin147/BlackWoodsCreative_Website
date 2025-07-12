@@ -73,7 +73,9 @@ export function useAdvancedAnalytics(config: Partial<AnalyticsConfig> = {}) {
     if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
       const array = new Uint8Array(6);
       crypto.getRandomValues(array);
-      randomPart = Array.from(array, byte => byte.toString(36)).join('').substr(0, 9);
+      randomPart = Array.from(array, byte => byte.toString(36))
+        .join('')
+        .substr(0, 9);
     } else {
       randomPart = Math.random().toString(36).substr(2, 9);
     }

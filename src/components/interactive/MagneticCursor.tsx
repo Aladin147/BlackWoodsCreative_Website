@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 import { useIsHydrated } from './SSRSafeWrapper';
 
@@ -91,7 +92,7 @@ export function MagneticCursor() {
 
     // Add event listeners
     document.addEventListener('mousemove', handleMouseMove);
-    
+
     // Add hover listeners to interactive elements
     const interactiveElements = document.querySelectorAll('[data-cursor]');
     interactiveElements.forEach(element => {
@@ -102,10 +103,16 @@ export function MagneticCursor() {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', checkMobile);
-      
+
       interactiveElements.forEach(element => {
-        (element as HTMLElement).removeEventListener('mouseenter', handleMouseEnter as EventListener);
-        (element as HTMLElement).removeEventListener('mouseleave', handleMouseLeave as EventListener);
+        (element as HTMLElement).removeEventListener(
+          'mouseenter',
+          handleMouseEnter as EventListener
+        );
+        (element as HTMLElement).removeEventListener(
+          'mouseleave',
+          handleMouseLeave as EventListener
+        );
       });
     };
   }, [isHydrated, cursorX, cursorY, cursorScale, cursorState.scale]);

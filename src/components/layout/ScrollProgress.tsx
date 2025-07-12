@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, useScroll, useSpring } from 'framer-motion';
 import { useState, useEffect } from 'react';
+
+import { motion, useScroll, useSpring } from 'framer-motion';
 
 interface ScrollProgressProps {
   className?: string;

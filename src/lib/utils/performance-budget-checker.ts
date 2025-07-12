@@ -501,8 +501,9 @@ export function collectPerformanceData(): PerformanceData {
 
   // Memory usage if available
   if ('memory' in performance) {
-    const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } })
-      .memory;
+    const { memory } = performance as {
+      memory: { usedJSHeapSize: number; totalJSHeapSize: number };
+    };
     data.performance.memoryUsage = (memory.usedJSHeapSize / memory.totalJSHeapSize) * 100;
   }
 

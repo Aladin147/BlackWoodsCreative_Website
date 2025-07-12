@@ -149,7 +149,7 @@ class FramerMotionHashCollector {
     if (dataMotionComponent) return dataMotionComponent;
 
     // Infer from class names
-    const className = element.className;
+    const { className } = element;
     if (className.includes('motion-')) {
       const match = className.match(/motion-(\w+)/);
       return match ? match[1] : undefined;
@@ -277,7 +277,10 @@ class FramerMotionHashCollector {
 
     allHashes.forEach(hashData => {
       const component = hashData.component ?? 'unknown';
-      byComponent[component] = (byComponent[component] ?? 0) + 1;
+      // Safe object assignment with validation
+      if (typeof component === 'string' && component.length > 0 && component.length < 100) {
+        byComponent[component] = (byComponent[component] ?? 0) + 1;
+      }
     });
 
     const mostFrequent = allHashes.sort((a, b) => b.frequency - a.frequency).slice(0, 10);

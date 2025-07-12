@@ -85,7 +85,6 @@ class Logger {
 
   warn(message: string, context?: Record<string, unknown>): void {
     if (this.shouldLog('warn')) {
-      // eslint-disable-next-line no-console
       console.warn(this.formatMessage('warn', message, context));
     }
   }
@@ -95,13 +94,10 @@ class Logger {
       const formattedMessage = this.formatMessage('error', message, context);
 
       if (error instanceof Error) {
-        // eslint-disable-next-line no-console
         console.error(formattedMessage, error);
       } else if (error) {
-        // eslint-disable-next-line no-console
         console.error(formattedMessage, error);
       } else {
-        // eslint-disable-next-line no-console
         console.error(formattedMessage);
       }
     }

@@ -1,0 +1,97 @@
+import dynamic from 'next/dynamic';
+
+import { QuickQuoteRequest } from '@/components/business/LeadGeneration';
+import { Footer } from '@/components/layout';
+import { SimpleFAQSchema } from '@/components/seo/SimpleStructuredData';
+import { simpleSEO } from '@/lib/seo/simple-seo';
+
+// Optimized loading component
+const LoadingSection = ({ title, subtitle }: { title: string; subtitle: string }) => (
+  <div className="flex min-h-screen items-center justify-center bg-bw-bg-primary px-6 py-32">
+    <div className="text-center">
+      <div className="mb-4 text-display-xl">{title}</div>
+      <div className="text-body-xl">{subtitle}</div>
+      <div className="mt-4 animate-pulse">
+        <div className="mx-auto h-2 w-32 rounded bg-bw-accent-gold/20" />
+      </div>
+    </div>
+  </div>
+);
+
+// ✅ Critical above-the-fold content - load immediately with SSR
+const HeroSection = dynamic(
+  () => import('@/components/sections/HeroSection').then(mod => ({ default: mod.HeroSection })),
+  {
+    ssr: true, // ✅ Enable SSR to prevent hydration mismatch
+    loading: () => (
+      <LoadingSection title="BlackWoods Creative" subtitle="Crafting Visual Stories..." />
+    ),
+  }
+);
+
+// ✅ Below-the-fold sections - enable SSR to prevent hydration issues
+const PortfolioSection = dynamic(
+  () =>
+    import('@/components/sections/PortfolioSection').then(mod => ({
+      default: mod.PortfolioSection,
+    })),
+  {
+    ssr: true, // ✅ Enable SSR
+    loading: () => (
+      <LoadingSection title="Our Portfolio" subtitle="Showcasing our finest work..." />
+    ),
+  }
+);
+
+const VisionSection = dynamic(
+  () => import('@/components/sections/VisionSection').then(mod => ({ default: mod.VisionSection })),
+  {
+    ssr: true, // ✅ Enable SSR
+    loading: () => (
+      <LoadingSection title="Experience the Difference" subtitle="Discovering our vision..." />
+    ),
+  }
+);
+
+const AboutSection = dynamic(
+  () => import('@/components/sections/AboutSection').then(mod => ({ default: mod.AboutSection })),
+  {
+    ssr: true, // ✅ Enable SSR
+    loading: () => <LoadingSection title="About Us" subtitle="Learning about our story..." />,
+  }
+);
+
+const ContactSection = dynamic(
+  () =>
+    import('@/components/sections/ContactSection').then(mod => ({ default: mod.ContactSection })),
+  {
+    ssr: true, // ✅ Enable SSR
+    loading: () => <LoadingSection title="Contact" subtitle="Connecting with our team..." />,
+  }
+);
+
+// Simplified approach - let React handle the loading naturally
+
+// Simplified metadata using the new SEO system
+export const metadata = simpleSEO.generateMetadata();
+
+export default function HomePage() {
+  return (
+    <>
+      {/* Simplified FAQ Schema */}
+      <SimpleFAQSchema />
+
+      <HeroSection />
+      <main id="main-content" role="main" aria-label="Main content">
+        <PortfolioSection />
+        <VisionSection />
+        <AboutSection />
+        <ContactSection />
+      </main>
+      <Footer />
+
+      {/* Business Features */}
+      <QuickQuoteRequest />
+    </>
+  );
+}

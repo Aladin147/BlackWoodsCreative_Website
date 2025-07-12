@@ -208,8 +208,9 @@ export function monitorMemoryUsage(): {
   percentage: number;
 } | null {
   if ('memory' in performance) {
-    const memory = (performance as { memory: { usedJSHeapSize: number; totalJSHeapSize: number } })
-      .memory;
+    const { memory } = performance as {
+      memory: { usedJSHeapSize: number; totalJSHeapSize: number };
+    };
     return {
       used: memory.usedJSHeapSize,
       total: memory.totalJSHeapSize,
@@ -284,26 +285,28 @@ export function checkPerformanceBudget(budget: PerformanceBudget): Promise<{
 }> {
   return new Promise(resolve => {
     (async () => {
-    const violations: string[] = [];
+      const violations: string[] = [];
 
-    // Check bundle size
-    const bundleInfo = await analyzeBundleSize();
-    if (bundleInfo.totalSize > budget.maxBundleSize) {
-      violations.push(`Bundle size ${bundleInfo.totalSize} exceeds budget ${budget.maxBundleSize}`);
-    }
+      // Check bundle size
+      const bundleInfo = await analyzeBundleSize();
+      if (bundleInfo.totalSize > budget.maxBundleSize) {
+        violations.push(
+          `Bundle size ${bundleInfo.totalSize} exceeds budget ${budget.maxBundleSize}`
+        );
+      }
 
-    // Check memory usage
-    const memoryInfo = monitorMemoryUsage();
-    if (memoryInfo && memoryInfo.percentage > budget.maxMemoryUsage) {
-      violations.push(
-        `Memory usage ${memoryInfo.percentage}% exceeds budget ${budget.maxMemoryUsage}%`
-      );
-    }
+      // Check memory usage
+      const memoryInfo = monitorMemoryUsage();
+      if (memoryInfo && memoryInfo.percentage > budget.maxMemoryUsage) {
+        violations.push(
+          `Memory usage ${memoryInfo.percentage}% exceeds budget ${budget.maxMemoryUsage}%`
+        );
+      }
 
-    resolve({
-      passed: violations.length === 0,
-      violations,
-    });
+      resolve({
+        passed: violations.length === 0,
+        violations,
+      });
     })();
   });
 }

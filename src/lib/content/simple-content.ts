@@ -1,6 +1,6 @@
 /**
  * Simplified Content Management System
- * 
+ *
  * A streamlined approach to content management that focuses on practical needs
  * rather than complex abstractions. Designed for easy content population.
  */
@@ -61,7 +61,12 @@ export interface TeamMember extends SimpleContent {
 }
 
 // Union type for all content
-export type ContentItem = SimpleContent | PortfolioItem | TestimonialItem | ServiceItem | TeamMember;
+export type ContentItem =
+  | SimpleContent
+  | PortfolioItem
+  | TestimonialItem
+  | ServiceItem
+  | TeamMember;
 
 // Simple content store
 class SimpleContentStore {
@@ -127,7 +132,12 @@ export const contentStore = new SimpleContentStore();
 // Utility functions
 export const ContentUtils = {
   // Create text content
-  createText: (id: string, title: string, content: string, isPlaceholder = true): SimpleContent => ({
+  createText: (
+    id: string,
+    title: string,
+    content: string,
+    isPlaceholder = true
+  ): SimpleContent => ({
     id,
     type: 'text',
     title,
@@ -136,7 +146,13 @@ export const ContentUtils = {
   }),
 
   // Create image content
-  createImage: (id: string, title: string, image: string, alt: string, isPlaceholder = true): SimpleContent => ({
+  createImage: (
+    id: string,
+    title: string,
+    image: string,
+    alt: string,
+    isPlaceholder = true
+  ): SimpleContent => ({
     id,
     type: 'image',
     title,
@@ -179,7 +195,12 @@ export const ContentUtils = {
   }),
 
   // Create service
-  createService: (id: string, title: string, content: string, isPlaceholder = true): ServiceItem => ({
+  createService: (
+    id: string,
+    title: string,
+    content: string,
+    isPlaceholder = true
+  ): ServiceItem => ({
     id,
     type: 'service',
     title,
@@ -221,7 +242,9 @@ export const ContentUtils = {
     if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
       const array = new Uint8Array(4);
       crypto.getRandomValues(array);
-      random = Array.from(array, byte => byte.toString(36)).join('').substring(0, 6);
+      random = Array.from(array, byte => byte.toString(36))
+        .join('')
+        .substring(0, 6);
     } else {
       // Deterministic fallback based on timestamp for SSR compatibility
       random = (timestamp % 1000000).toString(36).substring(0, 6);
@@ -237,57 +260,74 @@ export function initializeBasicContent(): void {
   contentStore.clear();
 
   // Add basic text content
-  contentStore.add(ContentUtils.createText(
-    'hero-title',
-    'Hero Title',
-    'BlackWoods Creative - Premium Visual Storytelling'
-  ));
+  contentStore.add(
+    ContentUtils.createText(
+      'hero-title',
+      'Hero Title',
+      'BlackWoods Creative - Premium Visual Storytelling'
+    )
+  );
 
-  contentStore.add(ContentUtils.createText(
-    'hero-subtitle',
-    'Hero Subtitle',
-    'Crafting compelling visual narratives that resonate with your audience'
-  ));
+  contentStore.add(
+    ContentUtils.createText(
+      'hero-subtitle',
+      'Hero Subtitle',
+      'Crafting compelling visual narratives that resonate with your audience'
+    )
+  );
 
   // Add basic portfolio items
-  const portfolioCategories: Array<'film' | 'photography' | '3d' | 'scenes'> = ['film', 'photography', '3d', 'scenes'];
+  const portfolioCategories: Array<'film' | 'photography' | '3d' | 'scenes'> = [
+    'film',
+    'photography',
+    '3d',
+    'scenes',
+  ];
   portfolioCategories.forEach((category, index) => {
-    contentStore.add(ContentUtils.createPortfolio(
-      `portfolio-${category}-${index + 1}`,
-      `${category.charAt(0).toUpperCase() + category.slice(1)} Project ${index + 1}`,
-      `Professional ${category} project showcasing our expertise`,
-      category
-    ));
+    contentStore.add(
+      ContentUtils.createPortfolio(
+        `portfolio-${category}-${index + 1}`,
+        `${category.charAt(0).toUpperCase() + category.slice(1)} Project ${index + 1}`,
+        `Professional ${category} project showcasing our expertise`,
+        category
+      )
+    );
   });
 
   // Add basic testimonials
   for (let i = 1; i <= 3; i++) {
-    contentStore.add(ContentUtils.createTestimonial(
-      `testimonial-${i}`,
-      'Client Testimonial',
-      'BlackWoods Creative delivered exceptional results that exceeded our expectations.',
-      `Client ${i}`
-    ));
+    contentStore.add(
+      ContentUtils.createTestimonial(
+        `testimonial-${i}`,
+        'Client Testimonial',
+        'BlackWoods Creative delivered exceptional results that exceeded our expectations.',
+        `Client ${i}`
+      )
+    );
   }
 
   // Add basic services
   const services = ['Video Production', 'Photography', '3D Visualization', 'Creative Consulting'];
   services.forEach((service, index) => {
-    contentStore.add(ContentUtils.createService(
-      `service-${index + 1}`,
-      service,
-      `Professional ${service.toLowerCase()} services tailored to your needs`
-    ));
+    contentStore.add(
+      ContentUtils.createService(
+        `service-${index + 1}`,
+        service,
+        `Professional ${service.toLowerCase()} services tailored to your needs`
+      )
+    );
   });
 
   // Add basic team members
   for (let i = 1; i <= 3; i++) {
-    contentStore.add(ContentUtils.createTeamMember(
-      `team-${i}`,
-      `Team Member ${i}`,
-      'Experienced creative professional dedicated to delivering exceptional results',
-      'Creative Director'
-    ));
+    contentStore.add(
+      ContentUtils.createTeamMember(
+        `team-${i}`,
+        `Team Member ${i}`,
+        'Experienced creative professional dedicated to delivering exceptional results',
+        'Creative Director'
+      )
+    );
   }
 }
 

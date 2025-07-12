@@ -8,10 +8,7 @@
 import { logger } from '../utils/logger';
 
 import { MigrationHelper } from './migration-helper';
-import {
-  contentManager as legacyContentManager,
-  type Content
-} from './placeholder-system';
+import { contentManager as legacyContentManager, type Content } from './placeholder-system';
 import { initializeBasicContent } from './simple-content';
 
 // SIMPLIFIED CONTENT SYSTEM (NEW)
@@ -48,12 +45,7 @@ export {
   useContentManagement,
 } from './simple-hooks';
 
-export {
-  MigrationHelper,
-  DevUtils,
-} from './migration-helper';
-
-
+export { MigrationHelper, DevUtils } from './migration-helper';
 
 export {
   ContentPlaceholderManager,
@@ -187,5 +179,3 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     initializeContentSystem();
   }, 100);
 }
-
-

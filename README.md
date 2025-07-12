@@ -1,6 +1,6 @@
 # BlackWoods Creative - Technical Documentation
 
-A professional portfolio website built with Next.js 14, featuring advanced animations, WebGL effects, comprehensive security, and enterprise-level accessibility support.
+A professional portfolio website built with Next.js 15, featuring advanced animations, WebGL effects, comprehensive security, and enterprise-level accessibility support.
 
 ## ✨ Key Features
 
@@ -19,7 +19,7 @@ A professional portfolio website built with Next.js 14, featuring advanced anima
 
 ### Tech Stack
 
-- **Framework**: Next.js 14 with App Router and React 18
+- **Framework**: Next.js 15 with App Router and React 19
 - **Language**: TypeScript (strict mode with comprehensive type safety)
 - **Styling**: Tailwind CSS with custom theme system and CSS-in-JS
 - **Animations**: Framer Motion + Custom WebGL effects + Three.js
@@ -60,8 +60,9 @@ npm run test         # Run test suite (1597 tests)
 npm run test:watch   # Watch mode testing
 npm run test:coverage # Coverage report
 npm run test:e2e     # Playwright E2E tests
-npm run lint         # ESLint check (0 violations)
+npm run lint         # ESLint check with security rules
 npm run lint:fix     # Auto-fix linting issues
+npm run lint-staged  # Pre-commit linting
 npm run type-check   # TypeScript validation (strict mode)
 npm run analyze      # Bundle size analysis
 npm run security     # Security audit
@@ -159,11 +160,12 @@ npm test -- ContactSection.test.tsx
 
 ### Quality Metrics
 
-- **ESLint**: 0 violations (strict mode)
-- **TypeScript**: Strict mode compliance
-- **Security**: 104/104 security tests passing
-- **Accessibility**: 89/89 accessibility tests passing
-- **Performance**: 193/193 performance tests passing
+- **ESLint**: Enhanced security rules with automated vulnerability detection
+- **TypeScript**: Strict mode compliance with Next.js 15 compatibility
+- **Security**: Comprehensive security testing with automated linting rules
+- **Accessibility**: WCAG Level AA compliance with comprehensive testing
+- **Performance**: Next.js 15 optimizations with Core Web Vitals monitoring
+- **Code Quality**: Pre-commit hooks with automated fixing and quality gates
 
 ### Monitoring & Analytics
 
@@ -177,23 +179,70 @@ const { accessibilityFeatures } = useAccessibility();
 const { lcp, fid, cls } = useWebVitals();
 ```
 
+## 🔧 Code Quality & Linting
+
+### ESLint Configuration
+
+The project uses a comprehensive ESLint setup with Next.js 15 best practices:
+
+```javascript
+// Enhanced ESLint configuration with security rules
+{
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "@typescript-eslint/recommended",
+    "plugin:security/recommended",
+    "plugin:import/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "security", "import"],
+  "rules": {
+    // Security rules for vulnerability detection
+    "security/detect-object-injection": "warn",
+    "security/detect-eval-with-expression": "error",
+    "security/detect-unsafe-regex": "warn",
+
+    // Import organization and code quality
+    "import/order": "error", // Enforces import organization
+    "prefer-const": "error",
+    "prefer-template": "error",
+    "@typescript-eslint/prefer-nullish-coalescing": "warn"
+  }
+}
+```
+
+### Pre-commit Hooks
+
+Automated quality gates ensure code quality before commits:
+
+```bash
+# Lint-staged configuration
+*.{js,jsx,ts,tsx} → ESLint + Prettier + Git add
+*.{json,css,md} → Prettier + Git add
+```
+
 ## 🔒 Security & Performance Features
 
 ### Security Implementation
 
 - **CSRF Protection**: Token-based protection with secure cookie handling
 - **Rate Limiting**: Redis-based with fallback (API: 100/15min, Contact: 5/10min)
-- **Security Headers**: CSP, HSTS, X-Frame-Options, X-Content-Type-Options
-- **Input Sanitization**: XSS and injection protection
-- **Security Middleware**: Production-ready with comprehensive logging
+- **Enhanced Security Headers**: Comprehensive CSP with nonce-based approach, HSTS, Cross-Origin policies (COEP, COOP, CORP)
+- **Content Security Policy**: Nonce-based CSP with Framer Motion compatibility and strict security controls
+- **Permissions Policy**: Granular control over browser features and APIs
+- **Input Sanitization**: XSS and injection protection with multi-layer validation
+- **Security Middleware**: Production-ready with comprehensive logging and threat detection
+- **ESLint Security Rules**: Automated security vulnerability detection during development
 
 ### Performance Optimization
 
-- **Bundle Analysis**: Dynamic imports and code splitting
-- **Core Web Vitals**: LCP, FID, CLS, FCP, TTFB, INP monitoring
-- **Device Adaptation**: Mobile-specific optimizations and GPU detection
-- **WebGL Performance**: Particle count adaptation and performance degradation detection
-- **Memory Management**: Heap size tracking and optimization
+- **Next.js 15 Features**: Latest optimization features including Server Components HMR cache and static generation optimizations
+- **Bundle Analysis**: Dynamic imports, code splitting, and package optimization with bundlePagesRouterDependencies
+- **Core Web Vitals**: LCP, FID, CLS, FCP, TTFB, INP monitoring with real-time tracking
+- **Device Adaptation**: Mobile-specific optimizations, GPU detection, and performance profiling
+- **WebGL Performance**: Particle count adaptation, performance degradation detection, and GPU optimization
+- **Memory Management**: Heap size tracking, optimization, and automatic performance scaling
+- **Build Optimization**: Advanced Next.js 15 build features with server minification and React optimizations
 
 ### Accessibility Features
 
@@ -207,11 +256,13 @@ const { lcp, fid, cls } = useWebVitals();
 
 ### Code Quality
 
-- **TypeScript**: Strict mode with comprehensive type safety (0 errors)
-- **ESLint**: Custom rules for React/Next.js best practices (0 violations)
-- **Prettier**: Consistent code formatting
-- **Husky**: Pre-commit hooks for quality gates
-- **Testing**: Comprehensive test suite with 1597 tests
+- **TypeScript**: Strict mode with comprehensive type safety and Next.js 15 compatibility
+- **ESLint**: Enhanced configuration with security rules, import order enforcement, and Next.js 15 best practices
+- **Security Linting**: Automated vulnerability detection with eslint-plugin-security
+- **Prettier**: Consistent code formatting with automated pre-commit hooks
+- **Lint-staged**: Pre-commit quality gates with automatic fixing
+- **Husky**: Git hooks for quality enforcement and automated testing
+- **Testing**: Comprehensive test suite with enhanced coverage and security testing
 
 ### Git Workflow
 
@@ -260,15 +311,16 @@ NEXT_PUBLIC_ACCESSIBILITY_FEATURES=true
 
 ## 🔄 Recent Updates & Current Status
 
-### Code Quality & Performance Audit (Latest)
+### Phase 4-5: Performance & Security Headers + Code Quality (Latest)
 
-- **ESLint Status**: ✅ 0 violations across all files (strict mode)
-- **TypeScript**: ✅ Strict mode compliance with comprehensive type safety
-- **Test Coverage**: ✅ 1597/1597 tests passing across 72 test suites
-- **Bundle Optimization**: ✅ 218 kB homepage bundle with dynamic imports
-- **Performance Monitoring**: ✅ Core Web Vitals tracking and device adaptation
-- **Security Validation**: ✅ 104/104 security tests passing
-- **Accessibility Compliance**: ✅ WCAG Level AA with 89/89 tests passing
+- **Next.js 15 Upgrade**: ✅ Successfully upgraded to Next.js 15 with latest optimization features
+- **Enhanced Security Headers**: ✅ Comprehensive CSP with nonce-based approach, Cross-Origin policies, enhanced Permissions Policy
+- **ESLint Security Rules**: ✅ Implemented eslint-plugin-security with automated vulnerability detection
+- **Build Optimization**: ✅ Next.js 15 features including Server Components HMR cache and static generation optimizations
+- **Import Order Enforcement**: ✅ Strict import organization with automated fixing via lint-staged
+- **Pre-commit Hooks**: ✅ Automated quality gates with lint-staged and husky integration
+- **TypeScript**: ✅ Strict mode compliance with Next.js 15 compatibility
+- **Performance Monitoring**: ✅ Enhanced Core Web Vitals tracking with Next.js 15 optimizations
 
 ### Contact Form Integration
 
@@ -287,14 +339,16 @@ NEXT_PUBLIC_ACCESSIBILITY_FEATURES=true
 
 ### Production Readiness Checklist
 
-- [x] All tests passing (1597/1597)
-- [x] Build successful (optimized bundle)
-- [x] Performance audit completed (Core Web Vitals)
-- [x] Accessibility validation (WCAG Level AA)
+- [x] Next.js 15 upgrade completed with latest optimizations
+- [x] Enhanced security headers implemented (CSP with nonce, Cross-Origin policies)
+- [x] ESLint security rules configured with automated vulnerability detection
+- [x] Pre-commit hooks implemented with lint-staged and husky
+- [x] Build optimization completed with Next.js 15 features
+- [x] Performance monitoring enhanced with Core Web Vitals tracking
+- [x] Accessibility validation (WCAG Level AA compliance)
 - [x] SEO optimization verified (structured data, sitemap)
-- [x] Security headers configured (CSP, HSTS, etc.)
-- [x] Code quality validated (0 ESLint violations)
-- [x] TypeScript strict mode compliance
+- [x] TypeScript strict mode compliance with Next.js 15
+- [x] Code quality gates automated with comprehensive linting
 - [ ] Content population (awaiting client content)
 - [ ] Final production deployment
 

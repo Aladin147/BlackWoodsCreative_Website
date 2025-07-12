@@ -374,12 +374,24 @@ export const BrowserTestUtils = {
       Edge: 90,
     };
 
+    // Use pre-defined regex patterns for browser version detection
+    const browserRegexes: Record<string, RegExp> = {
+      Chrome: /Chrome\/(\d+)/,
+      Firefox: /Firefox\/(\d+)/,
+      Safari: /Safari\/(\d+)/,
+      Edge: /Edge\/(\d+)/,
+    };
+
     for (const [browser, minVersion] of Object.entries(modernVersions)) {
       if (userAgent.includes(browser)) {
-        const versionMatch = userAgent.match(new RegExp(`${browser}\\/(\\d+)`));
-        if (versionMatch) {
-          const version = parseInt(versionMatch[1] ?? '0');
-          return version >= minVersion;
+        const regexMap: Record<string, RegExp> = browserRegexes;
+        const regex = regexMap[browser];
+        if (regex) {
+          const versionMatch = userAgent.match(regex);
+          if (versionMatch) {
+            const version = parseInt(versionMatch[1] ?? '0');
+            return version >= minVersion;
+          }
         }
       }
     }
@@ -395,7 +407,8 @@ export const BrowserTestUtils = {
       chromium: ['-webkit-'],
     };
 
-    return prefixes[browserName] ?? [];
+    const prefixMap: Record<string, string[]> = prefixes;
+    return prefixMap[browserName] ?? [];
   },
 
   // Format test duration

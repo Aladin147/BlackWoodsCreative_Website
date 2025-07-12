@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+
+import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 
 interface ScrollStorySection {
   id: string;
@@ -69,7 +70,8 @@ export function ScrollStoryTeller({ sections, className }: ScrollStoryTellerProp
               }`}
               whileHover={{ scale: 1.2 }}
               onClick={() => {
-                const section = sections[index];
+                // Safe array access with bounds checking
+                const section = index >= 0 && index < sections.length ? sections[index] : null;
                 if (section && typeof document !== 'undefined') {
                   const element = document.getElementById(section.id);
                   element?.scrollIntoView({ behavior: 'smooth' });

@@ -7,6 +7,7 @@ This document provides a comprehensive validation of the sitemap and robots.txt 
 ## 🎯 Validation Results Summary
 
 ### ✅ Test Coverage
+
 - **Sitemap Tests**: ✅ 16/16 passing
 - **Robots.txt Tests**: ✅ 35/35 passing
 - **Total SEO Tests**: ✅ 51/51 passing
@@ -176,7 +177,7 @@ Host: https://blackwoodscreative.com
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url;
   const currentDate = new Date().toISOString();
-  
+
   return [
     {
       url: baseUrl,

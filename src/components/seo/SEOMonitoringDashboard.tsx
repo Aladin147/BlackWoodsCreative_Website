@@ -92,7 +92,6 @@ export function SEOMonitoringDashboard() {
       setMetrics(seoMetrics);
       setIssues(ensureFixProperties(analysis.issues));
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('SEO analysis error:', error);
     } finally {
       setLoading(false);

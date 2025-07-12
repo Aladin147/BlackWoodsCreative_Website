@@ -4,8 +4,9 @@
  * React hooks for SEO optimization and content integration
  */
 
-import { usePathname } from 'next/navigation';
 import { useEffect, useState, useMemo, useCallback } from 'react';
+
+import { usePathname } from 'next/navigation';
 
 import { legacyContentManager } from '../content';
 import { logger } from '../utils/logger';
@@ -19,7 +20,7 @@ export function usePageSEO(initialSEO: PageSEO = {}) {
 
   // Generate metadata for the current page
   const metadata = useMemo(() => {
-    return seoOptimizer.generateMetadata(pageSEO, pathname);
+    return seoOptimizer.generateMetadata(pageSEO, pathname || undefined);
   }, [pageSEO, pathname]);
 
   // Update SEO data
@@ -186,6 +187,10 @@ export function useBreadcrumbs(customBreadcrumbs?: Array<{ name: string; url: st
   const breadcrumbs = useMemo(() => {
     if (customBreadcrumbs) {
       return customBreadcrumbs;
+    }
+
+    if (!pathname) {
+      return [{ name: 'Home', url: '/' }];
     }
 
     // Generate breadcrumbs from pathname

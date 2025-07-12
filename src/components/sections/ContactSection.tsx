@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useTransition } from 'react';
+
 import {
   EnvelopeIcon,
   PhoneIcon,
@@ -8,7 +10,6 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { useState, useTransition } from 'react';
 
 import {
   ScrollReveal,
@@ -187,7 +188,11 @@ export function ContactSection({ className }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" data-testid="contact-section" className={`relative bg-bw-bg-primary px-4 py-24 ${className}`}>
+    <section
+      id="contact"
+      data-testid="contact-section"
+      className={`relative bg-bw-bg-primary px-4 py-24 ${className}`}
+    >
       {/* Atmospheric Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <AtmosphericLayer type="mist" intensity={0.4} color="bw-aurora-teal" />

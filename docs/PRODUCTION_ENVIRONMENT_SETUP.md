@@ -7,6 +7,7 @@ This document provides comprehensive guidance for setting up and deploying the B
 ## 🎯 Production Readiness Status
 
 ### ✅ Current Status
+
 - **Build System**: ✅ Production-ready Next.js 14 build
 - **Security**: ✅ Comprehensive security middleware
 - **Performance**: ✅ Optimized bundles and caching
@@ -64,6 +65,7 @@ SANITY_API_TOKEN=your_sanity_api_token
 ```
 
 **Deployment Steps**:
+
 1. Connect GitHub repository to Vercel
 2. Configure environment variables in Vercel dashboard
 3. Set up custom domain
@@ -136,7 +138,7 @@ headers: [
     key: 'Strict-Transport-Security',
     value: 'max-age=31536000; includeSubDomains; preload',
   },
-]
+];
 ```
 
 ### Middleware Security
@@ -198,14 +200,14 @@ headers: [
 // Production budgets
 export const PRODUCTION_BUDGETS = {
   bundles: {
-    main: 500 * 1024,     // 500KB main bundle
-    vendor: 800 * 1024,   // 800KB vendor bundle
+    main: 500 * 1024, // 500KB main bundle
+    vendor: 800 * 1024, // 800KB vendor bundle
     total: 1.5 * 1024 * 1024, // 1.5MB total
   },
   coreWebVitals: {
-    lcp: 2500,  // 2.5s Largest Contentful Paint
-    fid: 100,   // 100ms First Input Delay
-    cls: 0.1,   // 0.1 Cumulative Layout Shift
+    lcp: 2500, // 2.5s Largest Contentful Paint
+    fid: 100, // 100ms First Input Delay
+    cls: 0.1, // 0.1 Cumulative Layout Shift
   },
 };
 ```
@@ -223,10 +225,10 @@ export const PRODUCTION_BUDGETS = {
 
 ```typescript
 // Google Analytics 4
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_ID = G - XXXXXXXXXX;
 
 // Vercel Analytics
-VERCEL_ANALYTICS_ID=your_analytics_id
+VERCEL_ANALYTICS_ID = your_analytics_id;
 ```
 
 ## 🧪 Pre-Deployment Validation
@@ -239,6 +241,7 @@ node scripts/production-validation.js
 ```
 
 **Validation Checklist**:
+
 - [x] Environment variables configured
 - [x] Build configuration optimized
 - [x] Security middleware active

@@ -360,7 +360,14 @@ export class SEOContentAnalyzer {
   }
 
   private countKeywordOccurrences(text: string, keyword: string): number {
-    const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    // Validate keyword length and content for security
+    if (!keyword || keyword.length > 100 || !/^[a-zA-Z0-9\s\-_]+$/.test(keyword)) {
+      return 0;
+    }
+
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // eslint-disable-next-line security/detect-non-literal-regexp
+    const regex = new RegExp(escapedKeyword, 'gi');
     return (text.match(regex) ?? []).length;
   }
 

@@ -67,8 +67,8 @@ const PLACEHOLDER_IMAGES = {
 export const PlaceholderGenerators = {
   // Generate text content
   text: (id: string, length: 'short' | 'medium' | 'long' = 'medium'): TextContent => {
-    const texts = PLACEHOLDER_TEXTS[length];
-    const content = texts[0] ?? 'Placeholder text content';
+    const texts = PLACEHOLDER_TEXTS[length] ?? PLACEHOLDER_TEXTS.medium;
+    const content = (texts && texts.length > 0) ? (texts[0] ?? 'Placeholder text content') : 'Placeholder text content';
 
     return ContentUtils.createTextPlaceholder(id, content, {
       title: `Text Content - ${id}`,
@@ -88,9 +88,10 @@ export const PlaceholderGenerators = {
     if (category === 'hero') {
       src = PLACEHOLDER_IMAGES.hero;
     } else {
-      const images = PLACEHOLDER_IMAGES[category];
-      src =
-        images[Math.floor(Math.random() * images.length)] ?? images[0] ?? '/placeholder-image.jpg';
+      const images = PLACEHOLDER_IMAGES[category] ?? PLACEHOLDER_IMAGES.portfolio;
+      src = (images && images.length > 0)
+        ? (images[Math.floor(Math.random() * images.length)] ?? images[0] ?? '/placeholder-image.jpg')
+        : '/placeholder-image.jpg';
     }
 
     return ContentUtils.createImagePlaceholder(
@@ -158,9 +159,10 @@ export const PlaceholderGenerators = {
       scenes: ['Fantasy Environment', 'Urban Landscape', 'Interior Design', 'Atmospheric Scene'],
     };
 
-    const categoryTitles = titles[category] ?? titles.film;
-    const title =
-      categoryTitles[Math.floor(Math.random() * categoryTitles.length)] ?? 'Portfolio Item';
+    const categoryTitles = (titles as Record<string, string[]>)[category] ?? titles.film;
+    const title = (categoryTitles && categoryTitles.length > 0)
+      ? (categoryTitles[Math.floor(Math.random() * categoryTitles.length)] ?? 'Portfolio Item')
+      : 'Portfolio Item';
 
     return {
       id,
@@ -392,12 +394,8 @@ export const PlaceholderGenerators = {
       lastUpdated: new Date(),
       version: '1.0.0',
       title,
-      excerpt:
-        PLACEHOLDER_TEXTS.medium[0] ??
-        'Blog excerpt',
-      content:
-        PLACEHOLDER_TEXTS.long[0] ??
-        'Blog content',
+      excerpt: PLACEHOLDER_TEXTS.medium[0] ?? 'Blog excerpt',
+      content: PLACEHOLDER_TEXTS.long[0] ?? 'Blog content',
       author: 'BlackWoods Creative Team',
       publishDate: new Date(),
       readTime: '5 min read',

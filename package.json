@@ -1,8 +1,24 @@
 {
   "name": "blackwoods-creative-website",
-  "version": "1.1.1",
-  "description": "Premium portfolio website for BlackWoods Creative - showcasing filmmaking, photography, 3D, and scene creation",
+  "version": "1.2.0",
+  "description": "Premium portfolio website for BlackWoods Creative built with Next.js 15 - showcasing filmmaking, photography, 3D, and scene creation with enterprise-grade security and performance",
   "private": true,
+  "keywords": [
+    "portfolio",
+    "creative-agency",
+    "filmmaking",
+    "photography",
+    "3d-visualization",
+    "next.js",
+    "typescript",
+    "framer-motion"
+  ],
+  "author": "BlackWoods Creative",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aladin147/BlackWoodsCreative_Website.git"
+  },
+  "homepage": "https://blackwoodscreative.com",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -38,27 +54,33 @@
     "collect-hashes": "node scripts/collect-hashes.js",
     "collect-hashes:dev": "npm run dev & sleep 10 && npm run collect-hashes && kill %1",
     "production:validate": "node scripts/production-validation.js",
-    "production:deploy": "npm run production:validate && npm run build"
+    "production:deploy": "npm run production:validate && npm run build",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@types/dompurify": "^3.0.5",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^24.0.10",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.35.0",
+    "autoprefixer": "^10.4.21",
     "clsx": "^2.1.1",
+    "dompurify": "^3.2.6",
     "framer-motion": "^12.23.0",
+    "jsdom": "^26.1.0",
     "next": "^15.3.4",
+    "postcss": "^8.5.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "resend": "^4.6.0",
     "sharp": "^0.34.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.4.17",
-    "postcss": "^8.5.6",
-    "autoprefixer": "^10.4.21",
-    "@types/node": "^24.0.10",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "typescript": "^5.8.3"
+    "typescript": "^5.0.4"
   },
   "devDependencies": {
     "@axe-core/react": "^4.10.2",
@@ -71,6 +93,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/eslint-plugin-security": "^3.0.0",
     "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
@@ -86,8 +109,10 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-security": "^3.0.1",
     "eslint-plugin-sonarjs": "^1.0.4",
+    "husky": "^9.1.7",
     "jest": "^29.0.0",
     "jest-environment-jsdom": "^29.0.0",
+    "lint-staged": "^16.1.2",
     "madge": "^8.0.0",
     "playwright": "^1.40.0",
     "prettier": "^3.6.2",
@@ -97,16 +122,5 @@
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
-  "keywords": [
-    "portfolio",
-    "creative-agency",
-    "filmmaking",
-    "photography",
-    "3d-visualization",
-    "next.js",
-    "typescript",
-    "framer-motion"
-  ],
-  "author": "BlackWoods Creative",
   "license": "UNLICENSED"
 }

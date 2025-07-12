@@ -6,9 +6,11 @@
 
 'use client';
 
-import { motion } from 'framer-motion';
+import { ReactNode, ReactElement } from 'react';
+
 import Image from 'next/image';
-import { ReactNode } from 'react';
+
+import { motion } from 'framer-motion';
 
 import {
   useContent,
@@ -59,7 +61,7 @@ export function TextRenderer({
   fallback,
   showPlaceholderIndicator = true,
   options,
-}: ContentRendererProps) {
+}: ContentRendererProps): ReactElement {
   const { content, loading, error, isPlaceholder } = useTextContent(id, options);
 
   if (loading) {
@@ -67,7 +69,7 @@ export function TextRenderer({
   }
 
   if (error || !content) {
-    return fallback ?? <div className={className}>Content not available</div>;
+    return (fallback as ReactElement) ?? <div className={className}>Content not available</div>;
   }
 
   return (
@@ -99,7 +101,7 @@ export function ImageRenderer({
   height?: number;
   priority?: boolean;
   sizes?: string;
-}) {
+}): ReactElement {
   const { content, loading, error, isPlaceholder } = useImageContent(id, options);
 
   if (loading) {
@@ -108,7 +110,7 @@ export function ImageRenderer({
 
   if (error || !content) {
     return (
-      fallback ?? (
+      (fallback as ReactElement) ?? (
         <div className={`flex aspect-video items-center justify-center bg-gray-200 ${className}`}>
           Image not available
         </div>
@@ -146,7 +148,7 @@ export function VideoRenderer({
   fallback,
   showPlaceholderIndicator = true,
   options,
-}: ContentRendererProps) {
+}: ContentRendererProps): ReactElement {
   const { content, loading, error, isPlaceholder } = useVideoContent(id, options);
 
   if (loading) {
@@ -155,7 +157,7 @@ export function VideoRenderer({
 
   if (error || !content) {
     return (
-      fallback ?? (
+      (fallback as ReactElement) ?? (
         <div className={`flex aspect-video items-center justify-center bg-gray-200 ${className}`}>
           Video not available
         </div>

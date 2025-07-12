@@ -1,15 +1,21 @@
 /**
  * Google Analytics Component
- * 
+ *
  * Simple component to integrate Google Analytics with the website
  */
 
 'use client';
 
-import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { initGA, trackPageView, ConsentManager, GADevUtils } from '@/lib/analytics/google-analytics';
+import { usePathname } from 'next/navigation';
+
+import {
+  initGA,
+  trackPageView,
+  ConsentManager,
+  GADevUtils,
+} from '@/lib/analytics/google-analytics';
 
 interface GoogleAnalyticsProps {
   trackingId?: string;
@@ -22,7 +28,7 @@ export function GoogleAnalytics({ trackingId: _trackingId }: GoogleAnalyticsProp
   useEffect(() => {
     // Initialize consent management
     ConsentManager.initConsent();
-    
+
     // Initialize GA
     initGA();
 
@@ -51,7 +57,7 @@ export function CookieConsentBanner() {
     // Show banner if consent hasn't been given
     const hasConsent = ConsentManager.hasConsent();
     const hasDeclined = localStorage.getItem('ga_consent') === 'denied';
-    
+
     if (!hasConsent && !hasDeclined) {
       setShowBanner(true);
     }
@@ -70,24 +76,24 @@ export function CookieConsentBanner() {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-bw-bg-secondary border-t border-bw-border-subtle p-4 shadow-lg">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="bg-bw-bg-secondary fixed bottom-0 left-0 right-0 z-50 border-t border-bw-border-subtle p-4 shadow-lg">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
         <div className="text-sm text-bw-text-secondary">
           <p>
-            We use cookies to improve your experience and analyze website traffic. 
-            By accepting, you agree to our use of analytics cookies.
+            We use cookies to improve your experience and analyze website traffic. By accepting, you
+            agree to our use of analytics cookies.
           </p>
         </div>
         <div className="flex gap-3">
           <button
             onClick={handleDecline}
-            className="px-4 py-2 text-sm border border-bw-border-subtle rounded-lg hover:bg-bw-bg-tertiary transition-colors"
+            className="hover:bg-bw-bg-tertiary rounded-lg border border-bw-border-subtle px-4 py-2 text-sm transition-colors"
           >
             Decline
           </button>
           <button
             onClick={handleAccept}
-            className="px-4 py-2 text-sm bg-bw-accent-gold text-black rounded-lg hover:bg-bw-accent-gold/90 transition-colors"
+            className="rounded-lg bg-bw-accent-gold px-4 py-2 text-sm text-black transition-colors hover:bg-bw-accent-gold/90"
           >
             Accept
           </button>
@@ -129,14 +135,19 @@ export function useBusinessTracking() {
     },
 
     // Track conversions
-    trackConversion: (type: 'quote_request' | 'consultation' | 'project_inquiry', value?: number) => {
+    trackConversion: (
+      type: 'quote_request' | 'consultation' | 'project_inquiry',
+      value?: number
+    ) => {
       import('@/lib/analytics/google-analytics').then(({ BusinessTracking }) => {
         BusinessTracking.trackConversion(type, value);
       });
     },
 
     // Track business goals
-    trackBusinessGoal: (goal: 'newsletter_signup' | 'quote_request' | 'phone_click' | 'email_click') => {
+    trackBusinessGoal: (
+      goal: 'newsletter_signup' | 'quote_request' | 'phone_click' | 'email_click'
+    ) => {
       import('@/lib/analytics/google-analytics').then(({ BusinessInsights }) => {
         BusinessInsights.trackBusinessGoal(goal);
       });
@@ -145,7 +156,12 @@ export function useBusinessTracking() {
 }
 
 // Component for tracking specific business interactions
-export function BusinessTracker({ children, event, category, label }: {
+export function BusinessTracker({
+  children,
+  event,
+  category,
+  label,
+}: {
   children: React.ReactNode;
   event: string;
   category: string;
@@ -164,15 +180,8 @@ export function BusinessTracker({ children, event, category, label }: {
   };
 
   return (
-    <div
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      role="button"
-      tabIndex={0}
-    >
+    <div onClick={handleClick} onKeyDown={handleKeyDown} role="button" tabIndex={0}>
       {children}
     </div>
   );
 }
-
-

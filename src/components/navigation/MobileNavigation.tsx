@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
+
+import Link from 'next/link';
+
 import { ArrowLeftIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { AnimatePresence, motion } from 'framer-motion';
-import Link from 'next/link';
-import { useState } from 'react';
 
 import { MagneticField } from '@/components/interactive';
 import { CompactBreadcrumbs } from '@/components/seo/Breadcrumbs';

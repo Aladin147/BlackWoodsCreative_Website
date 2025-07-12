@@ -1,6 +1,6 @@
 /**
  * Simplified Content Hooks
- * 
+ *
  * Simple React hooks for content management without over-engineering
  */
 
@@ -8,13 +8,13 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { 
-  ContentItem, 
-  PortfolioItem, 
-  TestimonialItem, 
-  ServiceItem, 
+import {
+  ContentItem,
+  PortfolioItem,
+  TestimonialItem,
+  ServiceItem,
   TeamMember,
-  contentStore 
+  contentStore,
 } from './simple-content';
 
 // Simple content hook
@@ -34,13 +34,16 @@ export function useContent(id: string) {
     setContent(item);
   }, [id]);
 
-  const update = useCallback((updates: Partial<ContentItem>) => {
-    const success = contentStore.update(id, updates);
-    if (success) {
-      refresh();
-    }
-    return success;
-  }, [id, refresh]);
+  const update = useCallback(
+    (updates: Partial<ContentItem>) => {
+      const success = contentStore.update(id, updates);
+      if (success) {
+        refresh();
+      }
+      return success;
+    },
+    [id, refresh]
+  );
 
   return {
     content,
@@ -148,7 +151,7 @@ export function useContentStats() {
     const allContent = contentStore.getAll();
     const placeholders = allContent.filter(item => item.isPlaceholder);
     const realContent = allContent.filter(item => !item.isPlaceholder);
-    
+
     const byType: Record<string, number> = {};
     allContent.forEach(item => {
       byType[item.type] = (byType[item.type] ?? 0) + 1;
@@ -185,12 +188,13 @@ export function useContentSearch(query: string) {
 
     setLoading(true);
     const allContent = contentStore.getAll();
-    const filtered = allContent.filter(item => 
-      item.title.toLowerCase().includes(query.toLowerCase()) ||
-      item.content.toLowerCase().includes(query.toLowerCase()) ||
-      item.metadata?.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    const filtered = allContent.filter(
+      item =>
+        item.title.toLowerCase().includes(query.toLowerCase()) ||
+        item.content.toLowerCase().includes(query.toLowerCase()) ||
+        item.metadata?.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
     );
-    
+
     setResults(filtered);
     setLoading(false);
   }, [query]);
@@ -206,7 +210,7 @@ export function useContentSearch(query: string) {
 export function usePortfolioByCategory(category?: 'film' | 'photography' | '3d' | 'scenes') {
   const { content: allPortfolio, loading, refresh } = usePortfolioItems();
 
-  const filteredContent = category 
+  const filteredContent = category
     ? allPortfolio.filter(item => item.category === category)
     : allPortfolio;
 
@@ -249,35 +253,47 @@ export function useContentManagement() {
     refresh();
   }, [refresh]);
 
-  const addContent = useCallback((item: ContentItem) => {
-    contentStore.add(item);
-    refresh();
-  }, [refresh]);
-
-  const updateContent = useCallback((id: string, updates: Partial<ContentItem>) => {
-    const success = contentStore.update(id, updates);
-    if (success) {
+  const addContent = useCallback(
+    (item: ContentItem) => {
+      contentStore.add(item);
       refresh();
-    }
-    return success;
-  }, [refresh]);
+    },
+    [refresh]
+  );
 
-  const removeContent = useCallback((id: string) => {
-    const success = contentStore.remove(id);
-    if (success) {
-      refresh();
-    }
-    return success;
-  }, [refresh]);
+  const updateContent = useCallback(
+    (id: string, updates: Partial<ContentItem>) => {
+      const success = contentStore.update(id, updates);
+      if (success) {
+        refresh();
+      }
+      return success;
+    },
+    [refresh]
+  );
+
+  const removeContent = useCallback(
+    (id: string) => {
+      const success = contentStore.remove(id);
+      if (success) {
+        refresh();
+      }
+      return success;
+    },
+    [refresh]
+  );
 
   const exportContent = useCallback(() => {
     return contentStore.export();
   }, []);
 
-  const importContent = useCallback((data: Record<string, ContentItem>) => {
-    contentStore.import(data);
-    refresh();
-  }, [refresh]);
+  const importContent = useCallback(
+    (data: Record<string, ContentItem>) => {
+      contentStore.import(data);
+      refresh();
+    },
+    [refresh]
+  );
 
   return {
     content: allContent,

@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 import {
   EnvelopeIcon,
   PhoneIcon,
@@ -11,7 +13,6 @@ import {
   PaintBrushIcon,
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
-import React from 'react';
 
 import { MagneticField, ScrollReveal } from '@/components/interactive';
 import { siteConfig, type NavigationItem } from '@/lib/constants/siteConfig';
@@ -54,7 +55,7 @@ const getQuickLinks = () => {
 
     return {
       name: item.name,
-      href: href,
+      href,
     };
   });
 };

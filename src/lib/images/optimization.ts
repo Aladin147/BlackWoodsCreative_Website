@@ -441,7 +441,7 @@ export function useImageGallery(
   );
 
   return {
-    currentImage: images[currentIndex],
+    currentImage: (currentIndex >= 0 && currentIndex < images.length) ? images[currentIndex] : null,
     currentIndex,
     totalImages: images.length,
     preloadedCount,

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { generateCSRFToken } from '@/lib/utils/security';
+import { generateCSRFToken, generateNonce } from '@/lib/utils/security';
 
 // Use Node.js runtime for crypto operations
 export const runtime = 'nodejs';
@@ -12,16 +12,19 @@ export const runtime = 'nodejs';
 
 export function GET() {
   try {
-    // Generate a new CSRF token
+    // Generate a new cryptographically secure CSRF token
     const token = generateCSRFToken();
 
-    // Create response with token
+    // Generate a new nonce for CSP
+    const nonce = generateNonce();
+
+    // Create response with token for client-side use
     const response = NextResponse.json({
       token,
       success: true,
     });
 
-    // Set the token in an HTTP-only cookie
+    // Set the token in an HTTP-only cookie for double submit cookie pattern
     response.cookies.set('csrf-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -30,9 +33,15 @@ export function GET() {
       path: '/',
     });
 
+    // Provide nonce in response headers for client-side CSP compliance
+    response.headers.set('x-nonce', nonce);
+
     return response;
-  } catch {
-    // Error generating CSRF token - logged internally
+  } catch (error) {
+    // Log error for debugging in non-production environments
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('CSRF token generation failed:', error);
+    }
 
     return NextResponse.json(
       {

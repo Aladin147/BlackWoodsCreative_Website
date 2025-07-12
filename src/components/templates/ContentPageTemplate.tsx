@@ -1,5 +1,9 @@
 'use client';
 
+import { ReactNode } from 'react';
+
+import Image from 'next/image';
+
 import {
   UserIcon,
   BriefcaseIcon,
@@ -16,8 +20,6 @@ import {
   ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { ReactNode } from 'react';
 
 import { ScrollReveal } from '@/components/interactive';
 import { SEOMetadata } from '@/lib/utils/metadata';

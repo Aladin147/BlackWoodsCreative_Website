@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 import { useRef, useEffect, useState, useMemo, ReactNode } from 'react';
+
+import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
 
 import { useAnimationPerformance } from '@/hooks/useAnimationPerformance';
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';

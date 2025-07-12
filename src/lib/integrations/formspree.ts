@@ -1,6 +1,6 @@
 /**
  * Formspree Integration
- * 
+ *
  * Comprehensive integration with Formspree for contact form handling
  */
 
@@ -51,7 +51,7 @@ export async function submitContactForm(data: ContactFormData): Promise<Formspre
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
       body: JSON.stringify({
         name: data.name,
@@ -79,11 +79,13 @@ export async function submitContactForm(data: ContactFormData): Promise<Formspre
     // Formspree submission error - handled gracefully
     return {
       ok: false,
-      errors: [{
-        field: 'general',
-        code: 'NETWORK_ERROR',
-        message: 'Network error occurred. Please try again.',
-      }],
+      errors: [
+        {
+          field: 'general',
+          code: 'NETWORK_ERROR',
+          message: 'Network error occurred. Please try again.',
+        },
+      ],
     };
   }
 }
@@ -100,8 +102,8 @@ export async function getFormSubmissions(): Promise<FormspreeSubmission[]> {
       `${FORMSPREE_CONFIG.apiEndpoint}${FORMSPREE_CONFIG.formId}/submissions`,
       {
         headers: {
-          'Authorization': `Bearer ${FORMSPREE_CONFIG.readonlyKey}`,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${FORMSPREE_CONFIG.readonlyKey}`,
+          Accept: 'application/json',
         },
       }
     );
@@ -126,15 +128,12 @@ export async function getFormAnalytics() {
   }
 
   try {
-    const response = await fetch(
-      `${FORMSPREE_CONFIG.apiEndpoint}${FORMSPREE_CONFIG.formId}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${FORMSPREE_CONFIG.readonlyKey}`,
-          'Accept': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${FORMSPREE_CONFIG.apiEndpoint}${FORMSPREE_CONFIG.formId}`, {
+      headers: {
+        Authorization: `Bearer ${FORMSPREE_CONFIG.readonlyKey}`,
+        Accept: 'application/json',
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Formspree API error: ${response.status}`);
@@ -237,16 +236,20 @@ export function validateContactFormData(data: Partial<ContactFormData>): {
 // Rate limiting for form submissions
 const submissionTracker = new Map<string, number[]>();
 
-export function checkSubmissionRateLimit(email: string, maxSubmissions = 3, windowMs = 60000): boolean {
+export function checkSubmissionRateLimit(
+  email: string,
+  maxSubmissions = 3,
+  windowMs = 60000
+): boolean {
   const now = Date.now();
   const submissions = submissionTracker.get(email) ?? [];
-  
+
   // Remove old submissions outside the window
   const recentSubmissions = submissions.filter(time => now - time < windowMs);
-  
+
   // Update tracker
   submissionTracker.set(email, recentSubmissions);
-  
+
   // Check if under limit
   return recentSubmissions.length < maxSubmissions;
 }

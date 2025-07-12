@@ -12,11 +12,7 @@ interface SSRSafeWrapperProps {
  * SSR-Safe wrapper component to prevent hydration mismatches
  * Only renders children after client-side hydration is complete
  */
-export function SSRSafeWrapper({ 
-  children, 
-  fallback = null, 
-  className = '' 
-}: SSRSafeWrapperProps) {
+export function SSRSafeWrapper({ children, fallback = null, className = '' }: SSRSafeWrapperProps) {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
@@ -67,14 +63,14 @@ export function useIsHydrated(): boolean {
  * SSR-safe client-only component
  * Only renders on client-side, never during SSR
  */
-export function ClientOnly({ 
-  children, 
-  fallback = null 
-}: { 
-  children: React.ReactNode; 
-  fallback?: React.ReactNode; 
+export function ClientOnly({
+  children,
+  fallback = null,
+}: {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
 }) {
   const isHydrated = useIsHydrated();
-  
+
   return isHydrated ? children : fallback;
 }

@@ -30,9 +30,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme: THEME, isHydrated }}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={{ theme: THEME, isHydrated }}>{children}</ThemeContext.Provider>
   );
 }
 

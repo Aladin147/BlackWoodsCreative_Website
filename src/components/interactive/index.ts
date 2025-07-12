@@ -1,67 +1,45 @@
-// Advanced Interactive Components - Phase 4
-// Optimized for tree shaking and code splitting
-//
-// PERFORMANCE NOTE: Heavy components (AtmosphericParticles, WebGL effects,
-// Complex parallax systems) should be dynamically imported for better performance
+// Interactive Components Export Hub - Optimized for Bundle Size
+// This file provides a centralized export point for all interactive components
+// Organized by complexity and use case for better tree-shaking and performance
+
+// Core motion wrapper (always needed)
+export { MotionDiv, MotionButton, MotionSpan } from './MotionWrapper';
+
+// Lightweight motion components (small bundle impact)
+export * from '../motion/LightweightMotion';
+
+// Lazy-loaded heavy components (loaded on demand)
+export * from '../motion/LazyMotionComponents';
 
 // Core interactive components
-// Temporarily commented out due to import issues - will fix in next step
-// export { ScrollStoryTeller } from './ScrollStoryTeller';
-
-// Temporary stub for ScrollStoryTeller only (until we implement it)
-// Removed problematic React import and createElement usage
-
 export { MagneticCursor } from './MagneticCursor';
 
-// Parallax components (heavy - use direct exports for now to fix import issues)
-// TODO: Re-implement dynamic imports after fixing module loading issues
-export { ParallaxLayer, ParallaxContainer, CinematicParallax, MagneticField, DepthOfField } from './ParallaxContainer';
+// Critical components that need immediate loading (small bundle impact)
+export { ParallaxLayer, ParallaxContainer, MagneticField } from './ParallaxContainer';
+export { HoverMagnify, TextReveal } from './MicroInteractions';
+export { ScrollReveal, ParallaxText } from './AdvancedScrollAnimations';
 
-// Micro-interactions (lighter components - use direct exports for now to fix import issues)
-// TODO: Re-implement dynamic imports after fixing module loading issues
+// Export missing components as lazy-loaded versions for better performance
 export {
-  HoverMagnify,
-  TiltCard,
-  FloatingElement,
-  PulseGlow,
-  MorphingButton,
-  RippleEffect,
-  StaggeredReveal,
-  TextReveal,
-  GlitchText,
-  TypewriterText
-} from './MicroInteractions';
+  LazyStaggeredGrid as StaggeredGrid,
+  LazyCountUp as CountUp,
+  LazyFloatingElement as FloatingElement,
+  LazyMorphingButton as MorphingButton,
+  LazyAdvancedPortfolioFilter as AdvancedPortfolioFilter,
+  LazyWebGLEnhancedBackground as WebGLEnhancedBackground,
+  LazyGlitchText as GlitchText,
+  LazyTypewriterText as TypewriterText,
+} from '../motion/LazyMotionComponents';
 
-// Deep Forest Haze atmospheric effects
+// Export AtmosphericLayer from ComplexParallaxSystem as lazy component
+export { LazyAtmosphericLayer as AtmosphericLayer } from '../motion/LazyMotionComponents';
+
+// Export PulseGlow as Pulse from LightweightMotion
+export { Pulse as PulseGlow } from '../motion/LightweightMotion';
+
+// Lightweight atmospheric effects
 export { AtmosphericParticles } from './AtmosphericParticles';
 export { ScrollFadeIn, StaggeredScrollFadeIn, SectionScrollAnimation } from './ScrollAnimations';
 
-// Phase 2: Advanced Scroll Animations
-export {
-  ScrollReveal,
-  ParallaxText,
-  ScrollProgressBar,
-  CountUp,
-  StaggeredGrid,
-  MorphingShape,
-  ScrollTriggeredCounter,
-} from './AdvancedScrollAnimations';
-
-// Phase 2: Advanced Portfolio Features
-export { AdvancedPortfolioFilter } from './AdvancedPortfolioFilter';
-
-// Phase 2: Complex Parallax Systems
-export {
-  ComplexParallaxSystem,
-  CinematicParallaxScene,
-  ParallaxStorySequence,
-  AtmosphericLayer,
-} from './ComplexParallaxSystem';
-
-// Phase 2: WebGL Effects
-export { WebGLAuroraEffect, WebGLParticleSystem, WebGLEnhancedBackground } from './WebGLEffects';
-
-// Future exports for Phase 4 expansion:
-// export { ThreeDScene } from './ThreeDScene';
-// export { AudioVisualizer } from './AudioVisualizer';
-// export { WebGLEffects } from './WebGLEffects';
+// Note: Heavy components like ComplexParallaxSystem, AdvancedPortfolioFilter,
+// and WebGL effects are now available through LazyMotionComponents for better performance

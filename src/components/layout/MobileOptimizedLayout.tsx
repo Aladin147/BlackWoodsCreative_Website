@@ -1,6 +1,6 @@
 /**
  * Mobile Optimized Layout
- * 
+ *
  * A layout component optimized for mobile devices with proper safe areas,
  * touch targets, and mobile-first responsive design
  */
@@ -9,7 +9,11 @@
 
 import { ReactNode } from 'react';
 
-import { MobileOptimizedNavigation, MobileBreadcrumbs, MobileFooterNavigation } from '@/components/navigation/MobileOptimizedNavigation';
+import {
+  MobileOptimizedNavigation,
+  MobileBreadcrumbs,
+  MobileFooterNavigation,
+} from '@/components/navigation/MobileOptimizedNavigation';
 import { useMobileDevice, MobileStyles } from '@/lib/utils/mobile-optimization';
 
 interface MobileOptimizedLayoutProps {
@@ -36,11 +40,8 @@ export function MobileOptimizedLayout({
       {showBreadcrumbs && <MobileBreadcrumbs />}
 
       {/* Main Content */}
-      <main 
-        className={`
-          ${deviceInfo.isMobile ? 'pb-20' : ''} 
-          ${deviceInfo.hasNotch ? 'px-safe-left pr-safe-right' : ''}
-        `}
+      <main
+        className={` ${deviceInfo.isMobile ? 'pb-20' : ''} ${deviceInfo.hasNotch ? 'px-safe-left pr-safe-right' : ''} `}
       >
         {children}
       </main>
@@ -70,11 +71,8 @@ export function MobileSection({
     large: deviceInfo.isMobile ? 'p-8' : 'p-12',
   };
 
-  return (
-    <section className={`${paddingClasses[padding]} ${className}`}>
-      {children}
-    </section>
-  );
+  return <section className={`${(padding in paddingClasses) ? (
+    paddingClasses[padding] ?? paddingClasses.normal) : paddingClasses.normal} ${className}`}>{children}</section>;
 }
 
 // Mobile-optimized container
@@ -97,7 +95,8 @@ export function MobileContainer({
   };
 
   return (
-    <div className={`mx-auto ${sizeClasses[size]} ${MobileStyles.spacing.mobileX} ${className}`}>
+    <div className={`mx-auto ${(size in sizeClasses) ? (
+      sizeClasses[size] ?? sizeClasses.default) : sizeClasses.default} ${MobileStyles.spacing.mobileX} ${className}`}>
       {children}
     </div>
   );
@@ -133,9 +132,7 @@ export function MobileGrid({
   };
 
   return (
-    <div className={`grid ${gridClasses[columns]} ${gapClasses[gap]} ${className}`}>
-      {children}
-    </div>
+    <div className={`grid ${gridClasses[columns] ?? gridClasses[1]} ${gapClasses[gap] ?? gapClasses.normal} ${className}`}>{children}</div>
   );
 }
 
@@ -165,14 +162,7 @@ export function MobileCard({
 
   return (
     <div
-      className={`
-        bg-bw-bg-secondary 
-        border border-bw-border-subtle 
-        rounded-lg 
-        ${paddingClasses[padding]} 
-        ${interactiveClasses}
-        ${className}
-      `}
+      className={`bg-bw-bg-secondary rounded-lg border border-bw-border-subtle ${paddingClasses[padding] ?? paddingClasses.normal} ${interactiveClasses} ${className} `}
     >
       {children}
     </div>
@@ -212,21 +202,7 @@ export function MobileButton({
 
   return (
     <button
-      className={`
-        ${variantClasses[variant]}
-        ${sizeClasses[size]}
-        ${fullWidth ? 'w-full' : ''}
-        ${MobileStyles.touchTarget()}
-        ${deviceInfo.isMobile ? 'active:scale-95' : 'hover:scale-105'}
-        rounded-lg
-        font-medium
-        transition-all
-        duration-200
-        disabled:opacity-50
-        disabled:cursor-not-allowed
-        disabled:transform-none
-        ${className}
-      `}
+      className={` ${variantClasses[variant] ?? variantClasses.primary} ${sizeClasses[size] ?? sizeClasses.normal} ${fullWidth ? 'w-full' : ''} ${MobileStyles.touchTarget()} ${deviceInfo.isMobile ? 'active:scale-95' : 'hover:scale-105'} rounded-lg font-medium transition-all duration-200 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50 ${className} `}
       disabled={disabled}
       {...props}
     >
@@ -246,39 +222,15 @@ export function MobileInput({
   error?: string;
   className?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
-
   return (
     <div className="space-y-1">
-      {label && (
-        <label className="block text-sm font-medium text-bw-text-primary">
-          {label}
-        </label>
-      )}
+      {label && <label className="block text-sm font-medium text-bw-text-primary">{label}</label>}
       <input
-        className={`
-          w-full
-          px-4
-          py-3
-          border
-          border-bw-border-subtle
-          rounded-lg
-          bg-bw-bg-primary
-          text-bw-text-primary
-          placeholder-bw-text-secondary
-          focus:ring-2
-          focus:ring-bw-accent-gold
-          focus:border-bw-accent-gold
-          transition-colors
-          ${MobileStyles.touchTarget()}
-          ${error ? 'border-red-500' : ''}
-          ${className}
-        `}
+        className={`w-full rounded-lg border border-bw-border-subtle bg-bw-bg-primary px-4 py-3 text-bw-text-primary placeholder-bw-text-secondary transition-colors focus:border-bw-accent-gold focus:ring-2 focus:ring-bw-accent-gold ${MobileStyles.touchTarget()} ${error ? 'border-red-500' : ''} ${className} `}
         style={{ fontSize: '16px' }} // Prevents zoom on iOS
         {...props}
       />
-      {error && (
-        <p className="text-sm text-red-500">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

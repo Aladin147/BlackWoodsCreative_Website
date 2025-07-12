@@ -85,9 +85,7 @@ export function PerformanceMonitor() {
       {/* Performance Score */}
       <div className="mb-3">
         <h4 className="mb-1 text-yellow-400">Performance Score</h4>
-        <div className={`text-lg font-bold ${getScoreColor(status.score)}`}>
-          {status.score}/100
-        </div>
+        <div className={`text-lg font-bold ${getScoreColor(status.score)}`}>{status.score}/100</div>
       </div>
 
       {/* Core Web Vitals */}
@@ -127,4 +125,3 @@ export function DevelopmentPerformanceTools() {
 
   return <PerformanceMonitor />;
 }
-

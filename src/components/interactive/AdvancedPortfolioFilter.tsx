@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, AnimatePresence, LayoutGroup, Variants } from 'framer-motion';
 import { useState, useMemo } from 'react';
+
+import { motion, AnimatePresence, LayoutGroup, Variants } from 'framer-motion';
 
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 

@@ -1,7 +1,8 @@
 'use client';
 
-import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useState, useRef, useEffect, ReactNode } from 'react';
+
+import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 import { useAnimationConfig } from '@/hooks/useReducedMotion';
 
@@ -64,8 +65,8 @@ export function TiltCard({ children, maxTilt = 8, className = '' }: TiltCardProp
     if (!ref.current || animationConfig.disableAnimations) return;
 
     const rect = ref.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    const { width } = rect;
+    const { height } = rect;
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
     const xPct = mouseX / width - 0.5;
@@ -400,7 +401,9 @@ export function TypewriterText({ text, className = '', speed = 50 }: TypewriterT
   useEffect(() => {
     if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
-        setDisplayText(prev => prev + text[currentIndex]);
+        // Safe string character access with bounds checking
+        const char = currentIndex >= 0 && currentIndex < text.length ? text.charAt(currentIndex) : '';
+        setDisplayText(prev => prev + char);
         setCurrentIndex(prev => prev + 1);
       }, speed);
 

@@ -12,7 +12,7 @@ import {
   TestimonialItem,
   ServiceItem,
   contentStore,
-  initializeBasicContent
+  initializeBasicContent,
 } from './simple-content';
 
 // Migration utilities
@@ -41,9 +41,9 @@ export const MigrationHelper = {
     const allContent = contentStore.getAll();
     const placeholders = allContent.filter(item => item.isPlaceholder);
     const realContent = allContent.filter(item => !item.isPlaceholder);
-    
+
     const byType: Record<string, { total: number; placeholders: number; real: number }> = {};
-    
+
     allContent.forEach(item => {
       byType[item.type] ??= { total: 0, placeholders: 0, real: 0 };
       const typeStats = byType[item.type];
@@ -76,7 +76,9 @@ export const MigrationHelper = {
     logger.info('\n📋 By Type:');
 
     Object.entries(stats.byType).forEach(([type, counts]) => {
-      logger.info(`   ${type}: ${counts.total} total (${counts.placeholders} placeholders, ${counts.real} real)`);
+      logger.info(
+        `   ${type}: ${counts.total} total (${counts.placeholders} placeholders, ${counts.real} real)`
+      );
     });
   },
 
@@ -87,17 +89,19 @@ export const MigrationHelper = {
     // Replace some text content
     contentStore.update('hero-title', {
       title: 'BlackWoods Creative',
-      content: 'Morocco\'s Premier Visual Storytelling Studio',
+      content: "Morocco's Premier Visual Storytelling Studio",
       isPlaceholder: false,
       metadata: {
-        seoTitle: 'BlackWoods Creative - Morocco\'s Premier Visual Storytelling Studio',
-        seoDescription: 'Professional video production, photography, and 3D visualization services in Morocco',
+        seoTitle: "BlackWoods Creative - Morocco's Premier Visual Storytelling Studio",
+        seoDescription:
+          'Professional video production, photography, and 3D visualization services in Morocco',
         tags: ['video production', 'photography', '3d visualization', 'morocco'],
       },
     });
 
     contentStore.update('hero-subtitle', {
-      content: 'We craft compelling visual narratives that elevate your brand and connect with your audience through the power of professional filmmaking, photography, and 3D visualization.',
+      content:
+        'We craft compelling visual narratives that elevate your brand and connect with your audience through the power of professional filmmaking, photography, and 3D visualization.',
       isPlaceholder: false,
     });
 
@@ -106,7 +110,8 @@ export const MigrationHelper = {
     if (portfolioItems.length > 0 && portfolioItems[0]) {
       contentStore.update(portfolioItems[0].id, {
         title: 'Corporate Brand Film - TechCorp Morocco',
-        content: 'A dynamic corporate brand film showcasing TechCorp\'s innovative approach to technology solutions in Morocco. This project combined cinematic storytelling with corporate messaging to create a compelling narrative.',
+        content:
+          "A dynamic corporate brand film showcasing TechCorp's innovative approach to technology solutions in Morocco. This project combined cinematic storytelling with corporate messaging to create a compelling narrative.",
         client: 'TechCorp Morocco',
         year: 2024,
         featured: true,
@@ -119,7 +124,8 @@ export const MigrationHelper = {
           description: 'Corporate brand film for TechCorp Morocco',
           tags: ['corporate video', 'brand film', 'technology', 'morocco'],
           seoTitle: 'Corporate Brand Film - TechCorp Morocco | BlackWoods Creative',
-          seoDescription: 'Professional corporate brand film production for TechCorp Morocco by BlackWoods Creative',
+          seoDescription:
+            'Professional corporate brand film production for TechCorp Morocco by BlackWoods Creative',
         },
       });
     }
@@ -129,7 +135,8 @@ export const MigrationHelper = {
     if (testimonials.length > 0 && testimonials[0]) {
       contentStore.update(testimonials[0].id, {
         title: 'Outstanding Creative Partnership',
-        content: 'BlackWoods Creative exceeded our expectations with their professional approach and creative vision. The final video perfectly captured our brand essence and has significantly improved our marketing efforts.',
+        content:
+          'BlackWoods Creative exceeded our expectations with their professional approach and creative vision. The final video perfectly captured our brand essence and has significantly improved our marketing efforts.',
         author: 'Sarah Johnson',
         position: 'Marketing Director',
         company: 'TechCorp Morocco',
@@ -143,7 +150,8 @@ export const MigrationHelper = {
     if (services.length > 0 && services[0]) {
       contentStore.update(services[0].id, {
         title: 'Professional Video Production',
-        content: 'From concept to final cut, we provide comprehensive video production services including corporate films, commercials, documentaries, and promotional content.',
+        content:
+          'From concept to final cut, we provide comprehensive video production services including corporate films, commercials, documentaries, and promotional content.',
         features: [
           'Pre-production planning',
           'Professional cinematography',
@@ -157,7 +165,8 @@ export const MigrationHelper = {
           description: 'Professional video production services in Morocco',
           tags: ['video production', 'cinematography', 'post-production', 'morocco'],
           seoTitle: 'Professional Video Production Services Morocco | BlackWoods Creative',
-          seoDescription: 'Comprehensive video production services in Morocco including corporate films, commercials, and promotional content',
+          seoDescription:
+            'Comprehensive video production services in Morocco including corporate films, commercials, and promotional content',
         },
       });
     }
@@ -173,7 +182,7 @@ export const MigrationHelper = {
     const filename = `content-backup-${timestamp}.json`;
 
     logger.info(`💾 Exporting content to ${filename}`);
-    
+
     // In a real implementation, this would save to file
     // For now, just return the data
     return {
@@ -221,7 +230,7 @@ export const MigrationHelper = {
   getReadinessReport: () => {
     const stats = MigrationHelper.getContentStats();
     const readinessPercentage = stats.total > 0 ? (stats.realContent / stats.total) * 100 : 0;
-    
+
     const report = {
       readinessPercentage: Math.round(readinessPercentage),
       totalItems: stats.total,
@@ -233,18 +242,26 @@ export const MigrationHelper = {
 
     // Generate recommendations
     if (readinessPercentage < 25) {
-      report.recommendations.push('Content system is in early stage - focus on creating core content first');
+      report.recommendations.push(
+        'Content system is in early stage - focus on creating core content first'
+      );
     } else if (readinessPercentage < 50) {
-      report.recommendations.push('Good progress - continue replacing placeholder content with real content');
+      report.recommendations.push(
+        'Good progress - continue replacing placeholder content with real content'
+      );
     } else if (readinessPercentage < 75) {
-      report.recommendations.push('Content system is well developed - focus on quality and SEO optimization');
+      report.recommendations.push(
+        'Content system is well developed - focus on quality and SEO optimization'
+      );
     } else {
       report.recommendations.push('Content system is nearly ready for production');
     }
 
     Object.entries(stats.byType).forEach(([type, counts]) => {
       if (counts.placeholders > counts.real) {
-        report.recommendations.push(`Focus on ${type} content - ${counts.placeholders} placeholders remaining`);
+        report.recommendations.push(
+          `Focus on ${type} content - ${counts.placeholders} placeholders remaining`
+        );
       }
     });
 
@@ -292,10 +309,11 @@ export const DevUtils = {
   // Quick content lookup
   findContent: (query: string) => {
     const allContent = contentStore.getAll();
-    const results = allContent.filter(item =>
-      item.id.includes(query) ||
-      item.title.toLowerCase().includes(query.toLowerCase()) ||
-      item.content.toLowerCase().includes(query.toLowerCase())
+    const results = allContent.filter(
+      item =>
+        item.id.includes(query) ||
+        item.title.toLowerCase().includes(query.toLowerCase()) ||
+        item.content.toLowerCase().includes(query.toLowerCase())
     );
 
     logger.info(`🔍 Search results for "${query}":`);

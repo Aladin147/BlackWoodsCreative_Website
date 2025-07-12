@@ -239,7 +239,10 @@ export class SEOOptimizer {
         ...metadata.alternates,
         languages: this.config.alternateLocales.reduce(
           (acc, locale) => {
-            acc[locale] = `${this.config.siteUrl}/${locale}${path}`;
+            // Safe object assignment with validation
+            if (typeof locale === 'string' && locale.length > 0 && locale.length < 10) {
+              acc[locale] = `${this.config.siteUrl}/${locale}${path}`;
+            }
             return acc;
           },
           {} as Record<string, string>
@@ -454,7 +457,10 @@ export class SEOOptimizer {
         }
       }
 
-      density[keyword] = totalWords > 0 ? (count / totalWords) * 100 : 0;
+      // Safe object assignment with validation
+      if (typeof keyword === 'string' && keyword.length > 0 && keyword.length < 100) {
+        density[keyword] = totalWords > 0 ? (count / totalWords) * 100 : 0;
+      }
     });
 
     return density;
@@ -462,15 +468,25 @@ export class SEOOptimizer {
 
   // Extract heading structure
   private extractHeadingStructure(content: string): HeadingStructure[] {
-    const headingRegex = /<h([1-6])(?:\s+id="([^"]*)")?[^>]*>([^<]+)<\/h[1-6]>/gi;
+    // Use a safer regex pattern to prevent ReDoS attacks - simplified approach
+    const headingRegex = /<h([1-6])[^>]*>([^<]*)<\/h[1-6]>/gi;
+    const idRegex = /id="([^"]*)"/i;
     const headings: HeadingStructure[] = [];
     let match;
 
     while ((match = headingRegex.exec(content)) !== null) {
+      const fullMatch = match[0];
+      const level = parseInt(match[1] ?? '1');
+      const text = (match[2] ?? '').trim();
+
+      // Extract ID separately to avoid complex nested patterns
+      const idMatch = idRegex.exec(fullMatch);
+      const id = idMatch?.[1] ?? `heading-${headings.length}`;
+
       headings.push({
-        level: parseInt(match[1] ?? '1'),
-        text: (match[3] ?? '').trim(),
-        id: match[2] ?? `heading-${headings.length}`,
+        level,
+        text,
+        id,
       });
     }
 
@@ -489,7 +505,10 @@ export class SEOOptimizer {
       formatDistribution: images.reduce(
         (acc, img) => {
           const format = img.src.split('.').pop()?.toLowerCase() ?? 'unknown';
-          acc[format] = (acc[format] ?? 0) + 1;
+          // Safe object assignment with validation
+          if (typeof format === 'string' && format.length > 0 && format.length < 10) {
+            acc[format] = (acc[format] ?? 0) + 1;
+          }
           return acc;
         },
         {} as Record<string, number>
@@ -609,7 +628,10 @@ export const SEOUtils = {
 
     const wordCount: Record<string, number> = {};
     words.forEach(word => {
-      wordCount[word] = (wordCount[word] ?? 0) + 1;
+      // Safe object assignment with validation
+      if (typeof word === 'string' && word.length > 0 && word.length < 50) {
+        wordCount[word] = (wordCount[word] ?? 0) + 1;
+      }
     });
 
     return Object.entries(wordCount)

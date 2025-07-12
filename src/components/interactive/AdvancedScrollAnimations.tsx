@@ -1,7 +1,12 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 import React, { useRef, useEffect, useState, Children } from 'react';
+
+import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+
+import { useGPUOptimization } from '@/lib/animation/gpu-optimizer';
+import { useOptimizedAnimation } from '@/lib/animation/performance-optimizer';
+import { useVirtualizedScrollAnimation } from '@/lib/animation/scroll-optimizer';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -20,8 +25,18 @@ export function ScrollReveal({
   delay = 0,
   duration = 0.8,
 }: ScrollRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const {
+    ref: scrollRef,
+    isVisible,
+    shouldAnimate,
+  } = useVirtualizedScrollAnimation(6, {
+    threshold: 0.1,
+    rootMargin: '-100px',
+    triggerOnce: true,
+  });
+  const { optimizeTransition } = useOptimizedAnimation('scrollReveal', 6);
+  const { ref: gpuRef } = useGPUOptimization(6);
+  const combinedRef = useRef<HTMLDivElement>(null);
 
   const getInitialTransform = () => {
     switch (direction) {
@@ -44,22 +59,61 @@ export function ScrollReveal({
   };
 
   const animate = {
-    opacity: isInView ? 1 : 0,
-    x: isInView ? 0 : getInitialTransform().x,
-    y: isInView ? 0 : getInitialTransform().y,
+    opacity: isVisible ? 1 : 0,
+    x: isVisible ? 0 : getInitialTransform().x,
+    y: isVisible ? 0 : getInitialTransform().y,
   };
+
+  const optimizedTransition = optimizeTransition({
+    duration,
+    delay,
+    ease: [0.25, 0.46, 0.45, 0.94],
+  });
+
+  // Combine refs using callback pattern
+  const setRefs = React.useCallback((node: HTMLDivElement | null) => {
+    // Use Object.defineProperty to bypass readonly restriction
+    Object.defineProperty(combinedRef, 'current', {
+      value: node,
+      writable: true,
+      configurable: true
+    });
+
+    // Set the scroll ref if it exists and has a current property
+    if (scrollRef && typeof scrollRef === 'object' && 'current' in scrollRef) {
+      Object.defineProperty(scrollRef, 'current', {
+        value: node,
+        writable: true,
+        configurable: true
+      });
+    }
+
+    // Set the GPU ref if it exists and has a current property
+    if (gpuRef && typeof gpuRef === 'object' && 'current' in gpuRef) {
+      Object.defineProperty(gpuRef, 'current', {
+        value: node,
+        writable: true,
+        configurable: true
+      });
+    }
+  }, [scrollRef, gpuRef]);
+
+  // Skip animation entirely if performance is poor
+  if (!shouldAnimate) {
+    return (
+      <div ref={setRefs} className={className}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <motion.div
-      ref={ref}
+      ref={setRefs}
       className={className}
       initial={initial}
       animate={animate}
-      transition={{
-        duration,
-        delay,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
+      transition={optimizedTransition}
     >
       {children}
     </motion.div>

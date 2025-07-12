@@ -28,12 +28,12 @@ The BlackWoods Creative website uses a simplified, production-ready content mana
 
 ```typescript
 interface ContentItem {
-  id: string;                    // Unique identifier
-  type: ContentType;             // Content type
-  title: string;                 // Display title
-  content: string;               // Main content
-  isPlaceholder: boolean;        // Placeholder vs real content
-  metadata?: ContentMetadata;    // Optional metadata
+  id: string; // Unique identifier
+  type: ContentType; // Content type
+  title: string; // Display title
+  content: string; // Main content
+  isPlaceholder: boolean; // Placeholder vs real content
+  metadata?: ContentMetadata; // Optional metadata
 }
 ```
 
@@ -72,7 +72,7 @@ import { ContentUtils, contentStore } from '@/lib/content/simple-content';
 const heroTitle = ContentUtils.createText(
   'hero-title',
   'BlackWoods Creative',
-  'Morocco\'s Premier Visual Storytelling Studio'
+  "Morocco's Premier Visual Storytelling Studio"
 );
 
 // Create portfolio item
@@ -111,7 +111,7 @@ const textContent = contentStore.getByType('text');
 const success = contentStore.update('hero-title', {
   title: 'Updated Title',
   content: 'Updated content',
-  isPlaceholder: false
+  isPlaceholder: false,
 });
 ```
 
@@ -132,12 +132,12 @@ import { ContentMigration } from '@/lib/content/simple-content';
 // Replace placeholder with real content
 const success = ContentMigration.replaceContent('hero-title', {
   title: 'BlackWoods Creative',
-  content: 'Morocco\'s Premier Visual Storytelling Studio',
+  content: "Morocco's Premier Visual Storytelling Studio",
   metadata: {
     seoTitle: 'BlackWoods Creative - Visual Storytelling',
     seoDescription: 'Professional video production and photography services',
-    tags: ['video production', 'photography', 'morocco']
-  }
+    tags: ['video production', 'photography', 'morocco'],
+  },
 });
 ```
 
@@ -148,11 +148,11 @@ const success = ContentMigration.replaceContent('hero-title', {
 const successCount = ContentMigration.bulkReplace({
   'hero-title': {
     title: 'BlackWoods Creative',
-    content: 'Morocco\'s Premier Visual Storytelling Studio'
+    content: "Morocco's Premier Visual Storytelling Studio",
   },
   'hero-subtitle': {
-    content: 'Crafting compelling visual narratives that elevate your brand'
-  }
+    content: 'Crafting compelling visual narratives that elevate your brand',
+  },
 });
 ```
 
@@ -193,7 +193,7 @@ const portfolioItem = ContentUtils.createPortfolio(
   'project-film-1',
   'Corporate Brand Film - TechCorp',
   'A dynamic corporate brand film showcasing innovation',
-  'film'  // Categories: 'film', 'photography', '3d', 'scenes'
+  'film' // Categories: 'film', 'photography', '3d', 'scenes'
 );
 ```
 

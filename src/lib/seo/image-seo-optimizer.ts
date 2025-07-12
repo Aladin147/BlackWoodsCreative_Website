@@ -161,7 +161,7 @@ export class ImageSEOOptimizer {
       {
         type: 'portfolio',
         subject: projectTitle,
-        service: serviceMap[category],
+        service: (serviceMap as Record<string, string>)[category] ?? 'creative services',
         client,
         location,
       },

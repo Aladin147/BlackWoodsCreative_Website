@@ -100,7 +100,7 @@ class PerformanceOptimizer {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               const img = entry.target as HTMLImageElement;
-              const src = img.dataset.src;
+              const { src } = img.dataset;
 
               if (src) {
                 img.src = src;
@@ -123,7 +123,7 @@ class PerformanceOptimizer {
       // Fallback for browsers without IntersectionObserver
       images.forEach(img => {
         const htmlImg = img as HTMLImageElement;
-        const src = htmlImg.dataset.src;
+        const { src } = htmlImg.dataset;
         if (src) {
           htmlImg.src = src;
           htmlImg.removeAttribute('data-src');

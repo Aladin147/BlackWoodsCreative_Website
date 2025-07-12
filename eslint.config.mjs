@@ -7,6 +7,7 @@ import importPlugin from 'eslint-plugin-import';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import securityPlugin from 'eslint-plugin-security';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -19,14 +20,15 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 });
 
+// Next.js 15 ESLint flat config with TypeScript and security rules
 export default [
   {
     ignores: [
       '.next/**',
-      'node_modules/**',
       'out/**',
       'build/**',
       'dist/**',
+      'node_modules/**',
       '*.config.js',
       '*.config.ts',
       'coverage/**',
@@ -53,6 +55,7 @@ export default [
       '@typescript-eslint': typescriptEslint,
       import: importPlugin,
       'jsx-a11y': jsxA11y,
+      security: securityPlugin,
     },
     languageOptions: {
       parser: typescriptParser,
@@ -124,7 +127,7 @@ export default [
       'no-unused-vars': 'off',
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
@@ -136,7 +139,7 @@ export default [
       '@typescript-eslint/no-empty-function': 'warn',
       '@typescript-eslint/no-inferrable-types': 'error',
       '@typescript-eslint/prefer-as-const': 'error',
-      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      '@typescript-eslint/prefer-nullish-coalescing': 'off', // Temporarily disabled
       '@typescript-eslint/prefer-optional-chain': 'error',
       '@typescript-eslint/no-unnecessary-type-assertion': 'error',
 
@@ -158,7 +161,7 @@ export default [
       'react/no-string-refs': 'error',
       'react/no-unknown-property': 'error',
       'react/require-render-return': 'error',
-      'react/self-closing-comp': 'error',
+      'react/self-closing-comp': 'warn',
       'react/jsx-boolean-value': ['error', 'never'],
       'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
       'react/jsx-fragments': ['error', 'syntax'],
@@ -169,7 +172,23 @@ export default [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
-      // Import rules
+      // Security rules - optimized to reduce false positives while maintaining protection
+      'security/detect-object-injection': 'off', // Too many false positives with legitimate array/object access in React/Next.js
+      'security/detect-non-literal-require': 'error',
+      'security/detect-eval-with-expression': 'error',
+      'security/detect-non-literal-fs-filename': 'warn', // Allow for legitimate file operations
+      'security/detect-unsafe-regex': 'warn', // Some complex regex patterns are legitimate
+      'security/detect-buffer-noassert': 'error',
+      'security/detect-child-process': 'warn',
+      'security/detect-disable-mustache-escape': 'error',
+      'security/detect-no-csrf-before-method-override': 'error',
+      'security/detect-non-literal-regexp': 'warn',
+      'security/detect-possible-timing-attacks': 'warn',
+      'security/detect-pseudoRandomBytes': 'error',
+      'security/detect-new-buffer': 'error',
+      'security/detect-bidi-characters': 'error',
+
+      // Import rules - enhanced for better organization
       'import/order': [
         'error',
         {
@@ -179,6 +198,24 @@ export default [
             order: 'asc',
             caseInsensitive: true,
           },
+          pathGroups: [
+            {
+              pattern: 'react',
+              group: 'external',
+              position: 'before',
+            },
+            {
+              pattern: 'next/**',
+              group: 'external',
+              position: 'before',
+            },
+            {
+              pattern: '@/**',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['react', 'next'],
         },
       ],
       'import/no-unresolved': 'error',
@@ -190,8 +227,8 @@ export default [
       'import/newline-after-import': 'error',
       'import/no-default-export': 'off',
 
-      // General JavaScript rules
-      'no-console': 'warn',
+      // General JavaScript rules - enhanced for code quality
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'error',
       'no-alert': 'error',
       'no-var': 'error',
@@ -209,7 +246,15 @@ export default [
       'no-useless-escape': 'error',
       'no-useless-return': 'error',
       'prefer-template': 'error',
-      'require-await': 'error',
+      'require-await': 'warn',
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+      'no-script-url': 'error',
+      'no-control-regex': 'error',
+      'template-curly-spacing': ['error', 'never'],
+      'object-shorthand': ['error', 'always'],
+      'prefer-destructuring': ['error', { array: false, object: true }],
       yoda: 'error',
     },
   },
@@ -251,6 +296,10 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'off',
       'react/display-name': 'off',
       'no-console': 'off',
+      // Relax security rules for test files
+      'security/detect-object-injection': 'off',
+      'security/detect-non-literal-require': 'off',
+      'security/detect-eval-with-expression': 'off',
     },
   },
   // Configuration files

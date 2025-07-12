@@ -314,7 +314,7 @@ export class DeviceCapabilityDetector {
   }
 
   private detectArchitecture(): string {
-    const userAgent = navigator.userAgent;
+    const { userAgent } = navigator;
     if (userAgent.includes('ARM') || userAgent.includes('arm')) return 'ARM';
     if (userAgent.includes('x86_64') || userAgent.includes('x64')) return 'x64';
     if (userAgent.includes('x86')) return 'x86';

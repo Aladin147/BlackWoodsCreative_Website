@@ -1,35 +1,43 @@
-import type { Metadata } from 'next';
-import { Inter, Urbanist, JetBrains_Mono } from 'next/font/google';
+import { Crimson_Text, Inter, JetBrains_Mono, Playfair_Display } from 'next/font/google';
 import { headers } from 'next/headers';
 
-import { GoogleAnalytics, CookieConsentBanner } from '@/components/analytics/GoogleAnalytics';
-import DevelopmentMonitors from '@/components/development/DevelopmentMonitors';
-import { ClientOnlyInteractives } from '@/components/interactive/ClientOnlyInteractives';
-import { ContextAwareBreadcrumbs } from '@/components/layout/ContextAwareBreadcrumbs';
-import { Header } from '@/components/layout/Header';
-import { ScrollProgress } from '@/components/layout/ScrollProgress';
-import { CoreWebVitalsOptimizer } from '@/components/optimization/CoreWebVitalsOptimizer';
+import type { Metadata } from 'next';
+
+import { ClientProviders } from '@/components/providers/ClientProviders';
 import { SimpleStructuredData } from '@/components/seo/SimpleStructuredData';
-import { ThemeProvider } from '@/context/ThemeContext';
+
+import '../styles/globals-enhanced.css';
 import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-primary',
   display: 'swap',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
-const urbanist = Urbanist({
+const crimsonText = Crimson_Text({
   subsets: ['latin'],
-  variable: '--font-display',
+  variable: '--font-secondary',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800', '900'], // Include Black (900) for maximum impact
+  weight: ['400', '600'],
+  style: ['normal', 'italic'],
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-accent',
+  display: 'swap',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
 });
 
 const jetbrains = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
+  style: ['normal', 'italic'],
 });
 
 export const metadata: Metadata = {
@@ -152,41 +160,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const csrfToken = headersList.get('x-csrf-token') ?? undefined;
 
   return (
-    <html lang="en" className={`${inter.variable} ${urbanist.variable} ${jetbrains.variable}`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${crimsonText.variable} ${playfairDisplay.variable} ${jetbrains.variable}`}
+    >
       <head>
         {nonce && <meta name="csp-nonce" content={nonce} />}
         {csrfToken && <meta name="csrf-token" content={csrfToken} />}
         <SimpleStructuredData metadata={metadata} />
       </head>
-      <body className="bg-bw-bg-primary font-primary text-bw-text-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
-        <ThemeProvider>
-          <div>
-            {/* Skip to main content link for accessibility */}
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-bw-accent-gold focus:px-4 focus:py-2 focus:font-medium focus:text-bw-bg-primary"
-            >
-              Skip to main content
-            </a>
-            <CoreWebVitalsOptimizer />
-            {/* ✅ Client-only interactive components re-enabled */}
-            <ClientOnlyInteractives />
-            <ScrollProgress />
-            <Header />
-
-            {/* Context-Aware Breadcrumb Navigation */}
-            <ContextAwareBreadcrumbs />
-
-            <main id="main-content" className="relative">
-              {children}
-            </main>
-            <DevelopmentMonitors />
-
-            {/* Analytics and Business Features */}
-            <GoogleAnalytics />
-            <CookieConsentBanner />
-          </div>
-        </ThemeProvider>
+      <body className="bg-background-primary font-secondary text-text-primary antialiased transition-colors duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]">
+        <ClientProviders>
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );

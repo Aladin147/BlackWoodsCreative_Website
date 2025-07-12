@@ -1,8 +1,9 @@
 'use client';
 
-import { ChevronLeftIcon, ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { ChevronLeftIcon, ChevronRightIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 import { MagneticField, ScrollReveal } from '@/components/interactive';
 import { getInternalLinksForPage } from '@/lib/utils/internal-linking';
@@ -62,8 +63,8 @@ export function PageNavigation({
 }: PageNavigationProps) {
   const pathname = usePathname();
 
-  // Don't show on homepage
-  if (pathname === '/') return null;
+  // Don't show on homepage or if pathname is null
+  if (pathname === '/' || !pathname) return null;
 
   const { prevPage, nextPage } = getPrevNextPages(pathname);
   const relatedLinks = getInternalLinksForPage(pathname);
@@ -200,7 +201,7 @@ function getPrevNextPages(currentPath: string): {
 export function CompactPageNavigation({ className = '' }: { className?: string }) {
   const pathname = usePathname();
 
-  if (pathname === '/') return null;
+  if (pathname === '/' || !pathname) return null;
 
   const { prevPage, nextPage } = getPrevNextPages(pathname);
 

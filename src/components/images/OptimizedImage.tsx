@@ -6,9 +6,11 @@
 
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import Image, { ImageProps } from 'next/image';
 import { useState, useEffect, forwardRef, ReactNode } from 'react';
+
+import Image, { ImageProps } from 'next/image';
+
+import { motion, AnimatePresence } from 'framer-motion';
 
 import {
   useImageGallery,
@@ -78,7 +80,7 @@ export const ProgressiveImage = forwardRef<HTMLDivElement, OptimizedImageProps>(
     };
 
     if (imageError && fallback) {
-      return fallback;
+      return fallback as React.ReactElement;
     }
 
     return (

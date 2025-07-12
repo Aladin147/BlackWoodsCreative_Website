@@ -298,7 +298,8 @@ export function EnhancedLocalBusinessSchema({
               Sa: 'Saturday',
               Su: 'Sunday',
             };
-            return dayMap[day] ?? day;
+            const dayMapping: Record<string, string> = dayMap;
+            return dayMapping[day] ?? day;
           }),
           opens: open,
           closes: close,

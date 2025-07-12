@@ -48,7 +48,6 @@ export function ContentOptimizationTool() {
         },
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Content analysis error:', error);
     } finally {
       setLoading(false);

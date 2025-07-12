@@ -1,7 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useRef, useEffect, useState, useCallback } from 'react';
+
+import { motion } from 'framer-motion';
 
 import { useDeviceAdaptation } from '@/hooks/useDeviceAdaptation';
 

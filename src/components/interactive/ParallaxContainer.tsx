@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef, useEffect, ReactNode } from 'react';
+
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 interface ParallaxLayerProps {
   children: ReactNode;
@@ -47,7 +48,7 @@ export function ParallaxLayer({
   rotate,
   blur,
   className = '',
-  offset = ['start end', 'end start'] as const,
+  offset = ['start end', 'end start'],
 }: ParallaxLayerProps) {
   const ref = useRef<HTMLDivElement>(null);
 

@@ -152,7 +152,7 @@ This email was sent from the BlackWoods Creative contact form.
     const result = await resend.emails.send({
       from: fromEmail,
       to: toEmail,
-      subject: subject,
+      subject,
       html: htmlContent,
       text: textContent,
       replyTo: formData.email, // Allow direct reply to the sender
@@ -267,7 +267,7 @@ This is an automated response. Please do not reply to this email.
     const result = await resend.emails.send({
       from: fromEmail,
       to: formData.email,
-      subject: subject,
+      subject,
       html: htmlContent,
       text: textContent,
     });

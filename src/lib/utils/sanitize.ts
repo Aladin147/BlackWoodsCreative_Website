@@ -1,3 +1,5 @@
+import { safeObjectIteration } from './safe-object-access';
+
 /**
  * Sanitizes user input to prevent XSS attacks
  * @param input The input string to sanitize
@@ -21,11 +23,13 @@ export function sanitizeInput(input: string): string {
 export function sanitizeFormData<T extends Record<string, unknown>>(formData: T): T {
   const sanitized: Record<string, unknown> = { ...formData };
 
-  for (const key in sanitized) {
-    if (typeof sanitized[key] === 'string') {
-      sanitized[key] = sanitizeInput(sanitized[key]);
+  // Use safe object iteration to prevent object injection
+  safeObjectIteration(sanitized, (key, value) => {
+    if (typeof value === 'string' && typeof key === 'string' && key.length > 0 && key.length < 100) {
+      // Safe object assignment with validation
+      sanitized[key] = sanitizeInput(value);
     }
-  }
+  });
 
   return sanitized as T;
 }

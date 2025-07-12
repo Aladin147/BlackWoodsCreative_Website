@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     // Log the security event
     const forwarded = request.headers.get('x-forwarded-for');
     const realIp = request.headers.get('x-real-ip');
-    const ip = forwarded ? forwarded.split(',')[0]?.trim() ?? 'unknown' : (realIp ?? 'unknown');
+    const ip = forwarded ? (forwarded.split(',')[0]?.trim() ?? 'unknown') : (realIp ?? 'unknown');
 
     logSecurityEvent({
       type: 'csp_violation',

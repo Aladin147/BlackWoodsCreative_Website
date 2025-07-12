@@ -13,9 +13,9 @@ import { logger } from './logger';
 export interface SimpleMetrics {
   // Core Web Vitals (the only metrics that really matter)
   lcp: number; // Largest Contentful Paint
-  fid: number; // First Input Delay  
+  fid: number; // First Input Delay
   cls: number; // Cumulative Layout Shift
-  
+
   // Basic loading metrics
   loadTime: number;
   domReady: number;
@@ -24,8 +24,8 @@ export interface SimpleMetrics {
 // Simple performance thresholds (Google's recommendations)
 const PERFORMANCE_THRESHOLDS = {
   lcp: 2500, // Good: < 2.5s
-  fid: 100,  // Good: < 100ms
-  cls: 0.1,  // Good: < 0.1
+  fid: 100, // Good: < 100ms
+  cls: 0.1, // Good: < 0.1
   loadTime: 3000, // Good: < 3s
 } as const;
 
@@ -56,7 +56,7 @@ class SimplePerformanceMonitor {
   // Collect basic performance metrics
   private collectBasicMetrics(): void {
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-    
+
     if (navigation) {
       this.metrics.loadTime = navigation.loadEventEnd - navigation.fetchStart;
       this.metrics.domReady = navigation.domContentLoadedEventEnd - navigation.fetchStart;
@@ -69,7 +69,7 @@ class SimplePerformanceMonitor {
 
     try {
       // LCP Observer
-      const lcpObserver = new PerformanceObserver((list) => {
+      const lcpObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1] as PerformanceEntry & { startTime: number };
         this.metrics.lcp = lastEntry.startTime;
@@ -78,11 +78,14 @@ class SimplePerformanceMonitor {
       this.observers.push(lcpObserver);
 
       // FID Observer
-      const fidObserver = new PerformanceObserver((list) => {
+      const fidObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
-        entries.forEach((entry) => {
+        entries.forEach(entry => {
           if (entry.entryType === 'first-input') {
-            const fidEntry = entry as PerformanceEntry & { processingStart: number; startTime: number };
+            const fidEntry = entry as PerformanceEntry & {
+              processingStart: number;
+              startTime: number;
+            };
             this.metrics.fid = fidEntry.processingStart - fidEntry.startTime;
           }
         });
@@ -91,24 +94,26 @@ class SimplePerformanceMonitor {
       this.observers.push(fidObserver);
 
       // CLS Observer
-      const clsObserver = new PerformanceObserver((list) => {
+      const clsObserver = new PerformanceObserver(list => {
         let clsValue = 0;
         const entries = list.getEntries();
-        
-        entries.forEach((entry) => {
+
+        entries.forEach(entry => {
           if (entry.entryType === 'layout-shift') {
-            const layoutShiftEntry = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
+            const layoutShiftEntry = entry as PerformanceEntry & {
+              value: number;
+              hadRecentInput: boolean;
+            };
             if (!layoutShiftEntry.hadRecentInput) {
               clsValue += layoutShiftEntry.value;
             }
           }
         });
-        
+
         this.metrics.cls = clsValue;
       });
       clsObserver.observe({ entryTypes: ['layout-shift'] });
       this.observers.push(clsObserver);
-
     } catch (error) {
       // Performance observers not supported or failed
       if (process.env.NODE_ENV === 'development') {
@@ -213,13 +218,13 @@ let performanceMonitor: SimplePerformanceMonitor | null = null;
 export function getSimplePerformanceMonitor(): SimplePerformanceMonitor {
   if (!performanceMonitor) {
     performanceMonitor = new SimplePerformanceMonitor();
-    
+
     // Auto-initialize in browser
     if (typeof window !== 'undefined') {
       performanceMonitor.initialize();
     }
   }
-  
+
   return performanceMonitor;
 }
 
@@ -254,7 +259,7 @@ export function trackUserInteraction(action: string): (() => void) | void {
   // Return a function to mark the end of the interaction
   return () => {
     const duration = performance.now() - startTime;
-    
+
     // Log slow interactions in development
     if (process.env.NODE_ENV === 'development' && duration > 50) {
       logger.debug('Slow user interaction', {
@@ -290,5 +295,3 @@ declare global {
     gtag?: (...args: unknown[]) => void;
   }
 }
-
-

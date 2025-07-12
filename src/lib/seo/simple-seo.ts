@@ -1,6 +1,6 @@
 /**
  * Simplified SEO System
- * 
+ *
  * A practical, focused SEO implementation for a portfolio website
  * that covers essential SEO needs without over-engineering.
  */
@@ -33,7 +33,8 @@ export const SIMPLE_SEO_CONFIG: SimpleSEOConfig = {
   siteName: 'BlackWoods Creative',
   siteUrl: 'https://blackwoodscreative.com',
   defaultTitle: "BlackWoods Creative | Morocco's Premier Creative Studio",
-  defaultDescription: 'Professional video production, photography, and 3D visualization services in Morocco. Transform your vision into compelling visual stories.',
+  defaultDescription:
+    'Professional video production, photography, and 3D visualization services in Morocco. Transform your vision into compelling visual stories.',
   defaultImage: '/assets/images/og-blackwoods-creative.jpg',
   twitterHandle: '@blackwoodscreative',
   locale: 'en_US',
@@ -49,14 +50,7 @@ export class SimpleSEO {
 
   // Generate Next.js metadata
   generateMetadata(pageSEO: PageSEO = {}, path = ''): Metadata {
-    const {
-      title,
-      description,
-      image,
-      canonical,
-      noindex = false,
-      type = 'website',
-    } = pageSEO;
+    const { title, description, image, canonical, noindex = false, type = 'website' } = pageSEO;
 
     const finalTitle = title ? `${title} | ${this.config.siteName}` : this.config.defaultTitle;
     const finalDescription = description ?? this.config.defaultDescription;
@@ -64,15 +58,15 @@ export class SimpleSEO {
     const finalCanonical = canonical ?? `${this.config.siteUrl}${path}`;
 
     // Ensure images are absolute URLs
-    const absoluteImage = finalImage.startsWith('http') 
-      ? finalImage 
+    const absoluteImage = finalImage.startsWith('http')
+      ? finalImage
       : `${this.config.siteUrl}${finalImage}`;
 
     return {
       title: finalTitle,
       description: finalDescription,
       keywords: this.getDefaultKeywords(),
-      
+
       // Canonical URL
       alternates: {
         canonical: finalCanonical,
@@ -93,18 +87,20 @@ export class SimpleSEO {
           },
         ],
         locale: this.config.locale,
-        type: type,
+        type,
       },
 
       // Twitter
-      twitter: this.config.twitterHandle ? {
-        card: 'summary_large_image',
-        title: finalTitle,
-        description: finalDescription,
-        images: [absoluteImage],
-        creator: this.config.twitterHandle,
-        site: this.config.twitterHandle,
-      } : null,
+      twitter: this.config.twitterHandle
+        ? {
+            card: 'summary_large_image',
+            title: finalTitle,
+            description: finalDescription,
+            images: [absoluteImage],
+            creator: this.config.twitterHandle,
+            site: this.config.twitterHandle,
+          }
+        : null,
 
       // Robots
       robots: {

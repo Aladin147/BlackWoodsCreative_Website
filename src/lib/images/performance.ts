@@ -131,7 +131,7 @@ export class ImagePerformanceMonitor {
 
   // Record image rendering metrics
   private recordImageRender(entry: ElementTimingEntry): void {
-    const identifier = entry.identifier;
+    const { identifier } = entry;
     const renderTime = (entry.renderTime ?? 0) - (entry.loadTime ?? 0);
 
     // Find corresponding load metrics
@@ -157,7 +157,7 @@ export class ImagePerformanceMonitor {
       svg: 'svg',
     };
 
-    return formatMap[extension ?? ''] ?? 'unknown';
+    return formatMap[extension ?? '' as keyof typeof formatMap] ?? 'unknown';
   }
 
   // Start tracking image load
@@ -219,7 +219,10 @@ export class ImagePerformanceMonitor {
     // Format distribution
     const formatDistribution: Record<string, number> = {};
     allMetrics.forEach(m => {
-      formatDistribution[m.format] = (formatDistribution[m.format] ?? 0) + 1;
+      // Safe object assignment with validation
+      if (typeof m.format === 'string' && m.format.length > 0 && m.format.length < 20) {
+        formatDistribution[m.format] = (formatDistribution[m.format] ?? 0) + 1;
+      }
     });
 
     // Size distribution
@@ -415,7 +418,9 @@ export class ImageOptimizationAnalyzer {
         allRecommendations.push(...result.value.recommendations);
       } else {
         if (process.env.NODE_ENV === 'development') {
-          logger.error('Failed to analyze image', { url: urls[index], error: result.reason });
+          // Safe array access with bounds checking
+          const url = (index >= 0 && index < urls.length) ? urls[index] : 'unknown';
+          logger.error('Failed to analyze image', { url, error: result.reason });
         }
       }
     });
@@ -443,7 +448,7 @@ export const ImagePerformanceUtils = {
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i] ?? 'B'}`;
   },
 
   // Format load time for display

@@ -7,14 +7,12 @@
 **Status: Ready for Google Search Console submission**
 
 1. **✅ Enhanced Sitemaps Implemented**
-
    - ✅ Main sitemap: `https://blackwoodscreative.com/sitemap.xml` (Dynamic, Next.js)
    - ✅ Image sitemap: `https://blackwoodscreative.com/sitemap-images.xml` (Enhanced with geo-data)
    - ✅ Robots.txt: `https://blackwoodscreative.com/robots.txt` (Dynamic configuration)
    - 🔄 **NEXT ACTION:** Submit to Google Search Console and monitor indexing status
 
 2. **Core Web Vitals Monitoring**
-
    - Set up performance tracking in GSC
    - Monitor LCP, FID, CLS metrics
    - Address any performance issues identified
@@ -39,7 +37,6 @@
    ```
 
 2. **Add Business Photos**
-
    - Studio photos with geo-location metadata
    - Portfolio samples from different Morocco cities
    - Team photos and behind-the-scenes content
@@ -54,7 +51,6 @@
 **Timeline: Within 2 weeks**
 
 1. **Morocco Business Directories**
-
    - Submit to local Morocco business directories
    - Ensure NAP consistency across all platforms
    - Use the standardized data from `NAPData` export
@@ -70,7 +66,6 @@
 **Timeline: Ongoing**
 
 1. **French Content (fr-MA)**
-
    - Translate key service pages
    - Create French blog content using Morocco keywords
    - Implement hreflang tags for French pages
@@ -85,7 +80,6 @@
 **Timeline: Ongoing**
 
 1. **Use Content Optimization Tool**
-
    - Analyze existing pages with the tool at `/content-optimization`
    - Optimize blog posts for Morocco-specific keywords
    - Improve content structure based on recommendations
@@ -100,7 +94,6 @@
 ### TODO: Set Up Tracking
 
 1. **SEO Monitoring Dashboard**
-
    - Use the built-in dashboard for regular health checks
    - Monitor technical SEO compliance weekly
    - Track content quality metrics

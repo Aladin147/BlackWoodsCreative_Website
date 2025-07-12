@@ -1,8 +1,9 @@
 'use client';
 
+import Image from 'next/image';
+
 import { PlayIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 import type { PortfolioProject } from '@/lib/types/portfolio';
 

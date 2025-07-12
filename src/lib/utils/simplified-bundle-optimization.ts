@@ -1,6 +1,6 @@
 /**
  * Simplified Bundle Optimization
- * 
+ *
  * A streamlined approach to bundle optimization that focuses on practical performance
  * improvements without over-engineering.
  */
@@ -51,9 +51,10 @@ export function createSimpleLazyComponent<T extends ComponentType<Record<string,
 
   // Add simple preload method
   if (preload) {
-    LazyComponent.preload = () => importFn().then(() => {
-      // Component preloaded successfully
-    });
+    LazyComponent.preload = () =>
+      importFn().then(() => {
+        // Component preloaded successfully
+      });
 
     // Auto-preload after initial page load
     if (typeof window !== 'undefined') {
@@ -97,9 +98,8 @@ class SimpleBundleAnalyzer {
   getMetrics(): BundleMetrics & { averageLoadTime: number } {
     return {
       ...this.metrics,
-      averageLoadTime: this.metrics.chunksLoaded > 0 
-        ? this.metrics.totalLoadTime / this.metrics.chunksLoaded 
-        : 0,
+      averageLoadTime:
+        this.metrics.chunksLoaded > 0 ? this.metrics.totalLoadTime / this.metrics.chunksLoaded : 0,
     };
   }
 
@@ -113,7 +113,9 @@ class SimpleBundleAnalyzer {
     }
 
     if (metrics.failedLoads > 0) {
-      recommendations.push(`${metrics.failedLoads} chunks failed to load - check network conditions`);
+      recommendations.push(
+        `${metrics.failedLoads} chunks failed to load - check network conditions`
+      );
     }
 
     if (metrics.chunksLoaded > 20) {
@@ -140,16 +142,16 @@ export const bundleAnalyzer = new SimpleBundleAnalyzer();
 export const ComponentCategories = {
   // Critical components that should load immediately
   CRITICAL: 'critical',
-  
+
   // Above-the-fold components that should load quickly
   ABOVE_FOLD: 'above-fold',
-  
+
   // Interactive components that can be lazy loaded
   INTERACTIVE: 'interactive',
-  
+
   // Heavy components that should be lazy loaded with preloading
   HEAVY: 'heavy',
-  
+
   // Development-only components
   DEVELOPMENT: 'development',
 } as const;
@@ -179,36 +181,33 @@ export const LoadingStrategies = {
 };
 
 // Utility to track component loading performance
-export function trackComponentLoad<T>(
-  componentName: string,
-  loadFn: () => Promise<T>
-): Promise<T> {
+export function trackComponentLoad<T>(componentName: string, loadFn: () => Promise<T>): Promise<T> {
   const startTime = performance.now();
 
   return loadFn()
     .then(result => {
       const loadTime = performance.now() - startTime;
       bundleAnalyzer.trackChunkLoad(loadTime, true);
-      
+
       if (process.env.NODE_ENV === 'development') {
         logger.debug('Component loaded successfully', {
           componentName,
           loadTime: `${loadTime.toFixed(2)}ms`,
         });
       }
-      
+
       return result;
     })
     .catch(error => {
       const loadTime = performance.now() - startTime;
       bundleAnalyzer.trackChunkLoad(loadTime, false);
-      
+
       logger.warn('Component failed to load', {
         componentName,
         loadTime: `${loadTime.toFixed(2)}ms`,
         error,
       });
-      
+
       throw error;
     });
 }
@@ -229,7 +228,7 @@ export class SimplePreloader {
     try {
       await trackComponentLoad(name, importFn);
       this.preloadedComponents.add(name);
-      
+
       if (process.env.NODE_ENV === 'development') {
         logger.debug('Component preloaded', { name });
       }
